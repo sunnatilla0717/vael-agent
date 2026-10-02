@@ -198,7 +198,7 @@ _E2E_LANES: dict[str, tuple[str, ...]] = {
         "tests/e2e/",
         # The state.db torture chamber and the compaction/exactly-once
         # suites are the only tests that run real concurrent writers.
-        "hermes_state",
+        "vael_state",
     ),
     "e2e_upgrade": (
         *_PY_TEST_HARNESS,

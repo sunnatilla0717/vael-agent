@@ -19,7 +19,7 @@ from hermes_cli.local_runtime.gguf import SPLIT_PART_RE, model_id_from_stem
 
 logger = logging.getLogger(__name__)
 
-_SUPERVISOR = None  # process-wide singleton; one router per Hermes process
+_SUPERVISOR = None  # process-wide singleton; one router per VAEL process
 
 
 def _detect_gpu_vendor() -> str | None:
@@ -37,7 +37,7 @@ def _detect_gpu_vendor() -> str | None:
 def models_dir() -> Path:
     """Machine-scoped, deliberately NOT profile-scoped: a 20 GB GGUF is a machine asset, and every
     profile shares the one managed server that serves it (same rule as runtimes_root())."""
-    from hermes_constants import get_default_hermes_root
+    from vael_constants import get_default_hermes_root
 
     return get_default_hermes_root() / "models"
 
@@ -80,7 +80,7 @@ def adopt_legacy_models() -> "list[Path]":
     adopting two profiles' same-named file at once, and a same name is the same catalog variant).
     Two processes racing on one file are harmless: the loser's rename finds the source gone and
     skips it. Returns the new paths of the moved files."""
-    from hermes_constants import get_default_hermes_root, named_profile_has_identity
+    from vael_constants import get_default_hermes_root, named_profile_has_identity
 
     profiles_root = get_default_hermes_root() / "profiles"
     if not profiles_root.is_dir():
@@ -338,7 +338,7 @@ def _unlock_boot_fd(fd: int) -> None:
 
 @contextmanager
 def _cross_process_boot_lock(timeout_s: float = 130.0):
-    """Serialize the state-check-then-spawn sequence across every Hermes process on this
+    """Serialize the state-check-then-spawn sequence across every VAEL process on this
     machine — the ``_SUPERVISOR`` singleton above only rules out a race within ONE process.
     Two profiles booting in the same second each see no ``server.json`` yet and each spawn a
     router on the stable port (#116682); an OS-held lock makes the second caller wait for the
@@ -391,7 +391,7 @@ def ensure_local_runtime(config: dict, force: bool = False) -> "object | None":
         logger.info("local runtime enabled but no models staged; not booting")
         return None
 
-    # Another Hermes process may already be supervising — reuse via state, but ONLY while its
+    # Another VAEL process may already be supervising — reuse via state, but ONLY while its
     # launch policy still covers every staged model. A server whose preset file predates a
     # download serves the new model with no policy at all (--models-autoload + stock fit). A stale
     # incumbent gets stopped and replaced by a fresh boot with regenerated presets; sessions ride

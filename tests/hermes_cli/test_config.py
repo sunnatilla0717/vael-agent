@@ -7,7 +7,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-import hermes_yaml as yaml
+import vael_yaml as yaml
 
 from hermes_cli.config import (
     DEFAULT_CONFIG,
@@ -35,7 +35,7 @@ from hermes_cli.config import (
 
 class TestGetHermesHome:
     def test_default_path(self):
-        from hermes_constants import _get_platform_default_hermes_home
+        from vael_constants import _get_platform_default_hermes_home
         with patch.dict(os.environ, {}, clear=False):
             os.environ.pop("HERMES_HOME", None)
             home = get_hermes_home()
@@ -889,7 +889,7 @@ class TestConfigSupportFloor:
 
     def test_floor_message_uses_display_hermes_home(self):
         from hermes_cli.config_migrations import support_floor_message
-        from hermes_constants import display_hermes_home
+        from vael_constants import display_hermes_home
 
         msg = support_floor_message()
         assert f"{display_hermes_home()}/config.yaml" in msg

@@ -86,7 +86,7 @@ def _default_hermes_root_is_opt_data() -> bool:
     if not raw:
         return False
     try:
-        from hermes_constants import get_default_hermes_root
+        from vael_constants import get_default_hermes_root
 
         root = get_default_hermes_root().expanduser().resolve(strict=False)
     except (OSError, RuntimeError):
@@ -95,7 +95,7 @@ def _default_hermes_root_is_opt_data() -> bool:
 
 
 def _dashboard_local_update_managed_externally() -> bool:
-    """True when the dashboard should not offer ``hermes update``.
+    """True when the dashboard should not offer ``vael update``.
 
     Containerized dashboards are updated by the outer launcher/image — except a
     ``git`` install (bind-mounted checkout, e.g. the hermes-webui image), where
@@ -107,7 +107,7 @@ def _dashboard_local_update_managed_externally() -> bool:
     if _default_hermes_root_is_opt_data():
         return True
     try:
-        from hermes_constants import is_container
+        from vael_constants import is_container
 
         if not is_container():
             return False
@@ -128,7 +128,7 @@ def _managed_files_policy(request: Request, *, create_root: bool = True) -> Mana
         return ManagedFilesPolicy(default_path=root, locked_root=root, can_change_path=False)
 
     # Remote/OAuth access does not imply a hosted container (a gated macOS launchd
-    # install still browses its home). Lock to /opt/data only when the Hermes
+    # install still browses its home). Lock to /opt/data only when the VAEL
     # root actually IS /opt/data or HERMES_DASHBOARD_FILES_ROOT is set.
     if _default_hermes_root_is_opt_data():
         root = _ensure_managed_root(_HOSTED_MANAGED_FILES_ROOT) if create_root else _HOSTED_MANAGED_FILES_ROOT

@@ -6,7 +6,7 @@ author: SHL0MS, Hermes Agent
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
-  hermes:
+  vael:
     tags: [ASCII, Video, FFmpeg, Terminal-Art]
     related_skills: []
 ---

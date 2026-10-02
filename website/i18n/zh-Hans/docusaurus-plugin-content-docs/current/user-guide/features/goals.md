@@ -1,18 +1,18 @@
 ---
 sidebar_position: 16
 title: "持久目标"
-description: "设置一个持续目标，让 Hermes 跨轮次持续工作直到完成。我们对 Ralph loop 的实现。"
+description: "设置一个持续目标，让 VAEL 跨轮次持续工作直到完成。我们对 Ralph loop 的实现。"
 ---
 
 # 持久目标（`/goal`）
 
-`/goal` 为 Hermes 设置一个跨轮次持续存在的目标。每轮结束后，一个轻量级裁判模型会检查目标是否已被助手的最新回复满足。若未满足，Hermes 会自动将一条续行 prompt（提示词）注入同一会话并继续工作——直到目标达成、你暂停或清除目标，或者轮次预算耗尽为止。
+`/goal` 为 VAEL 设置一个跨轮次持续存在的目标。每轮结束后，一个轻量级裁判模型会检查目标是否已被助手的最新回复满足。若未满足，VAEL 会自动将一条续行 prompt（提示词）注入同一会话并继续工作——直到目标达成、你暂停或清除目标，或者轮次预算耗尽为止。
 
-这是我们对 **Ralph loop** 的实现，直接受 Eric Traut（OpenAI）在 [Codex CLI 0.128.0 的 `/goal`](https://github.com/openai/codex) 中的启发。核心思路——跨轮次保持目标存活、不达成不停止——源自他们。此处的实现是独立的，并已适配 Hermes 的架构。
+这是我们对 **Ralph loop** 的实现，直接受 Eric Traut（OpenAI）在 [Codex CLI 0.128.0 的 `/goal`](https://github.com/openai/codex) 中的启发。核心思路——跨轮次保持目标存活、不达成不停止——源自他们。此处的实现是独立的，并已适配 VAEL 的架构。
 
 ## 适用场景
 
-当你希望 Hermes 自主迭代、无需每轮重新提示时，使用 `/goal`：
+当你希望 VAEL 自主迭代、无需每轮重新提示时，使用 `/goal`：
 
 - "修复 `src/` 中的所有 lint 错误，并验证 `ruff check` 通过"
 - "从仓库 Y 移植功能 X，包含测试，并让 CI 变绿"
@@ -30,9 +30,9 @@ description: "设置一个持续目标，让 Hermes 跨轮次持续工作直到�
 你将看到：
 
 1. **目标已接受** — `⊙ Goal set (20-turn budget): <your goal>`
-2. **第 1 轮运行** — Hermes 开始工作，就像你发送了一条普通消息一样。
+2. **第 1 轮运行** — VAEL 开始工作，就像你发送了一条普通消息一样。
 3. **裁判运行** — 轮次结束后，裁判模型判定 `done` 或 `continue`。
-4. **若需要则触发循环** — 若为 `continue`，你将看到 `↻ Continuing toward goal (1/20): <judge's reason>`，Hermes 自动执行下一步。
+4. **若需要则触发循环** — 若为 `continue`，你将看到 `↻ Continuing toward goal (1/20): <judge's reason>`，VAEL 自动执行下一步。
 5. **终止** — 最终你会看到 `✓ Goal achieved: <reason>` 或 `⏸ Goal paused — N/20 turns used`。
 
 ## 命令
@@ -66,7 +66,7 @@ description: "设置一个持续目标，让 Hermes 跨轮次持续工作直到�
 
 ### 裁判
 
-每轮结束后，Hermes 会调用一个辅助模型，传入：
+每轮结束后，VAEL 会调用一个辅助模型，传入：
 
 - 持续目标文本
 - agent 最新的最终回复（最后约 4 KB 文本）
@@ -76,11 +76,11 @@ description: "设置一个持续目标，让 Hermes 跨轮次持续工作直到�
 
 ### 失败开放语义
 
-若裁判出错（网络抖动、响应格式错误、辅助客户端不可用），Hermes 将判定视为 `continue`——损坏的裁判不会阻塞进度。**轮次预算**才是真正的兜底机制。
+若裁判出错（网络抖动、响应格式错误、辅助客户端不可用），VAEL 将判定视为 `continue`——损坏的裁判不会阻塞进度。**轮次预算**才是真正的兜底机制。
 
 ### 轮次预算
 
-默认为 20 个续行轮次（`config.yaml` 中的 `goals.max_turns`）。预算耗尽时，Hermes 自动暂停并告知你如何继续：
+默认为 20 个续行轮次（`config.yaml` 中的 `goals.max_turns`）。预算耗尽时，VAEL 自动暂停并告知你如何继续：
 
 ```
 ⏸ Goal paused — 20/20 turns used. Use /goal resume to keep going, or /goal clear to stop.
@@ -102,7 +102,7 @@ agent 正在运行时，`/goal status`、`/goal pause` 和 `/goal clear` 可以�
 
 ### Prompt 缓存
 
-续行 prompt 是一条以用户角色追加到历史记录中的普通消息。它**不会**修改系统 prompt、切换工具集，也不会以任何使 Hermes prompt 缓存失效的方式改动对话。运行一个 20 轮目标，在缓存层面与 20 轮普通对话的开销相同。
+续行 prompt 是一条以用户角色追加到历史记录中的普通消息。它**不会**修改系统 prompt、切换工具集，也不会以任何使 VAEL prompt 缓存失效的方式改动对话。运行一个 20 轮目标，在缓存层面与 20 轮普通对话的开销相同。
 
 ## 配置
 
@@ -177,4 +177,4 @@ You: _
 
 ## 致谢
 
-`/goal` 是 Hermes 对 **Ralph loop** 模式的实现。面向用户的设计——跨轮次保持目标存活、不达成不停止，以及创建/暂停/恢复/清除控制——由 OpenAI Codex 团队的 Eric Traut 在 [Codex CLI 0.128.0](https://github.com/openai/codex) 中推广并落地。我们的实现是独立的（中央 `CommandDef` 注册表、`SessionDB.state_meta` 持久化、辅助客户端裁判、gateway 侧的适配器 FIFO 续行），但这个想法源自他们。功劳归于应得之人。
+`/goal` 是 VAEL 对 **Ralph loop** 模式的实现。面向用户的设计——跨轮次保持目标存活、不达成不停止，以及创建/暂停/恢复/清除控制——由 OpenAI Codex 团队的 Eric Traut 在 [Codex CLI 0.128.0](https://github.com/openai/codex) 中推广并落地。我们的实现是独立的（中央 `CommandDef` 注册表、`SessionDB.state_meta` 持久化、辅助客户端裁判、gateway 侧的适配器 FIFO 续行），但这个想法源自他们。功劳归于应得之人。

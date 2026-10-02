@@ -13,8 +13,8 @@ import sys
 
 import pytest
 
-import hermes_state_lockguard as lg
-from hermes_state import SessionDB
+import vael_state_lockguard as lg
+from vael_state import SessionDB
 from tests.hermes_state._wal_generation_harness import make_db, pin_wal, require_wal
 
 pytestmark = pytest.mark.platforms("linux")

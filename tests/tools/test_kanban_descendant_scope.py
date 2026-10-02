@@ -138,7 +138,7 @@ def test_child_shell_can_write_a_kanban_board_outside_its_lineage_root(tmp_path,
         "except PermissionError as exc:\n"
         "    out['lineage'] = 'fenced: ' + str(exc)\n"
         f"os.environ['HERMES_HOME'] = {str(scratch_home)!r}\n"
-        "import hermes_constants; hermes_constants._default_hermes_root_memo = None\n"
+        "import vael_constants; hermes_constants._default_hermes_root_memo = None\n"
         "conn = connect(kb.kanban_db_path()); out['scratch'] = kb.create_task(conn, title='scratch')\n"
         "print('SCOPE_RESULT=' + json.dumps(out))\n"
     )

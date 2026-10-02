@@ -19,7 +19,7 @@ def cron_home(tmp_path, monkeypatch):
     monkeypatch.setenv("HOME", str(home))
     monkeypatch.setenv("HERMES_HOME", str(home / ".hermes"))
     for name in list(sys.modules):
-        if name.split(".")[0] in ("cron", "gateway", "hermes_cli", "hermes_constants"):
+        if name.split(".")[0] in ("cron", "gateway", "hermes_cli", "vael_constants"):
             monkeypatch.delitem(sys.modules, name, raising=False)
     return home / ".hermes"
 

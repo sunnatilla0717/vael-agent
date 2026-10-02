@@ -210,7 +210,7 @@ def main() -> int:
     # Add repo root to sys.path so we can import hermes_constants (this script
     # runs as a standalone subprocess, not as a module).
     sys.path.insert(0, str(repo_root))
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
 
     all_violations = []
 

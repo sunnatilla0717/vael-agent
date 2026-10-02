@@ -1,4 +1,4 @@
-"""Persistent session goals — the Ralph loop for Hermes.
+"""Persistent session goals — the Ralph loop for VAEL.
 
 A goal is a free-form objective that stays active across turns; after each turn an auxiliary-model
 judge decides whether it is satisfied. The continuation prompt is a normal user message appended via
@@ -22,7 +22,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 from hermes_cli._subprocess_compat import noninteractive_git_env
-from hermes_time import safe_strftime
+from vael_time import safe_strftime
 
 logger = logging.getLogger(__name__)
 
@@ -543,7 +543,7 @@ def _get_session_db() -> Optional[Any]:
     healthy cold init completes and the first write isn't dropped).
     """
     try:
-        from hermes_constants import get_hermes_home
+        from vael_constants import get_hermes_home
 
         home = str(get_hermes_home())
     except Exception as exc:  # pragma: no cover
@@ -552,7 +552,7 @@ def _get_session_db() -> Optional[Any]:
 
     cached = _DB_CACHE.get(home)
     if cached is not None and _registry_tore_down(cached):
-        # ``hermes profile delete`` force-closes every handle under the profile home
+        # ``vael profile delete`` force-closes every handle under the profile home
         # (``hermes_state_registry.close_all_under``) before rmtree; a same-name recreate in this
         # process must acquire a fresh handle, not keep writing into the torn-down one.
         with _DB_BOOTSTRAP_LOCK:
@@ -603,12 +603,12 @@ def _acquire_session_db(home: str):
     """The registry's shared handle for ``home/state.db``. A bare ``SessionDB()`` here was a SECOND
     writer per profile beside the gateway's registry handle — its own token-writer thread and
     close-time checkpoint (the #90837 corruption shape), doubled under multiplexing."""
-    from hermes_state_registry import acquire
+    from vael_state_registry import acquire
     return acquire(Path(home) / "state.db")
 
 
 def _release_session_db(db) -> None:
-    from hermes_state_registry import release_or_close
+    from vael_state_registry import release_or_close
     try:
         release_or_close(db)
     except Exception:

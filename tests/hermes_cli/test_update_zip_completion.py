@@ -14,7 +14,7 @@ from hermes_cli import main, update_cmd, update_cmd_fleet as fleet, update_cmd_m
 from hermes_cli import update_cmd_zip, update_receipt
 from hermes_cli.config_defaults import DEFAULT_CONFIG
 from hermes_cli.update_inventory import RuntimeRecord, UpdatePlan
-import hermes_yaml
+import vael_yaml
 
 
 @pytest.fixture
@@ -328,7 +328,7 @@ def test_installed_app_without_a_checkout_build_is_still_rebuilt(zip_update, mon
     # The checkout under the default Hermes home is the one an installed app runs.
     (tmp_path / "default-home").mkdir()
     (tmp_path / "default-home" / "hermes-agent").symlink_to(zip_update.root)
-    monkeypatch.setattr("hermes_constants.get_default_hermes_root", lambda **kw: tmp_path / "default-home")
+    monkeypatch.setattr("vael_constants.get_default_hermes_root", lambda **kw: tmp_path / "default-home")
     built = []
     monkeypatch.setattr("hermes_cli.source_build.build_update_products",
                         lambda selected, *, desktop: built.append(desktop))

@@ -1,7 +1,7 @@
 ---
 sidebar_position: 11
 title: "用 Cron 自动化一切"
-description: "使用 Hermes cron 的真实自动化模式——监控、报告、数据管道与多技能工作流"
+description: "使用 VAEL cron 的真实自动化模式——监控、报告、数据管道与多技能工作流"
 ---
 
 # 用 Cron 自动化一切
@@ -15,7 +15,7 @@ Cron 任务在全新的 agent 会话中运行，不保留当前对话的任何�
 :::
 
 :::tip 不需要 LLM？你有两种零 token 方案。
-- **循环看门狗**：脚本本身已能生成精确消息（内存告警、磁盘告警、心跳）时，使用 [纯脚本 cron 任务](./cron-script-only.md)。相同的调度器，无需 LLM。你可以在对话中让 Hermes 帮你设置——`cronjob` 工具知道何时选择 `no_agent=True` 并为你编写脚本。
+- **循环看门狗**：脚本本身已能生成精确消息（内存告警、磁盘告警、心跳）时，使用 [纯脚本 cron 任务](./cron-script-only.md)。相同的调度器，无需 LLM。你可以在对话中让 VAEL 帮你设置——`cronjob` 工具知道何时选择 `no_agent=True` 并为你编写脚本。
 - **已在运行的脚本发起的一次性通知**（CI 步骤、post-commit hook、部署脚本、外部调度的监控）：使用 [`hermes send`](./pipe-script-output.md) 将 stdout 或文件直接推送到 Telegram / Discord / Slack 等，无需设置 cron 条目。
 :::
 

@@ -40,8 +40,8 @@ def _fresh_import():
     Drops any cached copy from sys.modules first so module-level code
     runs again and the platform check re-evaluates.
     """
-    sys.modules.pop("hermes_bootstrap", None)
-    import hermes_bootstrap  # noqa: WPS433
+    sys.modules.pop("vael_bootstrap", None)
+    import vael_bootstrap  # noqa: WPS433
     return hermes_bootstrap
 
 
@@ -205,7 +205,7 @@ def guarded(name, globals=None, locals=None, fromlist=(), level=0):
         if name == '__future__':
             return real_import(name, globals, locals, fromlist, level)
         if not seen:
-            assert name == 'hermes_bootstrap', name
+            assert name == 'vael_bootstrap', name
             module = real_import(name, globals, locals, fromlist, level)
             assert module._pm_repair is True
             assert module._bootstrap_applied is (sys.platform == 'win32')
@@ -217,7 +217,7 @@ builtins.__import__ = guarded
 try:
     runpy.run_path(entry, run_name='__main__')
 except Boundary:
-    assert seen == ['hermes_bootstrap']
+    assert seen == ['vael_bootstrap']
     print('bootstrap-before-app')
 else:
     raise AssertionError('entrypoint never reached the application import boundary')
@@ -241,7 +241,7 @@ def test_library_imports_of_dual_use_entry_modules_stay_side_effect_free(tmp_pat
         before = dict(os.environ)
         import agent.auxiliary_client, gateway.relay, tui_gateway.compute_host  # noqa: F401
         changed = sorted(k for k in before.keys() | os.environ.keys() if before.get(k) != os.environ.get(k))
-        print(json.dumps({"bootstrapped": "hermes_bootstrap" in sys.modules, "changed": changed}))
+        print(json.dumps({"bootstrapped": "vael_bootstrap" in sys.modules, "changed": changed}))
     """)
     repo = Path(__file__).resolve().parents[1]
     env = {k: os.environ[k] for k in ("PATH", "SYSTEMROOT", "WINDIR") if k in os.environ}
@@ -272,13 +272,13 @@ class PrePMEditableFinder(MetaPathFinder):
             pkg = os.path.join(root, 'hermes_cli')
             return importlib.util.spec_from_file_location(
                 name, os.path.join(pkg, '__init__.py'), submodule_search_locations=[pkg])
-        if name == 'hermes_bootstrap':
-            return importlib.util.spec_from_file_location(name, os.path.join(root, 'hermes_bootstrap.py'))
+        if name == 'vael_bootstrap':
+            return importlib.util.spec_from_file_location(name, os.path.join(root, 'vael_bootstrap.py'))
         return None
 sys.meta_path.append(PrePMEditableFinder())
 sys.argv = ['hermes', 'pm', 'repair']
 import hermes_cli
-import hermes_bootstrap
+import vael_bootstrap
 assert hermes_bootstrap._pm_repair is True
 print('reached-pm')
 """
@@ -309,7 +309,7 @@ def test_entrypoint_tolerates_only_an_absent_bootstrap(tmp_path, path, bootstrap
     fake_root = tmp_path / "root"
     fake_root.mkdir()
     if bootstrap is not None:
-        (fake_root / "hermes_bootstrap.py").write_text(bootstrap)
+        (fake_root / "vael_bootstrap.py").write_text(bootstrap)
     program = r"""
 import builtins, runpy, sys
 fake_root, entry = sys.argv[1:]
@@ -317,7 +317,7 @@ sys.path.insert(0, fake_root)
 real_import = builtins.__import__
 class Boundary(BaseException): pass
 def guarded(name, globals=None, locals=None, fromlist=(), level=0):
-    if globals and globals.get('__file__') == entry and name not in ('__future__', 'hermes_bootstrap'):
+    if globals and globals.get('__file__') == entry and name not in ('__future__', 'vael_bootstrap'):
         raise Boundary()
     return real_import(name, globals, locals, fromlist, level)
 builtins.__import__ = guarded
@@ -410,7 +410,7 @@ class TestEnableWindowsVt:
             import ctypes, msvcrt, sys
             from ctypes import wintypes
             sys.path.insert(0, sys.argv[1])
-            import hermes_bootstrap
+            import vael_bootstrap
             kernel32 = ctypes.WinDLL("kernel32")
             handle = msvcrt.get_osfhandle(sys.stdout.fileno())
             mode = wintypes.DWORD()
@@ -435,7 +435,7 @@ class TestEnableWindowsVt:
     def test_leaves_non_console_handles_and_colour_alone(self, tmp_path, monkeypatch):
         # Redirected output must neither fail nor flip Hermes to NO_COLOR.
         monkeypatch.delenv("NO_COLOR", raising=False)
-        import hermes_bootstrap
+        import vael_bootstrap
 
         with open(tmp_path / "out.txt", "w", encoding="utf-8") as stream:
             assert hermes_bootstrap.enable_windows_vt([stream]) is True

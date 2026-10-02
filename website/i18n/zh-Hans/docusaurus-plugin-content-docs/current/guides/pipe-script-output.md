@@ -6,7 +6,7 @@ description: "使用 `hermes send` 将任意 shell 脚本、cron 任务、CI hoo
 
 # 将脚本输出推送到消息平台
 
-`hermes send` 是一个轻量、可脚本化的 CLI，能将消息推送到 Hermes 已配置的任意消息平台。可以把它理解为跨平台的通知专用 `curl`——无需运行中的 gateway，无需 LLM，也无需在每个脚本里重复粘贴 bot token。
+`hermes send` 是一个轻量、可脚本化的 CLI，能将消息推送到 VAEL 已配置的任意消息平台。可以把它理解为跨平台的通知专用 `curl`——无需运行中的 gateway，无需 LLM，也无需在每个脚本里重复粘贴 bot token。
 
 适用场景：
 
@@ -70,7 +70,7 @@ hermes send --list telegram
 | `platform:#channel` | `discord:#ops` | 易读的频道名称（通过频道目录解析） |
 | `platform:+E164` | `signal:+15551234567` | 以电话号码寻址的平台：Signal、SMS、WhatsApp |
 
-Hermes 附带适配器的所有平台均可作为目标：
+VAEL 附带适配器的所有平台均可作为目标：
 `telegram`、`discord`、`slack`、`signal`、`sms`、`whatsapp`、`matrix`、
 `mattermost`、`feishu`、`dingtalk`、`wecom`、`weixin`、`email` 等。
 
@@ -94,7 +94,7 @@ Hermes 附带适配器的所有平台均可作为目标：
 2. **`--file PATH`** — `hermes send --to telegram --file msg.txt`
 3. **管道 stdin** — `echo hi | hermes send --to telegram`
 
-当 stdin 是 TTY（无管道）时，Hermes **不会**等待输入——你会收到明确的用法错误提示。这可以防止脚本在意外省略消息体时挂起。
+当 stdin 是 TTY（无管道）时，VAEL **不会**等待输入——你会收到明确的用法错误提示。这可以防止脚本在意外省略消息体时挂起。
 
 ---
 
@@ -113,7 +113,7 @@ if [ "$ram_pct" -ge 85 ]; then
 fi
 ```
 
-由于 `hermes send` 复用你的 Hermes 配置，同一脚本可在任何安装了 Hermes 的主机上运行——无需手动将 bot token 导出到每台机器的环境变量中。
+由于 `hermes send` 复用你的 VAEL 配置，同一脚本可在任何安装了 VAEL 的主机上运行——无需手动将 bot token 导出到每台机器的环境变量中。
 
 :::tip 不要用 gateway 监控自身
 对于可能在 gateway 本身出现问题时触发的 watchdog（OOM 告警、磁盘满告警），请继续使用最简单的 `curl` 调用，而非 `hermes send`。如果 Python 解释器因机器抖动无法加载，你仍然希望告警能发出去。
@@ -196,7 +196,7 @@ hermes send --list --json
 
 ## 与其他方案的对比
 
-| 方案 | 多平台 | 复用 Hermes 凭据 | 需要 gateway | 最适合 |
+| 方案 | 多平台 | 复用 VAEL 凭据 | 需要 gateway | 最适合 |
 |----------|----------------|---------------------|---------------|----------|
 | `hermes send` | ✅ | ✅ | 否（bot token） | 以下所有场景 |
 | 对各平台直接 `curl` | 各自单独编写 | 手动管理 | 否 | 关键 watchdog |

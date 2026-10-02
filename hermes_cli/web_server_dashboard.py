@@ -8,7 +8,7 @@ import os
 import sys
 import threading
 import time
-import hermes_yaml as yaml
+import vael_yaml as yaml
 from fastapi import Depends, FastAPI, Request
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
@@ -35,7 +35,7 @@ def _layer_hex(palette: Dict[str, Any], key: str, default: str) -> str:
 
 def _render_active_theme_bootstrap_css() -> str:
     """Critical-CSS ``<style>`` shim for the active *user* theme, so the first paint uses the
-    target palette instead of flashing the bundle's default Hermes Teal until
+    target palette instead of flashing the bundle's default VAEL Teal until
     ``ThemeProvider.applyTheme()`` runs. Built-in themes return "" (the bundle owns them).
 
     Variable names MUST match what the bundle consumes (``layerVars()`` /
@@ -85,8 +85,8 @@ def _render_active_theme_bootstrap_css() -> str:
 _IMMUTABLE_ASSET_CACHE_CONTROL = "public, max-age=31536000, immutable"
 _NO_STORE = {"Cache-Control": "no-store, no-cache, must-revalidate"}
 _HEADLESS_MSG = (
-    "Headless backend (hermes serve): web UI disabled — use "
-    "`hermes dashboard` for the browser UI."
+    "Headless backend (vael serve): web UI disabled — use "
+    "`vael dashboard` for the browser UI."
 )
 
 
@@ -105,7 +105,7 @@ def mount_spa(application: FastAPI):
     from hermes_cli.web_server import WEB_DIST, _DASHBOARD_EMBEDDED_CHAT_ENABLED, app
     from hermes_cli.web_deps import _server
 
-    # `hermes serve` is the headless backend: it must NEVER serve the browser SPA, even if a
+    # `vael serve` is the headless backend: it must NEVER serve the browser SPA, even if a
     # dist is lying around, so only the JSON-RPC/WS/API surface is reachable.
     if os.environ.get("HERMES_SERVE_HEADLESS") == "1":
 
@@ -113,7 +113,7 @@ def mount_spa(application: FastAPI):
         async def no_frontend(full_path: str):
             # Desktop token handshake: the Electron shell boots by fetching `/` and reading
             # ``window.__HERMES_SESSION_TOKEN__`` for /api/ws auth. When headless 404'd every
-            # path, a renderer whose spawn token no longer matched (e.g. after `hermes update`)
+            # path, a renderer whose spawn token no longer matched (e.g. after `vael update`)
             # white-screened. Serve a token-only page at the exact root, but ONLY when the auth
             # gate is off: on a gated serve the token must never be readable without auth.
             # See #94227, #95575.
@@ -129,7 +129,7 @@ def mount_spa(application: FastAPI):
             return JSONResponse({"error": _HEADLESS_MSG}, status_code=404)
         return
 
-    # A missing WEB_DIST is deliberately NOT a mount-time terminal state (#82614): a long-lived `hermes
+    # A missing WEB_DIST is deliberately NOT a mount-time terminal state (#82614): a long-lived `vael
     # dashboard --skip-build` process that survives a `git pull` (or starts before the first build) used to
     # install a permanent no_frontend catch-all here and could never recover — every route answered 404
     # "Frontend not built" until the process was restarted, even after `npm run build` completed. The SPA
@@ -239,8 +239,8 @@ def mount_spa(application: FastAPI):
 
 # Built-in themes — label + description only; colors live in web/src/themes/presets.ts.
 _BUILTIN_DASHBOARD_THEMES = [
-    {"name": "default",       "label": "Hermes Teal",         "description": "Classic dark teal — the canonical Hermes look"},
-    {"name": "default-large", "label": "Hermes Teal (Large)", "description": "Hermes Teal with bigger fonts and roomier spacing"},
+    {"name": "default",       "label": "VAEL Teal",         "description": "Classic dark teal — the canonical VAEL look"},
+    {"name": "default-large", "label": "VAEL Teal (Large)", "description": "VAEL Teal with bigger fonts and roomier spacing"},
     {"name": "nous-blue",     "label": "Nous Blue",           "description": "Light mode — vivid Nous-blue accents on cream canvas"},
     {"name": "midnight",      "label": "Midnight",            "description": "Deep blue-violet with cool accents"},
     {"name": "ember",     "label": "Ember",          "description": "Warm crimson and bronze — forge vibes"},
@@ -467,13 +467,13 @@ def _dashboard_plugin_search_dirs() -> List[tuple]:
     User dashboard plugins are a dashboard-owned asset (like theme YAML): resolved from the
     process launch home so they don't vanish when a request is scoped to another profile.
     When the process itself is profile-scoped (``HERMES_HOME=<root>/profiles/<name>``) the
-    launch home has no ``plugins/`` — user plugins live in the hermes root — so the default
+    launch home has no ``plugins/`` — user plugins live in the vael root — so the default
     root is scanned too; profile-local plugins stay authoritative over same-named root ones.
     The project source is gated on shared truthy semantics (``1``/``true``/``yes``/``on``):
     a bare non-empty check let ``=0``/``=false`` silently enable it (GHSA-5qr3-c538-wm9j).
     """
     from hermes_cli.plugins import get_bundled_plugins_dir
-    from hermes_constants import get_default_hermes_root
+    from vael_constants import get_default_hermes_root
 
     bundled_root = get_bundled_plugins_dir()
     # User dashboard plugins are a dashboard-owned asset (same category as theme YAML): resolve them from
@@ -481,7 +481,7 @@ def _dashboard_plugin_search_dirs() -> List[tuple]:
     # context-local HERMES_HOME override (e.g. embedded /chat under --open-profile). #87197: when the
     # process itself is profile-scoped (``--profile <name>`` sets ``HERMES_HOME=<root>/profiles/<name>``),
     # the launch home is the profile directory, which has no ``plugins/`` — user plugins are installed in
-    # the hermes root (``~/.hermes/plugins``). Scan the default root as well (``get_default_hermes_root()``
+    # the vael root (``~/.hermes/plugins``). Scan the default root as well (``get_default_hermes_root()``
     # unwraps ``<root>/profiles/<name>`` → ``<root>`` and returns a custom ``HERMES_HOME`` unchanged when it
     # *is* the root), mirroring how ``hermes_cli.plugins`` resolves plugin install locations. The
     # ``seen_names`` dedupe below keeps profile-local plugins (if any) authoritative over same-named root
@@ -645,7 +645,7 @@ def _plugin_auth_hint(name: str, provides_tools: list) -> tuple:
             if cached_result is None:
                 _schedule_check_fn_probe(entry.check_fn)
             elif cached_result is False:
-                return True, f"hermes auth {name}"
+                return True, f"vael auth {name}"
     except Exception:
         pass
     return False, ""
@@ -667,7 +667,7 @@ def _merged_plugins_hub(force_refresh: bool = False) -> Dict[str, Any]:
     from hermes_cli.web_server_memory import _discover_memory_provider_statuses, _normalize_memory_provider_name
     from hermes_cli.web_server import _get_dashboard_plugins
     from hermes_cli.config import get_hermes_home, load_config
-    from hermes_constants import hermes_home_key
+    from vael_constants import hermes_home_key
 
     cache_key = hermes_home_key(get_hermes_home())
     now = time.monotonic()
@@ -706,7 +706,7 @@ def _merged_plugins_hub(force_refresh: bool = False) -> Dict[str, Any]:
     active = _category_active_names()
 
     for name, version, description, source, dir_str, key in _discover_all_plugins():
-        # Same verdict as `hermes plugins list` / the TUI hub: name+key aliases for the lists, bundled
+        # Same verdict as `vael plugins list` / the TUI hub: name+key aliases for the lists, bundled
         # backends/platforms/providers and the live memory provider count as enabled without a list
         # entry (#73131, #82898).
         runtime_status = _plugin_status(

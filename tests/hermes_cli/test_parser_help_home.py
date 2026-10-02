@@ -13,7 +13,7 @@ import pytest
 
 @pytest.fixture
 def sticky_profile_home(monkeypatch, tmp_path):
-    import hermes_constants
+    import vael_constants
 
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
     monkeypatch.delenv("HERMES_HOME", raising=False)

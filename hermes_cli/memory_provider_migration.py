@@ -4,10 +4,10 @@ A bundled ``plugins/memory/<name>`` that becomes a standalone catalog plugin kee
 name, config section (``memory.<name>``), data directory and tool names, so the migration is only
 "the code now lives under ``HERMES_HOME/plugins/<name>``". Two hooks call :func:`migrate_home`:
 
-* ``hermes update`` — for every profile home that shares the venv (primary; runs where the venv was
+* ``vael update`` — for every profile home that shares the venv (primary; runs where the venv was
   just rebuilt anyway).
 * agent init — when the configured provider cannot be found at all, once per process (Desktop
-  users update through the app and never run ``hermes update`` by hand).
+  users update through the app and never run ``vael update`` by hand).
 
 Both install the catalog entry at its reviewed pin through the normal plugin install path (kill
 list, dependency constraints, enable), never a custom source. Offline or absent from the catalog:
@@ -33,11 +33,11 @@ def configured_provider(home: Path) -> str:
 
 
 def provider_present(name: str, home: Path) -> bool:
-    """True when the provider resolves anywhere Hermes looks for *home* (bundled, that home's user
+    """True when the provider resolves anywhere VAEL looks for *home* (bundled, that home's user
     plugins, entry point). The lookup reads the active home, so it is bound explicitly: the update
     hook walks several profile homes from one process."""
     from plugins.memory import find_provider_dir
-    from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+    from vael_constants import reset_hermes_home_override, set_hermes_home_override
     token = set_hermes_home_override(home)
     try:
         return find_provider_dir(name) is not None
@@ -65,7 +65,7 @@ def migrate_home(home: Path, *, install: Callable[[str], dict], say: Callable[[s
         return None
     if catalog_source(name) is None:
         say(f"  ⚠ Memory provider '{name}' is configured but not installed and not in the plugin catalog. "
-            f"Install it with `hermes plugins install <source>` or change memory.provider.")
+            f"Install it with `vael plugins install <source>` or change memory.provider.")
         return None
     try:
         result = install(name)
@@ -76,14 +76,14 @@ def migrate_home(home: Path, *, install: Callable[[str], dict], say: Callable[[s
             f"(your memory.{name} settings and data are unchanged).")
         return name
     say(f"  ⚠ Memory provider '{name}' moved out of core and could not be installed automatically: "
-        f"{result.get('error') or 'unknown error'}. Run `hermes plugins install {name}`.")
+        f"{result.get('error') or 'unknown error'}. Run `vael plugins install {name}`.")
     return None
 
 
 def _install_into(home: Path) -> Callable[[str], dict]:
     def _install(name: str) -> dict:
         from hermes_cli.plugins_cmd import dashboard_install_plugin
-        from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+        from vael_constants import reset_hermes_home_override, set_hermes_home_override
         token = set_hermes_home_override(home)
         try:
             return dashboard_install_plugin("", force=False, enable=True, catalog_name=name)
@@ -93,7 +93,7 @@ def _install_into(home: Path) -> Callable[[str], dict]:
 
 
 def migrate_all_homes(*, say: Callable[[str], None] = print) -> list[str]:
-    """``hermes update`` hook: every profile home sharing this venv. Returns installed plugin names."""
+    """``vael update`` hook: every profile home sharing this venv. Returns installed plugin names."""
     from pm.plugins_state import dependency_homes
     installed: list[str] = []
     for home in dependency_homes():
@@ -110,7 +110,7 @@ def migrate_all_homes(*, say: Callable[[str], None] = print) -> list[str]:
 def recover_at_startup(name: str) -> bool:
     """Agent-init hook for a configured provider that resolved nowhere. One attempt per process per
     home and name; honours ``security.allow_lazy_installs`` because it installs code. True when installed."""
-    from hermes_constants import get_hermes_home, hermes_home_key
+    from vael_constants import get_hermes_home, hermes_home_key
 
     home = get_hermes_home()
     key = (hermes_home_key(home), name)
@@ -120,6 +120,6 @@ def recover_at_startup(name: str) -> bool:
     from pm.install import lazy_installs_allowed
     if not lazy_installs_allowed():
         logger.warning("Memory provider '%s' is not installed; security.allow_lazy_installs is off — "
-                       "run `hermes plugins install %s`.", name, name)
+                       "run `vael plugins install %s`.", name, name)
         return False
     return migrate_home(home, install=_install_into(home), say=logger.warning) == name

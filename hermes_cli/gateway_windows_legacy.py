@@ -5,7 +5,7 @@ Before task/launcher names carried ``_profile_suffix()``, an install wrote the S
 ``gateway-service\\Hermes_Gateway.{vbs,cmd}``. Every operation in ``gateway_windows`` is keyed on
 ``get_task_name()`` → ``Hermes_Gateway_<suffix>``, so those strays are never queried, rewritten,
 reported or removed: they keep launching a second gateway at logon, never pick up launcher
-fixes, and ``hermes gateway status`` prints ✓ while they do (#116157). This module enumerates
+fixes, and ``vael gateway status`` prints ✓ while they do (#116157). This module enumerates
 them once; ``status`` warns, ``uninstall`` and ``install --force`` remove.
 """
 
@@ -63,13 +63,13 @@ def legacy_launcher_artifacts() -> list[tuple[str, str, Path | str]]:
 
 
 def warn_legacy_launchers() -> bool:
-    """``hermes gateway status``: name every stray so nobody has to do file-mtime archaeology."""
+    """``vael gateway status``: name every stray so nobody has to do file-mtime archaeology."""
     artifacts = legacy_launcher_artifacts()
     for _kind, label, target in artifacts:
         print(f"⚠ {label} still installed: {target}")
     if artifacts:
         print("  These predate per-profile launcher names and also start the gateway at logon.")
-        print("  Remove them with: hermes gateway uninstall   (then: hermes gateway install)")
+        print("  Remove them with: vael gateway uninstall   (then: vael gateway install)")
     return bool(artifacts)
 
 

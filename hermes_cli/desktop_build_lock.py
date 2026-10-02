@@ -9,18 +9,18 @@ from typing import IO
 
 
 class DesktopBuildLock:
-    """Advisory lock held while npm installs and packages Hermes Desktop.
+    """Advisory lock held while npm installs and packages VAEL Desktop.
 
     ``node_modules`` and ``apps/desktop/release`` are checkout-scoped even
-    when two commands use different Hermes profiles.  The lock therefore
-    lives under the profile-common Hermes root and is keyed by the resolved
+    when two commands use different VAEL profiles.  The lock therefore
+    lives under the profile-common VAEL root and is keyed by the resolved
     checkout path.  Keeping it out of the checkout preserves ``--skip-build``
     launches from read-only/prebuilt source trees.  The open handle owns the
     lock, so the OS releases it automatically if a builder crashes.
     """
 
     def __init__(self, project_root: Path) -> None:
-        from hermes_constants import get_default_hermes_root
+        from vael_constants import get_default_hermes_root
 
         resolved = os.path.normcase(str(project_root.resolve(strict=False)))
         checkout_key = hashlib.sha256(resolved.encode("utf-8")).hexdigest()[:24]
@@ -52,7 +52,7 @@ class DesktopBuildLock:
         # Blocking mode queues behind the holder; say so instead of appearing
         # to hang with no output (the update path would rather wait for the
         # in-flight build it depends on than fail the update).
-        print("→ Waiting for another Hermes desktop dependency install or build to finish...")
+        print("→ Waiting for another VAEL desktop dependency install or build to finish...")
         print(f"  Lock: {self.path}")
         from gateway.status import _release_file_lock
 

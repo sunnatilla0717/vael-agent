@@ -7,7 +7,7 @@ sidebar_position: 6
 
 # Image Generation
 
-Hermes Agent generates images from text prompts via FAL.ai. Eleven models are supported out of the box, each with different speed, quality, and cost tradeoffs. The active model is user-configurable via `hermes tools` and persists in `config.yaml`.
+VAEL Agent generates images from text prompts via FAL.ai. Eleven models are supported out of the box, each with different speed, quality, and cost tradeoffs. The active model is user-configurable via `hermes tools` and persists in `config.yaml`.
 
 ## Supported Models
 
@@ -71,7 +71,7 @@ image_gen:
 
 `image_gen.provider` is the single selection key: `nous` routes through the managed Tool Gateway; a vendor name (`fal`, `openai`, `xai`, `krea`, ...) goes direct with your own key. The runtime always follows this stored selection — a `FAL_KEY` in `.env` is ignored while `provider: nous`, and `provider: fal` without `FAL_KEY` errors with `image_gen is configured to use fal (set via hermes tools), but FAL_KEY is not set. Run 'hermes tools' to change it.` rather than silently rerouting. Change providers via `hermes tools`, not by adding/removing keys. (The old `use_gateway` boolean is legacy — still read as `nous` when `true`, but never written anymore.)
 
-`max_parallel_requests` defaults to `4`. Hermes clamps it to at least one and
+`max_parallel_requests` defaults to `4`. VAEL clamps it to at least one and
 to the global tool-worker limit, so image providers receive bounded parallel
 requests without allowing an image batch to bypass the agent's concurrency cap.
 
@@ -83,7 +83,7 @@ entire live image catalog — the dedicated
 models (Seedream, FLUX.2, Recraft, Qwen Image, MAI, Krea, Riverflow, Grok
 Imagine, and more — 40+ ids) merged with the chat-completions image models.
 The catalog is fetched live from `GET /images/models` and `GET /models`, so
-new models appear in the picker as soon as OpenRouter serves them; no Hermes
+new models appear in the picker as soon as OpenRouter serves them; no VAEL
 update needed. Generation routes each model to the surface that serves it
 (dedicated `POST /images/generations` vs chat-completions) automatically.
 Nous Portal proxies the chat-completions protocol only, so its picker offers
@@ -145,7 +145,7 @@ hermes config set image_gen.model openai/gpt-image-2.5/flare/text-to-image
 
 Providing `image_url` or reference images automatically selects the corresponding
 `openai/gpt-image-2.5/flare/edit` or `openai/gpt-image-2.5/sunburst/edit` endpoint.
-Both accept up to 16 source images. Hermes pins quality to `medium`, matching its
+Both accept up to 16 source images. VAEL pins quality to `medium`, matching its
 existing FAL GPT Image policy rather than FAL's higher-cost `high` default.
 Landscape and portrait use 4:3 presets to satisfy the minimum pixel count;
 square uses `square_hd`. Upscaling remains off unless requested.
@@ -207,7 +207,7 @@ image_gen:
 Only the variable *name* is stored in `config.yaml`; the secret stays in `.env`
 or the process environment. Availability checks and
 generation use the same resolution, so a configured `key_env` is enough — no
-`OPENAI_API_KEY` is required. Requests go through Hermes' own HTTP client, which
+`OPENAI_API_KEY` is required. Requests go through VAEL's own HTTP client, which
 honours `HTTP(S)_PROXY`/`NO_PROXY` but ignores macOS system proxies (whose
 exception list is invisible to Python), so `localhost` endpoints connect directly.
 The `OpenAI-Project` header is sent blank on image requests: an `OPENAI_PROJECT_ID`
@@ -302,7 +302,7 @@ edit-capable model.
 
 :::note OpenAI (Codex auth): the backend decides quality and size
 
-Hermes posts straight to the Codex backend's native
+VAEL posts straight to the Codex backend's native
 `images/generations` / `images/edits` endpoints (the same route the official
 Codex client uses), so no chat model is involved and the call does not depend
 on which chat models your ChatGPT plan currently has. The backend, however,
@@ -404,5 +404,5 @@ Debug logs go to `./logs/image_tools_debug_<session_id>.json` with per-call deta
 
 - **Requires credentials** for the active backend (FAL `FAL_KEY` / Nous Subscription, `OPENAI_API_KEY`, xAI OAuth, `KREA_API_KEY`)
 - **Editing is model-dependent** — image-to-image works only on edit-capable models (see the table above); text-to-image-only models reject image inputs with a clear error
-- **Temporary URLs** — backends return hosted URLs that expire after hours/days; Hermes materializes them to the local cache so delivery still works after expiry
+- **Temporary URLs** — backends return hosted URLs that expire after hours/days; VAEL materializes them to the local cache so delivery still works after expiry
 - **Per-model constraints** — some models don't support `seed`, `num_inference_steps`, etc. The `supports` / `edit_supports` filter silently drops unsupported params; this is expected behavior

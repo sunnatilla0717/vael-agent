@@ -1,15 +1,15 @@
 ---
 sidebar_position: 1
 title: "CLI 界面"
-description: "掌握 Hermes Agent 终端界面——命令、快捷键、人格设定等"
+description: "掌握 VAEL Agent 终端界面——命令、快捷键、人格设定等"
 ---
 
 # CLI 界面
 
-Hermes Agent 的 CLI 是一个完整的终端用户界面（TUI），而非 Web UI。它支持多行编辑、斜杠命令自动补全、对话历史、中断并重定向，以及流式工具输出。专为常驻终端的用户而生。
+VAEL Agent 的 CLI 是一个完整的终端用户界面（TUI），而非 Web UI。它支持多行编辑、斜杠命令自动补全、对话历史、中断并重定向，以及流式工具输出。专为常驻终端的用户而生。
 
 :::tip
-Hermes 还提供了一个现代 TUI，支持模态覆盖层、鼠标选择和非阻塞输入。使用 `hermes --tui` 启动——参见 [TUI](tui.md) 指南。
+VAEL 还提供了一个现代 TUI，支持模态覆盖层、鼠标选择和非阻塞输入。使用 `hermes --tui` 启动——参见 [TUI](tui.md) 指南。
 :::
 
 ## 运行 CLI
@@ -49,8 +49,8 @@ hermes -w -z "Fix issue #123"     # 在 worktree 中以单次查询模式运行
 
 ## 界面布局
 
-<img className="docs-terminal-figure" src="/img/docs/cli-layout.svg" alt="Hermes CLI 布局的风格化预览，展示了横幅、对话区域和固定输入提示符。" />
-<p className="docs-figure-caption">Hermes CLI 横幅、对话流和固定输入提示符，以稳定的文档图示形式呈现，而非脆弱的文字艺术。</p>
+<img className="docs-terminal-figure" src="/img/docs/cli-layout.svg" alt="VAEL CLI 布局的风格化预览，展示了横幅、对话区域和固定输入提示符。" />
+<p className="docs-figure-caption">VAEL CLI 横幅、对话流和固定输入提示符，以稳定的文档图示形式呈现，而非脆弱的文字艺术。</p>
 
 欢迎横幅一目了然地显示当前模型、终端后端、工作目录、可用工具和已安装的 skill。
 
@@ -105,7 +105,7 @@ hermes -w -z "Fix issue #123"     # 在 worktree 中以单次查询模式运行
 | `F6` | 打开全屏实时子智能体监视器，保留输入草稿。方向键选择，`Enter` 查看近期日志，`s` 引导，`x` 请求停止并确认。 |
 | `F7` | 将实时子智能体栏切换为单行摘要或恢复多行预览，不改变输入焦点。 |
 | `Ctrl+D` | 退出 |
-| `Ctrl+Z` | 将 Hermes 挂起到后台（仅 Unix）。在 shell 中运行 `fg` 恢复。 |
+| `Ctrl+Z` | 将 VAEL 挂起到后台（仅 Unix）。在 shell 中运行 `fg` 恢复。 |
 | `Tab` | 接受自动建议（ghost text）或自动补全斜杠命令 |
 
 **多行粘贴预览。** 粘贴多行内容时，CLI 会显示一行简洁的单行预览（`[pasted: 47 lines, 1,842 chars — press Enter to send]`），而非将全部内容倾倒到滚动缓冲区。实际发送的仍是完整内容；这只是显示上的优化。
@@ -114,7 +114,7 @@ hermes -w -z "Fix issue #123"     # 在 worktree 中以单次查询模式运行
 
 ## 斜杠命令
 
-输入 `/` 查看自动补全下拉菜单。Hermes 支持大量 CLI 斜杠命令、动态 skill 命令和用户自定义快捷命令。
+输入 `/` 查看自动补全下拉菜单。VAEL 支持大量 CLI 斜杠命令、动态 skill 命令和用户自定义快捷命令。
 
 常用示例：
 
@@ -128,7 +128,7 @@ hermes -w -z "Fix issue #123"     # 在 worktree 中以单次查询模式运行
 | `/btw <question>` | 在不打断当前对话的情况下，就当前对话提出顺带问题 |
 | `/skin` | 显示或切换当前 CLI 皮肤 |
 | `/voice on` | 启用 CLI 语音模式（按 `Ctrl+B` 录音） |
-| `/voice tts` | 切换 Hermes 回复的语音播放 |
+| `/voice tts` | 切换 VAEL 回复的语音播放 |
 | `/reasoning high` | 提高推理强度 |
 | `/title My Session` | 为当前会话命名 |
 | `/status` | 显示会话信息——模型/配置/token/时长——以及本地**会话摘要**块（近期轮次数、常用工具、涉及文件、最新用户 prompt + 助手回复）。纯本地计算，不调用 LLM。 |
@@ -171,7 +171,7 @@ hermes -s hermes-agent-dev,github-auth
 hermes chat -s github-pr-workflow -s github-auth
 ```
 
-Hermes 会在第一轮对话前将每个指定的 skill 加载到会话 prompt 中。该标志在交互模式和单次查询模式下均有效。
+VAEL 会在第一轮对话前将每个指定的 skill 加载到会话 prompt 中。该标志在交互模式和单次查询模式下均有效。
 
 ## Skill 斜杠命令
 
@@ -229,7 +229,7 @@ personalities:
 
 ### Shift+Enter 兼容性
 
-大多数终端默认对 `Enter` 和 `Shift+Enter` 发送相同的字节序列，因此应用程序无法区分它们。Hermes 仅在终端通过 [Kitty 键盘协议](https://sw.kovidgoyal.net/kitty/keyboard-protocol/)或 xterm 的 `modifyOtherKeys` 模式发送不同序列时才能识别 `Shift+Enter`。
+大多数终端默认对 `Enter` 和 `Shift+Enter` 发送相同的字节序列，因此应用程序无法区分它们。VAEL 仅在终端通过 [Kitty 键盘协议](https://sw.kovidgoyal.net/kitty/keyboard-protocol/)或 xterm 的 `modifyOtherKeys` 模式发送不同序列时才能识别 `Shift+Enter`。
 
 | 终端 | 状态 |
 |---|---|
@@ -238,7 +238,7 @@ personalities:
 | Windows Terminal Preview 1.25+ | 在设置中启用 Kitty 协议后支持 |
 | macOS Terminal.app、Windows Terminal 稳定版 | 不支持——`Shift+Enter` 与 `Enter` 无法区分 |
 
-当终端无法区分时，`Alt+Enter` 和 `Ctrl+J` 在所有终端中均可正常使用。**特别是在 Windows Terminal 中，`Alt+Enter` 被终端捕获（切换全屏），永远不会传递给 Hermes——请直接使用 `Ctrl+Enter`（传递为 `Ctrl+J`）或 `Ctrl+J` 来换行。**
+当终端无法区分时，`Alt+Enter` 和 `Ctrl+J` 在所有终端中均可正常使用。**特别是在 Windows Terminal 中，`Alt+Enter` 被终端捕获（切换全屏），永远不会传递给 VAEL——请直接使用 `Ctrl+Enter`（传递为 `Ctrl+J`）或 `Ctrl+J` 来换行。**
 
 ## 中断 Agent
 
@@ -279,12 +279,12 @@ display:
 ```
 
 :::tip 首次提示
-第一次在 Hermes 工作时按下 Enter，Hermes 会打印一行提示，说明 `/busy` 选项（`"(tip) Your message interrupted the current run…"`）。每次安装只触发一次——`config.yaml` 中 `onboarding.seen.busy_input_prompt` 下的标志会锁定它。删除该键可再次看到提示。
+第一次在 VAEL 工作时按下 Enter，VAEL 会打印一行提示，说明 `/busy` 选项（`"(tip) Your message interrupted the current run…"`）。每次安装只触发一次——`config.yaml` 中 `onboarding.seen.busy_input_prompt` 下的标志会锁定它。删除该键可再次看到提示。
 :::
 
 ### 挂起到后台
 
-在 Unix 系统上，按 **`Ctrl+Z`** 将 Hermes 挂起到后台——与任何终端进程一样。shell 会打印确认信息：
+在 Unix 系统上，按 **`Ctrl+Z`** 将 VAEL 挂起到后台——与任何终端进程一样。shell 会打印确认信息：
 
 ```
 Hermes Agent has been suspended. Run `fg` to bring Hermes Agent back.
@@ -356,7 +356,7 @@ hermes -r 20260225_143052_a1b2c3           # 简写形式
 
 ### 会话存储
 
-CLI 会话存储在 Hermes 的 SQLite 状态数据库 `~/.hermes/state.db` 中。数据库保存：
+CLI 会话存储在 VAEL 的 SQLite 状态数据库 `~/.hermes/state.db` 中。数据库保存：
 
 - 会话元数据（ID、标题、时间戳、token 计数器）
 - 消息历史
@@ -391,7 +391,7 @@ auxiliary:
 /bg Analyze the logs in /var/log and summarize any errors from today
 ```
 
-Hermes 立即确认任务并将提示符还给你：
+VAEL 立即确认任务并将提示符还给你：
 
 ```
 🔄 Background task #1 started: "Analyze the logs in /var/log and summarize..."

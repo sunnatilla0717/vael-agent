@@ -21,7 +21,7 @@ from hermes_cli.cli_render import (
     _set_paint_gate,
     _take_suspect_rows,
 )
-from hermes_constants import get_hermes_home
+from vael_constants import get_hermes_home
 
 
 # A replay ``fit`` with no room: nothing is replayed.

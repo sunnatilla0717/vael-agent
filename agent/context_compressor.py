@@ -1978,7 +1978,7 @@ def _today_for_prompt() -> str:
         # via hermes_time.now(). The compaction summary is a mid-conversation message that is NOT part of
         # the cached prefix, so a date here never affects prompt-cache stability. Resolved defensively — a
         # clock failure must never block compaction.
-        from hermes_time import now as _hermes_now
+        from vael_time import now as _hermes_now
         return _hermes_now().strftime("%Y-%m-%d")
     except Exception:  # pragma: no cover - clock resolution is best-effort
         return ""
@@ -4428,7 +4428,7 @@ Write only the summary body. Do not include any preamble or prefix."""
             if not text:
                 continue
             text = re.sub(r"\s+", " ", text)
-            # Elide AFTER repr: repr would escape the marker's "Hermes's" and hide a copy from the
+            # Elide AFTER repr: repr would escape the marker's "VAEL's" and hide a copy from the
             # guard. Text within the cap stays whole (the split-turn path relies on that).
             text = repr(text) if len(text) <= _ACTIVE_TASK_MAX_CHARS else elide(repr(text), _ACTIVE_TASK_MAX_CHARS)
             return (

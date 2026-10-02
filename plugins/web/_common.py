@@ -230,7 +230,7 @@ class BaseWebSearchProvider(WebSearchProvider):
 
 
 def setup_schema(name: str, badge: str, tag: str, key_env: str = "", prompt: str = "", url: str = "", **extra: Any) -> Dict[str, Any]:
-    """``hermes tools`` picker entry; ``env_vars`` is empty when ``key_env`` is blank."""
+    """``vael tools`` picker entry; ``env_vars`` is empty when ``key_env`` is blank."""
     env_vars = [{"key": key_env, "prompt": prompt, "url": url}] if key_env else []
     return {"name": name, "badge": badge, "tag": tag, "env_vars": env_vars, **extra}
 

@@ -199,7 +199,7 @@ class OpenAICompatibleVideoGenProvider(VideoGenProvider):
             import openai
         except ImportError:
             return error_response(
-                error="openai Python package not installed. Run: hermes pm repair",
+                error="openai Python package not installed. Run: vael pm repair",
                 error_type="missing_dependency", provider=self.name,
             )
 

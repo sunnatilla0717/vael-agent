@@ -16,7 +16,7 @@ from pathlib import Path
 
 import pytest
 
-from hermes_state import SessionDB
+from vael_state import SessionDB
 from tests.hermes_state._wal_generation_harness import make_db, pin_wal, require_wal
 
 pytestmark = pytest.mark.platforms("linux")

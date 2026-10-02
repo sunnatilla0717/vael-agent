@@ -58,14 +58,14 @@ def detect_service_manager() -> ServiceManagerKind:
     This function does NOT replace ``supports_systemd_services()`` —
     host call sites continue to use that. It exists for new backend-
     agnostic code (profile create/delete hooks, the s6 dispatch path
-    in ``hermes gateway start/stop/restart``).
+    in ``vael gateway start/stop/restart``).
     """
     # Deferred so importing this module (Protocol type, validate_profile_name) doesn't drag in
     # the whole gateway dependency graph.
     from hermes_cli.gateway import is_macos, is_windows, supports_systemd_services
     # Gate on _s6_running() alone, NOT is_container(): the latter only detects Docker/Podman/lxc
     # and is False on Fly's Firecracker microVMs even though s6-overlay is PID 1 there — that
-    # made the s6 dispatch inert on Fly, so `hermes gateway start` spawned a foreground gateway
+    # made the s6 dispatch inert on Fly, so `vael gateway start` spawned a foreground gateway
     # competing with the supervised one.
     if _s6_running():
         return "s6"
@@ -81,15 +81,15 @@ def detect_service_manager() -> ServiceManagerKind:
 def _s6_running() -> bool:
     """True when s6-svscan is PID 1 in this container.
 
-    Must work for the unprivileged hermes user too: ``/proc/1/exe`` is unreadable for other UIDs
+    Must work for the unprivileged vael user too: ``/proc/1/exe`` is unreadable for other UIDs
     (``resolve()`` silently yields the literal ``exe``), which made runtime registration inert in
     production. Probe the world-readable ``/proc/1/comm`` AND ``/run/s6/basedir`` — either alone
     can false-positive.
 
     The obvious probe — ``Path('/proc/1/exe').resolve()`` — only works as root: for any other UID, the
     symlink at ``/proc/1/exe`` is unreadable and ``resolve()`` silently returns the path unchanged, so the
-    resolved name is the literal ``"exe"`` and detection always fails. Since every Hermes runtime call
-    inside the container drops to hermes via ``s6-setuidgid``, that silent failure made the entire
+    resolved name is the literal ``"exe"`` and detection always fails. Since every VAEL runtime call
+    inside the container drops to vael via ``s6-setuidgid``, that silent failure made the entire
     service-manager runtime-registration path inert in production (PR #30136 review).
     """
     try:
@@ -102,7 +102,7 @@ def _s6_running() -> bool:
 # ---------------------------------------------------------------------------
 # Host backends: thin facades over ``hermes_cli.gateway`` (systemd/launchd) and
 # ``hermes_cli.gateway_windows``. The protocol's ``name`` parameter is unused here — host backends
-# operate on the currently active profile (``hermes -p <profile>``); the shape exists for s6 where
+# operate on the currently active profile (``vael -p <profile>``); the shape exists for s6 where
 # each profile maps to a distinct service directory.
 # ---------------------------------------------------------------------------
 
@@ -218,7 +218,7 @@ def get_service_manager() -> ServiceManager:
 
 # ---------------------------------------------------------------------------
 # S6ServiceManager (container-only). Per-profile gateways are registered dynamically by
-# `hermes profile create` inside the container. Static services (main-hermes, dashboard) live in
+# `vael profile create` inside the container. Static services (main-hermes, dashboard) live in
 # /etc/s6-overlay/s6-rc.d/ as part of the image and are NOT managed here.
 # ---------------------------------------------------------------------------
 
@@ -275,7 +275,7 @@ def _write_gateway_desired_state(name: str, desired_state: str) -> None:
 def register_unregistered_profile_gateway(mgr: ServiceManager, profile: str) -> bool:
     """Register a ``down`` s6 slot for a profile whose directory exists but was never registered.
 
-    `hermes profile create` can only register a slot when it runs inside the container; created
+    `vael profile create` can only register a slot when it runs inside the container; created
     from the host against a bind-mounted home, the directory lands where the container reads it
     but no ``/run/service/gateway-<name>`` exists, and the boot reconciler only notices on the
     next container restart. Returns False without touching anything unless the directory carries
@@ -306,7 +306,7 @@ def _s6_run(cmd: str, *args: str, timeout: float = 5, check: bool = False):
     )
 
 
-# UID/GID of the in-image ``hermes`` user; hardcoded to match what ``stage2-hook.sh`` enforces
+# UID/GID of the in-image ``vael`` user; hardcoded to match what ``stage2-hook.sh`` enforces
 # (tests/docker/test_uid_remap.py). s6-supervise starts as root and drops via ``s6-setuidgid``.
 _HERMES_UID = 10000
 _HERMES_GID = 10000
@@ -316,7 +316,7 @@ def _chown_hermes(path: Path) -> None:
     try:
         os.chown(path, _HERMES_UID, _HERMES_GID)
     except PermissionError:
-        # Already running as hermes → the dir is hermes-owned by default; swallowing keeps root
+        # Already running as vael → the dir is hermes-owned by default; swallowing keeps root
         # and unprivileged callers on one code path.
         pass
 
@@ -325,14 +325,14 @@ def _seed_supervise_skeleton(svc_dir: Path) -> None:
     """Pre-create hermes-owned ``supervise/`` and top-level ``event/`` inside a service directory.
 
     s6-supervise (root) creates ``event/``/``supervise/`` 0700 and the control FIFO 0600, so the
-    hermes user gets EACCES on every ``s6-svc``/``s6-svstat``. s6 treats EEXIST as success and skips
+    vael user gets EACCES on every ``s6-svc``/``s6-svstat``. s6 treats EEXIST as success and skips
     its chown/chmod fix-up, so seeding before ``s6-svscanctl -a`` makes s6-supervise inherit our
     ownership. ``log/`` gets the same skeleton (its own supervise instance) or unregister teardown
     EACCESes on the logger. Idempotent: existing entries (possibly live FIFOs) are left untouched.
 
     The PR #30136 review surfaced this as a real product gap: the entire S6ServiceManager lifecycle
     (``register/start/stop/unregister _profile_gateway``) was inert in production because every operation is
-    dispatched as the hermes user.
+    dispatched as the vael user.
     Reference --------- Discussed at length on the skarnet `skaware` mailing list in 2020
     (`<http://skarnet.org/lists/skaware/1424.html>`_); see also just-containers/s6-overlay#130. The
     pre-creation pattern was historically called out as forward-compatibility-fragile, but the EEXIST
@@ -385,7 +385,7 @@ class GatewayNotRegisteredError(S6Error):
         self.profile = profile
         super().__init__(
             f"no such gateway {profile!r}: register it with "
-            f"`hermes profile create {profile}` first, or pass "
+            f"`vael profile create {profile}` first, or pass "
             "an existing profile name via `-p <name>`",
             service=f"gateway-{profile}",
         )
@@ -423,7 +423,7 @@ class S6ServiceManager:
         """Run script for a profile-gateway s6 service.
 
         Sources HERMES_HOME via with-contenv (run time, not baked in), resets ``HOME`` before the
-        privilege drop so root's HOME does not leak, activates the venv, drops to hermes.
+        privilege drop so root's HOME does not leak, activates the venv, drops to vael.
         ``profile == "default"`` emits NO ``-p`` flag: it is the sentinel for the root HERMES_HOME
         profile and ``-p default`` would look up ``profiles/default/``. Port comes from the
         profile's own env (``API_SERVER_PORT``, default 8642); two profiles that both leave it
@@ -457,7 +457,7 @@ class S6ServiceManager:
         # hermes_cli.main._apply_profile_override; kept alongside the s6 one for back-compat.
         lines.append("export HERMES_SUPERVISED_CHILD=1")
         # ``--replace`` makes the supervised gateway authoritative for its HERMES_HOME. Without it
-        # a gateway started OUTSIDE s6 (stray ``hermes gateway run``, an agent action, the Open
+        # a gateway started OUTSIDE s6 (stray ``vael gateway run``, an agent action, the Open
         # WebUI helper) grabs the PID lock first; the slot then hits "Another gateway instance is
         # already running", exits non-zero, and s6 restarts it forever — a log-flooding loop that
         # never binds. ``--replace`` reaps the stale holder (marker + SIGTERM→SIGKILL-with-
@@ -465,12 +465,12 @@ class S6ServiceManager:
         # above prevents the run→start→run recursion. s6 guarantees one supervised instance per
         # slot, so there is no legitimate sibling for ``--replace`` to clobber.
         if profile == "default":
-            gateway_cmd = "hermes gateway run --replace"
+            gateway_cmd = "vael gateway run --replace"
         else:
-            gateway_cmd = f"hermes -p {shlex.quote(profile)} gateway run --replace"
+            gateway_cmd = f"vael -p {shlex.quote(profile)} gateway run --replace"
         # Skip the drop when already non-root (setgroups() lacks CAP_SETGID → s6 boot-loop).
         lines.append(f'[ "$(id -u)" = 0 ] || exec {gateway_cmd}')
-        lines.append(f"exec s6-setuidgid hermes {gateway_cmd}")
+        lines.append(f"exec s6-setuidgid vael {gateway_cmd}")
         return "\n".join(lines) + "\n"
 
     @staticmethod
@@ -519,15 +519,15 @@ class S6ServiceManager:
             # Parent logs/gateways is seeded hermes-owned at stage2 boot (test_log_dir_seed.py).
             # See #45258.
             f'if [ "$(id -u)" = 0 ]; then\n'
-            f'  s6-setuidgid hermes mkdir -p "$log_dir"\n'
-            f'  s6-setuidgid hermes rm -f "$log_dir/lock"\n'
+            f'  s6-setuidgid vael mkdir -p "$log_dir"\n'
+            f'  s6-setuidgid vael rm -f "$log_dir/lock"\n'
             f'else\n'
             f'  mkdir -p "$log_dir"\n'
             f'  rm -f "$log_dir/lock"\n'
             f'fi\n'
             # Skip the drop when already non-root (CAP_SETGID).
             f'[ "$(id -u)" = 0 ] || exec s6-log 1 n10 s1000000 T "$log_dir"\n'
-            f'exec s6-setuidgid hermes s6-log 1 n10 s1000000 T "$log_dir"\n'
+            f'exec s6-setuidgid vael s6-log 1 n10 s1000000 T "$log_dir"\n'
         )
 
     # -- lifecycle ---------------------------------------------------------

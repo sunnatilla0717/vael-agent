@@ -6,7 +6,7 @@ author: Hermes Agent + Teknium
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
-  hermes:
+  vael:
     tags: [Research, Citations, Grounding, Sources, Web, Reports]
     category: research
     related_skills: [arxiv, pdf, reddit-reading, rss-feeds, youtube-content]
@@ -142,8 +142,8 @@ with every claim attributed to the platform it came from:
 | X/Twitter | `xurl` (needs API access) | announcements, developer chatter |
 
 The `reddit-reading` and `rss-feeds` skills are optional. If absent, install with
-`hermes skills install official/social-media/reddit-reading` or
-`hermes skills install official/research/rss-feeds` before using them.
+`vael skills install official/social-media/reddit-reading` or
+`vael skills install official/research/rss-feeds` before using them.
 
 Register every URL from every route in the ledger as it arrives (step ②). Keep
 opinion and measurement apart: a Reddit thread is evidence that users *report*

@@ -6,7 +6,7 @@
 #   - Idempotent: detects already-running server and skips re-launch
 #   - Configurable port via --port=N (default 8188)
 #   - Configurable workspace via --workspace=PATH
-#   - Persistent log file in $TMPDIR/comfyui_setup.<pid>.log (Hermes scratch dir) for debugging
+#   - Persistent log file in $TMPDIR/comfyui_setup.<pid>.log (VAEL scratch dir) for debugging
 #   - SIGINT trap cleans up partial state
 #   - Refuses local install when hardware_check.py verdict is "cloud"
 #   - Forwards extra flags to comfy-cli (e.g. --cuda-version=12.4)

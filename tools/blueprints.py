@@ -14,6 +14,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+from agent.skill_utils import skill_metadata_block
+
 logger = logging.getLogger(__name__)
 
 __all__ = ["BlueprintSpec", "parse_blueprint", "blueprint_spec_for_installed", "blueprint_to_job_spec",
@@ -47,7 +49,7 @@ def _split_frontmatter(text: str) -> Optional[Dict[str, Any]]:
     if not stripped.startswith("---") or (end := stripped.find("\n---", 3)) == -1:
         return None
     try:
-        import hermes_yaml as yaml
+        import vael_yaml as yaml
 
         data = yaml.safe_load(stripped[3:end])
     except Exception as e:  # pragma: no cover - malformed YAML
@@ -67,9 +69,7 @@ def parse_blueprint(skill_md_text: str) -> Optional[BlueprintSpec]:
     if not fm:
         return None
 
-    meta = fm.get("metadata")
-    hermes = meta.get("hermes") if isinstance(meta, dict) else None
-    blueprint = hermes.get("blueprint") if isinstance(hermes, dict) else None
+    blueprint = skill_metadata_block(fm).get("blueprint")
     if blueprint is None:
         return None
     if not isinstance(blueprint, dict):
@@ -159,9 +159,9 @@ def register_blueprint_suggestion(spec: BlueprintSpec) -> Optional[Dict[str, Any
 
 def export_blueprint(job: Dict[str, Any], body: str, *, blueprint_name: Optional[str] = None) -> str:
     """Inverse of ``create_blueprint_job``: render a cron job as a SKILL.md (with a
-    ``metadata.hermes.blueprint`` block) ready for ``hermes skills publish``.
+    ``metadata.hermes.blueprint`` block) ready for ``vael skills publish``.
     ``body`` becomes the SKILL.md body; its first line is the description."""
-    import hermes_yaml as yaml
+    import vael_yaml as yaml
 
     # Sanitize to a valid skill identifier.
     name = str(blueprint_name or job.get("name") or "shared-blueprint").lower()
@@ -180,7 +180,7 @@ def export_blueprint(job: Dict[str, Any], body: str, *, blueprint_name: Optional
     frontmatter = {
         "name": name, "description": body.splitlines()[0][:200] if body else "Shared automation blueprint.",
         "version": "1.0.0", "license": "MIT",
-        "metadata": {"hermes": {"tags": ["blueprint", "automation"], "blueprint": block}},
+        "metadata": {"vael": {"tags": ["blueprint", "automation"], "blueprint": block}},
     }
     fm_yaml = yaml.safe_dump(frontmatter, sort_keys=False, allow_unicode=True).strip()
     body_text = body or f"# {name}\n\nShared automation blueprint."

@@ -253,19 +253,19 @@ class TurnExplainersMixin:
         if key is not None:
             body = t(key, model=model or t("explainer.shared.the_model"))
         elif reason == "session_persistence_failed":
-            from hermes_constants import display_hermes_home, profile_cli_selector
-            from hermes_state_errors import STORAGE_RECOVERY_DOCS_URL
+            from vael_constants import display_hermes_home, profile_cli_selector
+            from vael_state_errors import STORAGE_RECOVERY_DOCS_URL
 
-            # Copy-pasteable, so pin every `hermes` command to the profile whose store failed:
+            # Copy-pasteable, so pin every `vael` command to the profile whose store failed:
             # a multi-profile backend (Desktop serve) hosts sessions whose state.db is NOT the
-            # process default, and a bare `hermes` follows active_profile (#105887).
+            # process default, and a bare `vael` follows active_profile (#105887).
             fill: Dict[str, str] = {
                 "home": display_hermes_home(), "profile_arg": profile_cli_selector(),
                 "recovery_docs": STORAGE_RECOVERY_DOCS_URL, "db_path": "", "backups_dir": "",
             }
             if persistence_cause in ("corrupt", "fts_index"):
-                from hermes_constants import get_default_hermes_root
-                from hermes_state import _default_db_path
+                from vael_constants import get_default_hermes_root
+                from vael_state import _default_db_path
 
                 fill["db_path"] = str(db_path or _default_db_path())
                 fill["backups_dir"] = str(get_default_hermes_root() / "backups")

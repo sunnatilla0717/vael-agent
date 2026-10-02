@@ -30,7 +30,7 @@ def test_validate_critical_files_syntax_tolerates_missing_files(tmp_path):
     guard should skip missing files, not falsely flag the install as broken."""
     # Populate everything except hermes_constants.py
     for relpath in update_cmd._UPDATE_CRITICAL_FILES:
-        if relpath == "hermes_constants.py":
+        if relpath == "vael_constants.py":
             continue
         path = tmp_path / relpath
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -50,7 +50,7 @@ def test_pull_rolls_back_broken_critical_file_and_accepts_corrected_retry(tmp_pa
     git("init", "-b", "main")
     git("config", "user.email", "test@example.invalid")
     git("config", "user.name", "Test")
-    source = tmp_path / "hermes_constants.py"
+    source = tmp_path / "vael_constants.py"
     source.write_text("print('runnable')\n", encoding="utf-8")
     git("add", ".")
     git("commit", "-m", "working")

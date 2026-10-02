@@ -178,7 +178,7 @@ def bind_prepared_dispatch(dispatch):
         nonlocal claimed
         with lock:
             if claimed:
-                raise RuntimeError("Hermes tool execution callback invoked more than once")
+                raise RuntimeError("VAEL tool execution callback invoked more than once")
             claimed = True
         return invoke(*args, **kwargs)
 

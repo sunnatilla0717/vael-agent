@@ -2,7 +2,7 @@
 
 Capture via sounddevice, WAV via stdlib wave, STT via tools.transcription_tools,
 playback via sounddevice or system players. Optional deps: the ``audio-io`` / ``stt-whisper``
-extras, installed through PM (``hermes tools`` configures speech-to-text).
+extras, installed through PM (``vael tools`` configures speech-to-text).
 """
 
 import logging
@@ -24,7 +24,7 @@ from typing import Any, Callable, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 
-from hermes_constants import is_termux as _is_termux_environment
+from vael_constants import is_termux as _is_termux_environment
 from hermes_platform.host.runtime import is_wsl
 from tools.voice_mode_transcript import _voice_config, is_voice_stop_phrase, is_whisper_hallucination
 
@@ -308,14 +308,14 @@ def detect_audio_environment() -> dict:
         report("Running over SSH with a reachable PulseAudio/PipeWire sound server",
                "Running over SSH -- no audio devices available.\n"
                "  If a sound server (PulseAudio/PipeWire) is running on this host,\n"
-               "  point Hermes at it, e.g.:\n"
+               "  point VAEL at it, e.g.:\n"
                "    export XDG_RUNTIME_DIR=/run/user/$(id -u)\n"
                "    # or: export PULSE_SERVER=unix:$XDG_RUNTIME_DIR/pulse/native")
 
     # Docker/Podman container detection — honor host audio forwarding. When the user mounts a
     # PulseAudio/PipeWire socket into the container and points PULSE_SERVER / PIPEWIRE_REMOTE at it, audio
     # works fine (issue #21203). Only block when no forwarding is configured.
-    from hermes_constants import is_container
+    from vael_constants import is_container
     if is_container():
         report("Running inside container (Docker/Podman/LXC) with host audio forwarding",
                "Running inside container (Docker/Podman/LXC) -- no audio devices.\n"
@@ -1511,7 +1511,7 @@ def check_voice_requirements() -> Dict[str, Any]:
         else f"Audio capture: MISSING ({_audio_unavailable_reason()})",
         "STT provider: DISABLED in config (stt.enabled: false)" if not stt_enabled
         else f"STT provider: {stt_label}" if stt_label
-        else ("STT provider: MISSING (run `hermes tools` and configure "
+        else ("STT provider: MISSING (run `vael tools` and configure "
               "Speech-to-Text: Local Whisper or a cloud provider)"),
     ]
     details += [f"Environment: {w}" for w in env_check["warnings"]]

@@ -6,7 +6,7 @@ author: 'nateherkai (upstream scroll-craft), ported by Hermes Agent'
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
-  hermes:
+  vael:
     tags: [web-development, landing-page, scrollytelling, animation, design, frontend]
     category: web-development
     homepage: https://github.com/nateherkai/scroll-craft
@@ -227,7 +227,7 @@ build's row to `<workspace>/FINGERPRINTS.md`.
 ## Pitfalls
 
 - `scripts/shoot.mjs` needs Playwright (`npm install playwright` or
-  `playwright-core` plus a Chrome install). Hermes' `browser_exec` tool is the
+  `playwright-core` plus a Chrome install). VAEL's `browser_exec` tool is the
   lighter alternative for scroll-screenshot verification: serve the build,
   scroll in steps, capture screenshots, and inspect them yourself.
 - `scripts/kie.mjs` needs `KIE_AI_API_KEY` and paid credit; prefer

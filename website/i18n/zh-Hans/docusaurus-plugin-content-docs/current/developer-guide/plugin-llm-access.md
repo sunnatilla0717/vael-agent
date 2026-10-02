@@ -67,7 +67,7 @@ if result.parsed["urgency"] > 0.8:
 ## 此模式的优势
 
 * **一次调用，四种形态。** `complete()` 用于对话，`complete_structured()` 用于有类型的 JSON，`acomplete()` 和 `acomplete_structured()` 用于 asyncio。参数相同，结果对象相同。
-* **宿主持有凭据。** OAuth token、刷新流程、凭据池、每任务辅助覆盖——Hermes 已有的所有凭据概念均适用。Plugin 永远看不到 token；宿主通过 `result.audit` 将调用归因回溯。
+* **宿主持有凭据。** OAuth token、刷新流程、凭据池、每任务辅助覆盖——VAEL 已有的所有凭据概念均适用。Plugin 永远看不到 token；宿主通过 `result.audit` 将调用归因回溯。
 * **有界。** 单次同步或异步调用。无流式输出，无工具循环，无需管理对话状态。给定输入，获取结果，返回。
 * **失败关闭信任。** 从未配置过的 plugin 无法自行选择 provider、模型、agent 或存储的凭据。默认行为是"使用用户正在使用的"。运营人员在 `config.yaml` 中按 plugin 逐一选择开启特定覆盖。
 
@@ -268,7 +268,7 @@ auxiliary:
     model: vendor/model-id
 ```
 
-Plugin 可以为自己注册的任务提供 provider/模型注册默认值。运营人员在 `auxiliary.<task>` 中的配置会覆盖这些默认值，并控制部署选择。Plugin 只能使用自己注册的任务；未知或属于其他 plugin 的任务名会在调用 provider 前失败。`allow_task_override: true` 是运营人员显式授予的权限，用于使用 Hermes 内置辅助任务；它不允许使用其他 plugin 的任务。省略 `task=`（或使用 `"auto"`）会继续使用当前主 provider/模型。
+Plugin 可以为自己注册的任务提供 provider/模型注册默认值。运营人员在 `auxiliary.<task>` 中的配置会覆盖这些默认值，并控制部署选择。Plugin 只能使用自己注册的任务；未知或属于其他 plugin 的任务名会在调用 provider 前失败。`allow_task_override: true` 是运营人员显式授予的权限，用于使用 VAEL 内置辅助任务；它不允许使用其他 plugin 的任务。省略 `task=`（或使用 `"auto"`）会继续使用当前主 provider/模型。
 
 ### 结果属性
 
@@ -364,7 +364,7 @@ Plugin id 对于扁平 plugin 是 manifest 中的 `name:` 字段，对于嵌套 
 * **Provider 解析。** 从用户配置中读取 `model.provider` + `model.model`（或在受信任时读取显式覆盖值）。
 * **认证。** 从 `~/.hermes/auth.json` / 环境变量中提取 API 密钥、OAuth token 或刷新 token，包括配置了凭据池时的处理。Plugin 永远看不到这些内容。
 * **视觉路由。** 当提供图像输入而用户当前激活的文本模型仅支持文本时，宿主自动回退到已配置的视觉模型。
-* **回退链。** 若用户主 provider 返回 5xx 或 429，请求在向 plugin 返回错误前会经过 Hermes 常规的聚合器感知回退流程。
+* **回退链。** 若用户主 provider 返回 5xx 或 429，请求在向 plugin 返回错误前会经过 VAEL 常规的聚合器感知回退流程。
 * **超时。** 遵循你的 `timeout=` 参数，回退到 `auxiliary.<task>.timeout` 配置或全局辅助默认值。
 * **JSON 塑形。** 在你请求 JSON 时向 provider 发送 `response_format`，若 provider 返回了代码围栏格式的响应则在本地重新解析。
 * **Schema 验证。** 安装了 `jsonschema` 时对你的 `json_schema` 进行验证；否则记录一行 debug 日志并跳过严格验证。
@@ -379,7 +379,7 @@ Plugin id 对于扁平 plugin 是 manifest 中的 `name:` 字段，对于嵌套 
 
 ## 在 plugin 接口中的定位
 
-现有 `ctx.*` 方法各自扩展一个已有的 Hermes 子系统：
+现有 `ctx.*` 方法各自扩展一个已有的 VAEL 子系统：
 
 | `ctx.register_tool` | 添加 agent 可调用的工具 |
 | `ctx.register_platform` | 接入新的 gateway 适配器 |

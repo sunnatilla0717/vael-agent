@@ -199,8 +199,8 @@ def test_three_turn_tool_conversation(case: LiveCase, live_home: Path, monkeypat
     runtime = _resolve(case.provider, model)
     assert runtime.get("api_key") == secret, f"{case.id}: resolver did not pick the {case.key_env} credential"
 
-    from hermes_constants import parse_reasoning_effort
-    from hermes_state import SessionDB
+    from vael_constants import parse_reasoning_effort
+    from vael_state import SessionDB
     from run_agent import AIAgent
 
     db = SessionDB(live_home / "state.db")

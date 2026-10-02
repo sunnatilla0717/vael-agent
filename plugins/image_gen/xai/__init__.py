@@ -93,7 +93,7 @@ def _fetch_live_models(creds: Optional[Dict[str, Any]] = None) -> Dict[str, Dict
 def _live_models() -> Dict[str, Dict[str, Any]]:
     """Cached live catalog (``{}`` when unreachable)."""
     global _LIVE_CACHE
-    from hermes_constants import get_hermes_home_override
+    from vael_constants import get_hermes_home_override
 
     if get_hermes_home_override() is None:
         if _LIVE_CACHE is not None and time.monotonic() - _LIVE_CACHE[1] < _LIVE_CACHE_TTL:
@@ -254,7 +254,7 @@ class XAIImageGenProvider(StaticImageGenProvider):
         provider_name = str(creds.get("provider") or "xai").strip() or "xai"
         if not api_key:
             return error_factory(provider_name, aspect_ratio)(
-                "No xAI credentials found. Configure xAI OAuth in `hermes model` or set XAI_API_KEY.",
+                "No xAI credentials found. Configure xAI OAuth in `vael model` or set XAI_API_KEY.",
                 "missing_api_key")
 
         model_id, meta = _resolve_model(kwargs.get("model"))

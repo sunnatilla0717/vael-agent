@@ -38,7 +38,7 @@ def _is_current_profile(profile: Optional[str]) -> bool:
 def _hermes_home_scope(path) -> Any:
     """Scope ``load_config``/``save_config`` (anything resolving ``get_hermes_home()`` at call
     time) to ``path`` for the block via the context-local HERMES_HOME override."""
-    from hermes_constants import set_hermes_home_override, reset_hermes_home_override
+    from vael_constants import set_hermes_home_override, reset_hermes_home_override
     token = set_hermes_home_override(str(path))
     try:
         yield
@@ -256,7 +256,7 @@ def _profile_scope(profile: Optional[str]):
     since #65828 its directory lookups resolve at call time through the same contextvar override set in step
     1.
     """
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
     from tools import skills_tool as _skills_tool
     from tools import skill_manager_tool as _skill_mgr
     with _config_profile_scope(profile) as scoped:
@@ -437,7 +437,7 @@ def _aux_task_summary(aux_rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
 
 def _profile_cli_args(profile: Optional[str]) -> List[str]:
     """``["-p", <name>]`` for a validated named profile, else ``[]``. Hub actions run in
-    a fresh ``hermes`` subprocess whose ``_apply_profile_override()`` reads ``-p`` from argv —
+    a fresh ``vael`` subprocess whose ``_apply_profile_override()`` reads ``-p`` from argv —
     the only mechanism that reaches import-time-bound globals like ``skills_hub.SKILLS_DIR``.
     ``default`` is a real named target, not an alias for the dashboard's own profile:
     selector-less argv would make the child resolve the ambient ``HERMES_HOME`` (the launch

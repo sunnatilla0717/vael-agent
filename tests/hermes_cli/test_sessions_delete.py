@@ -4,7 +4,7 @@ import pytest
 
 def test_sessions_delete_accepts_unique_id_prefix(monkeypatch, capsys):
     import hermes_cli.main as main_mod
-    import hermes_state
+    import vael_state
 
     captured = {}
 
@@ -44,7 +44,7 @@ def _run_prune(monkeypatch, capsys, argv_tail, candidates=None, skipped_open=0):
     """Run `hermes sessions prune <argv_tail>` against a FakeDB, capturing
     the filter kwargs passed to list_prune_candidates. Auto-confirms."""
     import hermes_cli.main as main_mod
-    import hermes_state
+    import vael_state
 
     seen = {}
     rows = candidates if candidates is not None else [

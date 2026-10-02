@@ -87,9 +87,9 @@ faraz qilingan — ikkalasi ham upstream da **yo'q**. To'g'ri reja:
   identity (`prompt_builder`, `SOUL.md`, `default_soul`), `locales/*.yaml` +
   `web/src/i18n/*` (`\bHermes\b` → `VAEL`), web title/header, desktop display
   names, Telegram `plugin.yaml`, CLI user strings, `tests/branding/` +
-  `vael-brand.yml` CI. Ataylab qoldirildi: `hermes` komanda literallari,
+  `vael-brand.yml` CI. Ataylab qoldirildi:  `hermes` komanda literallari,
   `~/.hermes` path lar, `_LEGACY_TEMPLATE_SOULS`, kebab/pascal artifact
-  nomlari, `website/` marketing docs (keyingi PR lar).
+  nomlari, `website/` marketing docs (W fazasida bajarildi — pastga qarang).
 - [x] PR-2 (skill rename): `hermes-agent` → `vael-agent` (essential skill,
   `ESSENTIAL_SKILLS`, prompt guidance, `X-Title: VAEL`),
   `hermes-agent-skill-authoring` → `vael-skill-authoring`,
@@ -113,5 +113,16 @@ faraz qilingan — ikkalasi ham upstream da **yo'q**. To'g'ri reja:
   ataylab yo'q (50+ var, minglab ishlatish — merge saqlanadi); `HERMES_HOME`
   explicit va barcha default matematika (`get_default_hermes_root`,
   suffix, sudo) o'zgarishsiz.
+- [x] W (website rebrand, PR-4): Docusaurus saytning butun user-facing
+  surface i — `title`/navbar/OG image/footer attribution, favicon + wordmark +
+  1200x630 OG kartochka (`website/scripts/generate-brand-assets.mjs`, faqat
+  Node stdlib), CyberAI palitrasi (`#D97757`/`#CC785C`, system font stack),
+  docs prozasini kod bloklarini tegilmasdan qayta yozish
+  (`website/scripts/rebrand-hermes-to-vael.py`, 391 fayl), generatorlar
+  (`generate-skill-docs.py`, `generate-llms-txt.py`) + qayta generatsiya,
+  6 ta guide route `hermes` → `vael` (+ client redirects, legacy anchor pin lar),
+  `docs/getting-started/migrating-from-hermes.md` sahifasi va 5 ta yangi
+  website guard testi. Batafsil: `docs/verification-log.md` (W bo'limi),
+  qoldiqlar: `docs/open-items.md`.
 - [ ] R-5-bridge/R-8/R-9: bridge kontrakt (CyberAI repo), branding testlari,
-  CI guardlar (qisman PR-1 da bor).
+  CI guardlar (qisman PR-1 da bor; W fazasida website guardlari qo'shildi).

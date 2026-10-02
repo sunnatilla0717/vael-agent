@@ -1,4 +1,4 @@
-"""CLI subcommand: ``hermes send`` — pipe text from shell scripts to any configured messaging platform
+"""CLI subcommand: ``vael send`` — pipe text from shell scripts to any configured messaging platform
 (Telegram, Discord, Slack, Signal, SMS, etc.).
 """
 
@@ -36,17 +36,17 @@ def _read_message_body(positional: Optional[str], file_path: Optional[str]) -> O
             return Path(file_path).read_text(encoding="utf-8-sig")
         except UnicodeDecodeError:
             _fail(
-                f"hermes send: {file_path} is not a text file. --file reads the "
+                f"vael send: {file_path} is not a text file. --file reads the "
                 "message *body* (logs, reports, markdown).\n"
                 "To send an image/document/audio file as a native attachment, "
                 "reference it with MEDIA: in the message text instead:\n"
-                f'  hermes send --to telegram "MEDIA:{file_path}"\n'
-                f'  hermes send --to telegram "optional caption MEDIA:{file_path}"\n'
+                f'  vael send --to telegram "MEDIA:{file_path}"\n'
+                f'  vael send --to telegram "optional caption MEDIA:{file_path}"\n'
                 "Add [[as_document]] to deliver an image as an uncompressed file:\n"
-                f'  hermes send --to telegram "[[as_document]] MEDIA:{file_path}"',
+                f'  vael send --to telegram "[[as_document]] MEDIA:{file_path}"',
                 _USAGE_EXIT)
         except OSError as exc:
-            _fail(f"hermes send: cannot read {file_path}: {exc}", _USAGE_EXIT)
+            _fail(f"vael send: cannot read {file_path}: {exc}", _USAGE_EXIT)
 
     # Reading from a TTY would block the user in a half-broken "type your message" state.
     return (sys.stdin.read() or None) if not sys.stdin.isatty() else None
@@ -71,7 +71,7 @@ def _emit_result(result_json: str, *, json_mode: bool, quiet: bool) -> int:
         print(json.dumps(payload, indent=2))
     elif not quiet:
         if payload.get("error"):
-            print(f"hermes send: {payload['error']}", file=sys.stderr)
+            print(f"vael send: {payload['error']}", file=sys.stderr)
         elif payload.get("success"):
             print(payload.get("note") or "sent")
         else:
@@ -87,11 +87,11 @@ def _list_targets(platform_filter: Optional[str], *, json_mode: bool) -> int:
     try:
         from gateway.channel_directory import format_directory_for_display, load_directory
     except Exception as exc:
-        return _fail(f"hermes send: failed to load channel directory: {exc}")
+        return _fail(f"vael send: failed to load channel directory: {exc}")
     try:
         raw = load_directory()
     except Exception as exc:
-        return _fail(f"hermes send: failed to read channel directory: {exc}")
+        return _fail(f"vael send: failed to read channel directory: {exc}")
     platforms = dict(raw.get("platforms") or {})
 
     # Merge in configured-but-undiscovered platforms (e.g. a fresh SimpleX setup used only for
@@ -109,7 +109,7 @@ def _list_targets(platform_filter: Optional[str], *, json_mode: bool) -> int:
         filtered = {k: v for k, v in platforms.items() if k.lower() == key}
         if not filtered:
             return _fail(
-                f"hermes send: no targets found for platform '{platform_filter}'. "
+                f"vael send: no targets found for platform '{platform_filter}'. "
                 f"Configured: {', '.join(sorted(platforms)) or '(none)'}")
         platforms = filtered
     if json_mode:
@@ -117,8 +117,8 @@ def _list_targets(platform_filter: Optional[str], *, json_mode: bool) -> int:
         return _SUCCESS_EXIT
     if not platforms:
         print("No messaging platforms configured or no channels discovered yet.")
-        print("Set one up with `hermes gateway setup`, or run the gateway once so")
-        from hermes_constants import get_default_hermes_root, get_hermes_home, hermes_home_key
+        print("Set one up with `vael gateway setup`, or run the gateway once so")
+        from vael_constants import get_default_hermes_root, get_hermes_home, hermes_home_key
         home, root = get_hermes_home(), get_default_hermes_root()
         print(f"channel discovery can populate {home / 'channel_directory.json'}.")
         # A gateway started from the default root writes that root's directory, never this profile's.
@@ -195,31 +195,31 @@ def cmd_send(args: argparse.Namespace) -> None:
     """Entry point wired into the top-level argparse dispatcher."""
     _load_hermes_env()  # the downstream gateway config loader reads credentials from os.environ
     if getattr(args, "list_targets", False):  # --list short-circuits everything else
-        # `hermes send --list telegram` lands "telegram" in the `message` positional.
+        # `vael send --list telegram` lands "telegram" in the `message` positional.
         exit_code = _list_targets(getattr(args, "message", None), json_mode=getattr(args, "json", False))
         sys.exit(exit_code)
     target = (getattr(args, "to", None) or "").strip()
     if not target:
         _fail(
-            "hermes send: --to PLATFORM[:channel[:thread]] is required\n"
+            "vael send: --to PLATFORM[:channel[:thread]] is required\n"
             "Examples:\n"
-            "  hermes send --to telegram \"hello\"\n"
-            "  hermes send --to discord:#ops --file report.md\n"
-            "  hermes send --list      # list available targets",
+            "  vael send --to telegram \"hello\"\n"
+            "  vael send --to discord:#ops --file report.md\n"
+            "  vael send --list      # list available targets",
             _USAGE_EXIT)
     mentions = list(getattr(args, "mentions", None) or [])
     if mentions and target.split(":", 1)[0].strip().lower() != "whatsapp":
-        _fail("hermes send: --mention is only supported for WhatsApp targets.", _USAGE_EXIT)
+        _fail("vael send: --mention is only supported for WhatsApp targets.", _USAGE_EXIT)
     invalid_mentions = _invalid_whatsapp_mentions(mentions)
     if invalid_mentions:
         _fail(
-            "hermes send: invalid --mention value(s): "
+            "vael send: invalid --mention value(s): "
             f"{', '.join(invalid_mentions)}. Use a phone number or participant JID.",
             _USAGE_EXIT)
     message = _read_message_body(getattr(args, "message", None), getattr(args, "file", None))
     if message is None or not message.strip():
         _fail(
-            "hermes send: no message provided. Pass text as a positional "
+            "vael send: no message provided. Pass text as a positional "
             "argument, use --file PATH, or pipe data via stdin.",
             _USAGE_EXIT)
 
@@ -228,7 +228,7 @@ def cmd_send(args: argparse.Namespace) -> None:
     if subject:
         message = f"{subject}\n\n{message.lstrip()}"
 
-    # Lazy import keeps `hermes send --help` fast (no tool registry / gateway config stack).
+    # Lazy import keeps `vael send --help` fast (no tool registry / gateway config stack).
     from tools.send_message_tool import send_message_tool
 
     # Routes to the platform adapter (bot-token path for built-ins, live-adapter path for plugin
@@ -256,7 +256,7 @@ _SEND_ARGUMENTS = (
         "WhatsApp only: add a native participant mention. Repeat for multiple recipients; "
         "bare phone numbers are normalized to JIDs. Include each matching @<number> near the start of the message text."))),
     (("-l", "--list"), dict(dest="list_targets", action="store_true", default=False,
-                            help="List available targets. Optional positional filter: `hermes send --list telegram`.")),
+                            help="List available targets. Optional positional filter: `vael send --list telegram`.")),
     (("-q", "--quiet"), dict(action="store_true", default=False, help="Suppress stdout on success (exit code only).")),
     (("--json",), dict(action="store_true", default=False, help="Emit raw JSON result instead of human-readable output.")),
 )
@@ -264,13 +264,13 @@ _SEND_ARGUMENTS = (
 
 def register_send_subparser(subparsers) -> argparse.ArgumentParser:
     """Create the ``send`` subparser and return it."""
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
     hermes_home = get_hermes_home()
     parser = subparsers.add_parser(
         "send",
         help="Send a message to a configured platform (scripts, cron jobs, CI).",
         description=(
-            "Pipe text from any shell script to any messaging platform Hermes "
+            "Pipe text from any shell script to any messaging platform VAEL "
             "is already configured for. Reuses the gateway's platform "
             f"credentials ({hermes_home / '.env'} + "
             f"{hermes_home / 'config.yaml'}) — no LLM, "
@@ -279,14 +279,14 @@ def register_send_subparser(subparsers) -> argparse.ArgumentParser:
         ),
         epilog=(
             "Examples:\n"
-            "  hermes send --to telegram \"deploy finished\"\n"
-            "  echo \"RAM 92%\" | hermes send --to telegram:-1001234567890\n"
-            "  hermes send --to discord:#ops --file ./report.md\n"
-            "  hermes send --to slack:#eng --subject \"[CI]\" --file build.log\n"
-            "  hermes send --to whatsapp:GROUP@g.us --mention 15551234567 \"@15551234567 hello\"\n"
-            "  hermes send --to telegram \"MEDIA:./chart.png\"   # send a media attachment\n"
-            "  hermes send --list                  # all platforms\n"
-            "  hermes send --list telegram         # filter by platform\n"
+            "  vael send --to telegram \"deploy finished\"\n"
+            "  echo \"RAM 92%\" | vael send --to telegram:-1001234567890\n"
+            "  vael send --to discord:#ops --file ./report.md\n"
+            "  vael send --to slack:#eng --subject \"[CI]\" --file build.log\n"
+            "  vael send --to whatsapp:GROUP@g.us --mention 15551234567 \"@15551234567 hello\"\n"
+            "  vael send --to telegram \"MEDIA:./chart.png\"   # send a media attachment\n"
+            "  vael send --list                  # all platforms\n"
+            "  vael send --list telegram         # filter by platform\n"
             "\n"
             "Exit codes: 0 ok, 1 delivery/backend error, 2 usage error."
         ),

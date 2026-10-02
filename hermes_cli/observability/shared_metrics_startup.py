@@ -1,6 +1,6 @@
 """Startup / attach latency: one bucketed row per process start and surface.
 
-In-process surfaces (classic CLI, messaging gateway, ``hermes serve``) measure from the OS process
+In-process surfaces (classic CLI, messaging gateway, ``vael serve``) measure from the OS process
 creation time, the earliest timestamp available (it includes interpreter start and imports), to the
 moment they are ready. The Ink TUI and the Desktop app measure on their own side and report through
 the ``shared_metrics.startup_latency`` RPC. Recording goes through the shared ``_emit`` gate, so a

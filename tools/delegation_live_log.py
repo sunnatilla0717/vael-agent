@@ -39,7 +39,7 @@ _TIME_FMT = "%Y-%m-%d %H:%M:%S"
 
 def live_transcript_root() -> Path:
     """Root directory for live transcripts (profile-safe, never ~/.hermes)."""
-    from hermes_constants import get_hermes_dir
+    from vael_constants import get_hermes_dir
     return get_hermes_dir("cache/delegation", "delegation_cache") / "live"
 
 
@@ -99,7 +99,7 @@ class LiveTranscriptWriter:
             d.mkdir(parents=True, exist_ok=True)
             path = d / f"task-{task_index}.log"
             path.write_text(
-                "=== Hermes subagent live transcript ===\n"
+                "=== VAEL subagent live transcript ===\n"
                 f"delegation: {delegation_id}   task: {task_index}\n"
                 f"goal: {_redact(goal_line)}\n"  # header bypasses event(), so redact here too
                 f"started: {time.strftime(_TIME_FMT)}\n"

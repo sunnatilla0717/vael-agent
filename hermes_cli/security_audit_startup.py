@@ -30,7 +30,7 @@ def _is_root() -> bool:
 def _running_as_root() -> Optional[str]:
     return None if not _is_root() else (
         "Running as ROOT. The agent's terminal/file tools execute with full root privileges — a single "
-        "prompt-injection or exposed endpoint is a full host compromise. Run Hermes as an unprivileged user "
+        "prompt-injection or exposed endpoint is a full host compromise. Run VAEL as an unprivileged user "
         "(or in a sandboxed terminal backend / container with a non-root user).")
 
 
@@ -108,7 +108,7 @@ def _container_no_volume_mount(hermes_home: Optional[Path]) -> Optional[str]:
     if not _in_container():
         return None
     if hermes_home is None:
-        from hermes_constants import get_hermes_home
+        from vael_constants import get_hermes_home
 
         hermes_home = get_hermes_home()
     if _path_is_mounted(hermes_home):  # any error propagates to run_security_audit (= no finding)

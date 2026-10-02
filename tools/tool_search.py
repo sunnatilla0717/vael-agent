@@ -549,7 +549,7 @@ def out_of_scope_reason(name: str) -> Optional[str]:
     try:
         if _registry_toolset(name) in _DIRECT_SURFACE_TOOLSETS:
             return (f"'{name}' needs a desktop-app session with a GUI surface (preview/terminal panes). "
-                    "This session has none: use it only from the Hermes desktop app, not via tool_search.")
+                    "This session has none: use it only from the VAEL desktop app, not via tool_search.")
     except Exception:
         pass
     return None

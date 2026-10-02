@@ -1,7 +1,7 @@
 ---
 sidebar_position: 12
 title: "Web Search Provider Plugins"
-description: "How to build a web-search/extract/crawl backend plugin for Hermes Agent"
+description: "How to build a web-search/extract/crawl backend plugin for VAEL Agent"
 ---
 
 # Building a Web Search Provider Plugin
@@ -9,12 +9,12 @@ description: "How to build a web-search/extract/crawl backend plugin for Hermes 
 Web-search provider plugins register a backend that services `web_search`, `web_extract`, and (optionally) deep-crawl tool calls. Built-in providers — Firecrawl, SearXNG, Tavily, Perplexity, Exa, Parallel, Keenable, Brave Search (free tier), xAI, and DDGS — all ship as plugins under `plugins/web/<name>/`. You can add a new one, or override a bundled one, by dropping a directory next to them.
 
 :::tip
-Web search is one of several **backend plugins** Hermes supports. The others (with their own ABCs) are [Image Generation Provider Plugins](./image-gen-provider-plugin.md), [Video Generation Provider Plugins](./video-gen-provider-plugin.md), [Memory Provider Plugins](./memory-provider-plugin.md), [Context Engine Plugins](./context-engine-plugin.md), and [Model Provider Plugins](./model-provider-plugin.md). General tool/hook/CLI plugins live in [Build a Hermes Plugin](./plugins/index.md).
+Web search is one of several **backend plugins** VAEL supports. The others (with their own ABCs) are [Image Generation Provider Plugins](./image-gen-provider-plugin.md), [Video Generation Provider Plugins](./video-gen-provider-plugin.md), [Memory Provider Plugins](./memory-provider-plugin.md), [Context Engine Plugins](./context-engine-plugin.md), and [Model Provider Plugins](./model-provider-plugin.md). General tool/hook/CLI plugins live in [Build a VAEL Plugin](./plugins/index.md).
 :::
 
 ## How discovery works
 
-Hermes scans for web-search backends in three places:
+VAEL scans for web-search backends in three places:
 
 1. **Bundled** — `<repo>/plugins/web/<name>/` (auto-loaded with `kind: backend`, always available)
 2. **User** — `~/.hermes/plugins/web/<name>/` (opt-in via `plugins.enabled` or `hermes plugins enable <name>`)
@@ -28,7 +28,7 @@ Each plugin's `register(ctx)` function calls `ctx.register_web_search_provider(.
 | `web_extract` | `web.extract_backend` | `web.backend` |
 | Deep crawl modes inside `web_extract` | `web.extract_backend` | `web.backend` |
 
-When neither key is set, Hermes auto-detects the backend from whichever API key/URL is present in the environment. `hermes tools` walks users through selection.
+When neither key is set, VAEL auto-detects the backend from whichever API key/URL is present in the environment. `hermes tools` walks users through selection.
 
 ## Directory structure
 
@@ -141,7 +141,7 @@ requires_env:
 |---|---|
 | `kind: backend` | Routes the plugin through the backend-loading path |
 | `provides_web_providers` | List of provider `name`s this plugin registers — used by the loader to advertise the plugin in `hermes tools` even before `register()` runs |
-| `requires_env` | Interactive credential prompt during `hermes plugins install` (see [Build a Hermes Plugin](./plugins/index.md#gate-on-environment-variables) for the rich format) |
+| `requires_env` | Interactive credential prompt during `hermes plugins install` (see [Build a VAEL Plugin](./plugins/index.md#gate-on-environment-variables) for the rich format) |
 
 ## ABC reference
 
@@ -206,7 +206,7 @@ Both `search()` and `extract()` may be `async def` — the dispatcher detects co
 
 ## Capability flags
 
-Hermes routes calls to the right provider based on the `supports_*` flags. A common multi-provider setup:
+VAEL routes calls to the right provider based on the `supports_*` flags. A common multi-provider setup:
 
 ```yaml
 # ~/.hermes/config.yaml
@@ -215,11 +215,11 @@ web:
   extract_backend: "firecrawl"     # extract + crawl, paid quota
 ```
 
-When `web.search_backend` or `web.extract_backend` aren't set, both fall through to `web.backend`. When that's also unset, Hermes picks the first available provider that supports the requested capability based on env-var presence.
+When `web.search_backend` or `web.extract_backend` aren't set, both fall through to `web.backend`. When that's also unset, VAEL picks the first available provider that supports the requested capability based on env-var presence.
 
 If your provider only supports one capability, leave the other flags at their default (`False`) and the registry will skip it for that tool — users won't see misleading "provider X failed" errors when they're using X only for search and asking the agent to extract.
 
-## How Hermes wires it into the tools
+## How VAEL wires it into the tools
 
 The `web_search` and `web_extract` tools live in `tools/web_tools.py`. At call time they:
 
@@ -233,14 +233,14 @@ Errors surface as the tool result; the LLM decides how to explain them. If no pr
 
 ## Lazy-installing optional dependencies
 
-Keep availability checks read-only. For an SDK covered by a Hermes extra,
+Keep availability checks read-only. For an SDK covered by a VAEL extra,
 use `pm.available("extra-name")` in `is_available()`. Request
 `pm.ensure_import("extra-name")` from the operation that needs it. Report
 `InstallError`, including a required restart, to the caller.
 
 Declare a third-party plugin's own dependencies in its manifest or
-`pyproject.toml` rather than inventing a Hermes extra. See
-[Build a Hermes Plugin → Lazy-install](./plugins/index.md#lazy-install-optional-python-dependencies).
+`pyproject.toml` rather than inventing a VAEL extra. See
+[Build a VAEL Plugin → Lazy-install](./plugins/index.md#lazy-install-optional-python-dependencies).
 
 ## Reference implementations
 
@@ -264,4 +264,4 @@ my-backend-web = "my_backend_web_package"
 
 - [Web Search](../user-guide/features/web-search.md) — user-facing feature documentation and per-backend configuration
 - [Plugins overview](../user-guide/features/plugins.md) — all plugin types at a glance
-- [Build a Hermes Plugin](./plugins/index.md) — general tools/hooks/slash commands guide
+- [Build a VAEL Plugin](./plugins/index.md) — general tools/hooks/slash commands guide

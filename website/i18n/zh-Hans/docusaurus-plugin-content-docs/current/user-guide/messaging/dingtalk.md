@@ -1,25 +1,25 @@
 ---
 sidebar_position: 10
 title: "DingTalk"
-description: "将 Hermes Agent 设置为钉钉聊天机器人"
+description: "将 VAEL Agent 设置为钉钉聊天机器人"
 ---
 
 # 钉钉设置
 
 本页的 Python 依赖命令使用 [PM 准备的源码环境](../../reference/package-management.md#developer-workflow)。
-依赖变更后，请重新激活该 checkout 并重启 Hermes。
+依赖变更后，请重新激活该 checkout 并重启 VAEL。
 
-Hermes Agent 可作为聊天机器人集成到钉钉（DingTalk），让你通过单聊或群聊与 AI 助手对话。机器人通过钉钉的 Stream Mode（流模式）连接——一种长连接 WebSocket，无需公网 URL 或 webhook 服务器——并通过钉钉的 session webhook API 以 markdown 格式回复消息。
+VAEL Agent 可作为聊天机器人集成到钉钉（DingTalk），让你通过单聊或群聊与 AI 助手对话。机器人通过钉钉的 Stream Mode（流模式）连接——一种长连接 WebSocket，无需公网 URL 或 webhook 服务器——并通过钉钉的 session webhook API 以 markdown 格式回复消息。
 
-在开始设置之前，先了解大多数人最关心的内容：Hermes 进入你的钉钉工作空间后的行为方式。
+在开始设置之前，先了解大多数人最关心的内容：VAEL 进入你的钉钉工作空间后的行为方式。
 
-## Hermes 的行为方式
+## VAEL 的行为方式
 
 | 场景 | 行为 |
 |---------|----------|
-| **单聊（1:1 对话）** | Hermes 响应每条消息，无需 `@提及`，每个单聊有独立会话。 |
-| **群聊** | Hermes 仅在被 `@提及` 时响应，未被提及则忽略消息。 |
-| **多用户共享群聊** | 默认情况下，Hermes 在群内按用户隔离会话历史。同一群中的两个用户不共享同一对话记录，除非你明确禁用该功能。 |
+| **单聊（1:1 对话）** | VAEL 响应每条消息，无需 `@提及`，每个单聊有独立会话。 |
+| **群聊** | VAEL 仅在被 `@提及` 时响应，未被提及则忽略消息。 |
+| **多用户共享群聊** | 默认情况下，VAEL 在群内按用户隔离会话历史。同一群中的两个用户不共享同一对话记录，除非你明确禁用该功能。 |
 
 ### 钉钉中的会话模型
 
@@ -86,14 +86,14 @@ Stream Mode 是推荐的设置方式。它使用从你的机器发起的长连�
 
 ## 第三步：找到你的钉钉用户 ID
 
-Hermes Agent 使用你的钉钉用户 ID 来控制谁可以与机器人交互。钉钉用户 ID 是由组织管理员设置的字母数字字符串。
+VAEL Agent 使用你的钉钉用户 ID 来控制谁可以与机器人交互。钉钉用户 ID 是由组织管理员设置的字母数字字符串。
 
 查找方式：
 
 1. 询问你的钉钉组织管理员——用户 ID 在钉钉管理后台的**通讯录** → **成员**中配置。
 2. 或者，机器人会在日志中记录每条传入消息的 `sender_id`。启动 gateway，向机器人发送一条消息，然后在日志中查找你的 ID。
 
-## 第四步：配置 Hermes Agent
+## 第四步：配置 VAEL Agent
 
 ### 方式 A：交互式设置（推荐）
 
@@ -109,7 +109,7 @@ hermes gateway setup
 - **手动粘贴。** 如果你已有凭证（或扫码不方便），在提示时粘贴你的 Client ID、Client Secret 和允许的用户 ID。
 
 :::note openClaw 品牌披露
-由于钉钉的 `verification_uri_complete` 在 API 层硬编码为 openClaw 身份，在 Alibaba / DingTalk-Real-AI 在服务端注册 Hermes 专属模板之前，二维码目前以 `openClaw` 来源字符串进行授权。这仅是钉钉呈现授权界面的方式——你创建的机器人完全属于你，且对你的租户私有。
+由于钉钉的 `verification_uri_complete` 在 API 层硬编码为 openClaw 身份，在 Alibaba / DingTalk-Real-AI 在服务端注册 VAEL 专属模板之前，二维码目前以 `openClaw` 来源字符串进行授权。这仅是钉钉呈现授权界面的方式——你创建的机器人完全属于你，且对你的租户私有。
 :::
 
 ### 方式 B：手动配置
@@ -177,7 +177,7 @@ hermes gateway
 
 ### AI 卡片
 
-Hermes 可以使用钉钉 AI 卡片代替纯 markdown 消息进行回复。卡片提供更丰富、更结构化的展示，并支持在 agent 生成响应时进行流式更新。
+VAEL 可以使用钉钉 AI 卡片代替纯 markdown 消息进行回复。卡片提供更丰富、更结构化的展示，并支持在 agent 生成响应时进行流式更新。
 
 要启用 AI 卡片，在 `config.yaml` 中配置卡片模板 ID：
 
@@ -193,7 +193,7 @@ platforms:
 
 ### Emoji 反应
 
-Hermes 会自动在你的消息上添加 emoji 反应以显示处理状态：
+VAEL 会自动在你的消息上添加 emoji 反应以显示处理状态：
 
 - 🤔Thinking — 机器人开始处理你的消息时添加
 - 🥳Done — 响应完成时添加（替换 Thinking 反应）
@@ -256,7 +256,7 @@ python -c "import pm; pm.sync_venv(['dingtalk'], explicit=True)"
 
 ### 机器人离线
 
-**原因**：Hermes gateway 未运行，或连接失败。
+**原因**：VAEL gateway 未运行，或连接失败。
 
 **解决方法**：检查 `hermes gateway` 是否正在运行。查看终端输出中的错误信息。常见问题：凭证错误、应用被停用、`dingtalk-stream` 或 `httpx` 未安装。
 
@@ -272,7 +272,7 @@ python -c "import pm; pm.sync_venv(['dingtalk'], explicit=True)"
 务必设置 `DINGTALK_ALLOWED_USERS` 以限制可与机器人交互的用户。若未设置，gateway 默认拒绝所有用户作为安全措施。只添加你信任的人的用户 ID——已授权用户对 agent 的全部能力拥有完整访问权限，包括工具使用和系统访问。
 :::
 
-有关保护 Hermes Agent 部署的更多信息，请参阅[安全指南](../security.md)。
+有关保护 VAEL Agent 部署的更多信息，请参阅[安全指南](../security.md)。
 
 ## 注意事项
 

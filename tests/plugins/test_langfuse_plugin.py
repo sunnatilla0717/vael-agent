@@ -1609,7 +1609,7 @@ class TestAtexitFinalization(TestTurnTraceIsolation):
         credentials at all — it ends the open roots and flushes each settled client, so neither
         profile loses its pending traces."""
         from agent import secret_scope
-        from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+        from vael_constants import reset_hermes_home_override, set_hermes_home_override
 
         mod = self._fresh_plugin()
         monkeypatch.setattr(secret_scope, "_MULTIPLEX_ACTIVE", True)

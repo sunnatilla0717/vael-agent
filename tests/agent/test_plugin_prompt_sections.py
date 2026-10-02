@@ -102,7 +102,7 @@ def test_fresh_process_resume_restores_identical_full_prompt_without_callback(tm
         from agent.system_prompt import build_system_prompt, invalidate_system_prompt
         from hermes_cli import plugins
         from hermes_cli.plugins import PluginContext, PluginManager, PluginManifest
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
         from run_agent import AIAgent
 
         db = SessionDB(db_path=Path(os.environ["TEST_DB"]))

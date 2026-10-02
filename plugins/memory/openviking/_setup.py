@@ -1,7 +1,7 @@
-"""Interactive ``hermes memory setup`` wizard for the OpenViking provider.
+"""Interactive ``vael memory setup`` wizard for the OpenViking provider.
 
-Pure UI flow: prompts, menus, and persistence of the chosen connection (Hermes
-``.env`` only, or mirrored to an ``ovcli.conf.<name>`` profile that Hermes then
+Pure UI flow: prompts, menus, and persistence of the chosen connection (VAEL
+``.env`` only, or mirrored to an ``ovcli.conf.<name>`` profile that VAEL then
 links). Network validation and file writers live in the package ``__init__`` and
 are looked up there at call time so tests can monkeypatch them on the plugin module.
 """
@@ -274,7 +274,7 @@ def _print_openviking_ready(message: str, path: Optional[Path] = None) -> None:
     _say(message)
     if path is not None:
         _say(f"Config file: {path}")
-    print("  Start a new Hermes session to activate.\n")
+    print("  Start a new VAEL session to activate.\n")
 
 
 def _run_existing_profile_setup(*, profiles: list, select, cancelled, config: dict, provider_config: dict, env_path: Path) -> bool | object:
@@ -321,7 +321,7 @@ def _mirror_manual_config_to_openviking_store(*, prompt, select, cancelled, valu
             return _SETUP_CANCELLED
         if replace is False:
             continue
-        from hermes_constants import mkdir_under_hermes_home
+        from vael_constants import mkdir_under_hermes_home
         mkdir_under_hermes_home(path.parent)
         # atomic_json_write creates the temp file 0600 and os.replace()s it: no
         # half-written config on crash, no chmod-after-write window for the keys.
@@ -344,7 +344,7 @@ def _run_create_profile_setup(*, prompt, select, cancelled, config: dict, provid
         return False
 
     save_choice = select("  Save OpenViking config",
-                         [("Keep in Hermes only", "write values only to Hermes .env"),
+                         [("Keep in VAEL only", "write values only to VAEL .env"),
                           ("Mirror to OpenViking store", "write ~/.openviking/ovcli.conf.<name> and link it")],
                          default=1, cancel_returns=cancelled)
     if save_choice == cancelled:
@@ -359,7 +359,7 @@ def _run_create_profile_setup(*, prompt, select, cancelled, config: dict, provid
         return True
 
     _save_hermes_only_config(config=config, provider_config=provider_config, env_path=env_path, values=values)
-    _print_openviking_ready("Connection saved to Hermes .env.")
+    _print_openviking_ready("Connection saved to VAEL .env.")
     return True
 
 

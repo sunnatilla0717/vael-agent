@@ -6,7 +6,7 @@ author: Ben Barclay (benbarclay), Hermes Agent
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
-  hermes:
+  vael:
     tags: [Prices, Availability, Shopping, Travel, Alerts]
     related_skills: [maps]
 ---

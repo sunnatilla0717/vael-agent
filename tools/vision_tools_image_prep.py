@@ -13,7 +13,7 @@ from io import BytesIO
 from pathlib import Path
 from typing import Any, Optional
 
-from hermes_constants import get_hermes_dir
+from vael_constants import get_hermes_dir
 
 logger = logging.getLogger("tools.vision_tools")
 
@@ -308,7 +308,7 @@ def _crop_image_region(
         from PIL import Image
     except ImportError:
         return None, None, (
-            "region cropping requires Pillow (run `hermes pm repair`); "
+            "region cropping requires Pillow (run `vael pm repair`); "
             "retry without the region parameter.")
     if not (isinstance(region, (list, tuple)) and len(region) == 4
             and all(isinstance(v, (int, float)) and not isinstance(v, bool) for v in region)):

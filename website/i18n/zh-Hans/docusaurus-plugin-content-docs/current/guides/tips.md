@@ -1,12 +1,12 @@
 ---
 sidebar_position: 1
 title: "技巧与最佳实践"
-description: "充分发挥 Hermes Agent 潜力的实用建议——prompt 技巧、CLI 快捷键、上下文文件、记忆、成本优化与安全"
+description: "充分发挥 VAEL Agent 潜力的实用建议——prompt 技巧、CLI 快捷键、上下文文件、记忆、成本优化与安全"
 ---
 
 # 技巧与最佳实践
 
-一份实用技巧速查集，帮助你立即提升使用 Hermes Agent 的效率。每个章节针对不同方面——扫描标题，直接跳到相关内容。
+一份实用技巧速查集，帮助你立即提升使用 VAEL Agent 的效率。每个章节针对不同方面——扫描标题，直接跳到相关内容。
 
 ---
 
@@ -78,9 +78,9 @@ CLI 会自动检测多行粘贴。直接粘贴代码块或错误堆栈——不�
 
 ### SOUL.md：自定义个性
 
-想让 Hermes 拥有稳定的默认风格？编辑 `~/.hermes/SOUL.md`（如果使用自定义 Hermes home，则为 `$HERMES_HOME/SOUL.md`）。Hermes 现在会自动生成一个初始 SOUL 文件，并将该全局文件作为实例级个性来源。
+想让 VAEL 拥有稳定的默认风格？编辑 `~/.hermes/SOUL.md`（如果使用自定义 VAEL home，则为 `$HERMES_HOME/SOUL.md`）。VAEL 现在会自动生成一个初始 SOUL 文件，并将该全局文件作为实例级个性来源。
 
-完整说明请参阅 [在 Hermes 中使用 SOUL.md](./use-soul-with-hermes.md)。
+完整说明请参阅 [在 VAEL 中使用 SOUL.md](./use-soul-with-vael.md)。
 
 ```markdown
 # Soul
@@ -93,11 +93,11 @@ Always consider error handling and edge cases.
 
 ### .cursorrules 兼容性
 
-已有 `.cursorrules` 或 `.cursor/rules/*.mdc` 文件？Hermes 同样会读取它们。无需重复编写编码规范——这些文件会从工作目录自动加载。
+已有 `.cursorrules` 或 `.cursor/rules/*.mdc` 文件？VAEL 同样会读取它们。无需重复编写编码规范——这些文件会从工作目录自动加载。
 
 ### 发现机制
 
-Hermes 在会话启动时从当前工作目录加载顶层 `AGENTS.md`。子目录中的 `AGENTS.md` 文件在工具调用期间通过 `subdirectory_hints.py` 延迟发现，并注入工具结果——不会在启动时预先加载到系统 prompt 中。
+VAEL 在会话启动时从当前工作目录加载顶层 `AGENTS.md`。子目录中的 `AGENTS.md` 文件在工具调用期间通过 `subdirectory_hints.py` 延迟发现，并注入工具结果——不会在启动时预先加载到系统 prompt 中。
 
 :::tip
 保持上下文文件简洁聚焦。每个字符都会消耗 token 配额，因为它们会注入到每一条消息中。
@@ -210,7 +210,7 @@ $OutputEncoding = [Console]::OutputEncoding = [Text.UTF8Encoding]::new($false)
 
 ### 命令审批是你的安全防线
 
-Hermes 在执行每条命令前都会与一份精心维护的危险模式列表进行比对，包括递归删除、SQL DROP、curl 管道到 shell 等。不要在生产环境中禁用此功能——它的存在有充分的理由。
+VAEL 在执行每条命令前都会与一份精心维护的危险模式列表进行比对，包括递归删除、SQL DROP、curl 管道到 shell 等。不要在生产环境中禁用此功能——它的存在有充分的理由。
 
 :::warning
 在容器后端（Docker、Singularity、Modal、Daytona）中运行时，危险命令检查会被**跳过**，因为容器本身就是安全边界。请确保你的容器镜像已妥善加固。

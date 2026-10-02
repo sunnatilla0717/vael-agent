@@ -137,7 +137,7 @@ def run_command_provider(
 ) -> subprocess.CompletedProcess:
     """Run a command-provider shell command with process-tree idle cleanup.
     ``timeout`` is an IDLE timeout, reset whenever the command emits output — a slow-but-alive
-    provider survives, a silently stalled one is killed. Child env is scrubbed of Hermes secrets
+    provider survives, a silently stalled one is killed. Child env is scrubbed of VAEL secrets
     while propagating delegated-child lineage markers."""
     from agent.delegation_context import delegated_child_subprocess_env
     from tools.env_passthrough import resolve_passthrough_value

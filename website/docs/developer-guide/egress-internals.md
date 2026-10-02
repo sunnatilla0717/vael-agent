@@ -1,7 +1,7 @@
 ---
 sidebar_position: 14
 title: "Egress proxy internals"
-description: "How the iron-proxy egress firewall integrates with Hermes — module layout, lifecycle, security invariants, and extension points"
+description: "How the iron-proxy egress firewall integrates with VAEL — module layout, lifecycle, security invariants, and extension points"
 ---
 
 # Egress proxy internals
@@ -183,7 +183,7 @@ Regression: `test_default_bind_is_loopback_not_zero_zero` (asserts no INADDR_ANY
 
 ### Metrics port collision
 
-`metrics.listen` defaults to `:9090` in iron-proxy v0.39 — the SAME port as Hermes's default `tunnel_port: 9090`.  `build_proxy_config` MUST explicitly pin `metrics.listen: 127.0.0.1:0` so the metrics binding gets an ephemeral loopback port that can never collide with the proxy listener regardless of operator-chosen `tunnel_port`.
+`metrics.listen` defaults to `:9090` in iron-proxy v0.39 — the SAME port as VAEL's default `tunnel_port: 9090`.  `build_proxy_config` MUST explicitly pin `metrics.listen: 127.0.0.1:0` so the metrics binding gets an ephemeral loopback port that can never collide with the proxy listener regardless of operator-chosen `tunnel_port`.
 
 Regression: `test_metrics_listener_pinned_to_loopback_ephemeral`.
 

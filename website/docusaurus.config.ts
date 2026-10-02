@@ -4,10 +4,17 @@ import type * as Preset from '@docusaurus/preset-classic';
 import relativeDocLinks from './src/remark/relativeDocLinks';
 
 const config: Config = {
-  title: 'Hermes Agent',
+  title: 'VAEL Agent',
   tagline: 'The self-improving AI agent',
-  favicon: 'img/favicon.ico',
+  // SVG favicon is the VAEL monogram. The legacy raster favicons
+  // (favicon.ico / favicon-*.png / apple-touch-icon.png) are still shipped for
+  // older browsers and for iOS home-screen installs; replacing their pixels is
+  // tracked as a design task (see docs/open-items.md).
+  favicon: 'img/favicon.svg',
 
+  // Deployment identity is intentionally unchanged: this docs site is still
+  // published from the upstream GitHub Pages project, so the canonical URL,
+  // baseUrl and repo slug must keep matching it. See NOTICE.
   url: 'https://hermes-agent.nousresearch.com',
   baseUrl: '/docs/',
 
@@ -71,6 +78,35 @@ const config: Config = {
             from: '/installation',
             to: '/getting-started/installation',
           },
+          // W-4: pages whose route contained "hermes" were renamed to "vael".
+          // GitHub Pages cannot serve server-side 301s, so
+          // @docusaurus/plugin-client-redirects emits a canonical redirect
+          // page (meta refresh + rel=canonical to the new route) for each
+          // old URL — link equity and bookmarks survive the rename.
+          {
+            from: '/guides/manage-hermes-cloud-with-mcp',
+            to: '/guides/manage-vael-cloud-with-mcp',
+          },
+          {
+            from: '/guides/run-hermes-with-nous-portal',
+            to: '/guides/run-vael-with-nous-portal',
+          },
+          {
+            from: '/guides/secure-hermes-on-a-work-machine',
+            to: '/guides/secure-vael-on-a-work-machine',
+          },
+          {
+            from: '/guides/use-mcp-with-hermes',
+            to: '/guides/use-mcp-with-vael',
+          },
+          {
+            from: '/guides/use-soul-with-hermes',
+            to: '/guides/use-soul-with-vael',
+          },
+          {
+            from: '/guides/use-voice-mode-with-hermes',
+            to: '/guides/use-voice-mode-with-vael',
+          },
         ],
       },
     ],
@@ -83,6 +119,8 @@ const config: Config = {
         docs: {
           routeBasePath: '/',  // Docs at the root of /docs/
           sidebarPath: './sidebars.ts',
+          // Upstream repo on purpose: the docs mirror Hermes Agent's, and the
+          // rebrand keeps the upstream merge path intact (see REBRANDING.md).
           editUrl: 'https://github.com/NousResearch/hermes-agent/edit/main/website/',
           // Relative `.md` links (readable on GitHub, #114428) must also resolve
           // across the zh-Hans fallback boundary; see src/remark/relativeDocLinks.js.
@@ -97,7 +135,10 @@ const config: Config = {
   ],
 
   themeConfig: {
-    image: 'img/hermes-agent-banner.png',
+    // Open Graph / Twitter card image for every page without its own.
+    // 1200x630, VAEL wordmark — regenerate with
+    // `node website/scripts/generate-brand-assets.mjs`.
+    image: 'img/vael-agent-banner.png',
     // Algolia DocSearch (replaces @easyops-cn/docusaurus-search-local).
     // The local plugin shipped a ~16 MB client-side lunr index that every
     // visitor downloaded and hydrated before their first result; DocSearch
@@ -109,6 +150,9 @@ const config: Config = {
     algolia: {
       appId: '2JLBVEYZN5',
       apiKey: '9629ec26628d1a126535fd5ef408990d',
+      // The Algolia index is populated by the upstream crawler, so the index
+      // name stays 'hermes docs' until a VAEL-owned DocSearch app exists;
+      // renaming it here would silently break search (docs/open-items.md).
       indexName: 'hermes docs',
       contextualSearch: true,
     },
@@ -123,11 +167,11 @@ const config: Config = {
       },
     },
     navbar: {
-      title: 'Hermes Agent',
+      title: 'VAEL Agent',
       logo: {
-        alt: 'Hermes Agent',
-        src: 'img/logo.png',
-        srcDark: 'img/logo-dark.png',
+        alt: 'VAEL Agent',
+        src: 'img/vael-wordmark.svg',
+        srcDark: 'img/vael-wordmark-dark.svg',
       },
       items: [
         {
@@ -147,8 +191,10 @@ const config: Config = {
           position: 'left',
         },
         {
+          // Upstream download page: VAEL ships from the same source tree, so
+          // this stays until a VAEL-owned distribution URL exists.
           href: 'https://hermes-agent.nousresearch.com/',
-          label: 'Download',
+          label: 'Download (upstream)',
           position: 'left',
         },
         {
@@ -201,7 +247,9 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Built by <a href="https://nousresearch.com">Nous Research</a> · MIT License · ${new Date().getFullYear()}`,
+      // Single attribution surface for the upstream project (MIT compliance).
+      // Keep it to one place; see NOTICE for the full third-party notice.
+      copyright: `VAEL Agent — based on <a href="https://github.com/NousResearch/hermes-agent">Hermes Agent</a> by <a href="https://nousresearch.com">Nous Research</a> · MIT License · ${new Date().getFullYear()}`,
     },
     prism: {
       theme: prismThemes.github,

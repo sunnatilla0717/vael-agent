@@ -27,7 +27,7 @@ def _bound_home(hermes_home: Any) -> Iterator[None]:
     if not hermes_home:
         yield
         return
-    from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+    from vael_constants import reset_hermes_home_override, set_hermes_home_override
 
     token = set_hermes_home_override(hermes_home)
     try:
@@ -63,7 +63,7 @@ def _parsed(result: Any) -> dict[str, Any]:
 
 def _current_home() -> str | None:
     try:
-        from hermes_constants import get_hermes_home
+        from vael_constants import get_hermes_home
 
         return str(get_hermes_home())
     except Exception:
@@ -316,7 +316,7 @@ def execution_backend_fields(*, kind: Any, backend: Any, result: Any, error_clas
     }
 
 
-# Set while Hermes itself drives a backend (TUI/Desktop path completion listings): that is not the
+# Set while VAEL itself drives a backend (TUI/Desktop path completion listings): that is not the
 # user's workload, so it must not show up as backend usage.
 _UNMETERED = contextvars.ContextVar("shared_metrics_unmetered_backend", default=False)
 
@@ -334,7 +334,7 @@ def unmetered_backend_calls() -> Iterator[None]:
 def record_execution_backend(kind: str, backend: Any, result: Any = None, *, error_class: str | None = None) -> Any:
     """Count one tool call that reached its backend; returns ``result`` unchanged. ``backend`` may be a
     callable so resolving it costs nothing while collection is off. Calls the background review /
-    curator forks make are Hermes' own work, not the user's (terminal.outcome skips them too)."""
+    curator forks make are VAEL's own work, not the user's (terminal.outcome skips them too)."""
     from tools.skill_provenance import is_background_review
 
     if _UNMETERED.get() or is_background_review():

@@ -338,7 +338,7 @@ class LobeHubSource(SkillSource):
         tags = meta.get("tags", [])
         tag_list = tags if isinstance(tags, list) else []
         system_role = agent_data.get("config", {}).get("systemRole", "")
-        fm_lines = ["---", f"name: {identifier}", f"description: {description[:500]}", "metadata:", "  hermes:",
+        fm_lines = ["---", f"name: {identifier}", f"description: {description[:500]}", "metadata:", "  vael:",
                     f"    tags: [{', '.join(str(t) for t in tag_list)}]", "  lobehub:", "    source: lobehub", "---"]
         body_lines = [f"# {title}", "", description, "", "## Instructions", "",
                       system_role if system_role else "(No system role defined)"]

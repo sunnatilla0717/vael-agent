@@ -1,4 +1,4 @@
-"""Send ``hermes update`` back to the install whose interpreter it is running on.
+"""Send ``vael update`` back to the install whose interpreter it is running on.
 
 An install's in-tree venv can end up importing another checkout's code: an editable
 install recorded against a dev tree (what ``project_venv_dir`` used to cause when a dev

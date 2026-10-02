@@ -1201,7 +1201,7 @@ def test_managed_config_cannot_override_shared_metrics_consent(
     managed_enabled,
 ):
     from hermes_cli import config, managed_scope
-    from hermes_constants import (
+    from vael_constants import (
         reset_hermes_home_override,
         set_hermes_home_override,
     )
@@ -2843,7 +2843,7 @@ def test_milestone_install_age_is_the_subscriber_profile_not_the_relay_thread(tm
 
     from hermes_cli.observability.shared_metrics import SharedMetricsStore
     from hermes_cli.observability.shared_metrics_subscriber import SharedMetricsSubscriber
-    from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+    from vael_constants import reset_hermes_home_override, set_hermes_home_override
 
     launch, other = tmp_path / "A", tmp_path / "B"
     for home in (launch, other):

@@ -8,7 +8,7 @@ import json
 import os
 from typing import Any, Callable
 
-from hermes_constants import display_hermes_home
+from vael_constants import display_hermes_home
 from gateway.config import Platform, load_gateway_config
 from plugins.teams_pipeline.meetings import (
     enrich_meeting_with_call_record, fetch_preferred_transcript_text, list_recording_artifacts, resolve_meeting_reference)
@@ -31,7 +31,7 @@ def register_cli(subparser: argparse.ArgumentParser) -> None:
 def teams_pipeline_command(args: argparse.Namespace) -> int:
     action = getattr(args, "teams_pipeline_action", None)
     if not action:
-        print(f"Usage: hermes teams-pipeline {{{'|'.join(spec[0] for spec in _SUBCOMMANDS)}}}")
+        print(f"Usage: vael teams-pipeline {{{'|'.join(spec[0] for spec in _SUBCOMMANDS)}}}")
         return 2
     handler = _ACTIONS.get(action)
     if handler is None:

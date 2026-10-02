@@ -1,4 +1,4 @@
-"""Hermes Desktop (Chat GUI) uninstaller: removes only GUI state — built Electron artifacts, the packaged
+"""VAEL Desktop (Chat GUI) uninstaller: removes only GUI state — built Electron artifacts, the packaged
 app, and the desktop's own ``userData`` — never agent source, venv, config, sessions or .env."""
 
 import os
@@ -6,7 +6,7 @@ import shutil
 import sys
 from pathlib import Path
 
-from hermes_constants import get_hermes_home
+from vael_constants import get_hermes_home
 
 from hermes_cli.colors import Colors, color
 
@@ -25,7 +25,7 @@ def _env_dir(var: str, fallback: Path) -> Path:
 
 
 def desktop_userdata_dir() -> Path:
-    """Electron ``app.getPath('userData')`` for an app named "Hermes" on each platform (GUI-only state)."""
+    """Electron ``app.getPath('userData')`` for an app named "VAEL" on each platform (GUI-only state)."""
     home = Path.home()
     if sys.platform == "darwin":
         return home / "Library" / "Application Support" / "Hermes"
@@ -35,7 +35,7 @@ def desktop_userdata_dir() -> Path:
 
 
 def source_built_gui_artifacts(hermes_home: Path) -> "list[Path]":
-    """GUI build artifacts produced by ``hermes desktop`` inside the checkout (same ``hermes-agent/`` layout
+    """GUI build artifacts produced by ``vael desktop`` inside the checkout (same ``hermes-agent/`` layout
     install.sh uses). The Python agent runs from source + venv and never needs the Electron build output or
     node_modules (the workspace-root node_modules only carries Electron, ~200MB)."""
     agent_root = hermes_home / "hermes-agent"
@@ -45,17 +45,17 @@ def source_built_gui_artifacts(hermes_home: Path) -> "list[Path]":
 
 
 def desktop_install_record() -> Path:
-    """Where ``hermes update`` records the installed ``Hermes.app`` copies it keeps current. The apps
+    """Where ``vael update`` records the installed ``Hermes.app`` copies it keeps current. The apps
     are machine-wide, so the record sits under the default root whichever profile runs; deleting it
     is what stops an uninstalled app from being put back by the next update."""
-    from hermes_constants import get_default_hermes_root  # noqa: PLC0415
+    from vael_constants import get_default_hermes_root  # noqa: PLC0415
     return get_default_hermes_root() / "desktop-installed-apps.json"
 
 
 def packaged_gui_app_paths() -> "list[Path]":
     """Standard install locations of the packaged desktop distributable for the current OS. Every candidate
     is returned; the caller filters to those that exist. Never globs system-wide — only the well-known
-    electron-builder output locations for the "Hermes" product."""
+    electron-builder output locations for the "VAEL" product."""
     home = Path.home()
     if sys.platform == "darwin":
         return [Path("/Applications/Hermes.app"), home / "Applications" / "Hermes.app"]
@@ -155,7 +155,7 @@ def uninstall_gui(hermes_home: "Path | None" = None, *, remove_userdata: bool = 
     if not removed:
         log_info("No desktop GUI artifacts found to remove")
     if sys.platform.startswith("linux"):
-        # The desktop entry was removed above but the menu caches still list it; reindex so Hermes
+        # The desktop entry was removed above but the menu caches still list it; reindex so VAEL
         # disappears from the launcher.
         try:
             from hermes_cli.linux_desktop_entry import desktop_entry_path, refresh_desktop_databases
@@ -166,6 +166,6 @@ def uninstall_gui(hermes_home: "Path | None" = None, *, remove_userdata: bool = 
         except Exception as e:
             log_warn(f"Could not refresh the application menu cache: {e}")
         log_info("If you installed the desktop via a .deb / .rpm package, remove it with your package manager "
-                 "(e.g. 'sudo apt remove hermes' or 'sudo dnf remove hermes'). AppImage builds are a single "
+                 "(e.g. 'sudo apt remove vael' or 'sudo dnf remove vael'). AppImage builds are a single "
                  "file you can delete from wherever you saved it.")
     return removed

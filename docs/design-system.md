@@ -52,9 +52,19 @@ Dark palettes are the home turf (dashboard reads `darkColors` when present).
 Contrast floor for the accent-on-canvas pair is enforced by test
 (`web/src/themes/presets.test.ts`, ≥ 3:1).
 
+## Website projection (W phase)
+
+The docs site (`website/src/css/custom.css`) hand-projects the same palette into
+Docusaurus' `--ifm-*` tokens: `#D97757` primary / `#CC785C` accent on warm
+charcoal `#191410`, paper `#FBF7F1` in light mode. One deliberate deviation:
+the light-mode primary is the same hue darkened to `#B74C29` (5.2:1 on paper),
+because `#D97757` is only 3.1:1 on white and links must stay readable. Regenerate
+the docs assets from this palette with `node website/scripts/generate-brand-assets.mjs`.
+
 ## Files
 
 - `apps/shared/src/theme-presets.ts` — palette table (`vael` entry).
+- `website/src/css/custom.css` — docs-site projection of the same palette.
 - `apps/desktop/src/themes/presets.ts` — `vaelTheme`, `BUILTIN_THEMES`, default.
 - `web/src/themes/presets.ts` — `defaultTheme` → shared `vael` projection.
 - `tests/branding/test_vael_brand.py` — primary-hex snapshot guard.

@@ -97,7 +97,7 @@ def _write_codex_fixture(tmp_path, extra_lines=None):
 
 @pytest.fixture
 def session_db(tmp_path):
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     db = SessionDB(db_path=tmp_path / "state.db")
     yield db

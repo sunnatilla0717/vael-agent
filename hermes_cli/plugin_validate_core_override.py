@@ -1,6 +1,6 @@
-"""Admission lint: a catalog plugin must not rebind Hermes core at runtime.
+"""Admission lint: a catalog plugin must not rebind VAEL core at runtime.
 
-Plugins extend Hermes through public surfaces (hooks, middleware, provider profiles, Desktop SDK
+Plugins extend VAEL through public surfaces (hooks, middleware, provider profiles, Desktop SDK
 slots). A plugin that replaces a core function, method or module attribute in place — assigning
 ``AIAgent._replace_primary_openai_client``, ``tui_gateway.server.handle_request``, a
 ``gateway.run_turn`` helper, a private catalog dict — collides with every other plugin that patches
@@ -8,8 +8,8 @@ the same seam and breaks on any core release. This static pass finds those rebin
 Python (the import closure of ``__init__.py`` and ``dashboard/``; tests, benchmarks and scripts
 excluded). Like the Desktop lint it is a review tripwire, not a sandbox.
 
-A value is "core" when it is a Hermes module or an attribute chain off one: a name bound by an
-absolute import of a Hermes top-level package, ``importlib.import_module(...)`` / ``sys.modules``
+A value is "core" when it is a VAEL module or an attribute chain off one: a name bound by an
+absolute import of a VAEL top-level package, ``importlib.import_module(...)`` / ``sys.modules``
 lookups, ``getattr(core, ...)``, iteration over core values, and calls to plugin functions that
 return a core value. Rebinds are attribute assignment / deletion, ``setattr`` / ``delattr``,
 ``sys.modules[...] = ...``, ``mock.patch``, and passing a core value to a plugin helper that
@@ -28,7 +28,7 @@ _SKIP_DIRS = frozenset({"tests", "test", "node_modules", ".git", "__pycache__", 
 
 @lru_cache(maxsize=1)
 def _hermes_top_level() -> frozenset:
-    """Top-level importable names shipped by this Hermes checkout (packages and root modules)."""
+    """Top-level importable names shipped by this VAEL checkout (packages and root modules)."""
     root = Path(__file__).resolve().parents[1]
     names = {p.name for p in root.iterdir() if p.is_dir() and (p / "__init__.py").is_file()}
     names |= {p.stem for p in root.glob("*.py")}
@@ -51,9 +51,9 @@ def _python_files(plugin_dir: Path) -> Iterable[Tuple[Path, Path]]:
 
 
 def _runtime_files(plugin_dir: Path, files: Dict[Path, ast.AST], local: Set[str]) -> Set[Path]:
-    """The import closure of what Hermes loads: ``__init__.py`` (``register``) and ``dashboard/*.py``
+    """The import closure of what VAEL loads: ``__init__.py`` (``register``) and ``dashboard/*.py``
     (dashboard plugin API). Benchmarks, CI and smoke scripts shipped beside them never run inside
-    Hermes, so a stub they install into ``sys.modules`` is not a runtime override."""
+    VAEL, so a stub they install into ``sys.modules`` is not a runtime override."""
     by_module: Dict[str, Set[Path]] = {}
     for rel in files:
         parts = rel.with_suffix("").parts
@@ -159,7 +159,7 @@ class _Analysis:
         return False
 
     def _lookup_is_core(self, arg: ast.AST) -> bool:
-        """Whether a module-name expression names Hermes: a literal, a module-level string
+        """Whether a module-name expression names VAEL: a literal, a module-level string
         constant, or an f-string whose literal head names it (``f"hermes_plugins.{p}.adapter"``).
         A name computed some other way (the plugin locating its own package) is not judged."""
         if isinstance(arg, ast.Name):
@@ -266,7 +266,7 @@ def _functions(tree: ast.AST):
 
 
 def core_override_findings(plugin_dir: Path) -> List[str]:
-    """``["<target> (<rel>:<line>)", ...]`` for every runtime rebind of Hermes core in the plugin."""
+    """``["<target> (<rel>:<line>)", ...]`` for every runtime rebind of VAEL core in the plugin."""
     plugin_dir = Path(plugin_dir)
     parsed: Dict[Path, ast.AST] = {}
     for path, rel in _python_files(plugin_dir):
@@ -321,11 +321,11 @@ def core_override_findings(plugin_dir: Path) -> List[str]:
 
 
 def check_core_override(report, plugin_dir: Path) -> None:
-    """Fail the report when the plugin's Python rebinds Hermes core at runtime."""
+    """Fail the report when the plugin's Python rebinds VAEL core at runtime."""
     hits = core_override_findings(plugin_dir)
     report.add(
         "no core override", not hits,
-        "rebinds Hermes core at runtime (use a public hook, middleware or provider profile): "
+        "rebinds VAEL core at runtime (use a public hook, middleware or provider profile): "
         + "; ".join(hits[:8]) + (f" (+{len(hits) - 8} more)" if len(hits) > 8 else "")
-        if hits else "no runtime rebinds of Hermes core",
+        if hits else "no runtime rebinds of VAEL core",
     )

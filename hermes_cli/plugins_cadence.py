@@ -25,7 +25,7 @@ def _marker_path() -> Path:
     """The last-run marker, resolved per call (tests monkeypatch
     get_hermes_home). Derivation only — NO mkdir: a due-check or any
     read path must not create user state."""
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
 
     return get_hermes_home() / _MARKERS_DIR / "last-run"
 
@@ -166,15 +166,15 @@ def _run_check_locked(
     if updates:
         names = ", ".join(r.name for r in updates)
         log.info(
-            "plugin updates available: %s — run `hermes plugins check-updates` "
-            "and `hermes plugins update <name>`",
+            "plugin updates available: %s — run `vael plugins check-updates` "
+            "and `vael plugins update <name>`",
             names,
         )
     if needs_fixing:
         names = ", ".join(r.name for r in needs_fixing)
         log.warning(
             "plugin update_url mismatches need attention: %s — run "
-            "`hermes plugins trust-update-url <name>` after review",
+            "`vael plugins trust-update-url <name>` after review",
             names,
         )
 
@@ -215,9 +215,9 @@ def maybe_run_gateway_check(
 
     Fills in the REAL seams ``run_scheduled_check`` leaves injectable:
     the same read-only ``plugins_updates.run_checks`` the manual
-    ``hermes plugins check-updates`` uses (urllib feed fetch, git
+    ``vael plugins check-updates`` uses (urllib feed fetch, git
     ls-remote, PyPI latest), the real plugins dir, and the manual
-    ``hermes plugins update <name>`` flow as the opt-in apply path —
+    ``vael plugins update <name>`` flow as the opt-in apply path —
     auto-apply rides the identical security/consent/scan pipeline.
 
     Returns the check results, or None when not due / disabled. Due-gated
@@ -231,7 +231,7 @@ def maybe_run_gateway_check(
     if run_checks_fn is None:
         # ONE shared network-default implementation — plugins_updates
         # owns default_fetch / default_ls_remote / _default_pypi_latest;
-        # the manual `hermes plugins check-updates` passes the same
+        # the manual `vael plugins check-updates` passes the same
         # defaults. No boilerplate re-derivation here.
         from hermes_cli.plugins_updates import run_checks
 

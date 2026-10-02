@@ -1,4 +1,4 @@
-"""Plugin catalog — curated, Nous-approved Hermes plugins shipped with the repo.
+"""Plugin catalog — curated, Nous-approved VAEL plugins shipped with the repo.
 
 Mirrors the ``optional-mcps/`` MCP-catalog pattern: one YAML file per entry under the in-tree
 ``plugin-catalog/`` directory, pinned to an exact 40-character commit SHA. Presence in the directory IS
@@ -8,7 +8,7 @@ the human-merged approval gate; SHA bumps are new, re-reviewed PRs; ``removed.ya
 
 Live refresh: the docs build publishes the same data as ONE JSON document
 (``website/scripts/extract-plugins.py`` → ``/docs/api/plugin-catalog.json``, like the skills index), so
-an installed Hermes sees new entries and removals without updating. A fetch failure reuses the last valid
+an installed VAEL sees new entries and removals without updating. A fetch failure reuses the last valid
 cached copy regardless of age, then falls back to the in-tree copy when no valid cache exists.
 """
 
@@ -23,7 +23,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-import hermes_yaml as yaml
+import vael_yaml as yaml
 
 logger = logging.getLogger(__name__)
 
@@ -308,14 +308,14 @@ def match_removed(
 # ── Live catalog ─────────────────────────────────────────────────────────────
 
 def _live_cache_path() -> Path:
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
     return get_hermes_home() / "cache" / "plugin-catalog.json"
 
 
 def invalidate_live_cache_for_home(home: Path) -> None:
     """Best-effort removal of the cached live catalog under *home* (any profile's home).
 
-    ``hermes update`` drops it for every profile after the checkout changes: a snapshot fetched
+    ``vael update`` drops it for every profile after the checkout changes: a snapshot fetched
     before the bump would otherwise out-vote the newer in-tree catalog (pins the update just
     changed, entries it just added) for the rest of :data:`LIVE_CATALOG_TTL_SECONDS` (#119340).
     The next :func:`fetch_live_catalog` re-fetches the published doc, or falls back to the
@@ -367,7 +367,7 @@ def fetch_live_catalog(*, force: bool = False) -> Optional[Dict[str, Any]]:
         return _stale_live_cache(cache)
     try:
         import httpx
-        from hermes_constants import mkdir_under_hermes_home
+        from vael_constants import mkdir_under_hermes_home
         from utils import atomic_write_text
 
         resp = httpx.get(LIVE_CATALOG_URL, timeout=_REQUEST_TIMEOUT, follow_redirects=True)
@@ -395,7 +395,7 @@ def in_tree_catalog_time() -> Optional[float]:
     """Commit time (epoch) of the last change to this checkout's ``plugin-catalog/``, or ``None`` when
     the install is not a git checkout (a release/pip install cannot be newer than the published doc).
     On a git checkout whose path history is unreadable without network — the treeless ``tree:0`` layout
-    ``hermes update`` produces — the newest checked-out catalog file's mtime stands in for it, so a
+    ``vael update`` produces — the newest checked-out catalog file's mtime stands in for it, so a
     freshly updated checkout still outranks a doc fetched before the bump. Resolved once per process."""
     global _in_tree_catalog_time
     if _in_tree_catalog_time != -1.0:
@@ -418,7 +418,7 @@ def in_tree_catalog_time() -> Optional[float]:
         if resolved is None:
             # "History unreadable without network" must not collapse into "not a git checkout":
             # ``None`` feeds the frozen-copy rule that defers to the live doc, which would let a
-            # cache fetched before ``hermes update`` re-pin the old sha on exactly the installs
+            # cache fetched before ``vael update`` re-pin the old sha on exactly the installs
             # that just bumped it. A treeless clone still has its checked-out files — only the
             # historical trees are missing — and their mtime dates the checkout that wrote them.
             resolved = _catalog_worktree_mtime()
@@ -468,7 +468,7 @@ def _prefer_in_tree_entry(tree: PluginCatalogEntry, live: PluginCatalogEntry, tr
 
 def load_catalog_live() -> List[PluginCatalogEntry]:
     """Entries from the live (or cached) catalog, else the in-tree catalog. When both name an entry at
-    different pins the NEWER source supplies it — right after ``hermes update`` bumps an in-tree pin,
+    different pins the NEWER source supplies it — right after ``vael update`` bumps an in-tree pin,
     a cache fetched before the bump must not re-install the old one (see :func:`_prefer_in_tree_entry`)."""
     data = fetch_live_catalog()
     if data is None:
@@ -524,7 +524,7 @@ def entry_capability_summary(entry: PluginCatalogEntry) -> str:
     if entry.platforms:
         bits.append(f"Platforms: {', '.join(entry.platforms)}.")
     if entry.requires_hermes:
-        bits.append(f"Requires Hermes {entry.requires_hermes}.")
+        bits.append(f"Requires VAEL {entry.requires_hermes}.")
     if entry.known_issues:
         # #124058: informational — the catalog documents traps (unsupported
         # install-method/mode combinations); surface them at install prompts

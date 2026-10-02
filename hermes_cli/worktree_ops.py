@@ -1,4 +1,4 @@
-"""Git worktree isolation for ``hermes -w`` sessions: create, classify, prune.
+"""Git worktree isolation for ``vael -w`` sessions: create, classify, prune.
 
 Every git call goes through ``_git``/``_git_out``/``_git_quiet`` (UTF-8 text, captured,
 bounded timeout). Classification helpers fail SAFE toward "preserve". ``cli`` re-exports
@@ -20,7 +20,7 @@ from pathlib import Path
 from typing import Dict, Optional
 
 from hermes_cli._subprocess_compat import kill_process_tree, noninteractive_git_env
-from hermes_constants import get_hermes_home
+from vael_constants import get_hermes_home
 from utils import atomic_json_write
 
 logger = logging.getLogger("cli")
@@ -118,7 +118,7 @@ def _cleanup_failed_worktree_add(repo_root: str, wt_path: Path, branch_name: str
 
 _PACK_SPRAWL_THRESHOLD = 15
 _REPACK_TIMEOUT = 1800
-# One repack attempt per clone per interval, box-wide. Every ``hermes -w`` launch on a shared clone
+# One repack attempt per clone per interval, box-wide. Every ``vael -w`` launch on a shared clone
 # used to start its own ``git repack -a`` of the whole store; on a multi-agent box that stacked 50+
 # concurrent multi-GB repacks (each too slow under the others to ever finish inside the timeout).
 _REPACK_MIN_INTERVAL = 6 * 3600
@@ -428,7 +428,7 @@ def _setup_worktree(repo_root: str = None, sync_base: bool = True,
     repo_root = repo_root or _git_repo_root()
     if not repo_root:
         _cprint("\033[31m✗ --worktree requires being inside a git repository.\033[0m")
-        print("  cd into your project repo first, then run hermes -w")
+        print("  cd into your project repo first, then run vael -w")
         return None
 
     wt_name = ((name and re.sub(r"[^A-Za-z0-9._-]+", "-", name).strip("-._")[:40])
@@ -459,7 +459,7 @@ def _setup_worktree(repo_root: str = None, sync_base: bool = True,
 
     # Lock so other processes (and `git worktree remove`) see it is in use; fail-soft.
     try:
-        _git(["worktree", "lock", "--reason", f"hermes pid={os.getpid()}", str(wt_path)], repo_root)
+        _git(["worktree", "lock", "--reason", f"vael pid={os.getpid()}", str(wt_path)], repo_root)
         logger.debug("Worktree locked: %s (pid=%s)", wt_path, os.getpid())
     except Exception as e:
         logger.debug("git worktree lock failed (non-fatal): %s", e)
@@ -790,7 +790,7 @@ def _worktree_branch_pushed_exact(
 def _worktree_lock_is_live(repo_root: str, worktree_path: str, timeout: int = 10):
     """Lock state: ``"live"`` (owning pid runs), ``"dead"`` (pid gone / non-hermes reason), None (unlocked).
 
-    ``hermes -w`` locks with reason ``hermes pid=<pid>``; ``worktree remove --force`` refuses
+    ``vael -w`` locks with reason ``vael pid=<pid>``; ``worktree remove --force`` refuses
     locked trees, so a crashed session's lock would keep its tree forever. Fails SAFE toward "live".
     """
     try:
@@ -812,7 +812,7 @@ def _worktree_lock_is_live(repo_root: str, worktree_path: str, timeout: int = 10
             if current != target:
                 continue
             reason = line[len("locked"):].strip()
-            m = re.search(r"hermes pid=(\d+)", reason)
+            m = re.search(r"vael pid=(\d+)", reason)
             if not m:
                 # A foreign lock here is a leftover; the age/dirty/unpushed gates already passed.
                 return "dead"
@@ -892,7 +892,7 @@ def _classify_prune_candidates(repo_root: str, candidates: list) -> list:
                 return (entry, mtime, force, "unpushed", None)
             keep_branch = not merged
 
-        # Live lock = running hermes; a dead lock is unlocked in phase 3.
+        # Live lock = running vael; a dead lock is unlocked in phase 3.
         lock_state = _worktree_lock_is_live(repo_root, str(entry), timeout=5)
         if lock_state == "live":
             return (entry, mtime, force, "locked-live", None)
@@ -991,7 +991,7 @@ def _prune_stale_worktrees(repo_root: str, max_age_hours: int = 24) -> None:
 
     if preserved_stale:
         logger.warning("Preserving %d worktree(s) older than 7 days with unmerged work "
-                       "(run `hermes worktree prune` to review and reclaim): %s",
+                       "(run `vael worktree prune` to review and reclaim): %s",
                        len(preserved_stale), ", ".join(sorted(preserved_stale)))
 
     _prune_orphaned_branches(repo_root, protect=kept_branches)
@@ -1003,8 +1003,8 @@ def _prune_stale_worktrees(repo_root: str, max_age_hours: int = 24) -> None:
         count, size_mb = worktrees_summary(repo_root)
         if count >= 10 or (size_mb or 0) >= 5120:
             size_txt = f"{size_mb / 1024:.1f}GB" if size_mb else "unknown size"
-            logger.warning(".worktrees/ holds %d tree(s) (%s) — run `hermes worktree list` "
-                           "to audit and `hermes worktree prune` to reclaim safely.", count, size_txt)
+            logger.warning(".worktrees/ holds %d tree(s) (%s) — run `vael worktree list` "
+                           "to audit and `vael worktree prune` to reclaim safely.", count, size_txt)
     except Exception:
         pass
 

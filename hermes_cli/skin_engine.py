@@ -1,11 +1,11 @@
-"""Hermes skin/theme engine — the theme SDK for every surface."""
+"""VAEL skin/theme engine — the theme SDK for every surface."""
 
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from hermes_constants import get_hermes_home
+from vael_constants import get_hermes_home
 
 logger = logging.getLogger(__name__)
 
@@ -62,7 +62,7 @@ _HERMES_BRANDING: Dict[str, str] = _branding(
 
 _BUILTIN_SKINS: Dict[str, Dict[str, Any]] = {
     "default": {
-        "name": "default", "description": "Classic Hermes — gold and kawaii",
+        "name": "default", "description": "Classic VAEL — gold and kawaii",
         # Dark-authored; values match the TUI's DARK_THEME so both render the same gold.
         "colors": {
             "banner_border": "#CD7F32", "banner_title": "#FFD700", "banner_accent": "#FFBF00",
@@ -350,7 +350,7 @@ _active_skin_by_home: Dict[str, Tuple[str, SkinConfig]] = {}
 
 
 def _routed_home_key() -> Optional[str]:
-    from hermes_constants import get_hermes_home_override, hermes_home_key
+    from vael_constants import get_hermes_home_override, hermes_home_key
     return None if get_hermes_home_override() is None else hermes_home_key()
 
 
@@ -369,7 +369,7 @@ def _skins_dir() -> Path:
 def _load_skin_from_yaml(path: Path) -> Optional[Dict[str, Any]]:
     """Load a skin definition from a YAML file; None on any failure."""
     try:
-        import hermes_yaml as yaml
+        import vael_yaml as yaml
         with open(path, "r", encoding="utf-8-sig") as f:
             data = yaml.safe_load(f)
         if isinstance(data, dict) and "name" in data:

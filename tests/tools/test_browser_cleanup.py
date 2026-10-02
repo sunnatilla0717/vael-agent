@@ -119,7 +119,7 @@ class TestInactivityJanitorMultiplex:
 
     def test_janitor_tears_down_under_owner_profile_scope(self, tmp_path, monkeypatch):
         from agent import secret_scope
-        from hermes_constants import (
+        from vael_constants import (
             get_hermes_home, reset_hermes_home_override, set_hermes_home_override,
         )
 

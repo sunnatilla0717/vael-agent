@@ -82,3 +82,8 @@ Non-interactive (scripts/CI): add `--non-interactive` (sh) / `-NonInteractive`
   `sudo` installs); migrate as the owning user.
 - `already exists and is not empty`: back up or remove `~/.vael` first, or
   point `VAEL_CONFIG_DIR` elsewhere.
+
+## See also
+
+A rendered copy of this guide lives on the docs site:
+[website/docs/getting-started/migrating-from-hermes.md](../website/docs/getting-started/migrating-from-hermes.md).

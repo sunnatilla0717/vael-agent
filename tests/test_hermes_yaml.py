@@ -5,7 +5,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 import pytest
 
-import hermes_yaml as yaml
+import vael_yaml as yaml
 from utils import fast_safe_load
 
 

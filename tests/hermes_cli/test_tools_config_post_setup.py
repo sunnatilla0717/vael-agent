@@ -75,7 +75,7 @@ def test_camofox_setup_leaves_external_server_and_config_owned_by_user(monkeypat
         monkeypatch.setenv("CAMOFOX_URL", f"http://127.0.0.1:{server.server_port}")
         try:
             with (
-                patch("hermes_constants.find_node_executable", return_value="/external/npm"),
+                patch("vael_constants.find_node_executable", return_value="/external/npm"),
                 patch("subprocess.run") as run,
                 patch("pm.ensure") as ensure,
             ):

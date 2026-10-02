@@ -1,9 +1,9 @@
-"""Host-scoped update→restart obligation for ``hermes update``.
+"""Host-scoped update→restart obligation for ``vael update``.
 
-Multiplex-only (Teknium ruling): exactly ONE ``hermes gateway run`` per host serves every
+Multiplex-only (Teknium ruling): exactly ONE ``vael gateway run`` per host serves every
 profile, so "this pull still owes the fleet a restart" is a property of the HOST, not of one
 profile's ``HERMES_HOME``. The legacy ``$HERMES_HOME/fleet_restart_pending`` marker was
-per-home: ``hermes -p coder update`` armed and cleared coder's copy while restarting the
+per-home: ``vael -p coder update`` armed and cleared coder's copy while restarting the
 SHARED process, and every other profile's CLI could neither see nor discharge that obligation
 — it simply armed its own and re-killed the same host process.
 
@@ -179,7 +179,7 @@ def host_restart_already_completed(sha: Optional[str]) -> bool:
     """True when THIS host obligation was already restarted onto ``sha``.
 
     The guard that makes the catch-up restart idempotent per host: a second profile running
-    ``hermes update`` must attach to the first restart's outcome, never kill the shared
+    ``vael update`` must attach to the first restart's outcome, never kill the shared
     multiplexer again.
     """
     record = read_host_obligation()

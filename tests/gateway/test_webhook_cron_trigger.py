@@ -159,7 +159,7 @@ class TestCronJobTrigger:
         seen = []
 
         def _fake_execute(job_ref, extra_prompt=None):
-            from hermes_constants import get_hermes_home
+            from vael_constants import get_hermes_home
             seen.append((get_hermes_home(), extra_prompt))
             return {"claimed": True, "success": True, "error": None}
 

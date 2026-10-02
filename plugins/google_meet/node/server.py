@@ -1,9 +1,9 @@
-"""Remote node server — hosts the Meet bot on another machine (``hermes meet node run``).
+"""Remote node server — hosts the Meet bot on another machine (``vael meet node run``).
 
 WebSocket endpoint accepting token-signed RPC requests dispatched to ``process_manager``.
 Token: 32 hex chars minted on first boot, persisted at ``$HERMES_HOME/workspace/meetings/
 node_token.json`` so approved gateways survive restarts; the operator copies it to the gateway
-via ``hermes meet node approve <name> <url> <token>``. ``websockets`` is imported lazily.
+via ``vael meet node approve <name> <url> <token>``. ``websockets`` is imported lazily.
 """
 
 from __future__ import annotations
@@ -16,7 +16,7 @@ import time
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-from hermes_constants import get_hermes_home
+from vael_constants import get_hermes_home
 from plugins.google_meet._jsonfile import read_json
 from utils import atomic_json_write
 from plugins.google_meet.node import protocol as _proto

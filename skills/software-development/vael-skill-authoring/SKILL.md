@@ -6,7 +6,7 @@ author: VAEL
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
-  hermes:
+  vael:
     tags: [skills, authoring, vael-agent, conventions, skill-md]
     related_skills: [requesting-code-review]
 ---
@@ -32,7 +32,7 @@ In-repo skills must meet the repo's **hardline authoring standards** (see AGENTS
 ## Decide the Tier First: Bundled vs Optional
 
 - **Bundled (`skills/<category>/`)** — daily-driver behavior, broadly useful across many user types, low footprint. Hard bar: you can say "a user will load this in 5+ sessions per month" with a straight face.
-- **Optional (`optional-skills/<category>/`)** — niche, vertical-specific (blockchain, gaming, finance, one app), recurring-job/task skills, or anything heavy. Installed via `hermes skills install official/<category>/<skill>`.
+- **Optional (`optional-skills/<category>/`)** — niche, vertical-specific (blockchain, gaming, finance, one app), recurring-job/task skills, or anything heavy. Installed via `vael skills install official/<category>/<skill>`.
 
 **When in doubt, optional.** Promoting later is easy; demoting is churn. "Would be useful to anyone who ever needs this" is an optional-tier argument, not a bundled one.
 
@@ -62,7 +62,7 @@ author: Real Name (github-handle), VAEL Agent
 license: MIT
 platforms: [linux, macos, windows]   # audit, don't guess — see Platform Gating
 metadata:
-  hermes:
+  vael:
     tags: [Short, Descriptive, Tags]
     related_skills: [other-in-repo-skill]
 ---

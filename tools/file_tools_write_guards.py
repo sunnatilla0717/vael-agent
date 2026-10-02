@@ -56,12 +56,12 @@ def _config_path_resolved() -> str:
 
 
 def _hermes_home_real() -> str:
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
     return os.path.realpath(str(get_hermes_home()))
 
 
 def _get_hermes_config_resolved() -> str | None:
-    """Resolved absolute path of the Hermes config file for the ACTIVE profile.
+    """Resolved absolute path of the VAEL config file for the ACTIVE profile.
 
     Resolved per call so it tracks the per-turn ``HERMES_HOME`` scope (#107327);
     a test may pin it via ``_hermes_config_resolved`` + ``_hermes_config_resolved_loaded``."""
@@ -79,14 +79,14 @@ def _get_hermes_config_resolved() -> str | None:
         # ``get_hermes_home()`` key the happy path uses, and substitute no
         # unrelated home if even that is gone (#107327 follow-up; PR #107335).
         try:
-            from hermes_constants import get_hermes_home
+            from vael_constants import get_hermes_home
             return str((Path(str(get_hermes_home())) / "config.yaml").resolve())
         except Exception:
             return None
 
 
 def _get_real_hermes_home() -> str | None:
-    """Realpath of the authoritative Hermes home for the ACTIVE profile.
+    """Realpath of the authoritative VAEL home for the ACTIVE profile.
 
     Resolved per call so it tracks the per-turn ``HERMES_HOME`` scope (#107327);
     a test may pin it via ``_real_hermes_home_cached`` + ``_real_hermes_home_loaded``.
@@ -105,15 +105,15 @@ def _get_real_hermes_home() -> str | None:
         # path cannot be established (PR #107335). A ``None`` here fails closed at
         # the consumer: the ``~/.hermes`` exemption is skipped, so the gate runs.
         try:
-            from hermes_constants import get_hermes_home
+            from vael_constants import get_hermes_home
             return os.path.realpath(str(get_hermes_home()))
         except Exception:
             return None
 
 
 def _hermes_exempt_homes() -> tuple[str, ...]:
-    """Realpaths of the Hermes home tree(s) the protected-instruction gate must stay out of:
-    the ACTIVE profile's home, plus the Hermes ROOT when that home is a named profile
+    """Realpaths of the VAEL home tree(s) the protected-instruction gate must stay out of:
+    the ACTIVE profile's home, plus the VAEL ROOT when that home is a named profile
     (``<root>/profiles/<name>``). Exempting only the profile dir left the root's DIRECT files
     (LEDGER.md / MEMORY.md / SOUL.md / AGENTS.md ...) to the ``.hermes`` component rule, which
     gated them like a project-local ``<repo>/.hermes/config.yaml`` — fail-closed headless
@@ -125,7 +125,7 @@ def _hermes_exempt_homes() -> tuple[str, ...]:
     if not home:
         return ()
     try:
-        from hermes_constants import named_profile_home
+        from vael_constants import named_profile_home
         profile_home = named_profile_home(home)
     except Exception:
         profile_home = None
@@ -167,9 +167,9 @@ def _check_sensitive_path(filepath: str, task_id: str = "default") -> str | None
     hermes_config = _get_hermes_config_resolved()
     if hermes_config and hermes_config in candidates:
         return (
-            f"Refusing to write to Hermes config file: {filepath}\n"
+            f"Refusing to write to VAEL config file: {filepath}\n"
             "Agent cannot modify security-sensitive configuration. "
-            "Edit ~/.hermes/config.yaml directly or use 'hermes config' instead.")
+            "Edit ~/.hermes/config.yaml directly or use 'vael config' instead.")
     return None
 
 
@@ -391,7 +391,7 @@ def _check_approval_required_write(paths: list[str], task_id: str = "default") -
 
 
 def _get_container_mirror_prefix_for_task(task_id: str = "default") -> str | None:
-    """Return the container-side Hermes mirror prefix for persistent Docker file tools."""
+    """Return the container-side VAEL mirror prefix for persistent Docker file tools."""
     try:
         from tools.terminal_tool import (
             _active_environments, _env_lock, _get_env_config, _resolve_container_task_id)
@@ -412,7 +412,7 @@ def _get_container_mirror_prefix_for_task(task_id: str = "default") -> str | Non
 
 def _check_cross_profile_path(filepath: str, task_id: str = "default") -> str | None:
     """Soft-guard: warn when ``filepath`` lands on a host-side or Docker sandbox MIRROR of
-    Hermes state (a write the host never reads). Not profile isolation — that guard was
+    VAEL state (a write the host never reads). Not profile isolation — that guard was
     removed; ``cross_profile=True`` keeps bypassing this one for replay compat. Fails open."""
     try:
         from agent.file_safety import get_container_mirror_warning, get_sandbox_mirror_warning

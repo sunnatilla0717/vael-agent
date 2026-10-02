@@ -11,8 +11,8 @@ from __future__ import annotations
 
 import pytest
 
-import hermes_state_registry as registry
-from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+import vael_state_registry as registry
+from vael_constants import reset_hermes_home_override, set_hermes_home_override
 from tui_gateway import server
 
 

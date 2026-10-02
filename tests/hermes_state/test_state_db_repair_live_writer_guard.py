@@ -28,11 +28,11 @@ from pathlib import Path
 
 import pytest
 
-import hermes_state
-import hermes_state_repair
-import hermes_state_holders
-from hermes_state import SessionDB
-from hermes_state_repair import repair_state_db_schema
+import vael_state
+import vael_state_repair
+import vael_state_holders
+from vael_state import SessionDB
+from vael_state_repair import repair_state_db_schema
 
 
 def _make_wal_db(tmp_path: Path) -> Path:
@@ -275,7 +275,7 @@ def test_uninspectable_watched_identity_blocks_alias_before_sqlite(
         # swallow the error and report the database missing).
         frame = sys._getframe(1)
         if (str(path) == str(db) and not args and not kwargs
-                and frame.f_globals.get("__name__") == "hermes_state_holders"):
+                and frame.f_globals.get("__name__") == "vael_state_holders"):
             raise PermissionError(errno.EACCES, "watched identity denied", path)
         if path == "/proc/4242/fd/7":
             return real_stat(db)

@@ -18,9 +18,9 @@ inlined below until that module lands). Path-derived on purpose: an
 electron-updater update replaces the artifact (new stamp bytes) at the
 same path, and the channel opt-in must survive that.
 
-* Written by ``hermes update --set-channel <x>`` from inside an install
+* Written by ``vael update --set-channel <x>`` from inside an install
   (it knows its own id — the user never types a sha).
-* Shown by ``hermes update --install-id`` and the desktop About page.
+* Shown by ``vael update --install-id`` and the desktop About page.
 * Source installs select an R2 channel name, or use an explicit branch override.
   Bundles derive their channel from their baked identity, never these records.
   ``external`` installs have no configurable channel; the steward owns updates.
@@ -278,7 +278,7 @@ def _write_channel_record_locked(sha16: str, path: str, channel: str,
 
     Persists through the shared comment-preserving atomic writer
     (:func:`utils.atomic_roundtrip_yaml_update` — the same ruamel round-trip
-    path ``hermes config set`` uses), fail-closed via
+    path ``vael config set`` uses), fail-closed via
     :func:`hermes_cli.config.require_readable_config_before_write`. Malformed
     ``update`` / ``update.installs`` values are refused, never replaced —
     the dotted writer would otherwise turn a scalar into a mapping and

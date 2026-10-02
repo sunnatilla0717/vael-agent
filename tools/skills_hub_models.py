@@ -10,8 +10,10 @@ from pathlib import PurePosixPath
 from typing import Any, Callable, Dict, Iterable, List, Optional, Union
 from urllib.parse import unquote, urlsplit
 
+from agent.skill_utils import skill_metadata_block
+
 import httpx
-import hermes_yaml as yaml
+import vael_yaml as yaml
 
 logger = logging.getLogger("tools.skills_hub")
 
@@ -186,10 +188,8 @@ def _parse_frontmatter(content: str) -> dict:
 
 
 def _hermes_tags(fm: dict) -> Any:
-    """``metadata.hermes.tags`` from parsed frontmatter, or ``[]`` (unvalidated type)."""
-    metadata = fm.get("metadata", {})
-    hermes_meta = metadata.get("hermes", {}) if isinstance(metadata, dict) else None
-    return hermes_meta.get("tags", []) if isinstance(hermes_meta, dict) else []
+    """``metadata.vael.tags`` (legacy ``metadata.hermes.tags``) or ``[]``."""
+    return skill_metadata_block(fm).get("tags", [])
 
 
 def source_url_for_bundle(bundle: SkillBundle) -> str:

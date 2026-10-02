@@ -14,7 +14,7 @@ from datetime import datetime, timezone
 
 import pytest
 
-from hermes_state import SessionDB
+from vael_state import SessionDB
 from tools.session_search_tool import (
     _format_timestamp,
     _is_compacted_message,
@@ -115,9 +115,9 @@ class TestBrowseShape:
                 return []
 
         db = _DB()
-        monkeypatch.setattr("hermes_state_registry.acquire", lambda: db)
+        monkeypatch.setattr("vael_state_registry.acquire", lambda: db)
         monkeypatch.setattr(
-            "hermes_state_registry.release_or_close",
+            "vael_state_registry.release_or_close",
             lambda _: setattr(db, "released", db.released + 1),
         )
 

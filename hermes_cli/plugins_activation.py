@@ -98,21 +98,21 @@ def activate_plugin_now(name: str, *, in_process: bool = True) -> Dict[str, Any]
     subscribers here — the TUI/Desktop server — see it), connect its MCP servers and hand them plus
     its skills to the open chats of this profile (:func:`load_and_go_live`), and nudge the running
     gateway to load it too over its control socket so live adapters re-wire their handlers. A caller
-    in another process (``hermes plugins install``) passes ``in_process=False``; the running Desktop /
+    in another process (``vael plugins install``) passes ``in_process=False``; the running Desktop /
     dashboard backend is then asked to do the in-process half (:func:`notify_serve_backend`). Never raises.
 
     Returns ``{"gateway_reloaded": bool, "activation": summary | None, "restart_required": bool}``.
     ``activation.live_now`` lists what is usable in open chats now; ``activation.deferred`` what waits
     for the next session. ``restart_required`` is True only when no gateway answered (old gateway, not
     running)."""
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
     activation: Optional[Dict[str, Any]] = load_and_go_live(name) if in_process else None
     if not in_process:
         activation = (notify_serve_backend(name, Path(get_hermes_home())) or {}).get("activation")
     answer = None
     try:
         from gateway.control_socket import reload_gateway_plugins
-        from hermes_constants import get_default_hermes_root
+        from vael_constants import get_default_hermes_root
         home = Path(get_hermes_home())
         answer = reload_gateway_plugins(home)
         if answer is None:
@@ -165,7 +165,7 @@ def _go_live(name: str) -> Optional[Dict[str, Any]]:
     server = sys.modules.get("tui_gateway.server")  # loaded == this process hosts chats
     note = live_notice(activation)
     if server is not None and (servers or note):
-        from hermes_constants import get_hermes_home
+        from vael_constants import get_hermes_home
         try:
             server.refresh_plugin_sessions(Path(get_hermes_home()), note)
         except Exception:
@@ -184,7 +184,7 @@ def _serve_backend_record():
 
 
 def notify_serve_backend(name: str, home: Path) -> Optional[Dict[str, Any]]:
-    """Ask the running dashboard / Desktop backend (``hermes serve``, found through its host record) to
+    """Ask the running dashboard / Desktop backend (``vael serve``, found through its host record) to
     run :func:`load_and_go_live` for ``name`` in ``home``. None when no backend answers. Never raises."""
     try:
         import json
@@ -219,7 +219,7 @@ def activation_hint(result: Dict[str, Any]) -> str:
     if not result.get("gateway_reloaded"):
         if lines:  # live in open chats; a messaging gateway that starts later loads it at boot
             return "\n".join(lines)
-        return "\n".join([*lines, "Restart the gateway for the plugin to take effect:\n  hermes gateway restart"])
+        return "\n".join([*lines, "Restart the gateway for the plugin to take effect:\n  vael gateway restart"])
     now, deferred = act.get("activated_now") or {}, act.get("deferred") or {}
     parts = []
     if now:

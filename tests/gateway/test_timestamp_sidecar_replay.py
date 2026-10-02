@@ -17,7 +17,7 @@ NOTE = "[System note: Your previous turn was interrupted. Continue the old task.
 
 
 def _render(text, timestamp=STAMP):
-    from hermes_time import get_timezone
+    from vael_time import get_timezone
 
     return render_user_content_with_timestamp(text, timestamp, tz=get_timezone())
 
@@ -46,7 +46,7 @@ def test_recovery_cleanup_never_restores_a_sidecar(timestamps, embedded, real_te
 @pytest.fixture
 def responses_agent(tmp_path, monkeypatch):
     """Use the real agent/Responses converter; replace only the network call."""
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
     from run_agent import AIAgent
 
     captured = []
@@ -118,7 +118,7 @@ def test_full_builder_to_responses_keeps_cross_turn_prefix(responses_agent, tmp_
 
     history = db.get_messages_as_conversation(sid)
     if resume == "db":
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
 
         reopened = SessionDB(db_path=tmp_path / "state.db")
         try:

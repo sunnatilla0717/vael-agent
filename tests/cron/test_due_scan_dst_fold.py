@@ -3,7 +3,7 @@
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 
-import hermes_time
+import vael_time
 import pytest
 
 from cron import jobs

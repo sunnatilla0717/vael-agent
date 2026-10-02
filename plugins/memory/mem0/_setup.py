@@ -16,7 +16,7 @@ import urllib.request
 from pathlib import Path
 from typing import Any
 
-from hermes_constants import get_hermes_home  # noqa: F401 — patched by tests
+from vael_constants import get_hermes_home  # noqa: F401 — patched by tests
 
 from ._oss_providers import EMBEDDER_PROVIDERS, KNOWN_DIMS, LLM_PROVIDERS, VECTOR_PROVIDERS, validate_oss_config, vector_default_config
 
@@ -187,7 +187,7 @@ def _setup_platform(hermes_home: str, config: dict, flags: dict[str, str]) -> No
     provider_config.update(mode="platform", host="")
     # _load_config() also seeds ``host`` from MEM0_HOST (.env); the file clear can't help there, so warn.
     if os.environ.get("MEM0_HOST", "").strip():
-        print(f"\n  ⚠ MEM0_HOST is set in your environment ({os.environ['MEM0_HOST']}). It overrides platform mode — remove it from ~/.hermes/.env (or unset it) or Hermes will keep routing to the self-hosted server.")
+        print(f"\n  ⚠ MEM0_HOST is set in your environment ({os.environ['MEM0_HOST']}). It overrides platform mode — remove it from ~/.hermes/.env (or unset it) or VAEL will keep routing to the self-hosted server.")
     _persist_provider_config(hermes_home, config, provider_config, env_writes, "mem0", "API keys saved to .env")
 
 
@@ -432,8 +432,8 @@ def _install_provider_deps(llm_id: str, embedder_id: str, vector_id: str) -> Non
     """Point at the pip deps the selected OSS backends need.
 
     These are third-party backend SDKs (ollama, qdrant-client, ...), not
-    hermes dependencies — pm does not install arbitrary specs into the
-    hermes venv. Print the exact command instead."""
+    vael dependencies — pm does not install arbitrary specs into the
+    vael venv. Print the exact command instead."""
     deps: set[str] = set()
     for registry, pid in [(LLM_PROVIDERS, llm_id), (EMBEDDER_PROVIDERS, embedder_id),
                           (VECTOR_PROVIDERS, vector_id)]:
@@ -449,7 +449,7 @@ def _install_provider_deps(llm_id: str, embedder_id: str, vector_id: str) -> Non
     if missing:
         print("\n  The selected backends need extra packages:")
         print(f"    Missing: {', '.join(missing)}")
-        print("  Declare these requirements in the plugin's pyproject.toml, then run `hermes pm install` and restart Hermes.")
+        print("  Declare these requirements in the plugin's pyproject.toml, then run `vael pm install` and restart VAEL.")
 
 
 def _probe(fn, ok: str, fail: str, exc=Exception) -> tuple[bool, str]:
@@ -504,13 +504,13 @@ _MODE_PICKER = (_setup_platform, _setup_selfhosted, _setup_oss)
 
 
 def post_setup(hermes_home: str, config: dict) -> None:
-    """Entry point for `hermes memory setup`: routes on --mode (platform / selfhosted / oss), else shows a picker.
+    """Entry point for `vael memory setup`: routes on --mode (platform / selfhosted / oss), else shows a picker.
     OSS is non-interactive only when the mode came from the flag."""
     with suppress(ImportError):  # mem0ai must meet the minimum version from plugin.yaml
         import mem0
         installed_ver = getattr(mem0, "__version__", None)
         if installed_ver and tuple(int(x) for x in installed_ver.split(".")[:3]) < (2, 0, 7):
-            print(f"\n  ⚠ mem0ai {installed_ver} installed but >=2.0.7 required.\n  Run `hermes pm repair`, then restart Hermes.")
+            print(f"\n  ⚠ mem0ai {installed_ver} installed but >=2.0.7 required.\n  Run `vael pm repair`, then restart VAEL.")
     flags = parse_flags(sys.argv[1:])
     handler = _MODE_HANDLERS.get(flags["mode"])
     flags["_mode_from_flag"] = handler is not None

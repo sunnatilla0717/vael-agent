@@ -11,7 +11,7 @@ from gateway.config import GatewayConfig, Platform, PlatformConfig
 from gateway.platforms.base import BasePlatformAdapter, ProcessingOutcome, SendResult
 from gateway.platforms.event import MessageEvent
 from gateway.run import GatewayRunner
-from hermes_constants import get_hermes_home
+from vael_constants import get_hermes_home
 
 
 class RecordingAdapter(BasePlatformAdapter):

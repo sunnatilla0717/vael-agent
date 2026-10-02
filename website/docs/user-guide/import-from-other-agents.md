@@ -1,12 +1,12 @@
 ---
 sidebar_position: 9
 title: "Import from Other Agents"
-description: "One-command import of a Claude Code (~/.claude) or OpenAI Codex CLI (~/.codex) setup into Hermes — instructions, allowlists, MCP servers, skills, and memories."
+description: "One-command import of a Claude Code (~/.claude) or OpenAI Codex CLI (~/.codex) setup into VAEL — instructions, allowlists, MCP servers, skills, and memories."
 ---
 
 # Import from Other Agents
 
-`hermes import-agent` imports your existing **Claude Code** or **OpenAI Codex CLI** setup into Hermes with one command. It follows the same preview-first pattern as [`hermes claw migrate`](../guides/migrate-from-openclaw.md): you always see a per-item plan before anything is written, and `--dry-run` never touches disk.
+`hermes import-agent` imports your existing **Claude Code** or **OpenAI Codex CLI** setup into VAEL with one command. It follows the same preview-first pattern as [`hermes claw migrate`](../guides/migrate-from-openclaw.md): you always see a per-item plan before anything is written, and `--dry-run` never touches disk.
 
 ```bash
 hermes import-agent                    # auto-detect ~/.claude or ~/.codex
@@ -21,7 +21,7 @@ hermes import-agent claude-code --overwrite --yes  # replace conflicts, skip pro
 
 ### Claude Code (`~/.claude`)
 
-| Claude Code | Hermes |
+| Claude Code | VAEL |
 |---|---|
 | `CLAUDE.md` (global instructions) | Memory entries in `~/.hermes/memories/MEMORY.md` |
 | `settings.json` → `permissions.allow` (`Bash(...)` rules) | `command_allowlist` in `config.yaml` |
@@ -34,7 +34,7 @@ Claude's `Bash(npm run test:*)` prefix rules become `npm run test*` globs. Non-`
 
 ### Codex CLI (`~/.codex`)
 
-| Codex CLI | Hermes |
+| Codex CLI | VAEL |
 |---|---|
 | `AGENTS.md` (global instructions) | Memory entries in `~/.hermes/memories/MEMORY.md` |
 | `config.toml` → `[mcp_servers.*]` | `mcp_servers` in `config.yaml` |
@@ -49,7 +49,7 @@ Claude's `Bash(npm run test:*)` prefix rules become `npm run test*` globs. Non-`
 
 - **Preview first, always.** The command prints the full plan before applying; in non-interactive sessions it stops at the preview unless you pass `--yes`.
 - **Merges, not replaces.** Memory entries are deduplicated against your existing `MEMORY.md`; allowlist/denylist patterns merge with what's already in `config.yaml`.
-- **Conflicts are skipped by default.** An MCP server or skill that already exists in Hermes is reported as a conflict; pass `--overwrite` to replace it.
+- **Conflicts are skipped by default.** An MCP server or skill that already exists in VAEL is reported as a conflict; pass `--overwrite` to replace it.
 - **Malformed files don't abort the run.** A broken `settings.json` or `config.toml` becomes a per-item error in the report while everything else still imports.
 - Coming from OpenClaw instead? Use [`hermes claw migrate`](../guides/migrate-from-openclaw.md).
 

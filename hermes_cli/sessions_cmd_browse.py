@@ -1,10 +1,10 @@
-"""Interactive picker for ``hermes sessions browse``: curses UI with live search filtering and ``d``
+"""Interactive picker for ``vael sessions browse``: curses UI with live search filtering and ``d``
 delete-with-confirmation; numbered-list fallback when curses is unavailable (Windows, etc.)."""
 
 from typing import Optional
 
 from hermes_cli.timefmt import relative_time as _relative_time
-from hermes_state_errors import SessionActiveWriteGuardError
+from vael_state_errors import SessionActiveWriteGuardError
 
 
 def _session_status_tag(status: Optional[str]) -> str:

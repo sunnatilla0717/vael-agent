@@ -6,7 +6,7 @@ author: Teknium + Hermes Agent
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
-  hermes:
+  vael:
     tags: [orchestration, fan-out, subagents, delegation, verification, migration, audit, research, campaign]
     category: autonomous-ai-agents
     related_skills: [vael-agent, simplify-code]

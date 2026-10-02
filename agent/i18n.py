@@ -1,4 +1,4 @@
-"""Lightweight i18n for Hermes' static user-facing strings (approval prompts, gateway replies, CLI, tips).
+"""Lightweight i18n for VAEL's static user-facing strings (approval prompts, gateway replies, CLI, tips).
 
 Catalogs are flat dotted-key mappings resolved through layers, top first:
 
@@ -87,7 +87,7 @@ def _locales_dir() -> Path:
 
 
 def _current_home() -> str:
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
     return str(get_hermes_home())
 
 
@@ -108,7 +108,7 @@ def supported_languages(home: str | None = None) -> tuple[str, ...]:
 
 def resolve_language_id(value: Any, home: str | None = None) -> str | None:
     """Canonical supported id for a user-supplied value (code, alias, regional tag), or ``None`` when no
-    layer supplies it — the validation ``hermes config set display.language`` runs."""
+    layer supplies it — the validation ``vael config set display.language`` runs."""
     key = i18n_layers.normalize_language_id(value)
     if not key:
         return None

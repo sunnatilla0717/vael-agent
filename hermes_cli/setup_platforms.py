@@ -1,4 +1,4 @@
-"""Messaging-platform setup wizards (Telegram, BlueBubbles, webhooks) and the ``hermes setup
+"""Messaging-platform setup wizards (Telegram, BlueBubbles, webhooks) and the ``vael setup
 gateway`` flow. setup.py re-exports the public names, and tests monkeypatch prompt/print/env
 helpers on hermes_cli.setup, so those are imported lazily per function."""
 
@@ -170,7 +170,7 @@ def _setup_telegram():
         "TELEGRAM_ALLOWED_USERS", "Allowed user IDs (comma-separated, leave empty for open access)",
         "Telegram allowlist configured - only listed users can use the bot",
         "⚠️  No allowlist set - anyone who finds your bot can use it!", preset=allowed_users)
-    _info(None, "📬 Home Channel: where Hermes delivers cron job results,",
+    _info(None, "📬 Home Channel: where VAEL delivers cron job results,",
           "   cross-platform messages, and notifications.",
           "   For Telegram DMs, this is your user ID (same as above).")
     first_user_id = allowed_users.split(",")[0].strip() if allowed_users else ""
@@ -193,7 +193,7 @@ def _setup_bluebubbles():
     print_header("BlueBubbles (iMessage)")
     if declines_reconfigure("BlueBubbles", "Reconfigure BlueBubbles?", "BLUEBUBBLES_SERVER_URL"):
         return
-    _info("Connects Hermes to iMessage via BlueBubbles — a free, open-source",
+    _info("Connects VAEL to iMessage via BlueBubbles — a free, open-source",
           "macOS server that bridges iMessage to any device.",
           "   Requires a Mac running BlueBubbles Server v1.0.0+",
           "   Download: https://bluebubbles.app/", None,
@@ -241,7 +241,7 @@ def _setup_webhooks():
     save_env_value("WEBHOOK_ENABLED", "true")
     print()
     print_success("Webhooks enabled! Next steps:")
-    from hermes_constants import display_hermes_home as _dhh
+    from vael_constants import display_hermes_home as _dhh
     _info(f"   1. Define webhook routes in {_dhh()}/config.yaml",
           "   2. Point your service (GitHub, GitLab, etc.) at:",
           "      http://your-server:8644/webhooks/<route-name>", None,
@@ -249,8 +249,8 @@ def _setup_webhooks():
           "   https://hermes-agent.nousresearch.com/docs/user-guide/messaging/webhooks/#configuring-routes",
           None,
           # Printed twice upstream; kept verbatim for output parity.
-          "   Open config in your editor:  hermes config edit",
-          "   Open config in your editor:  hermes config edit")
+          "   Open config in your editor:  vael config edit",
+          "   Open config in your editor:  vael config edit")
 
 
 # (platform label, credential env var, home-channel env vars — any one satisfies)
@@ -280,7 +280,7 @@ def _warn_missing_home_channels() -> None:
     _info("   Without a home channel, cron jobs and cross-platform",
           "   messages can't be delivered to those platforms.",
           "   Set one later with /set-home in your chat, or:",
-          *(f"     hermes config set {plat.upper()}_HOME_CHANNEL <channel_id>" for plat in missing_home))
+          *(f"     vael config set {plat.upper()}_HOME_CHANNEL <channel_id>" for plat in missing_home))
 
 
 def _restart_running_gateway(any_messaging: bool, supports_systemd: bool) -> None:
@@ -323,7 +323,7 @@ def setup_gateway(config: dict):
     from hermes_cli.setup import _info, print_header, print_info, print_success, prompt_checklist
     from hermes_cli.gateway import _all_platforms, _platform_status, _configure_platform
     print_header("Messaging Platforms")
-    _info("Connect to messaging platforms to chat with Hermes from anywhere.",
+    _info("Connect to messaging platforms to chat with VAEL from anywhere.",
           "Toggle with Space, confirm with Enter.", None)
     platforms = _all_platforms()
 
@@ -333,7 +333,7 @@ def setup_gateway(config: dict):
     pre_selected = [i for i, status in enumerate(statuses) if status == "configured"]
     selected = prompt_checklist("Select platforms to configure:", items, pre_selected)
     if not selected:
-        print_info("No platforms selected. Run 'hermes setup gateway' later to configure.")
+        print_info("No platforms selected. Run 'vael setup gateway' later to configure.")
     for idx in selected or ():
         _configure_platform(platforms[idx])
 
@@ -347,8 +347,8 @@ def setup_gateway(config: dict):
         _warn_missing_home_channels()
 
     # Gateway service setup runs UNCONDITIONALLY — a gateway with zero platforms is a supported
-    # mode (cron keeps running; adapters come up once tokens are added via `hermes import` /
-    # `hermes setup gateway`). Gating it on messaging config left install-then-import machines
+    # mode (cron keeps running; adapters come up once tokens are added via `vael import` /
+    # `vael setup gateway`). Gating it on messaging config left install-then-import machines
     # with cron jobs and bot tokens but no process to serve them.
     from hermes_cli.gateway import _is_service_running, supports_systemd_services, ensure_gateway_service
     supports_systemd = supports_systemd_services()

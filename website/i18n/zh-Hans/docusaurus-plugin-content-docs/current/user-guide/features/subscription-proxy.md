@@ -6,14 +6,14 @@ description: "将你的 Nous Portal 订阅（或其他 OAuth 提供商）用作�
 
 # 订阅代理
 
-订阅代理是一个本地 HTTP 服务器，让外部应用——OpenViking、Karakeep、Open WebUI，以及任何支持 OpenAI 兼容聊天补全（chat completions）的应用——能够将你的 Hermes 托管提供商订阅用作其 LLM 端点。代理会自动附加正确的凭据（并在需要时自动刷新），因此应用无需静态 API 密钥。
+订阅代理是一个本地 HTTP 服务器，让外部应用——OpenViking、Karakeep、Open WebUI，以及任何支持 OpenAI 兼容聊天补全（chat completions）的应用——能够将你的 VAEL 托管提供商订阅用作其 LLM 端点。代理会自动附加正确的凭据（并在需要时自动刷新），因此应用无需静态 API 密钥。
 
 这与 [API 服务器](./api-server.md) 不同：
 
 | | API 服务器 | 订阅代理 |
 |---|---|---|
 | 服务内容 | 你的 Agent（完整工具集、记忆、技能） | 原始模型推理 |
-| 使用场景 | "将 Hermes 用作聊天后端" | "从其他应用使用我的 Portal 订阅" |
+| 使用场景 | "将 VAEL 用作聊天后端" | "从其他应用使用我的 Portal 订阅" |
 | 认证 | 你的 `API_SERVER_KEY` | 任意 bearer（代理附加真实凭据） |
 | 工具调用 | 是——Agent 执行工具 | 否——仅透传 |
 
@@ -27,7 +27,7 @@ description: "将你的 Nous Portal 订阅（或其他 OAuth 提供商）用作�
 hermes portal
 ```
 
-这会打开浏览器进行 Nous Portal OAuth 流程。Hermes 将刷新令牌存储在 `~/.hermes/auth.json` 中——与所有 Hermes 提供商登录信息存放在同一位置。
+这会打开浏览器进行 Nous Portal OAuth 流程。VAEL 将刷新令牌存储在 `~/.hermes/auth.json` 中——与所有 VAEL 提供商登录信息存放在同一位置。
 
 ### 2. 启动代理
 

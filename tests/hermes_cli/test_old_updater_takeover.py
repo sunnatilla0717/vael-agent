@@ -55,7 +55,7 @@ def test_historical_payload_maps_to_takeover_request_schema(tmp_path, desktop, r
     shutil.copy2(source / "hermes_cli/update_handoff.py", package / "update_handoff.py")
     # write_handoff resolves the home through hermes_constants; the child tree is the whole
     # sys.path (CI has no editable finder), so give it the one name the hand-off reads.
-    (root / "hermes_constants.py").write_text(
+    (root / "vael_constants.py").write_text(
         "import os\nfrom pathlib import Path\n"
         "def get_hermes_home():\n    return Path(os.environ['HERMES_HOME'])\n", encoding="utf-8",
     )
@@ -92,10 +92,10 @@ def test_shipped_post_swap_argv_enters_takeover_before_current_cli(tmp_path):
     package.mkdir(parents=True)
     (package / "__init__.py").write_text("", encoding="utf-8")
     (package / "main.py").write_text(
-        "import hermes_bootstrap\nraise AssertionError('current CLI parsed a legacy continuation')\n",
+        "import vael_bootstrap\nraise AssertionError('current CLI parsed a legacy continuation')\n",
         encoding="utf-8",
     )
-    for relative in ("hermes_bootstrap.py", "hermes_cli/update_handoff.py", "hermes_cli/_old_updater.py"):
+    for relative in ("vael_bootstrap.py", "hermes_cli/update_handoff.py", "hermes_cli/_old_updater.py"):
         shutil.copy2(source / relative, root / relative)
     (package / "_update_takeover.py").write_text(
         "import json, sys\nfrom pathlib import Path\n"

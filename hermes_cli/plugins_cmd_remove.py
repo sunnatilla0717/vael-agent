@@ -1,4 +1,4 @@
-"""``hermes plugins remove``: tree + install-metadata removal kept consistent, config bookkeeping, and the
+"""``vael plugins remove``: tree + install-metadata removal kept consistent, config bookkeeping, and the
 dashboard/TUI remove path.
 
 Sibling of :mod:`hermes_cli.plugins_cmd` (the facade re-exports the names other modules use and is
@@ -55,7 +55,7 @@ def cmd_remove(name: str) -> None:
     console.print(f"[red]✗[/red] Plugin [bold]{name}[/bold] removed from {plugins_dir}")
     if result.get("cleared_memory_provider"):
         console.print("[yellow]memory.provider pointed at this plugin and was reset; "
-                      "run `hermes memory setup` to pick another.[/yellow]")
+                      "run `vael memory setup` to pick another.[/yellow]")
     console.print()
 
 

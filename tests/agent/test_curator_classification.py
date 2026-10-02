@@ -30,7 +30,7 @@ def curator_env(tmp_path, monkeypatch):
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
 
     import importlib
-    import hermes_constants
+    import vael_constants
     importlib.reload(hermes_constants)
     from agent import curator
     importlib.reload(curator)

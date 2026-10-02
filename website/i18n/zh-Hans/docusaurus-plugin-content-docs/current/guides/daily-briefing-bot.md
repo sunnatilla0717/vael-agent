@@ -15,7 +15,7 @@ description: "构建一个自动化每日简报机器人，研究主题、汇总
 流程如下：
 
 1. **上午 8:00** — cron 调度器触发任务
-2. **Hermes 启动**一个全新的 agent 会话，使用你的 prompt（提示词）
+2. **VAEL 启动**一个全新的 agent 会话，使用你的 prompt（提示词）
 3. **网页搜索**拉取你关注主题的最新新闻
 4. **汇总**将内容提炼为简洁的简报格式
 5. **推送**将简报发送到你的 Telegram 或 Discord
@@ -26,7 +26,7 @@ description: "构建一个自动化每日简报机器人，研究主题、汇总
 
 开始之前，请确保：
 
-- **已安装 Hermes Agent** — 参见[安装指南](../getting-started/installation.md)
+- **已安装 VAEL Agent** — 参见[安装指南](../getting-started/installation.md)
 - **Gateway 正在运行** — gateway 守护进程负责处理 cron 执行：
   ```bash
   hermes gateway install   # Install as a user service
@@ -56,7 +56,7 @@ Search for the latest news about AI agents and open source LLMs.
 Summarize the top 3 stories in a concise briefing format with links.
 ```
 
-Hermes 将搜索网页、阅读结果，并生成类似以下内容：
+VAEL 将搜索网页、阅读结果，并生成类似以下内容：
 
 ```
 ☀️ Your AI Briefing — March 8, 2026
@@ -90,11 +90,11 @@ Hermes 将搜索网页、阅读结果，并生成类似以下内容：
 
 现在让我们将其设置为每天早晨自动运行。有两种方式可以实现。
 
-在创建 cron 任务之前，请确保 Hermes 已全局配置了默认模型和 provider。如果你希望某个任务使用不同的值，可在创建时设置该任务专属的 model/provider 覆盖项。
+在创建 cron 任务之前，请确保 VAEL 已全局配置了默认模型和 provider。如果你希望某个任务使用不同的值，可在创建时设置该任务专属的 model/provider 覆盖项。
 
 ### 方式 A：自然语言（在聊天中）
 
-直接告诉 Hermes 你想要什么：
+直接告诉 VAEL 你想要什么：
 
 ```
 Every morning at 8am, search the web for the latest news about AI agents
@@ -102,7 +102,7 @@ and open source LLMs. Summarize the top 3 stories in a concise briefing
 with links. Use a friendly, professional tone. Deliver to telegram.
 ```
 
-Hermes 将使用统一的 `cronjob` 工具为你创建 cron 任务。
+VAEL 将使用统一的 `cronjob` 工具为你创建 cron 任务。
 
 ### 方式 B：CLI 斜杠命令
 
@@ -155,7 +155,7 @@ Format as a clean briefing with section headers and emoji. End with today's date
 
 ### 使用委托进行并行研究
 
-若要加快简报生成速度，可以告诉 Hermes 将每个主题委托给子 agent：
+若要加快简报生成速度，可以告诉 VAEL 将每个主题委托给子 agent：
 
 ```
 /cron add "0 8 * * *" "Create a morning briefing by delegating research to sub-agents. Delegate three parallel tasks:
@@ -235,7 +235,7 @@ e5f6g7h8    | Evening Recap     | 0 18 * * *  | 2026-03-08 18:00   | telegram
 Remove my morning briefing cron job.
 ```
 
-Hermes 将使用 `cronjob(action="list")` 查找任务，并使用 `cronjob(action="remove")` 将其删除。
+VAEL 将使用 `cronjob(action="list")` 查找任务，并使用 `cronjob(action="remove")` 将其删除。
 
 ### 检查 Gateway 状态
 

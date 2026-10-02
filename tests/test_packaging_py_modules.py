@@ -4,7 +4,7 @@
 (``run_agent``, ``hermes_state``, ``toolsets``...) reach the wheel through
 ``setup.py::_root_py_modules()``, which derives the list from the tree at build time. A
 static list drifted every time the root layout changed and broke installed wheels with
-``ModuleNotFoundError`` on ``import hermes_state``. This test pins the two halves of that
+``ModuleNotFoundError`` on ``import vael_state``. This test pins the two halves of that
 contract: the derived list covers every root module packaged code can import, and the
 helper stays the single source (no static ``py-modules`` creeping back into pyproject).
 """
@@ -72,4 +72,4 @@ def test_every_root_module_imported_by_packaged_code_is_shipped():
     missing = {f: sorted(n for n in names if n not in shipped) for f, names in _imported_root_names(paths).items()}
     missing = {f: v for f, v in missing.items() if v}
     assert not missing, f"packaged code imports root modules the wheel would not ship: {missing}"
-    assert "hermes_state" in shipped and "setup" not in shipped
+    assert "vael_state" in shipped and "setup" not in shipped

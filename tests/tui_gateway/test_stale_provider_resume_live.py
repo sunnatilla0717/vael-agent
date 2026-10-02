@@ -32,7 +32,7 @@ import uuid
 from pathlib import Path
 
 import pytest
-import hermes_yaml as yaml
+import vael_yaml as yaml
 
 OLD_URL = "https://old-endpoint.invalid/v1"
 NEW_URL = "https://new-endpoint.invalid/v1"
@@ -60,7 +60,7 @@ def live_home(monkeypatch):
     # hermes_constants caches the resolved home at first read — the env var
     # alone doesn't repoint an already-imported process. Use the override API
     # (the same mechanism profile-scoped resumes use).
-    from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+    from vael_constants import reset_hermes_home_override, set_hermes_home_override
 
     home_token = set_hermes_home_override(str(home))
     # Neutralize ambient provider creds so resolution uses ONLY the config
@@ -80,7 +80,7 @@ def live_home(monkeypatch):
                 except Exception:
                     pass
 
-    import hermes_state
+    import vael_state
     import tui_gateway.server as server
 
     # The launch DB handle and the module-level home snapshot are import-time
@@ -115,7 +115,7 @@ def _seed_session_row(
     extra_config: dict | None = None,
 ) -> str:
     """Write a REAL session row + one message into the profile's state.db."""
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     db = SessionDB(db_path=home / "state.db")
     sid = uuid.uuid4().hex[:12]

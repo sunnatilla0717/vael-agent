@@ -9,9 +9,9 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-import hermes_yaml as yaml
+import vael_yaml as yaml
 
-from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+from vael_constants import reset_hermes_home_override, set_hermes_home_override
 
 
 @pytest.fixture

@@ -15,9 +15,9 @@ Author in-repo SKILL.md files: frontmatter and structure.
 | | |
 |---|---|
 | Source | Bundled (installed by default) |
-| Path | `skills/software-development\vael-skill-authoring` |
+| Path | `skills/software-development/vael-skill-authoring` |
 | Version | `2.0.0` |
-| Author | VAEL Agent |
+| Author | VAEL |
 | License | MIT |
 | Platforms | linux, macos, windows |
 | Tags | `skills`, `authoring`, `vael-agent`, `conventions`, `skill-md` |
@@ -26,7 +26,7 @@ Author in-repo SKILL.md files: frontmatter and structure.
 ## Reference: full SKILL.md
 
 :::info
-The following is the complete skill definition that Hermes loads when this skill is triggered. This is what the agent sees as instructions when the skill is active.
+The following is the complete skill definition that VAEL loads when this skill is triggered. This is what the agent sees as instructions when the skill is active.
 :::
 
 # Authoring VAEL-Agent Skills (in-repo)

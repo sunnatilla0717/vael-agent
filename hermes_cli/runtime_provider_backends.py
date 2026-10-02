@@ -12,7 +12,7 @@ from typing import Any, Dict, Optional
 
 from agent.azure_identity_adapter import is_token_provider
 from agent.secret_scope import get_secret_str
-from hermes_constants import OPENROUTER_BASE_URL
+from vael_constants import OPENROUTER_BASE_URL
 from utils import base_url_host_matches, base_url_hostname
 
 
@@ -33,7 +33,7 @@ def _azure_entra_credentials(cfg_entra: Dict[str, Any]) -> Any:
     except Exception as exc:
         raise AuthError(
             "Could not load the Azure Foundry Entra ID adapter. "
-            "Run hermes pm repair, then restart Hermes. "
+            "Run vael pm repair, then restart VAEL. "
             f"(import failed: {exc})"
         ) from exc
     scope = str(cfg_entra.get("scope") or "").strip() or SCOPE_AI_AZURE_DEFAULT
@@ -55,10 +55,10 @@ def _azure_foundry_api_key(rp, explicit_api_key: str) -> str:
     if not api_key:
         raise rp.AuthError(
             "Azure Foundry requires an API key. Set AZURE_FOUNDRY_API_KEY in "
-            "~/.hermes/.env or run 'hermes model' to configure. To use "
+            "~/.hermes/.env or run 'vael model' to configure. To use "
             "keyless Microsoft Entra ID auth instead, set "
             "model.auth_mode: entra_id in config.yaml (or pick "
-            "'Microsoft Entra ID' in 'hermes model')."
+            "'Microsoft Entra ID' in 'vael model')."
         )
     return api_key
 
@@ -89,7 +89,7 @@ def _resolve_azure_foundry_runtime(*, requested_provider: str, model_cfg: Dict[s
     base_url = explicit_base_url_clean or cfg_base_url or env_base_url
     if not base_url:
         raise rp.AuthError(
-            "Azure Foundry requires a base URL. Set it via 'hermes model' or "
+            "Azure Foundry requires a base URL. Set it via 'vael model' or "
             "the AZURE_FOUNDRY_BASE_URL environment variable."
         )
     if cfg_api_mode == "anthropic_messages":

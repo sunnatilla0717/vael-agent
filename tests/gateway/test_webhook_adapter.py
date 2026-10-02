@@ -895,7 +895,7 @@ class TestCrossPlatformDeliveryMirror:
 
     @staticmethod
     def _seed_dm(home, sid, chat):
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
         db = SessionDB(db_path=home / "state.db")
         db.create_session(sid, source="telegram")
         db._conn.execute("UPDATE sessions SET session_key=?, chat_id=?, user_id=? WHERE id=?",
@@ -905,7 +905,7 @@ class TestCrossPlatformDeliveryMirror:
 
     @staticmethod
     def _transcript(home, sid):
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
         db = SessionDB(db_path=home / "state.db")
         rows = db._conn.execute("SELECT role, content FROM messages WHERE session_id=? ORDER BY id", (sid,)).fetchall()
         db.close()
@@ -914,7 +914,7 @@ class TestCrossPlatformDeliveryMirror:
     @pytest.fixture
     def homes(self, tmp_path, monkeypatch):
         from pathlib import Path
-        import hermes_state
+        import vael_state
         from hermes_cli.profiles import get_profile_dir
         default_home = tmp_path / ".hermes"
         default_home.mkdir()

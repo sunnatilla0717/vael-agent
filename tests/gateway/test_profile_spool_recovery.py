@@ -19,13 +19,13 @@ from gateway.platforms.base import Platform, SessionSource
 from gateway.run import _recover_pending_flushes
 from gateway.session import SessionEntry, SessionStore
 from gateway.shutdown_flush import spool_dropped_transcript_message
-from hermes_constants import get_hermes_home, reset_hermes_home_override, set_hermes_home_override
+from vael_constants import get_hermes_home, reset_hermes_home_override, set_hermes_home_override
 
 
 @pytest.fixture
 def multiplex_homes(tmp_path, monkeypatch):
     """A launch home plus a named ``work`` profile, as in test_multiplex_session_db_profile_scope."""
-    import hermes_state
+    import vael_state
 
     root = tmp_path / "hermes"
     profile = root / "profiles" / "work"

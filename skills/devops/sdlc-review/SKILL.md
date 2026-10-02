@@ -6,7 +6,7 @@ author: Jakub Wolniewicz (@frizikk) + Hermes Agent
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
-  hermes:
+  vael:
     tags: [kanban, review, quality, verification]
     category: devops
     requires_toolsets: [kanban]

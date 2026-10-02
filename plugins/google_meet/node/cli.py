@@ -1,4 +1,4 @@
-"""`hermes meet node ...` subcommand tree, wired under the ``hermes meet`` parser."""
+"""`vael meet node ...` subcommand tree, wired under the ``vael meet`` parser."""
 
 from __future__ import annotations
 
@@ -36,7 +36,7 @@ def _cmd_run(args: argparse.Namespace, reg: NodeRegistry) -> int:
     print(f"[meet-node] display_name={server.display_name}\n"
           f"[meet-node] listening on ws://{args.host}:{args.port}\n"
           f"[meet-node] token (copy to gateway): {token}\n[meet-node] approve with:\n"
-          f"             hermes meet node approve <name> ws://<host>:{args.port} {token}")
+          f"             vael meet node approve <name> ws://<host>:{args.port} {token}")
     try:
         asyncio.run(server.serve())
     except KeyboardInterrupt:
@@ -92,7 +92,7 @@ _COMMANDS = {
 
 
 def node_command(args: argparse.Namespace) -> int:
-    """Dispatch for ``hermes meet node ...``; returns a process exit code."""
+    """Dispatch for ``vael meet node ...``; returns a process exit code."""
     cmd = getattr(args, "node_cmd", None)
     handler = _COMMANDS.get(cmd or "")
     if handler is None:

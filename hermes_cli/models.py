@@ -109,7 +109,7 @@ def _write_json_cache(path: Path, data: Any, **dump_kwargs: Any) -> None:
     """Atomically persist a cache file (creating parents). Raises on failure — callers decide
     whether a failed cache write is worth logging."""
     from utils import atomic_json_write
-    from hermes_constants import mkdir_under_hermes_home
+    from vael_constants import mkdir_under_hermes_home
 
     mkdir_under_hermes_home(path.parent)
     atomic_json_write(path, data, **dump_kwargs)
@@ -160,7 +160,7 @@ def _openrouter_catalog_disk_ttl() -> float:
 
 
 def _openrouter_catalog_disk_path() -> Path:
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
 
     return get_hermes_home() / "cache" / "openrouter_curated_catalog.json"
 
@@ -286,7 +286,7 @@ _free_tier_cache: dict[str, tuple[bool, float]] = {}  # profile key -> (result, 
 
 def _pricing_profile_key() -> str:
     """Stable profile identity for process-local pricing caches."""
-    from hermes_constants import hermes_home_key
+    from vael_constants import hermes_home_key
 
     return hermes_home_key()
 
@@ -334,7 +334,7 @@ _nous_recommended_cache: dict[tuple[str, str], tuple[dict[str, Any], float]] = {
 
 
 def _nous_recommended_disk_path() -> "Path":
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
     return get_hermes_home() / "cache" / "nous_recommended_cache.json"
 
 
@@ -672,7 +672,7 @@ def fetch_ai_gateway_models(
     if _ai_gateway_catalog_cache is not None and not force_refresh:
         return list(_ai_gateway_catalog_cache)
 
-    from hermes_constants import AI_GATEWAY_BASE_URL
+    from vael_constants import AI_GATEWAY_BASE_URL
 
     fallback = list(VERCEL_AI_GATEWAY_MODELS)
     live = _fetch_live_catalog_index(f"{AI_GATEWAY_BASE_URL.rstrip('/')}/models", timeout, _urlopen_model_catalog_request)
@@ -753,7 +753,7 @@ def _provider_has_credentials(pid: str) -> bool:
 
 def list_available_providers() -> list[dict[str, str]]:
     """``{id, label, aliases, authenticated}`` for every provider usable with ``provider:model``,
-    derived from :data:`CANONICAL_PROVIDERS` (shared with ``hermes model`` and ``/model``)."""
+    derived from :data:`CANONICAL_PROVIDERS` (shared with ``vael model`` and ``/model``)."""
     aliases_for: dict[str, list[str]] = {}
     for alias, canonical in _PROVIDER_ALIASES.items():
         aliases_for.setdefault(canonical, []).append(alias)
@@ -1150,7 +1150,7 @@ def _strip_vendor_prefix(model_id: str) -> str:
 
 
 def model_supports_fast_mode(model_id: Optional[str]) -> bool:
-    """Return whether Hermes should expose the /fast toggle for this model."""
+    """Return whether VAEL should expose the /fast toggle for this model."""
     from agent.model_metadata import is_grok_46_family
 
     return (
@@ -1398,7 +1398,7 @@ def _nous_catalog(normalized: str, force_refresh: bool) -> Optional[list[str]]:
     except Exception:
         pass
     # Live failed / no creds: the docs-hosted manifest — NOT the in-repo snapshot — so newly added
-    # Portal models still surface without a Hermes release.
+    # Portal models still surface without a VAEL release.
     return get_curated_nous_model_ids() or None
 
 
@@ -1446,10 +1446,10 @@ def _openai_catalog(normalized: str, force_refresh: bool) -> Optional[list[str]]
     base = _openai_discovery_base_url(normalized)
     # Custom OpenAI-compatible endpoints serve a small curated catalog — use it verbatim. Official
     # OpenAI hosts (canonical and data-residency regional) return 120+ embeddings/whisper/tts/…
-    # entries, so intersect with the curated agentic catalog so ``/model`` matches ``hermes model``.
+    # entries, so intersect with the curated agentic catalog so ``/model`` matches ``vael model``.
     # Model not in live /v1/models — check the curated catalog before rejecting. Providers may omit models
     # from their live listing that are still valid (stale cache, partial rollout, gated previews). Use the
-    # pure-catalog helper (no extra live fetch) so we only accept models Hermes actually ships. (#46850)
+    # pure-catalog helper (no extra live fetch) so we only accept models VAEL actually ships. (#46850)
     # Their /v1/models listing is access-scoped and authoritative — a model absent from it is one this key
     # CANNOT serve, so the curated soft-accept would manufacture a selection that 400s at first use. Custom
     # OpenAI-compatible proxies keep the fallback (incomplete listings are common there).
@@ -1581,7 +1581,7 @@ def _profile_live_catalog(normalized: str) -> Optional[list[str]]:
             logger.debug("external_process catalog fetch failed for %s: %s", normalized, exc)
             live = None
         # Same merge as setup (`_model_flow_plugin_provider`) so /model, the Desktop picker and
-        # `hermes model` offer one list: live ids plus any pinned id the probe omitted.
+        # `vael model` offer one list: live ids plus any pinned id the probe omitted.
         return merge_profile_catalog(normalized, profile, list(live) if live else None)
     if not (profile.auth_type == "api_key" and profile.base_url):
         return list(profile.fallback_models) or None
@@ -1816,7 +1816,7 @@ def _spawn_swr_refresh(cache_key: str, refresh_fn=None) -> None:
     # Under a routed profile the inflight key includes the home: the same provider slug names a
     # different disk cache and credential set per profile, so one profile's refresh must not
     # suppress another's. Unscoped keeps the bare key (tests inspect the set by slug).
-    from hermes_constants import get_hermes_home_override, hermes_home_key
+    from vael_constants import get_hermes_home_override, hermes_home_key
     inflight_key = cache_key if get_hermes_home_override() is None else (hermes_home_key(), cache_key)
     with _swr_refresh_lock:
         if inflight_key in _swr_refresh_inflight:
@@ -1850,7 +1850,7 @@ def _spawn_swr_refresh(cache_key: str, refresh_fn=None) -> None:
 
 
 def _provider_models_cache_path() -> Path:
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
     return get_hermes_home() / "provider_models_cache.json"
 
 
@@ -1938,7 +1938,7 @@ def _credential_fingerprint(provider: str) -> str:
         parts.append(f"codex_identity={codex_catalog_credential_identity()}")
     else:
         try:
-            from hermes_constants import get_hermes_home
+            from vael_constants import get_hermes_home
             for rel in ("auth.json", "credentials.json"):
                 _mtime_part(rel, get_hermes_home() / rel)
         except Exception:
@@ -2074,7 +2074,7 @@ def cached_provider_model_ids(
 
 def clear_provider_models_cache(provider: Optional[str] = None) -> None:
     """Drop one provider's cache entry, or wipe the whole cache (``provider=None``). Used by
-    ``/model --refresh`` and ``hermes model --refresh``."""
+    ``/model --refresh`` and ``vael model --refresh``."""
     try:
         # Native Ollama tags are keyed by root URL, not provider slug — a targeted refresh can't
         # identify the root from the name alone, so clear this small in-process cache every time.
@@ -2655,7 +2655,7 @@ _DEEPINFRA_SURFACE_TAGS: frozenset[str] = frozenset({
     "chat", "embed", "image-gen", "tts", "stt", "video-gen"})
 
 _DEEPINFRA_DEFAULT_BASE_URL = "https://api.deepinfra.com/v1/openai"
-_DEEPINFRA_MODELS_QUERY = "filter=true&sort_by=hermes"
+_DEEPINFRA_MODELS_QUERY = "filter=true&sort_by=vael"
 
 # Full tagged catalog keyed by base URL; every surface filter reads it so one round-trip serves all.
 _deepinfra_catalog_cache: dict[str, list[dict]] = {}
@@ -2766,7 +2766,7 @@ def _fetch_ai_gateway_models(timeout: float = 5.0) -> Optional[list[str]]:
         return None
     base_url = os.getenv("AI_GATEWAY_BASE_URL", "").strip()
     if not base_url:
-        from hermes_constants import AI_GATEWAY_BASE_URL
+        from vael_constants import AI_GATEWAY_BASE_URL
         base_url = AI_GATEWAY_BASE_URL
 
     headers = {"Authorization": f"Bearer {api_key}", "User-Agent": _HERMES_USER_AGENT}

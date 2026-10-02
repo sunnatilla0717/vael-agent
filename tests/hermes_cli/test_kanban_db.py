@@ -13,7 +13,7 @@ from pathlib import Path
 
 import pytest
 
-import hermes_state_wal
+import vael_state_wal
 from hermes_cli import kanban_db as kb
 from hermes_cli import kanban_db_connect as kbc
 from hermes_cli import kanban_db_dispatch as kbd
@@ -1217,7 +1217,7 @@ def test_connect_falls_back_to_delete_on_locking_protocol(tmp_path, monkeypatch,
 
     # These tests exercise the WAL-attempt path; assume a fixed SQLite so the
     # WAL-reset vulnerability gate doesn't short-circuit before the pragma.
-    import hermes_state_wal as _hermes_state_wal
+    import vael_state_wal as _hermes_state_wal
     monkeypatch.setattr(
         _hermes_state_wal, "is_sqlite_wal_reset_vulnerable",
         lambda version_info=None: False,

@@ -15,9 +15,9 @@ Modify or debug s6 services in the VAEL Docker image.
 | | |
 |---|---|
 | Source | Optional — install with `hermes skills install official/devops/vael-s6-container-supervision` |
-| Path | `optional-skills/devops\vael-s6-container-supervision` |
+| Path | `optional-skills/devops/vael-s6-container-supervision` |
 | Version | `1.0.0` |
-| Author | VAEL Agent |
+| Author | VAEL |
 | License | MIT |
 | Platforms | linux |
 | Tags | `docker`, `s6`, `supervision`, `gateway`, `profiles` |
@@ -26,7 +26,7 @@ Modify or debug s6 services in the VAEL Docker image.
 ## Reference: full SKILL.md
 
 :::info
-The following is the complete skill definition that Hermes loads when this skill is triggered. This is what the agent sees as instructions when the skill is active.
+The following is the complete skill definition that VAEL loads when this skill is triggered. This is what the agent sees as instructions when the skill is active.
 :::
 
 # VAEL s6-overlay Container Supervision

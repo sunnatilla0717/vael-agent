@@ -27,7 +27,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 import httpx
-import hermes_yaml as yaml
+import vael_yaml as yaml
 
 from tests.fakes.fake_llm_provider import FakeLLMServer
 
@@ -338,7 +338,7 @@ def run_py(sb: Sandbox, code: str, *args: str, hermes_home: Path | None = None,
 
 SEED_SESSIONS = """
 import sys
-from hermes_state import SessionDB
+from vael_state import SessionDB
 prefix, n = sys.argv[1], int(sys.argv[2])
 db = SessionDB()
 for i in range(n):

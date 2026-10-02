@@ -8,7 +8,7 @@ platforms: [linux, macos, windows]
 prerequisites:
   commands: [node, ffmpeg, npx]
 metadata:
-  hermes:
+  vael:
     tags: [creative, video, animation, html, gsap, motion-graphics]
     related_skills: [manim-video, meme-generation]
     category: creative

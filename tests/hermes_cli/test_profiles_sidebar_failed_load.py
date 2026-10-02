@@ -33,7 +33,7 @@ def _fresh_heal_latch(monkeypatch):
 @pytest.fixture
 def profiles_on_disk(tmp_path, monkeypatch, _isolate_hermes_home):
     from hermes_cli import profiles
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
 
     default_home = get_hermes_home()
     profiles_root = default_home / "profiles"
@@ -53,9 +53,9 @@ def client(monkeypatch, profiles_on_disk):
     except ImportError:
         pytest.skip("fastapi/starlette not installed")
 
-    import hermes_state
+    import vael_state
     from hermes_cli.web_server import _SESSION_HEADER_NAME, _SESSION_TOKEN, app
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
 
     monkeypatch.setattr(hermes_state, "DEFAULT_DB_PATH", get_hermes_home() / "state.db")
     http = TestClient(app)
@@ -64,7 +64,7 @@ def client(monkeypatch, profiles_on_disk):
 
 
 def _seed_session(home, session_id, *, source="cli"):
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     db = SessionDB(db_path=home / "state.db")
     try:
@@ -94,7 +94,7 @@ class TestSidebarFailedLoad:
         self, client, profiles_on_disk, monkeypatch
     ):
         _seed_session(profiles_on_disk["worker"], "worker-chat")
-        import hermes_state
+        import vael_state
 
         def boom(self, *args, **kwargs):
             raise sqlite3.OperationalError(
@@ -118,7 +118,7 @@ class TestSidebarFailedLoad:
         from hermes_cli import web_server_sessions as sessions_mod
 
         sessions_mod._session_db_heal_exhausted.add(str(home / "state.db"))
-        import hermes_state
+        import vael_state
 
         monkeypatch.setattr(
             hermes_state.SessionDB,
@@ -144,7 +144,7 @@ class TestSidebarFailedLoad:
             "_session_db_read_probe_statements",
             lambda: ('SELECT "sessions"."not_a_real_column" FROM "sessions" LIMIT 0',),
         )
-        import hermes_state
+        import vael_state
 
         writable_opens = []
         real_init = hermes_state.SessionDB.__init__
@@ -203,7 +203,7 @@ class TestSidebarFailedLoad:
         assert [row["id"] for row in payload["recents"]["sessions"]] == ["worker-chat"]
 
     def test_healthy_empty_store_stays_an_empty_list(self, client, profiles_on_disk):
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
 
         SessionDB(db_path=profiles_on_disk["worker"] / "state.db").close()
 
@@ -218,7 +218,7 @@ class TestSidebarFailedLoad:
     ):
         _seed_session(profiles_on_disk["default"], "default-chat")
         _seed_session(profiles_on_disk["worker"], "worker-chat")
-        import hermes_state
+        import vael_state
 
         real_list = hermes_state.SessionDB.list_sessions_rich
         worker_db = (profiles_on_disk["worker"] / "state.db").resolve()

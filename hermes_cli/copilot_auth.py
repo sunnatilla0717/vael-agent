@@ -44,7 +44,7 @@ def validate_copilot_token(token: str) -> tuple[bool, str]:
         return False, (
             "Classic Personal Access Tokens (ghp_*) are not supported by the "
             "Copilot API. Use one of:\n"
-            "  → `copilot login` or `hermes model` to authenticate via OAuth\n"
+            "  → `copilot login` or `vael model` to authenticate via OAuth\n"
             "  → A fine-grained PAT (github_pat_*) with Copilot Requests permission\n"
             "  → `gh auth login` with the default device code flow (produces gho_* tokens)")
     if not token.startswith(_SUPPORTED_PREFIXES):
@@ -278,7 +278,7 @@ def _read_jwt_store(path: Path) -> Optional[dict]:
 def _jwt_disk_path() -> Optional[Path]:
     """Path to the on-disk exchanged-JWT cache (profile-aware), or None."""
     try:
-        from hermes_constants import get_hermes_home
+        from vael_constants import get_hermes_home
         return Path(get_hermes_home()) / _JWT_DISK_FILENAME
     except Exception:
         return None

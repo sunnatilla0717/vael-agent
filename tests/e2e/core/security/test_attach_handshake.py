@@ -78,8 +78,8 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
-from hermes_constants import get_hermes_home
-from hermes_state import SessionDB
+from vael_constants import get_hermes_home
+from vael_state import SessionDB
 from hermes_cli.active_sessions import try_acquire_active_session
 
 sid, advertise, token = sys.argv[1], sys.argv[2], sys.argv[3]
@@ -144,7 +144,7 @@ fs.writeFileSync(process.env.ATTACH_PROBE_OUT, JSON.stringify({
 
 SNAPSHOT_CODE = r"""
 import json, sys
-from hermes_constants import get_hermes_home
+from vael_constants import get_hermes_home
 from hermes_cli.active_sessions import active_session_registry_snapshot
 rows = [e for e in active_session_registry_snapshot(get_hermes_home(), strict=True)
         if e.get("session_id") == sys.argv[1]]

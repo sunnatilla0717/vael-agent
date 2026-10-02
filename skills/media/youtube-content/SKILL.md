@@ -6,7 +6,7 @@ author: Teknium (teknium1), Hermes Agent
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
-  hermes:
+  vael:
     tags: [YouTube, Video, Transcripts, Media]
     related_skills: []
 ---
@@ -21,9 +21,9 @@ Extract transcripts from YouTube videos and convert them into useful formats.
 
 ## Setup
 
-Use `terminal` with the Python from a PM-prepared Hermes source checkout. The
+Use `terminal` with the Python from a PM-prepared VAEL source checkout. The
 `youtube` extra declares the helper's dependency; do not install packages into
-Hermes with raw pip or project-discovering `uv run`.
+VAEL with raw pip or project-discovering `uv run`.
 
 From that checkout, first follow the isolated development-home setup in
 [Package Management](https://hermes-agent.nousresearch.com/docs/reference/package-management#developer-workflow),

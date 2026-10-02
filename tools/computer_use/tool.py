@@ -15,6 +15,7 @@ import os
 import re
 import sys
 import threading
+import time
 import uuid
 from collections import namedtuple
 from functools import partial
@@ -202,7 +203,7 @@ def _scoped_sid(session_id: str) -> str:
     (legacy keys byte-identical); under a multiplexed turn the routed profile's home key is appended
     so two profiles that share a session id (or a DISPLAY) never share one cua-driver (#110032).
     Every cache path — lookup, install, release — goes through this, so release finds what lookup made."""
-    from hermes_constants import get_hermes_home_override, hermes_home_key
+    from vael_constants import get_hermes_home_override, hermes_home_key
     sid = str(session_id or "")
     return sid if get_hermes_home_override() is None else f"{sid}@{hermes_home_key()}"
 
@@ -320,6 +321,9 @@ class _NoopBackend(ComputerUseBackend):  # pragma: no cover
     type_text, key, set_value = _noop_stub("type", "text"), _noop_stub("key", "keys"), _noop_stub("set_value", "value", "element")
     list_apps, list_windows = _noop_stub("list_apps", result=[]), _noop_stub("list_windows", result=[])
     focus_app = _noop_stub("focus_app", "app", "raise_window")
+    launch_app = _noop_stub("launch_app", "name", "bundle_id", "urls", "additional_arguments",
+                            "creates_new_application_instance", result={"pid": 4242, "name": "noop"})
+    screen_info = _noop_stub("screen_info", result={"screen": {"width": 1024, "height": 768}})
 
 # ── Dispatch ────────────────────────────────────────────────────────────────
 def handle_computer_use(args: Dict[str, Any], **kwargs) -> Any:
@@ -452,6 +456,130 @@ def _do_capture(backend, action, args, fence=lambda: None, session_id=None, **_)
 def _do_listing(backend, action, args, key, **_):
     return json.dumps({key: (items := getattr(backend, action)()), "count": len(items)})
 
+# Bundle IDs are reverse-DNS with at least two dots ('com.apple.Safari'); a display name never looks like this,
+# so `app='com.apple.Safari'` can be routed to the driver's bundle_id argument without a second parameter.
+_BUNDLE_ID_RE = re.compile(r"^[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+){2,}$")
+
+
+def _do_launch_app(backend, action, args, **_):
+    """Start (or re-focus) an app the agent needs but that is not running yet — the one desktop prerequisite
+    `focus_app` cannot provide (it can only route input to an app that already has a window). Idempotent on
+    the driver side, so calling it on a running app is safe."""
+    launch = getattr(backend, "launch_app", None)
+    app = str(args.get("app") or "").strip()
+    bundle_id = str(args.get("bundle_id") or "").strip()
+    if not app and not bundle_id:
+        return json.dumps({"ok": False, "action": action,
+                           "error": "launch_app requires `app` (name or bundle id) or `bundle_id`."})
+    if not bundle_id and _BUNDLE_ID_RE.match(app):
+        bundle_id, app = app, ""
+    if not callable(launch):
+        return json.dumps({"ok": False, "action": action, "code": "unsupported",
+                           "error": "This computer_use backend cannot launch apps; start it yourself and use "
+                                    "focus_app/capture instead."})
+    try:
+        launched = launch(name=app or None, bundle_id=bundle_id or None, urls=args.get("urls"),
+                          additional_arguments=args.get("arguments"),
+                          creates_new_application_instance=bool(args.get("new_instance")))
+    except NotImplementedError:
+        return json.dumps({"ok": False, "action": action, "code": "unsupported",
+                           "error": "This computer_use backend cannot launch apps; start it yourself and use "
+                                    "focus_app/capture instead."})
+    except Exception as e:  # driver refusal (unknown app, permission) — never report as ok
+        return json.dumps({"ok": False, "action": action, "error": f"launch_app failed: {e}"})
+    return json.dumps({"ok": True, "action": action, "launched": launched,
+                       "next": "wait_for (the window may still be coming up), then capture(mode='som') for "
+                               "element indices; focus_app routes input without relaunching."}, default=str)
+
+
+def _do_screen_info(backend, action, args, **_):
+    """Read-only monitor geometry + cursor position: the coordinate context a multi-monitor run needs before
+    it can reason about where a composited `app='screen'` frame or a pixel coordinate lives."""
+    info = getattr(backend, "screen_info", None)
+    if not callable(info):
+        return json.dumps({"ok": False, "action": action, "code": "unsupported",
+                           "error": "This computer_use backend cannot report display geometry."})
+    try:
+        out = info()
+    except NotImplementedError as e:
+        return json.dumps({"ok": False, "action": action, "code": "unsupported", "error": str(e)})
+    except Exception as e:
+        return json.dumps({"ok": False, "action": action, "error": f"screen_info failed: {e}"})
+    payload = out if isinstance(out, dict) else None
+    if not payload:  # a backend that reports nothing is unsupported, not an empty success
+        return json.dumps({"ok": False, "action": action, "code": "unsupported",
+                           "error": "This computer_use backend could not report display geometry "
+                                    "(no display/cursor read tools advertised)."})
+    return json.dumps({"ok": True, "action": action, **payload}, default=str)
+
+# Blind `wait` guesses a delay; `wait_for` watches for the condition instead (the #1 fix for flaky desktop UIs:
+# a fixed sleep is either wasted context or too short). Bounds keep a stuck wait from eating the turn.
+_WAIT_FOR_MAX_SECONDS, _WAIT_FOR_DEFAULT_SECONDS = 60.0, 10.0
+_WAIT_FOR_MAX_INTERVAL, _WAIT_FOR_DEFAULT_INTERVAL = 5.0, 0.5
+
+
+def _wait_for_number(value: Any, default: float, *, low: float, high: float) -> float:
+    with contextlib.suppress(TypeError, ValueError):
+        return max(low, min(float(value), high))
+    return default
+
+
+def _wait_for_matches(cap: CaptureResult, text: str) -> bool:
+    """True when *text* appears in the window/app identity or any element label/role/app — the same surface the
+    capture summary prints, so a match is always something the model can then click."""
+    needle = text.casefold()
+    if needle in str(cap.window_title or "").casefold() or needle in str(cap.app or "").casefold():
+        return True
+    return any(needle in f"{e.label} {e.role} {e.app}".casefold() for e in cap.elements)
+
+
+def _screen_signature(cap: CaptureResult) -> Tuple[Any, ...]:
+    """Cheap equality key for 'did the screen change': window identity plus the element skeleton."""
+    return (cap.app, cap.window_title, cap.width, cap.height,
+            tuple((e.index, e.role, e.label[:_MAX_ELEMENT_LABEL_CHARS]) for e in cap.elements))
+
+
+def _wait_for_response(cap: CaptureResult, waited: float, *, matched: bool, text: str, session_id: Optional[str]) -> str:
+    """Matched: the fresh frame, ready to act on. Timed out: the verdict plus the last frame, so a failed wait
+    still leaves the model with something to act on. Text-only on purpose — a wait must never cost a vision call."""
+    view = _capture_view(cap, _DEFAULT_MAX_ELEMENTS)
+    what = f"text {text!r}" if text else "a screen change"
+    verdict = (f"wait_for: matched {what} after {waited:.1f}s" if matched else
+               f"wait_for: TIMEOUT after {waited:.1f}s — {what} never appeared. The frame below is the last one; "
+               "act on it, retry with a longer `timeout`, or re-capture to check again.")
+    extra = {"wait_matched": matched, "waited_s": round(waited, 2), **({"wait_text": text} if text else {})}
+    return _text_capture_payload(view, "\n".join([verdict, *_capture_summary_lines(view)]), extra)
+
+
+def _do_wait_for(backend, action, args, fence=lambda: None, session_id=None, **_):
+    """Poll the target until `text` appears or the screen changes (up to `timeout`).
+
+    Captures run in `ax` mode by default: the poll is about waiting, not about reading pixels, and an AX walk is
+    cheap enough to repeat. The satisfying frame is returned in the normal capture shape, so the model can click
+    an element index immediately instead of paying another round-trip.
+    """
+    text = str(args.get("text") or "").strip()
+    changed = bool(args.get("changed")) or not text  # no predicate given: wait for any change
+    timeout = _wait_for_number(args.get("timeout"), _WAIT_FOR_DEFAULT_SECONDS, low=0.0, high=_WAIT_FOR_MAX_SECONDS)
+    interval = _wait_for_number(args.get("interval"), _WAIT_FOR_DEFAULT_INTERVAL, low=0.1, high=_WAIT_FOR_MAX_INTERVAL)
+    mode = "som" if str(args.get("mode") or "ax").lower() == "som" else "ax"
+    target = {k: args[k] for k in ("app", "pid", "window_id") if args.get(k) is not None}
+    started = time.monotonic()
+    baseline = backend.capture(mode=mode, **target)
+    fence()
+    cap, matched = baseline, bool(text) and _wait_for_matches(baseline, text)
+    while not matched:
+        waited = time.monotonic() - started
+        if waited >= timeout:
+            return _wait_for_response(cap, waited, matched=False, text=text, session_id=session_id)
+        time.sleep(min(interval, max(0.0, timeout - waited)))
+        cap = backend.capture(mode=mode, **target)
+        fence()
+        matched = _wait_for_matches(cap, text) if text else False
+        if not matched and changed and _screen_signature(cap) != _screen_signature(baseline):
+            matched = True
+    return _wait_for_response(cap, time.monotonic() - started, matched=True, text=text, session_id=session_id)
+
 def _summarize_click(action: str, args: Dict[str, Any], fg: str) -> str:
     where = (f" element #{args['element']}" if args.get("element") is not None
              else f" at {tuple(args['coordinate'])}" if args.get("coordinate") else "")
@@ -479,6 +607,11 @@ _ACTIONS: Dict[str, _ActionSpec] = {
     "set_value": _input(lambda backend, action, args, **_: (
         json.dumps({"error": "set_value requires `value`"}) if args.get("value") is None
         else backend.set_value(value=str(args["value"]), element=args.get("element")))),
+    # launch_app opens a real window, so it is user-visible state -> approval. wait_for / screen_info only read.
+    "launch_app": _ActionSpec(_do_launch_app, destructive=True,
+                              summarize=lambda a, args, fg: "launch " + str(args.get("app") or args.get("bundle_id") or "?") + fg),
+    "wait_for": _ActionSpec(_do_wait_for),
+    "screen_info": _ActionSpec(_do_screen_info),
     "focus_app": _ActionSpec(lambda backend, action, args, **_: (
         json.dumps({"error": "focus_app requires `app`"}) if not args.get("app")
         else backend.focus_app(args["app"], raise_window=bool(args.get("raise_window")))), destructive=True,
@@ -495,6 +628,9 @@ _INPUT_ACTIONS = frozenset(a for a, s in _ACTIONS.items() if s.input)
 _ACTION_SUGGESTIONS = {
     "hotkey": "key", "press_key": "key", "keypress": "key", "key_combo": "key", "shortcut": "key", "type_text": "type",
     "input_text": "type", "screenshot": "capture", "get_window_state": "capture", "left_click": "click", "mouse_click": "click",
+    "open_app": "launch_app", "start_app": "launch_app", "open": "launch_app", "open_url": "launch_app",
+    "wait_until": "wait_for", "wait_for_element": "wait_for", "poll": "wait_for", "sleep_until": "wait_for",
+    "get_displays": "screen_info", "get_screen_size": "screen_info", "screen_size": "screen_info",
 }
 
 def _dispatch(backend: ComputerUseBackend, action: str, args: Dict[str, Any], fence: Callable[[], None] = lambda: None,
@@ -803,7 +939,7 @@ def _cache_file(subdir: str, legacy: str, name: str, pattern: str = "", cap: int
     """Path for a new file under ``$HERMES_HOME/<subdir>`` (dir created owner-only, per #77579).
     With ``pattern``/``cap``, first unlinks the oldest matching files so at most ``cap - 1`` remain
     (best-effort)."""
-    from hermes_constants import get_hermes_dir  # lazy so tests can patch get_hermes_dir
+    from vael_constants import get_hermes_dir  # lazy so tests can patch get_hermes_dir
     cache_dir = get_hermes_dir(subdir, legacy)
     _secure_dir_policy(cache_dir)
     with contextlib.suppress(Exception):
@@ -873,7 +1009,7 @@ def _should_route_through_aux_vision() -> bool:
     try:
         from agent.auxiliary_client import _read_main_model, _read_main_provider
         from hermes_cli.config import load_config
-        from hermes_constants import hermes_home_key
+        from vael_constants import hermes_home_key
         from tools.computer_use.vision_routing import should_route_capture_to_aux_vision
         stage = "config read"
         provider, model = _read_main_provider() or "", _read_main_model() or ""

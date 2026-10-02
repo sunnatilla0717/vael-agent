@@ -174,10 +174,11 @@ export default function UserStoriesCollage(): React.JSX.Element {
       <div className={styles.hero}>
         <h1>User Stories &amp; Use Cases</h1>
         <p>
-          What the Hermes Agent community is actually building. Every tile
-          below links to a real post, issue, video, or gist where someone
-          describes how they use Hermes &mdash; scraped from X, GitHub, Reddit,
-          Hacker News, YouTube, blogs, and podcasts.
+          What the upstream Hermes Agent community is actually building.
+          Every tile below links to a real post, issue, video, or gist where
+          someone describes how they use Hermes &mdash; the project VAEL is
+          based on. Scraped from X, GitHub, Reddit, Hacker News, YouTube,
+          blogs, and podcasts, and quoted unchanged.
         </p>
         <div className={styles.meta}>
           <span><strong>{allStories.length}</strong> stories</span>
@@ -293,7 +294,7 @@ export default function UserStoriesCollage(): React.JSX.Element {
       )}
 
       <div className={styles.footer}>
-        Built something with Hermes?{' '}
+        Built something with VAEL?{' '}
         <a
           href="https://github.com/NousResearch/hermes-agent/edit/main/website/src/data/userStories.json"
           target="_blank"

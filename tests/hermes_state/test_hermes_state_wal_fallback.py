@@ -18,10 +18,10 @@ from unittest.mock import patch
 
 import pytest
 
-import hermes_state
-import hermes_state_wal
-from hermes_state import SessionDB, get_last_init_error
-from hermes_state_wal import WalUnsupportedError, apply_wal_with_fallback
+import vael_state
+import vael_state_wal
+from vael_state import SessionDB, get_last_init_error
+from vael_state_wal import WalUnsupportedError, apply_wal_with_fallback
 
 
 # ``sqlite3.Connection.execute`` is a C-level slot and can't be monkeypatched
@@ -575,7 +575,7 @@ class TestGetLastInitError:
             kwargs.pop("factory", None)
             return real_connect(str(target), factory=_ForeignKeysFailConnection, **kwargs)
 
-        with patch("hermes_state.sqlite3.connect", side_effect=gated_connect):
+        with patch("vael_state.sqlite3.connect", side_effect=gated_connect):
             with pytest.raises(sqlite3.OperationalError):
                 SessionDB(db_path=target)
 
@@ -603,7 +603,7 @@ class TestSessionDbUsesWalFallback:
             kwargs.pop("factory", None)
             return real_connect(str(target), factory=factory, **kwargs)
 
-        with patch("hermes_state.sqlite3.connect", side_effect=gated_connect):
+        with patch("vael_state.sqlite3.connect", side_effect=gated_connect):
             db = SessionDB(db_path=target)
 
         try:
@@ -635,7 +635,7 @@ class TestSessionDbUsesWalFallback:
             kwargs.pop("factory", None)
             return real_connect(str(target), factory=factory, **kwargs)
 
-        with patch("hermes_state.sqlite3.connect", side_effect=gated_connect):
+        with patch("vael_state.sqlite3.connect", side_effect=gated_connect):
             with caplog.at_level("ERROR", logger="hermes_state"):
                 db = SessionDB(db_path=target)
 

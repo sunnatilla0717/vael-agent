@@ -1,4 +1,4 @@
-"""What a finite one-shot session (``hermes chat -q`` / ``--oneshot``, ``hermes -z``) does NOT do.
+"""What a finite one-shot session (``vael chat -q`` / ``--oneshot``, ``vael -z``) does NOT do.
 
 A one-shot run has no later session in its HERMES_HOME to learn for: the process answers one query and
 exits. The interactive self-improvement loop is pure overhead there, and a measured one — across 21

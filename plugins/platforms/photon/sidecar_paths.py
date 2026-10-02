@@ -25,7 +25,7 @@ SOURCE_SIDECAR_DIR = Path(__file__).parent / "sidecar"
 _MIRROR_FILES = ("index.mjs", "package.json", "package-lock.json", "patch-spectrum-mixed-attachments.mjs")
 # Tests monkeypatch these module globals directly; the accessors honor a non-None value.
 _SIDECAR_DIR: Optional[Path] = None
-# Written by `hermes photon install-sidecar` on npm failure so check_requirements() can
+# Written by `vael photon install-sidecar` on npm failure so check_requirements() can
 # surface the root cause later; cleared on success.
 _NPM_ERROR_LOG: Optional[Path] = None
 _NPM_ERROR_LOG_MAX_CHARS = 300
@@ -69,7 +69,7 @@ def resolve_sidecar_dir(source_dir: Optional[Path] = None) -> Path:
     # Read-only tree with baked, current deps: run in place (the sidecar never writes there).
     if (source / "node_modules").exists() and not _lock_newer_than_install(source):
         return source
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
     mirror = get_hermes_home() / "photon" / "sidecar"
     try:
         mirror.mkdir(parents=True, exist_ok=True)

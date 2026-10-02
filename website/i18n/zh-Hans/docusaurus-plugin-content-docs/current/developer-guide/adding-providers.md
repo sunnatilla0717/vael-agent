@@ -1,12 +1,12 @@
 ---
 sidebar_position: 5
 title: "添加 Provider"
-description: "如何向 Hermes Agent 添加新的推理 provider——认证、运行时解析、CLI 流程、适配器、测试与文档"
+description: "如何向 VAEL Agent 添加新的推理 provider——认证、运行时解析、CLI 流程、适配器、测试与文档"
 ---
 
 # 添加 Provider
 
-Hermes 已经可以通过自定义 provider 路径与任何 OpenAI 兼容的端点通信。除非你需要为某个服务提供一流的用户体验，否则不要添加内置 provider：
+VAEL 已经可以通过自定义 provider 路径与任何 OpenAI 兼容的端点通信。除非你需要为某个服务提供一流的用户体验，否则不要添加内置 provider：
 
 - provider 专属的认证或 token 刷新
 - 精选的模型目录
@@ -177,7 +177,7 @@ Hermes 已经可以通过自定义 provider 路径与任何 OpenAI 兼容的端�
 
 需要在此回答的问题：
 
-- Hermes 应该检查哪些环境变量，按什么优先级顺序？
+- VAEL 应该检查哪些环境变量，按什么优先级顺序？
 - provider 是否需要 base URL 覆盖？
 - 是否需要端点探测或 token 刷新？
 - 当凭据缺失时，认证错误应该显示什么？
@@ -226,7 +226,7 @@ kimi:model-name
 
 如果 provider 与 OpenAI 兼容，`api_mode` 通常应保持为 `chat_completions`。
 
-注意 API key 优先级。Hermes 已经包含避免将 OpenRouter key 泄露给无关端点的逻辑。新 provider 应同样明确地指定哪个 key 对应哪个 base URL。
+注意 API key 优先级。VAEL 已经包含避免将 OpenRouter key 泄露给无关端点的逻辑。新 provider 应同样明确地指定哪个 key 对应哪个 base URL。
 
 ## 第 5 步：在 `hermes_cli/main.py` 中接线 CLI
 
@@ -313,7 +313,7 @@ Prompt（提示词）缓存和 provider 专属的调节项很容易出现回归�
 - OpenRouter 获得 provider 路由字段
 - 并非每个 provider 都应该接收每个请求端选项
 
-添加原生 provider 时，仔细检查 Hermes 只向该 provider 发送它实际理解的字段。
+添加原生 provider 时，仔细检查 VAEL 只向该 provider 发送它实际理解的字段。
 
 ## 第 8 步：测试
 

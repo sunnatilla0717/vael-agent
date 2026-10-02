@@ -39,7 +39,7 @@ classifying a process by `"serve" in cmdline` or similar. `kanban --preserve-cac
 subcommand. Rules:
 
 - Use the canonical matchers: `gateway.status.looks_like_gateway_command_line` (gateway run),
-  `hermes_cli.update_cmd._hermes_holder_subcommand` (top-level subcommand of any Hermes argv). Never
+  `hermes_cli.update_cmd._hermes_holder_subcommand` (top-level subcommand of any VAEL argv). Never
   hand-roll token scans.
 - Flag sets must be DERIVED from the parser (`_holder_value_flags()` introspects
   `build_top_level_parser()`), never hand-written lists — they drift.
@@ -70,7 +70,7 @@ User skins are `~/.hermes/skins/<name>.yaml` with the same keys, activated with 
 
 ## Profiles: multi-instance support
 
-Hermes supports profiles — fully isolated instances, each with its own `HERMES_HOME` (config, API
+VAEL supports profiles — fully isolated instances, each with its own `HERMES_HOME` (config, API
 keys, memory, sessions, skills, gateway). For single-profile commands (`hermes -p x <cmd>`),
 `_apply_profile_override()` in `hermes_cli/main.py` sets `HERMES_HOME` before any module imports, so
 every `get_hermes_home()` reference scopes to the active profile. The multiplex gateway and the

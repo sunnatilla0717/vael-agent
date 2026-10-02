@@ -5,7 +5,7 @@ from pathlib import Path
 import sys
 
 import pytest
-import hermes_yaml as yaml
+import vael_yaml as yaml
 from fastapi.testclient import TestClient
 
 
@@ -46,7 +46,7 @@ def catalog_client(tmp_path, monkeypatch):
 
 def test_catalog_detection_is_opt_in_and_preserves_profile_state(catalog_client, tmp_path, monkeypatch):
     from hermes_cli import mcp_app_detection as detection
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
 
     client, home, other = catalog_client
     import socket

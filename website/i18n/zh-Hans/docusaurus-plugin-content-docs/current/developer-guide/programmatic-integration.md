@@ -6,7 +6,7 @@ description: "从外部程序驱动 hermes-agent 的三种协议：ACP、TUI gat
 
 # 程序化集成
 
-Hermes 提供三种协议，供外部程序驱动 agent——IDE 插件、自定义 UI、CI 流水线、嵌入式子 agent。根据你的传输方式和消费端选择合适的协议。
+VAEL 提供三种协议，供外部程序驱动 agent——IDE 插件、自定义 UI、CI 流水线、嵌入式子 agent。根据你的传输方式和消费端选择合适的协议。
 
 | 协议 | 传输方式 | 适用场景 | 定义位置 |
 |----------|-----------|----------|------------|
@@ -60,7 +60,7 @@ terminal.resize         clipboard.paste         image.attach
 
 Pi-mono RPC 规范（[issue #360](https://github.com/NousResearch/hermes-agent/issues/360)）中的每条命令均有对应的 TUI gateway 等价项：
 
-| Pi 命令 | Hermes 等价项 |
+| Pi 命令 | VAEL 等价项 |
 |------------|-------------------|
 | `prompt` | `prompt.submit`（或 ACP `session/prompt`） |
 | `steer` | `session.steer` |
@@ -78,7 +78,7 @@ Pi-mono RPC 规范（[issue #360](https://github.com/NousResearch/hermes-agent/i
 
 ## 兼容 OpenAI 的 API Server
 
-`gateway/platforms/api_server.py` 通过 HTTP 暴露 Hermes，供任何已支持 OpenAI 格式的客户端使用。适用于需要 Web 前端、curl 驱动的 CI 运行器或非 Python 消费端的场景。
+`gateway/platforms/api_server.py` 通过 HTTP 暴露 VAEL，供任何已支持 OpenAI 格式的客户端使用。适用于需要 Web 前端、curl 驱动的 CI 运行器或非 Python 消费端的场景。
 
 端点：
 
@@ -102,7 +102,7 @@ GET  /health, /health/detailed
 ## 该选哪个？
 
 - **正在编写 IDE 插件，且 IDE 已支持 ACP** → 选 ACP。IDE 侧无需任何协议工作。
-- **正在编写自定义桌面 / Web / TUI 宿主，且需要 Hermes 的全部功能**（slash 命令、审批、clarify、多 agent、会话分支）→ 选 TUI gateway JSON-RPC。
+- **正在编写自定义桌面 / Web / TUI 宿主，且需要 VAEL 的全部功能**（slash 命令、审批、clarify、多 agent、会话分支）→ 选 TUI gateway JSON-RPC。
 - **需要任意兼容 OpenAI 的前端、语言无关的 HTTP 客户端或 curl 驱动的自动化** → 选 API server。
 - **需要在 Python 进程内嵌入，不想启动子进程** → 直接导入 `run_agent.AIAgent`。参见 [Agent Loop](./agent-loop)。
 
@@ -123,4 +123,4 @@ GET  /health, /health/detailed
 
 ## 关于 `--mode rpc` 的说明
 
-Hermes 没有 `--mode rpc` 标志。上述三种协议已覆盖所有使用场景——ACP 用于 IDE 协议客户端，TUI gateway 用于 stdio JSON-RPC 宿主，API server 用于 HTTP。如果你发现上述协议均无法满足的真实需求，请提交 issue 并说明你正在构建的具体消费端。
+VAEL 没有 `--mode rpc` 标志。上述三种协议已覆盖所有使用场景——ACP 用于 IDE 协议客户端，TUI gateway 用于 stdio JSON-RPC 宿主，API server 用于 HTTP。如果你发现上述协议均无法满足的真实需求，请提交 issue 并说明你正在构建的具体消费端。

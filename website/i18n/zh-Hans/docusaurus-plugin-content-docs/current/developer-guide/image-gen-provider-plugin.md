@@ -1,7 +1,7 @@
 ---
 sidebar_position: 11
 title: "图像生成 Provider 插件"
-description: "如何为 Hermes Agent 构建图像生成后端插件"
+description: "如何为 VAEL Agent 构建图像生成后端插件"
 ---
 
 # 构建图像生成 Provider 插件
@@ -9,12 +9,12 @@ description: "如何为 Hermes Agent 构建图像生成后端插件"
 图像生成 provider 插件注册一个后端，用于处理所有 `image_generate` 工具调用——DALL·E、gpt-image、Grok、Flux、Imagen、Stable Diffusion、fal、Replicate、本地 ComfyUI 装置，任何后端均可。内置 provider（OpenAI、OpenAI-Codex、xAI）均以插件形式提供。你可以通过在 `plugins/image_gen/<name>/` 目录下放置一个目录来添加新的 provider，或覆盖内置 provider。
 
 :::tip
-图像生成是 Hermes 支持的多种**后端插件**之一。其他插件（各有更专用的 ABC）包括：[Memory Provider 插件](./memory-provider-plugin.md)、[Context Engine 插件](./context-engine-plugin.md) 和 [Model Provider 插件](./model-provider-plugin.md)。通用工具/hook/CLI 插件请参阅 [构建 Hermes 插件](./plugins/index.md)。
+图像生成是 VAEL 支持的多种**后端插件**之一。其他插件（各有更专用的 ABC）包括：[Memory Provider 插件](./memory-provider-plugin.md)、[Context Engine 插件](./context-engine-plugin.md) 和 [Model Provider 插件](./model-provider-plugin.md)。通用工具/hook/CLI 插件请参阅 [构建 VAEL 插件](./plugins/index.md)。
 :::
 
 ## 发现机制
 
-Hermes 在三个位置扫描图像生成后端：
+VAEL 在三个位置扫描图像生成后端：
 
 1. **内置** — `<repo>/plugins/image_gen/<name>/`（以 `kind: backend` 自动加载，始终可用）
 2. **用户** — `~/.hermes/plugins/image_gen/<name>/`（通过 `plugins.enabled` 选择启用）
@@ -285,4 +285,4 @@ my-backend-imggen = "my_backend_imggen_package"
 
 - [图像生成](../user-guide/features/image-generation.md) — 面向用户的功能文档
 - [插件概览](../user-guide/features/plugins.md) — 所有插件类型一览
-- [构建 Hermes 插件](./plugins/index.md) — 通用工具/hook/斜杠命令指南
+- [构建 VAEL 插件](./plugins/index.md) — 通用工具/hook/斜杠命令指南

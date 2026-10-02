@@ -20,7 +20,7 @@ from agent.context_compressor import (
     _is_summary_access_or_quota_error,
 )
 from agent.compression_marker import _COMPRESSION_MARKER_PREFIX
-from hermes_state import SessionDB
+from vael_state import SessionDB
 from agent.auxiliary_client import CODEX_STREAM_STALL_MARKER
 
 _REQ = httpx.Request("POST", "http://x")
@@ -1178,7 +1178,7 @@ class TestSustainedOverloadEscalation:
         restart the budget at zero, so a sustained outage never escalated (#123167;
         same contract as the durable fallback streak, #100185).
         """
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
 
         db = SessionDB(db_path=tmp_path / "state.db")
         session_id = "OVERLOAD_FRESH_BIND"

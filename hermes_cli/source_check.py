@@ -16,7 +16,7 @@ from urllib.parse import quote
 import urllib.error
 import urllib.request
 
-from hermes_constants import get_hermes_home
+from vael_constants import get_hermes_home
 from hermes_cli.source_releases import OFFICIAL_REPOSITORY, _GITHUB_ORIGIN, resolve_source_target
 
 logger = logging.getLogger(__name__)

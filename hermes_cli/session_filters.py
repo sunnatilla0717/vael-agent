@@ -1,4 +1,4 @@
-"""Shared time/filter parsing for `hermes sessions prune` / `archive`."""
+"""Shared time/filter parsing for `vael sessions prune` / `archive`."""
 
 from __future__ import annotations
 

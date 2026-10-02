@@ -18,7 +18,7 @@ def host_gateway(tmp_path, monkeypatch):
     locks = tmp_path / "locks"
     locks.mkdir()
     monkeypatch.setenv("HERMES_GATEWAY_LOCK_DIR", str(locks))
-    monkeypatch.setattr("hermes_constants.get_default_hermes_root", lambda: root)
+    monkeypatch.setattr("vael_constants.get_default_hermes_root", lambda: root)
     hr.publish_record(hr.ROLE_GATEWAY, profiles=("default", "coder"))
     return root
 
@@ -89,7 +89,7 @@ def test_topology_ignores_another_tenants_record_and_reads_the_launch_homes_stat
     argus.mkdir(parents=True)
     monkeypatch.setenv("HERMES_GATEWAY_LOCK_DIR", str(tmp_path / "locks"))
     monkeypatch.setenv("HERMES_HOME", str(root_b))
-    monkeypatch.setattr("hermes_constants._default_hermes_root_memo", None)
+    monkeypatch.setattr("vael_constants._default_hermes_root_memo", None)
 
     hr.publish_record(hr.ROLE_GATEWAY, profiles=("default", "coder"), home=str(root_a))
     assert host_topology.host_gateway_topology() is None

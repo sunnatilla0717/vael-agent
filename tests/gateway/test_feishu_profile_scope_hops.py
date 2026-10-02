@@ -24,7 +24,7 @@ from agent.secret_scope import (
     set_multiplex_active,
     set_secret_scope,
 )
-from hermes_constants import get_hermes_home, reset_hermes_home_override, set_hermes_home_override
+from vael_constants import get_hermes_home, reset_hermes_home_override, set_hermes_home_override
 
 
 def _observe(routed_home: Path) -> tuple:

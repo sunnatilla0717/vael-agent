@@ -1,4 +1,4 @@
-"""``hermes usage`` — the account-limits block of the REPL ``/usage`` without starting a session.
+"""``vael usage`` — the account-limits block of the REPL ``/usage`` without starting a session.
 
 Script-friendly Codex / Anthropic / OpenRouter quota view (issue #33094): same fetch and renderer as
 ``/usage`` (``agent.account_usage``), same credential resolution as a session with no live agent, plus
@@ -13,7 +13,7 @@ import sys
 
 
 def usage_snapshot_document(snapshot) -> dict:
-    """``hermes usage --json`` document. Schema is documented in website/docs/reference/cli-commands.md —
+    """``vael usage --json`` document. Schema is documented in website/docs/reference/cli-commands.md —
     keep the keys stable; extend only by adding keys."""
     return {
         "provider": snapshot.provider,

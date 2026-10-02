@@ -17,7 +17,7 @@ from pathlib import Path
 from typing import Any, Optional
 
 from gateway.platforms._shared import coerce_port as _coerce_int
-from hermes_constants import get_hermes_home
+from vael_constants import get_hermes_home
 
 PROTOCOL_VERSION = "1.0"
 
@@ -67,7 +67,7 @@ def build_agent_card(*, name: str, url: str, description: str, skills: Optional[
         "description": description,
         "url": url,  # convenience for pre-1.0 clients; canonical is supportedInterfaces
         "version": "1.0.0",
-        "provider": {"organization": os.getenv("A2A_PROVIDER_ORG", "Hermes Agent"), "url": os.getenv("A2A_PROVIDER_URL", "") or url},
+        "provider": {"organization": os.getenv("A2A_PROVIDER_ORG", "VAEL Agent"), "url": os.getenv("A2A_PROVIDER_URL", "") or url},
         "supportedInterfaces": [iface],
         "capabilities": {"streaming": streaming, "pushNotifications": push_notifications,
                          "stateTransitionHistory": False, "extendedAgentCard": False},
@@ -84,7 +84,7 @@ def skills_from_toolsets(toolsets: "list[str] | dict[str, list[str]] | None") ->
     become tags, max 10)."""
     if not isinstance(toolsets, dict):
         toolsets = {ts: [] for ts in set(toolsets or [])}
-    skills = [{"id": f"toolset.{name}", "name": name, "description": f"Hermes '{name}' capabilities",
+    skills = [{"id": f"toolset.{name}", "name": name, "description": f"VAEL '{name}' capabilities",
                "tags": [name] + [str(t) for t in (toolsets[name] or [])][:10]} for name in sorted(toolsets)]
     return skills or [{"id": "general", "name": "general", "description": "General-purpose conversational agent", "tags": ["general"]}]
 

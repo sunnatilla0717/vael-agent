@@ -23,7 +23,7 @@ import time
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-from hermes_constants import get_hermes_home
+from vael_constants import get_hermes_home
 from tools.environments import streams
 
 logger = logging.getLogger(__name__)

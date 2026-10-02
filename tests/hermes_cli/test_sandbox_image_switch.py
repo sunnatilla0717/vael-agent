@@ -15,7 +15,7 @@ import os
 import stat
 from pathlib import Path
 import pytest
-import hermes_yaml as yaml
+import vael_yaml as yaml
 
 
 @pytest.fixture

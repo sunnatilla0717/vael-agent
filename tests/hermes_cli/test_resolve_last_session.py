@@ -10,7 +10,7 @@ def test_search_sessions_exposes_last_active_column(tmp_path, monkeypatch):
     monkeypatch.setenv("HERMES_HOME", str(tmp_path))
     monkeypatch.setattr("pathlib.Path.home", lambda: tmp_path)
 
-    import hermes_state
+    import vael_state
 
     from pathlib import Path
 
@@ -56,7 +56,7 @@ def test_resolve_last_session_real_db_prefers_workspace(monkeypatch, tmp_path):
     monkeypatch.setenv("HERMES_HOME", str(tmp_path))
     monkeypatch.setattr("pathlib.Path.home", lambda: tmp_path)
 
-    import hermes_state
+    import vael_state
     from pathlib import Path
 
     repo_a = tmp_path / "repo-a"
@@ -81,7 +81,7 @@ def test_resolve_last_session_real_db_prefers_workspace(monkeypatch, tmp_path):
             cmd, 0, stdout=str(repo_a), stderr=""
         ),
     )
-    monkeypatch.setattr("hermes_state.SessionDB", lambda **kw: real_db(db_path=state_db, **kw))
+    monkeypatch.setattr("vael_state.SessionDB", lambda **kw: real_db(db_path=state_db, **kw))
     assert _resolve_last_session("cli") == "repo_a"
 
 
@@ -91,7 +91,7 @@ def test_resolve_last_session_cli_continues_a_oneshot(monkeypatch, tmp_path):
     monkeypatch.setenv("HERMES_HOME", str(tmp_path))
     monkeypatch.setattr("pathlib.Path.home", lambda: tmp_path)
 
-    import hermes_state
+    import vael_state
     from pathlib import Path
 
     state_db = Path(tmp_path / "state.db")
@@ -109,6 +109,6 @@ def test_resolve_last_session_cli_continues_a_oneshot(monkeypatch, tmp_path):
         db.close()
 
     monkeypatch.setattr("hermes_cli.main._resolve_workspace_key", lambda: None)
-    monkeypatch.setattr("hermes_state.SessionDB", lambda **kw: real_db(db_path=state_db, **kw))
+    monkeypatch.setattr("vael_state.SessionDB", lambda **kw: real_db(db_path=state_db, **kw))
     assert _resolve_last_session("cli") == "oneshot_run"
     assert _resolve_last_session("tui") == "tui_chat"

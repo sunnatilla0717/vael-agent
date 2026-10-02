@@ -23,8 +23,8 @@ from __future__ import annotations
 import threading
 import time
 
-import hermes_state_guard
-from hermes_state import SessionDB
+import vael_state_guard
+from vael_state import SessionDB
 
 # Deliberate cross-test handoff: test_leaked_instance_* leaks an instance;
 # the later test (pytest runs file order deterministically without a

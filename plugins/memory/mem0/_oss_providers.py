@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 from typing import Any
 
-from hermes_constants import get_hermes_home
+from vael_constants import get_hermes_home
 
 LLM_PROVIDERS: dict[str, dict[str, Any]] = {
     "openai": {"label": "OpenAI", "needs_key": True, "env_var": "OPENAI_API_KEY", "default_model": "gpt-5-mini", "base_url_key": "openai_base_url"},

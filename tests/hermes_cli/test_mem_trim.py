@@ -24,7 +24,7 @@ def test_unsupported_allocator_is_noop_without_gc(monkeypatch):
 
 
 def test_config_kill_switch_overrides_force_from_config_file(monkeypatch, tmp_path):
-    from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+    from vael_constants import reset_hermes_home_override, set_hermes_home_override
 
     hermes_home = tmp_path / "hermes"
     hermes_home.mkdir()

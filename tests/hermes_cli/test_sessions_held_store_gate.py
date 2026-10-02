@@ -29,8 +29,8 @@ _HOLDER = (
 
 @pytest.fixture
 def state_db(monkeypatch, tmp_path):
-    import hermes_state
-    from hermes_state import SessionDB
+    import vael_state
+    from vael_state import SessionDB
 
     db_path = tmp_path / "state.db"
     monkeypatch.setattr(hermes_state, "_default_db_path", lambda: db_path)

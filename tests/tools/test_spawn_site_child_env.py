@@ -90,7 +90,7 @@ def test_openviking_server_keeps_provider_keys_but_never_tier1_secrets(child_env
 def test_openviking_server_gets_the_bound_profiles_provider_keys_not_its_bot_tokens(child_env, monkeypatch):
     # A routed profile's own .env is overlaid for its provider keys; its bot and dashboard
     # secrets must not ride along, and the launch profile's keys must not either.
-    from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+    from vael_constants import reset_hermes_home_override, set_hermes_home_override
     _plant(monkeypatch)
     routed = child_env / "profiles" / "b"
     routed.mkdir(parents=True)

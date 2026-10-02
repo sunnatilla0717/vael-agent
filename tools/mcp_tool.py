@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """MCP (Model Context Protocol) client: connects to the ``mcp_servers`` configured in
 ~/.hermes/config.yaml (stdio, Streamable HTTP or SSE), discovers their tools and registers them
-into the hermes tool registry. The ``mcp`` package is optional (no-op without it).
+into the vael tool registry. The ``mcp`` package is optional (no-op without it).
 
 One background event loop (``_mcp_loop``) in a daemon thread runs each server as a long-lived
 Task (``MCPServerTask``) so the transport's anyio cancel scopes enter and exit in one Task; every
@@ -54,7 +54,7 @@ async def _preflight_stdio_command(server_name: str, command: str, args: list) -
         raise ValueError(f"MCP server '{server_name}': {malware_error}")
 
     # npx resolves the package and then FORKS, staying resident as the real server's parent for
-    # nothing (~48 MB per server, measured). Hermes already supervises the child (shared death
+    # nothing (~48 MB per server, measured). VAEL already supervises the child (shared death
     # supervisor), so a cached package is spawned directly; a cache miss leaves npx untouched.
     if os.path.basename(command).lower().startswith("npx"):
         cached = _npx_cached_bin(args)

@@ -1,5 +1,6 @@
-"""Schema for the generic `computer_use` tool (model-facing; value is byte-frozen —
-the schema goes to the model every turn, so prompt-cache parity depends on it).
+"""Schema for the generic `computer_use` tool (model-facing; keep it compact — it goes
+to the model every turn, so every property is a recurring prompt cost, and any edit
+invalidates the provider prompt cache for the whole tool block).
 
 Model-agnostic: any tool-calling model can drive this. Vision-capable models
 should prefer `capture(mode='som')` then `click(element=N)` — much more reliable
@@ -13,7 +14,9 @@ from typing import Any, Dict
 # One consolidated tool with an `action` discriminator keeps the schema compact
 # and the per-turn token cost low. Property groups: capture (mode, app, pid,
 # window_id) / targeting (element, coordinate, button, modifiers) / drag / scroll /
-# set_value / type-key-wait / focus_app / delivery ladder / return shape.
+# set_value / type-key / wait (seconds) and wait_for (text, timeout, interval,
+# changed) / launch_app (bundle_id, urls, arguments, new_instance) / focus_app /
+# delivery ladder / return shape.
 _PROPERTIES: Dict[str, Any] = {
     "action": {
         "type": "string",
@@ -29,25 +32,32 @@ _PROPERTIES: Dict[str, Any] = {
             "key",
             "set_value",
             "wait",
+            "wait_for",
+            "launch_app",
             "list_apps",
             "list_windows",
             "focus_app",
+            "screen_info",
         ],
         "description": (
-            "Which action to perform. `capture` is free (no side effects). All other actions "
-            "require approval unless auto-approved. Use `set_value` for select/popup elements and "
-            "sliders — it selects the matching option directly without opening the native menu (no "
-            "focus steal)."
+            "Which action to perform. `capture`, `wait_for`, `list_apps`, `list_windows` and "
+            "`screen_info` are free (no side effects). All other actions require approval unless "
+            "auto-approved. Use `set_value` for select/popup elements and sliders — it selects the "
+            "matching option directly without opening the native menu (no focus steal). Use "
+            "`wait_for` instead of `wait` whenever you are waiting for the UI (a fixed sleep is "
+            "either wasted context or too short), and `launch_app` to start an app that is not "
+            "running yet — `focus_app` can only route input to an app that already has a window."
         ),
     },
     "mode": {
         "type": "string",
         "enum": ["som", "vision", "ax"],
         "description": (
-            "Capture mode. `som` (default) is a screenshot with numbered overlays on every "
-            "interactable element plus the AX tree — best for vision models, lets you click by "
-            "element index. `vision` is a plain screenshot. `ax` is the accessibility tree only "
-            "(no image; useful for text-only models)."
+            "Capture mode. `som` (default for action='capture') is a screenshot with numbered "
+            "overlays on every interactable element plus the AX tree — best for vision models, lets "
+            "you click by element index. `vision` is a plain screenshot. `ax` is the accessibility "
+            "tree only (no image; useful for text-only models) and is the default for "
+            "action='wait_for', whose result carries the element list, not pixels."
         ),
     },
     "app": {
@@ -56,7 +66,49 @@ _PROPERTIES: Dict[str, Any] = {
             "Optional. Limit capture/action to one app (name e.g. 'Safari', or bundle ID). Omitted "
             "= frontmost window. app='screen' = composited full-screen grab (image only, no "
             "clickable elements); app='desktop' = the OS desktop/shell surface (wallpaper, icons, "
-            "taskbar) with its elements."
+            "taskbar) with its elements. For action='launch_app' it is the app to start (a "
+            "reverse-DNS value like 'com.apple.Safari' is routed as a bundle ID automatically)."
+        ),
+    },
+    "bundle_id": {
+        "type": "string",
+        "description": "Exact bundle/package identifier for action='launch_app' (e.g. 'com.apple.Safari').",
+    },
+    "urls": {
+        "type": "array",
+        "items": {"type": "string"},
+        "description": "action='launch_app': URLs to open with the app (e.g. a meeting link in the browser).",
+    },
+    "arguments": {
+        "type": "array",
+        "items": {"type": "string"},
+        "description": "action='launch_app': extra command-line arguments for the launched app.",
+    },
+    "new_instance": {
+        "type": "boolean",
+        "description": (
+            "action='launch_app': force a fresh instance instead of focusing the running one — use it "
+            "when a parallel run needs its own window. Default false (idempotent: launching a running "
+            "app is a no-op)."
+        ),
+    },
+    "timeout": {
+        "type": "number",
+        "description": (
+            "action='wait_for': how long to keep watching, in seconds (default 10, max 60). On timeout the "
+            "last frame is still returned, so the wait never wastes the round-trip."
+        ),
+    },
+    "interval": {
+        "type": "number",
+        "description": "action='wait_for': seconds between checks (default 0.5, max 5).",
+    },
+    "changed": {
+        "type": "boolean",
+        "description": (
+            "action='wait_for': also return as soon as the screen changes (new/changed elements, or a "
+            "different window title). This is the default when `text` is omitted — use it after a click "
+            "that kicks off loading, instead of a fixed `wait`."
         ),
     },
     "pid": {
@@ -140,7 +192,15 @@ _PROPERTIES: Dict[str, Any] = {
             "AXValue-settable elements, pass the numeric or string value."
         ),
     },
-    "text": {"type": "string", "description": "Text to type (respects the current layout)."},
+    "text": {
+        "type": "string",
+        "description": (
+            "action='type': the text to type (respects the current layout). action='wait_for': the "
+            "label/substring to wait for, matched case-insensitively against element labels, roles, "
+            "the app name and the window title — wait for a post-condition you expect to APPEAR "
+            "(e.g. 'Saved', 'Ready'), not for a spinner you expect to disappear."
+        ),
+    },
     "keys": {
         "type": "string",
         "description": (
@@ -196,9 +256,13 @@ COMPUTER_USE_SCHEMA: Dict[str, Any] = {
         "approval). Each result carries a `verdict` with the next step; follow it — never repeat "
         "confirmed input, and re-capture to verify an unverifiable one before retrying. Workflow: "
         "action='capture' (mode='som' gives numbered element overlays), then click by `element` "
-        "index; re-capture after state-changing actions (or pass capture_after=true). Image "
-        "captures include a shareable `screenshot_path`; deliver it via the platform's MEDIA "
-        "syntax when the user asks to see it — not for captures used only for control."
+        "index; re-capture after state-changing actions (or pass capture_after=true), and prefer "
+        "action='wait_for' over a fixed wait when the next state has to load — it returns the frame "
+        "that satisfied it, so you can act on it directly. Start an app the same way a user would "
+        "with action='launch_app' (idempotent), and read monitor geometry/cursor position with "
+        "action='screen_info'. Image captures include a shareable `screenshot_path`; deliver it "
+        "via the platform's MEDIA syntax when the user asks to see it — not for captures used only "
+        "for control."
     ),
     "parameters": {"type": "object", "properties": _PROPERTIES, "required": ["action"]},
 }

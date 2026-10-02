@@ -20,7 +20,7 @@ from itertools import chain, count
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
 
-from hermes_constants import get_hermes_home
+from vael_constants import get_hermes_home
 from agent.skill_utils import is_excluded_skill_path
 from agent.curator import _read_config_section
 from hermes_cli.sizefmt import format_bytes
@@ -409,7 +409,7 @@ def rollback(backup_id: Optional[str] = None) -> Tuple[bool, str, Optional[Path]
     target = _resolve_backup(backup_id)
     if target is None:
         return (False, "no matching backup found" + (f" for id '{backup_id}'" if backup_id else "")
-                + " (use `hermes curator rollback --list` to see available snapshots)", None)
+                + " (use `vael curator rollback --list` to see available snapshots)", None)
     archive = target / _ARCHIVE_NAME
     if not archive.exists():
         return (False, f"snapshot {target.name} has no skills.tar.gz — corrupted?", None)

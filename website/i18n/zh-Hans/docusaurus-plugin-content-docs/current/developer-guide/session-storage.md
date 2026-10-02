@@ -1,10 +1,10 @@
 # 会话存储
 
-Hermes Agent 使用 SQLite 数据库（`~/.hermes/state.db`）跨 CLI 和 gateway 会话持久化会话元数据、完整消息历史及模型配置。这替代了早期的逐会话 JSONL 文件方案。
+VAEL Agent 使用 SQLite 数据库（`~/.hermes/state.db`）跨 CLI 和 gateway 会话持久化会话元数据、完整消息历史及模型配置。这替代了早期的逐会话 JSONL 文件方案。
 
 源文件：`hermes_state.py`
 
-## Hermes home 与 profile 隔离
+## VAEL home 与 profile 隔离
 
 `get_hermes_home()` 是状态与配置的权威文件系统解析器。它依次使用上下文本地覆盖、`HERMES_HOME`
 环境变量，最后才是平台默认值（macOS 和 Linux 上为 `~/.hermes`；Windows 上为
@@ -16,7 +16,7 @@ Hermes Agent 使用 SQLite 数据库（`~/.hermes/state.db`）跨 CLI 和 gatewa
 为某个 profile 创建数据库、读取配置或启动子进程的进程必须保留或传递该 profile 的
 `HERMES_HOME`；回退到默认根目录会把错误 profile 的状态混入操作中。
 
-CLI 启动流程在导入 Hermes 其余部分之前调用 `_apply_profile_override()`。显式的
+CLI 启动流程在导入 VAEL 其余部分之前调用 `_apply_profile_override()`。显式的
 `--profile`/`-p` 会解析该 profile 并把解析后的目录写入 `HERMES_HOME`。没有显式选择器时，
 指向 profile 的 `HERMES_HOME` 会被保留；否则启动流程可以使用默认根目录中的 active-profile
 选择。`HOME` 只决定在没有上下文覆盖和 `HERMES_HOME` 时使用的平台默认值，修改 `HOME`
@@ -29,11 +29,11 @@ CLI 启动流程在导入 Hermes 其余部分之前调用 `_apply_profile_overri
 ### 测试隔离守卫
 
 测试必须使用临时 `HERMES_HOME` 或显式的临时数据库路径。实时系统守卫会在测试上下文进程打开
-真实默认 Hermes 根目录或真实命名 profile 下的生产 `state.db` 之前抛出异常，防止 fixture 数据或
+真实默认 VAEL 根目录或真实命名 profile 下的生产 `state.db` 之前抛出异常，防止 fixture 数据或
 SQLite 副作用触及正在使用的安装。
 
 `HERMES_STATE_DB_GUARD_BYPASS=1` 是仅供测试使用的逃生口，用于确实必须访问实时数据库的派生子进程。
-进程内的等价逃生口是 `@pytest.mark.live_system_guard_bypass`。不要在普通 Hermes 命令、开发 shell
+进程内的等价逃生口是 `@pytest.mark.live_system_guard_bypass`。不要在普通 VAEL 命令、开发 shell
 或应用配置中设置任一绕过：它会禁用保护实时会话历史的守卫（一个硬性的 `RuntimeError`），而导出了
 它的 shell 会把该绕过传给之后的每一次 pytest 运行。
 

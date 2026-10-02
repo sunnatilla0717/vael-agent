@@ -191,7 +191,7 @@ def _get_json(url: str, headers: dict[str, str], timeout: float, opener=None) ->
 
 def _pricing_entry(pricing: dict, prompt_key: str = "prompt", completion_key: str = "completion") -> dict[str, Any]:
     """Picker-shape ``{prompt, completion[, input_cache_read, input_cache_write]}`` from a catalog
-    ``pricing`` block whose cache fields already use the hermes names."""
+    ``pricing`` block whose cache fields already use the vael names."""
     entry: dict[str, Any] = {
         "prompt": str(pricing.get(prompt_key, "")),
         "completion": str(pricing.get(completion_key, "")),
@@ -267,7 +267,7 @@ def fetch_models_with_pricing(
 def fetch_ai_gateway_pricing(timeout: float = 8.0, *, force_refresh: bool = False) -> dict[str, dict[str, str]]:
     """Vercel AI Gateway /v1/models pricing, translating its ``input`` / ``output`` field names to
     the picker's ``prompt`` / ``completion`` (cache read/write names already match)."""
-    from hermes_constants import AI_GATEWAY_BASE_URL
+    from vael_constants import AI_GATEWAY_BASE_URL
 
     cache_key = AI_GATEWAY_BASE_URL.rstrip("/")
     if not force_refresh:
@@ -425,7 +425,7 @@ _FIREWORKS_PRICING_KEY = "models.dev/fireworks"
 
 
 def _ai_gateway_pricing_scope() -> str:
-    from hermes_constants import AI_GATEWAY_BASE_URL
+    from vael_constants import AI_GATEWAY_BASE_URL
     return AI_GATEWAY_BASE_URL.rstrip("/")
 
 

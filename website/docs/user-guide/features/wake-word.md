@@ -1,14 +1,14 @@
 ---
 sidebar_position: 11
 title: "Wake Word"
-description: "Hands-free 'Hey Hermes' wake word — start a voice session by speaking, the 'Hey Siri' way"
+description: "Hands-free 'Hey VAEL's wake word — start a voice session by speaking, the 'Hey Siri' way"
 ---
 
-# Wake Word ("Hey Hermes")
+# Wake Word ("Hey VAEL")
 
-The wake word turns Hermes into a hands-free assistant across the CLI, TUI, and
-desktop app: with one setting on, Hermes listens in the background for a spoken
-trigger phrase. Say it, and Hermes starts a fresh session, opens the microphone,
+The wake word turns VAEL into a hands-free assistant across the CLI, TUI, and
+desktop app: with one setting on, VAEL listens in the background for a spoken
+trigger phrase. Say it, and VAEL starts a fresh session, opens the microphone,
 captures your command via the normal [voice pipeline](./voice-mode.md),
 and answers — exactly like "Hey Siri" or "Alexa". Use `surface` to pick which
 one listens.
@@ -39,12 +39,12 @@ container" still goes through normally.
 
 ## Remote desktop (client capture)
 
-When the desktop app connects to a **remote** Hermes backend (for example a
+When the desktop app connects to a **remote** VAEL backend (for example a
 headless Docker host or a machine in another room), the backend often has **no
 microphone**. Server-side PortAudio then fails with “Failed to open the
 wake-word microphone.”
 
-Hermes supports **client capture** for that case:
+VAEL supports **client capture** for that case:
 
 1. The desktop arms wake with `capture: client` (automatic for the GUI when the
    backend has no local input device, or set explicitly below).
@@ -89,23 +89,23 @@ that of the Python backend, not a remote desktop client:
   (free, no key).
 
 An explicit provider stays selected, even if this platform does not support it.
-Hermes reports the requirement error instead of silently switching engines.
+VAEL reports the requirement error instead of silently switching engines.
 Existing explicit settings are not migrated. To opt into automatic selection,
 run `hermes config set wake_word.provider auto`. Wake detection stays **off**
 until you enable it.
 
-The default phrase label is **"hey hermes"**. For openWakeWord, Hermes includes
+The default phrase label is **"hey hermes"**. For openWakeWord, VAEL includes
 its trained TFLite model.
 The `pyopen-wakeword` package includes the shared feature-extraction models, so
 this engine does not download models when it starts.
 
-If the selected engine is missing, Hermes requests its PM extra when you enable
+If the selected engine is missing, VAEL requests its PM extra when you enable
 wake-word detection. `security.allow_lazy_installs` controls this installation.
-A new dependency environment can require a Hermes restart before the engine loads.
+A new dependency environment can require a VAEL restart before the engine loads.
 Packaged builds include the engine dependencies supported by their target.
 
 The `pyopen-wakeword` macOS
-wheel contains an ARM64-only library despite its `universal2` label. Hermes
+wheel contains an ARM64-only library despite its `universal2` label. VAEL
 excludes that engine on Intel Macs and native Windows ARM64. Sherpa provides
 keyless detection on both targets.
 
@@ -117,7 +117,7 @@ setting is only a display label; choose a built-in keyword or supply a custom
 
 The supported `pyopen-wakeword` wheels target Apple Silicon with macOS 15 or
 later, glibc Linux 2.35 or later, and Windows x64. These requirements apply to
-that engine, not every Hermes feature. Termux's core/ACP package does not
+that engine, not every VAEL feature. Termux's core/ACP package does not
 include this wake stack.
 
 ## Quick start
@@ -196,13 +196,13 @@ don't have the single-frame-spike problem and ignore `confirmation_frames`
 
 The `openwakeword` provider name now selects
 [pyopen-wakeword](https://github.com/rhasspy/pyopen-wakeword). Its wheel includes
-the TFLite library and shared feature models. Hermes uses the bundled
+the TFLite library and shared feature models. VAEL uses the bundled
 `hey_hermes.tflite` model by default. ONNX wake models and the
 `inference_framework` setting are no longer supported.
 
 ### Surfaces (CLI, TUI, GUI)
 
-The wake word works in all three Hermes surfaces, and `surface` picks which one
+The wake word works in all three VAEL surfaces, and `surface` picks which one
 owns the listener and opens the new session when it fires:
 
 | `surface` | Behavior |
@@ -213,9 +213,9 @@ owns the listener and opens the new session when it fires:
 | `gui` | Only the desktop app. |
 
 The detector is on-device and single-mic, so only one surface listens at a time,
-including when Hermes surfaces run in separate processes. Ownership is sticky:
+including when VAEL surfaces run in separate processes. Ownership is sticky:
 the first eligible claimant keeps the listener until it stops, disconnects, or
-its process exits. Hermes does not silently fail over to another open surface.
+its process exits. VAEL does not silently fail over to another open surface.
 Set `surface` when you want to pin ownership instead of using first-claim wins.
 The TUI and desktop GUI share the same Python backend (`tui_gateway`), which
 runs the detector server-side and yields the mic to voice capture while a
@@ -223,7 +223,7 @@ command records.
 
 ## Using a different phrase
 
-"Hey Hermes" is the default detection phrase with openWakeWord and sherpa.
+"Hey VAEL" is the default detection phrase with openWakeWord and sherpa.
 Porcupine uses its configured keyword instead ("jarvis" by default).
 To wake on something else, the easiest path on supported platforms is the
 open-vocabulary engine:
@@ -268,7 +268,7 @@ degrade accuracy — tune per-profile `sensitivity` if needed.
 ### Option B — openWakeWord (free, trained model)
 
 For a different phrase, obtain or train a compatible openWakeWord TFLite model.
-Set its absolute path in the configuration. Hermes does not resolve built-in
+Set its absolute path in the configuration. VAEL does not resolve built-in
 names such as `hey_jarvis` or download their models for you.
 
 ```yaml
@@ -293,7 +293,7 @@ syllables with an uncommon word ("hermes" qualifies) beat common words like
 
 ### Option C — Porcupine (custom keyword in seconds)
 
-Create a "Hey Hermes" keyword in the [Picovoice Console](https://console.picovoice.ai/),
+Create a "Hey VAEL" keyword in the [Picovoice Console](https://console.picovoice.ai/),
 download the `.ppn`, and:
 
 ```yaml
@@ -331,11 +331,11 @@ macOS grants microphone access per **process**. STT working in the desktop app
 proves the *renderer* has mic access — the wake listener runs in the Python
 *backend*, which needs its own grant. Without it, CoreAudio hands the backend a
 "working" stream that only ever delivers silence, so the ear shows listening
-but the phrase never fires. Hermes detects this (`/wake status` shows
+but the phrase never fires. VAEL detects this (`/wake status` shows
 "mic delivers only silence"; the desktop's folded voice menu carries the same
 hint on its trigger).
-Fix: System Settings → Privacy & Security → Microphone → enable the Hermes
-backend (it may appear as your terminal, `python`, or Hermes), then toggle the
+Fix: System Settings → Privacy & Security → Microphone → enable the VAEL
+backend (it may appear as your terminal, `python`, or VAEL), then toggle the
 wake word off and on.
 
 ### "Listening" but receives silence (Windows)

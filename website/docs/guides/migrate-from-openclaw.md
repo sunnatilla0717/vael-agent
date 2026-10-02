@@ -1,12 +1,12 @@
 ---
 sidebar_position: 10
 title: "Migrate from OpenClaw"
-description: "Complete guide to migrating your OpenClaw / Clawdbot setup to Hermes Agent — what gets migrated, how config maps, and what to check after."
+description: "Complete guide to migrating your OpenClaw / Clawdbot setup to VAEL Agent — what gets migrated, how config maps, and what to check after."
 ---
 
 # Migrate from OpenClaw
 
-`hermes claw migrate` imports your OpenClaw (or legacy Clawdbot/Moldbot) setup into Hermes. This guide covers exactly what gets migrated, the config key mappings, and what to verify after migration.
+`hermes claw migrate` imports your OpenClaw (or legacy Clawdbot/Moldbot) setup into VAEL. This guide covers exactly what gets migrated, the config key mappings, and what to verify after migration.
 
 :::note
 Coming from **Claude Code** or **OpenAI Codex CLI** instead? Use [`hermes import-agent`](../user-guide/import-from-other-agents.md).
@@ -39,7 +39,7 @@ Reads from `~/.openclaw/` by default. Legacy `~/.clawdbot/` or `~/.moltbot/` dir
 |--------|-------------|
 | `--dry-run` | Preview only — stop after showing what would be migrated. |
 | `--preset <name>` | `full` (all compatible settings) or `user-data` (excludes infrastructure config). Neither preset imports secrets by default — pass `--migrate-secrets` explicitly. |
-| `--overwrite` | Overwrite existing Hermes files on conflicts (default: refuse to apply when the plan has conflicts). |
+| `--overwrite` | Overwrite existing VAEL files on conflicts (default: refuse to apply when the plan has conflicts). |
 | `--migrate-secrets` | Include API keys. Required even under `--preset full` — no preset imports secrets silently. |
 | `--no-backup` | Skip the pre-migration zip snapshot of `~/.hermes/` (by default a single restore-point archive is written before apply, under `~/.hermes/backups/pre-migration-*.zip`; restorable with `hermes import`). |
 | `--source <path>` | Custom OpenClaw directory. |
@@ -51,7 +51,7 @@ Reads from `~/.openclaw/` by default. Legacy `~/.clawdbot/` or `~/.moltbot/` dir
 
 ### Persona, memory, and instructions
 
-| What | OpenClaw source | Hermes destination | Notes |
+| What | OpenClaw source | VAEL destination | Notes |
 |------|----------------|-------------------|-------|
 | Persona | `workspace/SOUL.md` | `~/.hermes/SOUL.md` | Direct copy |
 | Workspace instructions | `workspace/AGENTS.md` | `AGENTS.md` in `--workspace-target` | Requires `--workspace-target` flag |
@@ -63,18 +63,18 @@ Workspace files are also checked at `workspace.default/` and `workspace-main/` a
 
 ### Skills (4 sources)
 
-| Source | OpenClaw location | Hermes destination |
+| Source | OpenClaw location | VAEL destination |
 |--------|------------------|-------------------|
 | Workspace skills | `workspace/skills/` | `~/.hermes/skills/openclaw-imports/` |
 | Managed/shared skills | `~/.openclaw/skills/` | `~/.hermes/skills/openclaw-imports/` |
 | Personal cross-project | `~/.agents/skills/` | `~/.hermes/skills/openclaw-imports/` |
 | Project-level shared | `workspace/.agents/skills/` | `~/.hermes/skills/openclaw-imports/` |
 
-Skill conflicts are handled by `--skill-conflict`: `skip` leaves the existing Hermes skill, `overwrite` replaces it, `rename` creates a `-imported` copy.
+Skill conflicts are handled by `--skill-conflict`: `skip` leaves the existing VAEL skill, `overwrite` replaces it, `rename` creates a `-imported` copy.
 
 ### Model and provider configuration
 
-| What | OpenClaw config path | Hermes destination | Notes |
+| What | OpenClaw config path | VAEL destination | Notes |
 |------|---------------------|-------------------|-------|
 | Default model | `agents.defaults.model` | `config.yaml` → `model` | Can be a string or `{primary, fallbacks}` object |
 | Custom providers | `models.providers.*` | `config.yaml` → `custom_providers` (auto-migrated to the canonical `providers:` dict on the next `hermes update` config migration) | Maps `baseUrl`, `apiType`/`api` — handles both short ("openai", "anthropic") and hyphenated ("openai-completions", "anthropic-messages", "google-generative-ai") values |
@@ -82,7 +82,7 @@ Skill conflicts are handled by `--skill-conflict`: `skip` leaves the existing He
 
 ### Agent behavior
 
-| What | OpenClaw config path | Hermes config path | Mapping |
+| What | OpenClaw config path | VAEL config path | Mapping |
 |------|---------------------|-------------------|---------|
 | Max turns | `agents.defaults.timeoutSeconds` | `agent.max_turns` | `timeoutSeconds / 10`, capped at 200 |
 | Verbose mode | `agents.defaults.verboseDefault` | `agent.verbose` | "off" / "on" / "full" |
@@ -98,11 +98,11 @@ Skill conflicts are handled by `--skill-conflict`: `skip` leaves the existing He
 
 ### Session lifetime
 
-Idle and daily reset timers are not imported: Hermes conversations persist until an explicit `/new` or `/reset`. Advanced session settings (identity links, thread bindings, maintenance, scope and send policy) remain archived for reference.
+Idle and daily reset timers are not imported: VAEL conversations persist until an explicit `/new` or `/reset`. Advanced session settings (identity links, thread bindings, maintenance, scope and send policy) remain archived for reference.
 
 ### MCP servers
 
-| OpenClaw field | Hermes field | Notes |
+| OpenClaw field | VAEL field | Notes |
 |----------------|-------------|-------|
 | `mcp.servers.*.command` | `mcp_servers.*.command` | Stdio transport |
 | `mcp.servers.*.args` | `mcp_servers.*.args` | |
@@ -120,7 +120,7 @@ TTS settings are read from **two** OpenClaw config locations with this priority:
 2. Top-level `talk.providers.{provider}.*` (fallback)
 3. Legacy flat keys `messages.tts.{provider}.*` (oldest format)
 
-| What | Hermes destination |
+| What | VAEL destination |
 |------|-------------------|
 | Provider name | `config.yaml` → `tts.provider` |
 | ElevenLabs voice ID | `config.yaml` → `tts.elevenlabs.voice_id` |
@@ -132,7 +132,7 @@ TTS settings are read from **two** OpenClaw config locations with this priority:
 
 ### Messaging platforms
 
-| Platform | OpenClaw config path | Hermes `.env` variable | Notes |
+| Platform | OpenClaw config path | VAEL `.env` variable | Notes |
 |----------|---------------------|----------------------|-------|
 | Telegram | `channels.telegram.botToken` or `.accounts.default.botToken` | `TELEGRAM_BOT_TOKEN` | Token can be string or [SecretRef](#secretref-handling). Both flat and accounts layout supported. |
 | Telegram | `credentials/telegram-default-allowFrom.json` | `TELEGRAM_ALLOWED_USERS` | Comma-joined from `allowFrom[]` array |
@@ -150,7 +150,7 @@ TTS settings are read from **two** OpenClaw config locations with this priority:
 
 ### Other config
 
-| What | OpenClaw path | Hermes path | Notes |
+| What | OpenClaw path | VAEL path | Notes |
 |------|-------------|-------------|-------|
 | Approval mode | `approvals.exec.mode` | `config.yaml` → `approvals.mode` | "auto"→"off", "always"→"manual", "smart"→"smart" |
 | Command allowlist | `exec-approvals.json` | `config.yaml` → `command_allowlist` | Patterns merged and deduped |
@@ -160,14 +160,14 @@ TTS settings are read from **two** OpenClaw config locations with this priority:
 | Gateway auth token | `gateway.auth.token` | `.env` → `HERMES_GATEWAY_TOKEN` | Requires `--migrate-secrets` |
 | Working directory | `agents.defaults.workspace` | `config.yaml` → `terminal.cwd` | Legacy migrations may still emit `MESSAGING_CWD` as a compatibility fallback |
 
-### Archived (no direct Hermes equivalent)
+### Archived (no direct VAEL equivalent)
 
 These are saved to `~/.hermes/migration/openclaw/<timestamp>/archive/` for manual review:
 
-| What | Archive file | How to recreate in Hermes |
+| What | Archive file | How to recreate in VAEL |
 |------|-------------|--------------------------|
 | `IDENTITY.md` | `archive/workspace/IDENTITY.md` | Merge into `SOUL.md` |
-| `TOOLS.md` | `archive/workspace/TOOLS.md` | Hermes has built-in tool instructions |
+| `TOOLS.md` | `archive/workspace/TOOLS.md` | VAEL has built-in tool instructions |
 | `HEARTBEAT.md` | `archive/workspace/HEARTBEAT.md` | Use cron jobs for periodic tasks |
 | `BOOTSTRAP.md` | `archive/workspace/BOOTSTRAP.md` | Use context files or skills |
 | Cron jobs | `archive/cron-config.json` | Recreate with `hermes cron create` |
@@ -177,7 +177,7 @@ These are saved to `~/.hermes/migration/openclaw/<timestamp>/archive/` for manua
 | Skills registry | `archive/skills-registry-config.json` | Use `hermes skills config` |
 | UI/identity | `archive/ui-identity-config.json` | Use `/skin` command |
 | Logging | `archive/logging-diagnostics-config.json` | Set in `config.yaml` logging section |
-| Multi-agent list | `archive/agents-list.json` | Use Hermes profiles |
+| Multi-agent list | `archive/agents-list.json` | Use VAEL profiles |
 | Channel bindings | `archive/bindings.json` | Manual setup per platform |
 | Complex channels | `archive/channels-deep-config.json` | Manual platform config |
 
@@ -213,7 +213,7 @@ OpenClaw config values for tokens and API keys can be in three formats:
 "channels": { "telegram": { "botToken": { "source": "env", "id": "TELEGRAM_BOT_TOKEN" } } }
 ```
 
-The migration resolves all three formats. For env templates and SecretRef objects with `source: "env"`, it looks up the value in `~/.openclaw/.env` and the `openclaw.json` env sub-object. SecretRef objects with `source: "file"` or `source: "exec"` can't be resolved automatically — the migration warns about these, and those values must be added to Hermes manually via `hermes config set`.
+The migration resolves all three formats. For env templates and SecretRef objects with `source: "env"`, it looks up the value in `~/.openclaw/.env` and the `openclaw.json` env sub-object. SecretRef objects with `source: "file"` or `source: "exec"` can't be resolved automatically — the migration warns about these, and those values must be added to VAEL manually via `hermes config set`.
 
 ## After migration
 

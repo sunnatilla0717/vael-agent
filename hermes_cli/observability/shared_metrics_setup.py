@@ -5,7 +5,7 @@ ran it (``completed`` / ``failed`` + a closed failure class). A flow nobody fini
 itself, so ``started`` also drops a small marker under the owning profile's store dir (the
 process-exit pattern): the finisher claims it by rename, and a marker whose process is gone (or that
 has been pending longer than any real flow takes) is reported ``abandoned`` by the next setup start
-or Hermes start in that profile. Whoever claims the marker records, so each flow ends exactly once.
+or VAEL start in that profile. Whoever claims the marker records, so each flow ends exactly once.
 
 Only the catalog provider name leaves (custom endpoints read ``custom``); never a key, token, base
 URL or error text. Rows are saved synchronously: a setup killed right after ``started`` must still
@@ -68,14 +68,14 @@ def markers_dir(home: Path) -> Path:
 def _bound(hermes_home: Any) -> Iterator[None]:
     token = None
     if hermes_home:
-        from hermes_constants import set_hermes_home_override
+        from vael_constants import set_hermes_home_override
 
         token = set_hermes_home_override(str(hermes_home))
     try:
         yield
     finally:
         if token is not None:
-            from hermes_constants import reset_hermes_home_override
+            from vael_constants import reset_hermes_home_override
 
             reset_hermes_home_override(token)
 
@@ -139,7 +139,7 @@ def begin_provider_setup(surface: str, provider: Any, *, hermes_home: Any = None
             if fields is None:
                 return None
             from gateway.status import get_process_start_time
-            from hermes_constants import get_hermes_home
+            from vael_constants import get_hermes_home
 
             home = get_hermes_home()
             report_abandoned_setups(home)
@@ -238,7 +238,7 @@ def record_provider_setup_done(surface: str, provider: Any, *, hermes_home: Any 
 
             if not provider or not enabled():
                 return
-            from hermes_constants import get_hermes_home
+            from vael_constants import get_hermes_home
 
             home = str(get_hermes_home())
 
@@ -286,7 +286,7 @@ def record_api_key_saved(env_var: Any, value: Any, previous: Any, surface: str, 
         logger.debug("API key setup not recorded", exc_info=True)
 
 
-# ---- CLI flows (`hermes setup`, `hermes model`, first-run chat) ------------------------------
+# ---- CLI flows (`vael setup`, `vael model`, first-run chat) ------------------------------
 
 _cli = threading.local()
 
@@ -321,7 +321,7 @@ def _model_route() -> tuple[Any, ...]:
 
 @contextlib.contextmanager
 def provider_setup_surface(surface: str) -> Iterator[None]:
-    """Name the surface whose provider picker runs inside (``hermes model``, the setup wizard, the
+    """Name the surface whose provider picker runs inside (``vael model``, the setup wizard, the
     first-run chat prompt). The picker is shared, so only these entry points know which one it is."""
     previous = getattr(_cli, "surface", None)
     _cli.surface = surface

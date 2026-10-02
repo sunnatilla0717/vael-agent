@@ -17,7 +17,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
 
-from hermes_constants import get_hermes_home
+from vael_constants import get_hermes_home
 
 _SKIP_PARTS = {".archive", ".hub", ".locks", "node_modules", ".git"}
 _USAGE_TS_KEYS = ("last_activity_at", "last_used_at", "last_viewed_at", "last_patched_at", "created_at")
@@ -37,13 +37,14 @@ class SkillNode:
 
 
 def _fm_field(fm: dict[str, Any], key: str) -> Any:
-    """Top-level ``key`` or ``metadata.hermes.<key>``; tolerant of the string-valued
-    frontmatter that ``parse_frontmatter``'s malformed-YAML fallback produces."""
+    """Top-level ``key`` or ``metadata.vael.<key>`` (legacy ``metadata.hermes``);
+    tolerant of the string-valued frontmatter that ``parse_frontmatter``'s
+    malformed-YAML fallback produces."""
     if fm.get(key):
         return fm[key]
-    meta = fm.get("metadata")
-    hermes = meta.get("hermes") if isinstance(meta, dict) else None
-    return hermes.get(key) if isinstance(hermes, dict) else None
+    from agent.skill_utils import skill_metadata_block
+
+    return skill_metadata_block(fm).get(key)
 
 
 def _related(fm: dict[str, Any]) -> list[str]:

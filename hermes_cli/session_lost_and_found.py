@@ -16,7 +16,7 @@ from typing import Any, Callable, Optional, Sequence
 
 from hermes_cli.session_schema_history import SCHEMA_HISTORY, reachable_physical_layouts
 
-from hermes_state_ids import SESSION_ID_PATTERN  # timestamp prefix: strongest sentinel for schema-less rows
+from vael_state_ids import SESSION_ID_PATTERN  # timestamp prefix: strongest sentinel for schema-less rows
 from hermes_cli.session_recovery import (
     _AUXILIARY_TABLE_SCHEMAS, _AUXILIARY_TABLES, _CANONICAL_TABLES, _DANGLING_TOOL_PIN, _count_rows,
     _immediate_transaction, _placeholder_titles, _quoted_columns, _table_columns,
@@ -77,9 +77,9 @@ SQLITE3_CLI_GUIDANCE = (
 # 3.50.7 and 3.44.6 — the same version gate hermes_state applies to the
 # embedded library (#69784). The system `sqlite3` CLI on Debian/Ubuntu is
 # routinely in the vulnerable band (e.g. 3.45.1), and #100368's forensics
-# caught exactly this shell converting a live Hermes state.db into two
+# caught exactly this shell converting a live VAEL state.db into two
 # generations. A salvage shell must therefore be version-gated, not just
-# capability-gated, before it is pointed at (a copy of) a Hermes database.
+# capability-gated, before it is pointed at (a copy of) a VAEL database.
 #
 # The predicate lives in hermes_cli.sqlite_runtime (stdlib-only, shared with
 # the installer/update gates) so the embedded runtime and the salvage shell
@@ -87,7 +87,7 @@ SQLITE3_CLI_GUIDANCE = (
 from hermes_cli.sqlite_runtime import is_sqlite_wal_reset_vulnerable as _wal_reset_vulnerable  # noqa: E502
 
 _WAL_RESET_VULNERABLE_GUIDANCE = (
-    "salvage against a Hermes database with the WAL-reset bug "
+    "salvage against a VAEL database with the WAL-reset bug "
     "(https://sqlite.org/wal.html#walresetbug, fixed in 3.51.3+ / backports "
     "3.50.7 / 3.44.6; the vulnerable fresh-opener can unlink a live WAL/SHM "
     "pair and split the database into two generations, losing acknowledged "
@@ -354,7 +354,7 @@ def _type_conflicts(value: Any, declared: str) -> bool:
     """True when a salvaged cell cannot have come from a column of this type.
 
     Stricter than SQLite affinity on purpose: SQLite would happily keep a
-    non-numeric string in an INTEGER column, but Hermes never writes one, so
+    non-numeric string in an INTEGER column, but VAEL never writes one, so
     text sitting where a counter is declared means the layout is wrong. A
     TEXT column always yields ``str`` (numbers are coerced on write), a REAL
     column always yields ``float``, an INTEGER column yields ``int``.

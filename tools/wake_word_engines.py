@@ -150,7 +150,7 @@ _SHERPA_KWS_MODEL_DIR = "sherpa-onnx-kws-zipformer-gigaspeech-3.3M-2024-01-01"
 
 
 def _sherpa_model_root() -> Path:
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
     return get_hermes_home() / "cache" / "wakewords"
 
 
@@ -192,7 +192,7 @@ class _SherpaKwsEngine(_Engine):
 
         # Phrase set: this profile's phrase plus — with profile routing on — every other
         # wake-enabled profile's phrase, so ONE listener can wake any profile.
-        phrase = str(ww._get(cfg, "phrase") or "hey hermes").strip()
+        phrase = str(ww._get(cfg, "phrase") or "hey vael").strip()
         phrase_map: Dict[str, str] = {phrase: ww._active_profile_name()}
         if bool(cfg.get("profile_routing", True)):
             for prof, p in ww.enrolled_profile_phrases().items():

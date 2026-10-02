@@ -217,7 +217,7 @@ def _complete_selected(request: dict) -> None:
         # Discharges the obligation this run armed when the live fleet vouches for it; a
         # fleet still owing the restart fails closed exactly like a stale matrix would.
         if update_cmd._pending_fleet_restart_needed():
-            print("  ⚠ Gateways are still off the checkout code. Recover with: hermes gateway restart")
+            print("  ⚠ Gateways are still off the checkout code. Recover with: vael gateway restart")
             raise SystemExit(1)
         if not complete:
             raise SystemExit(1)

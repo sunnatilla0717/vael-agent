@@ -166,7 +166,7 @@ def _apply_field_values(provider: ProviderConfigSchema, values: Dict[str, str], 
 
 def _write_json_0600(path: Path, data: Dict[str, Any]) -> None:
     from utils import atomic_json_write
-    from hermes_constants import mkdir_under_hermes_home
+    from vael_constants import mkdir_under_hermes_home
     mkdir_under_hermes_home(path.parent)
     atomic_json_write(path, data, mode=0o600)
 
@@ -338,7 +338,7 @@ def _command_result(
 def _install_memory_provider_python_dependencies(name: str) -> List[Dict[str, Any]]:
     from hermes_cli.memory_setup import prepare_memory_provider_dependencies
 
-    command = "hermes pm install"
+    command = "vael pm install"
     try:
         _manifest, status = prepare_memory_provider_dependencies(name)
     except Exception as exc:

@@ -1,5 +1,5 @@
 #!/usr/bin/env -S bash -c 'exec "$BASH" "$(dirname "$0")/_hermes-python" "$0" "$@"'
-"""Build the Hermes Model Catalog — a centralized JSON manifest of curated models.
+"""Build the VAEL Model Catalog — a centralized JSON manifest of curated models.
 
 This script reads the in-repo hardcoded curated lists (``OPENROUTER_MODELS``,
 ``_PROVIDER_MODELS["nous"]``) and writes them to a JSON manifest that the
@@ -73,7 +73,7 @@ def build_catalog() -> dict:
                     "note": (
                         "Descriptions drive picker badges. Live /api/v1/models "
                         "filters curated ids by tool-calling support and free pricing. "
-                        'The entry labeled "default": true is the model Hermes '
+                        'The entry labeled "default": true is the model VAEL '
                         "silently lands on when the user never picked one."
                     ),
                 },
@@ -86,7 +86,7 @@ def build_catalog() -> dict:
                 "metadata": {
                     "display_name": "Nous Portal",
                     "note": (
-                        'The entry labeled "default": true is the model Hermes '
+                        'The entry labeled "default": true is the model VAEL '
                         "silently lands on when the user never picked one."
                     ),
                 },

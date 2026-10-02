@@ -9,7 +9,7 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
-import hermes_yaml as yaml
+import vael_yaml as yaml
 
 from hermes_cli.plugins import (
     ENTRY_POINTS_GROUP,
@@ -2416,7 +2416,7 @@ class TestPluginCommands:
         NOT touch ``os.environ``. A regression test that only flips the
         ``HERMES_HOME`` env var never exercises this path.
         """
-        from hermes_constants import set_hermes_home_override, reset_hermes_home_override
+        from vael_constants import set_hermes_home_override, reset_hermes_home_override
         import hermes_cli.plugins as plugins_mod
 
         def write_engine_plugin(home: Path) -> None:
@@ -2500,7 +2500,7 @@ class TestPluginCommands:
         leaking the previous profile's module-level state (and code) into
         the new profile.
         """
-        from hermes_constants import set_hermes_home_override, reset_hermes_home_override
+        from vael_constants import set_hermes_home_override, reset_hermes_home_override
         import hermes_cli.plugins as plugins_mod
 
         def write_stateful_plugin(home: Path, marker: str) -> None:

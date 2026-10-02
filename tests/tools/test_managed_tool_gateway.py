@@ -225,7 +225,7 @@ def test_read_nous_provider_state_falls_back_to_global_root_for_share_auth_profi
     monkeypatch.setenv("HERMES_GUEST_ONBOARDING", "1")
     monkeypatch.delenv("PYTEST_CURRENT_TEST", raising=False)
 
-    import hermes_constants
+    import vael_constants
     from hermes_cli import auth as auth_mod
 
     monkeypatch.setattr(hermes_constants, "get_default_hermes_root", lambda: root)

@@ -1,4 +1,4 @@
-"""hermes.feature_disabled.count: a user turns off something Hermes ships on, or removes something shipped.
+"""hermes.feature_disabled.count: a user turns off something VAEL ships on, or removes something shipped.
 
 One chokepoint sees every write: ``save_config`` hands over the raw config it replaced and the one it
 wrote, and :func:`config_transitions` diffs only what the user moved away from the shipped default
@@ -7,11 +7,11 @@ booleans. Names are public only when shipped (toolset key, bundled/catalog skill
 plugin, ``DEFAULT_CONFIG`` key path; never a value); anything else reads ``custom``. The store counts
 each (kind, name, event) at most once per day.
 
-The surface is the entry point that is running: ``set_process_surface`` from the ``hermes`` command
+The surface is the entry point that is running: ``set_process_surface`` from the ``vael`` command
 dispatch (``tools`` / ``config`` / ``skills`` / ``plugins`` / chat slash commands / the web server) and
 the TUI gateway. A process with no surface (setup wizard, updates) records nothing, nor does a write
-Hermes makes itself inside a surfaced process (migrations, under :func:`hermes_applied_write`): those
-are Hermes applying choices, not a user turning something off.
+VAEL makes itself inside a surfaced process (migrations, under :func:`hermes_applied_write`): those
+are VAEL applying choices, not a user turning something off.
 
 ``save_config``'s callers may hold their own write lock (the dashboard's ``_CONFIG_MUTATION_LOCK``), so
 the hook only runs the cheap gate inline; the diff and the record run on a thread bound to the owning
@@ -43,7 +43,7 @@ _hermes_write: ContextVar[bool] = ContextVar("hermes_feature_disabled_hermes_wri
 
 
 def set_process_surface(command: Any) -> None:
-    """Called once by the ``hermes`` dispatch (``command`` is the subcommand, None for chat) or the
+    """Called once by the ``vael`` dispatch (``command`` is the subcommand, None for chat) or the
     TUI gateway (``"tui_gateway"``). Unknown commands clear it."""
     global _process_surface
     _process_surface = "tui_gateway" if command == "tui_gateway" else _COMMAND_SURFACES.get(command)
@@ -226,7 +226,7 @@ def _emit(transitions: Iterable[tuple[str, str, str]], surface: str) -> None:
 
 @contextlib.contextmanager
 def hermes_applied_write() -> Iterator[None]:
-    """Config writes Hermes makes on its own (migrations) record nothing, whatever the surface."""
+    """Config writes VAEL makes on its own (migrations) record nothing, whatever the surface."""
     token = _hermes_write.set(True)
     try:
         yield
@@ -235,7 +235,7 @@ def hermes_applied_write() -> Iterator[None]:
 
 
 def _record(old: Any, new: Any, surface: str, home: str) -> None:
-    from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+    from vael_constants import reset_hermes_home_override, set_hermes_home_override
 
     token = set_hermes_home_override(home)  # a thread does not inherit the profile binding
     try:
@@ -251,7 +251,7 @@ def record_config_saved(old_raw: Any, new_config: Any) -> None:
     if _process_surface is None or _hermes_write.get():
         return
     try:
-        from hermes_constants import get_hermes_home
+        from vael_constants import get_hermes_home
 
         from .relay_shared_metrics import enabled
 
@@ -267,7 +267,7 @@ def record_config_saved(old_raw: Any, new_config: Any) -> None:
 
 
 def recording_raw_config_write(config_path: Any, user_config: Any, write) -> None:
-    """``hermes config set/unset`` write the raw file directly (not via ``save_config``): diff the file
+    """``vael config set/unset`` write the raw file directly (not via ``save_config``): diff the file
     they replace against what they write. The write itself runs unguarded, so its errors are the caller's."""
     before = None
     if _process_surface is not None:

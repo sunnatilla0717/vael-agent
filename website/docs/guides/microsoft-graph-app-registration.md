@@ -137,7 +137,7 @@ chmod 600 ~/.hermes/.env
 
 ## Step 6: Verify the Token Flow
 
-Hermes ships a Graph auth smoke-test. From your Hermes install:
+VAEL ships a Graph auth smoke-test. From your VAEL install:
 
 ```python
 python -c "

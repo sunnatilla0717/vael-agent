@@ -6,7 +6,7 @@ author: Bihruze (Asahi0x), Hermes Agent
 license: MIT
 platforms: [linux, macos]
 metadata:
-  hermes:
+  vael:
     tags: [evolution, optimization, prompt-engineering, research]
     related_skills: [arxiv, jupyter-notebook]
 ---
@@ -174,7 +174,7 @@ shipped `scripts/parrot_openrouter.py` is the reference.
 6. **CLI is hardcoded to Anthropic.** `uv run darwinian_evolver <problem>`
    reaches for `ANTHROPIC_API_KEY` and uses Claude Sonnet. To use any other
    provider, write a driver like `parrot_openrouter.py`.
-7. **AGPL.** Never `from darwinian_evolver import ...` inside Hermes core.
+7. **AGPL.** Never `from darwinian_evolver import ...` inside VAEL core.
    Custom driver scripts under `~/.hermes/skills/...` are user-side and fine.
 8. **No PyPI package.** `pip install darwinian-evolver` will pull the wrong
    thing. Always install from the GitHub repo.

@@ -1,4 +1,4 @@
-"""Cross-process mutual exclusion for in-flight Hermes updates.
+"""Cross-process mutual exclusion for in-flight VAEL updates.
 
 The marker file the Tauri updater writes (``UpdateMarkerGuard`` in
 ``apps/bootstrap-installer/src-tauri/src/update.rs``) and the Electron desktop reads
@@ -27,7 +27,7 @@ UPDATE_MARKER_MAX_AGE_SECONDS = 20 * 60
 MARKER_NAME = ".hermes-update-in-progress"
 
 # Set by an orchestrating updater (Tauri `hermes-setup --update`) to its own pid before
-# spawning `hermes update` as a child stage; the parent holds the marker for its whole run,
+# spawning `vael update` as a child stage; the parent holds the marker for its whole run,
 # so without this the child would refuse its own parent's lock. Keep in sync with
 # update_child_env in apps/bootstrap-installer/src-tauri/src/update.rs.
 HANDOFF_PID_ENV = "HERMES_UPDATE_HANDOFF_PID"
@@ -39,18 +39,18 @@ _MAX_ANCESTRY_DEPTH = 128
 
 # Exit code meaning "another updater/instance owns this install right now" — the same
 # contract as the Windows shim / venv-holder guards in _cmd_update_impl, matched by the
-# Tauri updater (UPDATE_EXIT_CONCURRENT in update.rs) to show "Hermes is still running".
+# Tauri updater (UPDATE_EXIT_CONCURRENT in update.rs) to show "VAEL is still running".
 UPDATE_EXIT_CONCURRENT = 2
 
 
 def update_marker_path() -> Path:
     """Path of the shared update marker.
 
-    Uses the *process* Hermes home (never the context-local profile override): the Rust
+    Uses the *process* VAEL home (never the context-local profile override): the Rust
     updater resolves ``$HERMES_HOME`` or the platform default and the desktop pins that same
     value into the updater's env, so a profile-scoped path would be one the other owners never look at.
     """
-    from hermes_constants import get_process_hermes_home
+    from vael_constants import get_process_hermes_home
     return get_process_hermes_home() / MARKER_NAME
 
 
@@ -180,7 +180,7 @@ def _stdlib_parent_pid(pid: int) -> int | None:
 def _is_ancestor_pid(pid: int) -> bool:
     """True when ``pid`` is a live ancestor of this process.
 
-    The orchestrating updater spawns ``hermes update`` as a (grand)child, so a live marker
+    The orchestrating updater spawns ``vael update`` as a (grand)child, so a live marker
     owned by one of our ancestors can only be the claim we are already running under — an
     unrelated concurrent updater is never in our parent chain. This heals the fleet of staged
     ``hermes-setup`` binaries that predate the HANDOFF_PID_ENV export and can never send it.
@@ -288,11 +288,11 @@ def describe_holder(holder: UpdateHolder | None) -> str:
     elapsed = f"{minutes}m {seconds}s" if minutes else f"{seconds}s"
     who = f", process {holder.pid}" if holder else ""
     return (
-        f"✗ Another Hermes update is already running (started {elapsed} ago{who}).\n"
+        f"✗ Another VAEL update is already running (started {elapsed} ago{who}).\n"
         "\n"
         "  Running two at once would corrupt the install. Wait for it to finish\n"
-        "  (watch `hermes logs`), or close the Desktop/dashboard window that\n"
-        "  started it, then run `hermes update` again."
+        "  (watch `vael logs`), or close the Desktop/dashboard window that\n"
+        "  started it, then run `vael update` again."
     )
 
 
@@ -320,7 +320,7 @@ class UpdateLock:
         existing = read_live_update(path=self.path)
         # A live claim naming our own pid is a killed update's marker whose pid this retry
         # inherited (containers restart pid numbering): no other live process has our pid, and
-        # nothing pre-writes a marker for `hermes update` (it always runs under a parent's claim).
+        # nothing pre-writes a marker for `vael update` (it always runs under a parent's claim).
         # It is a new attempt, so it is claimed fresh like a dead holder's. Keeping the old
         # started_at would let the ceiling expire mid-run and admit a second updater.
         if existing is not None and existing.pid != os.getpid():

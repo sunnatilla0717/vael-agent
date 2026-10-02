@@ -6,7 +6,7 @@ author: Ben Barclay (benbarclay), Hermes Agent
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
-  hermes:
+  vael:
     tags: [Competitors, News, Market-Research, Monitoring]
     related_skills: [blogwatcher, rss-feeds, reddit-reading]
 ---

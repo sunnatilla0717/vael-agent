@@ -4,7 +4,7 @@ sidebar_position: 7
 
 # Profile 命令参考
 
-本页涵盖所有与 [Hermes profiles](../user-guide/profiles.md) 相关的命令。通用 CLI 命令请参阅 [CLI 命令参考](./cli-commands.md)。
+本页涵盖所有与 [VAEL profiles](../user-guide/profiles.md) 相关的命令。通用 CLI 命令请参阅 [CLI 命令参考](./cli-commands.md)。
 
 ## `hermes profile`
 
@@ -173,7 +173,7 @@ hermes profile show <name>
 
 显示 profile 的详细信息，包括其主目录、配置的模型、gateway 状态、skill 数量和配置文件状态。
 
-此处显示的是 profile 的 Hermes 主目录，而非终端工作目录。终端命令从 `terminal.cwd` 启动（或在本地后端 `cwd: "."` 时从启动目录启动）。
+此处显示的是 profile 的 VAEL 主目录，而非终端工作目录。终端命令从 `terminal.cwd` 启动（或在本地后端 `cwd: "."` 时从启动目录启动）。
 
 | 参数 | 描述 |
 |----------|-------------|
@@ -199,7 +199,7 @@ Alias:   ~/.local/bin/work
 hermes profile alias <name> [options]
 ```
 
-重新生成位于 `~/.local/bin/<name>` 的 shell alias 脚本。适用于 alias 被意外删除，或移动 Hermes 安装目录后需要更新的情况。
+重新生成位于 `~/.local/bin/<name>` 的 shell alias 脚本。适用于 alias 被意外删除，或移动 VAEL 安装目录后需要更新的情况。
 
 | 参数 / 选项 | 描述 |
 |-------------------|-------------|
@@ -351,7 +351,7 @@ hermes profile update <name> [--force-config] [--yes]
 hermes profile info <name>
 ```
 
-打印 profile 的发行版 manifest — 名称、版本、所需 Hermes 版本、作者、环境变量要求、来源 URL/路径，以及发行版最后一次 `install` 或 `update` 时记录的 `Installed:` 时间戳。适用于安装前检查共享 profile 的需求，以及发现"该 profile 已安装 6 个月未更新"等情况。
+打印 profile 的发行版 manifest — 名称、版本、所需 VAEL 版本、作者、环境变量要求、来源 URL/路径，以及发行版最后一次 `install` 或 `update` 时记录的 `Installed:` 时间戳。适用于安装前检查共享 profile 的需求，以及发现"该 profile 已安装 6 个月未更新"等情况。
 
 `hermes profile list` 也会在 `Distribution` 列中显示发行版名称和版本，`hermes profile show <name>` / `delete <name>` 会显示来源 URL，让你一眼看出哪些 profile 来自 git 仓库，哪些是本地创建的。
 
@@ -395,7 +395,7 @@ distribution_owned:   # optional; defaults to SOUL.md, config.yaml,
   - cron/
 ```
 
-`hermes_requires` 支持 `>=`、`<=`、`==`、`!=`、`>`、`<`，或裸版本号（视为 `>=`）。若当前 Hermes 版本不满足规格，安装将失败并给出明确错误。
+`hermes_requires` 支持 `>=`、`<=`、`==`、`!=`、`>`、`<`，或裸版本号（视为 `>=`）。若当前 VAEL 版本不满足规格，安装将失败并给出明确错误。
 
 `distribution_owned` 为可选项。若设置，更新时仅更新这些路径；profile 中的其他内容保持用户所有。技能目录（如 `skills/`，或 `skills/research/` 这样的分类）按技能逐个合并：发行版附带的技能会被替换，你自己在其中添加的技能会保留。作者之后从发行版中移除的技能，更新时不会被删除（与顶层 `skills/` 相同）。若省略，则应用上述默认值。
 
@@ -404,7 +404,7 @@ distribution_owned:   # optional; defaults to SOUL.md, config.yaml,
 编写发行版就是一次 git push：
 
 1. 在你的 profile 目录中创建 `distribution.yaml`，至少包含 `name` 和 `version`。
-2. 初始化 git 仓库（或使用已有仓库），推送到 GitHub / GitLab / 任何 Hermes 可克隆的托管平台。
+2. 初始化 git 仓库（或使用已有仓库），推送到 GitHub / GitLab / 任何 VAEL 可克隆的托管平台。
 3. 告知接收方运行 `hermes profile install <your-repo-url>`。
 
 使用 git tag 进行版本化发布 — 克隆 `HEAD` 的接收方将获得最新状态，你也可以随时在 manifest 中更新 `version:`。
@@ -416,7 +416,7 @@ hermes -p <name> <command> [options]
 hermes --profile <name> <command> [options]
 ```
 
-全局标志，用于在不更改默认 profile 的情况下，在指定 profile 下运行任意 Hermes 命令。仅在该命令执行期间覆盖活跃 profile。
+全局标志，用于在不更改默认 profile 的情况下，在指定 profile 下运行任意 VAEL 命令。仅在该命令执行期间覆盖活跃 profile。
 
 | 选项 | 描述 |
 |--------|-------------|

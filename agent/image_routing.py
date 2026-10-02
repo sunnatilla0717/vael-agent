@@ -440,7 +440,7 @@ def _transcode_to_png(raw: bytes) -> Optional[bytes]:
     except ImportError:
         logger.info(
             "image_routing: Pillow not installed; cannot transcode "
-            "non-standard image format to PNG. Run `hermes pm repair` to restore Pillow, "
+            "non-standard image format to PNG. Run `vael pm repair` to restore Pillow, "
             "or convert the image to PNG before sending it."
         )
         return None

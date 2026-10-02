@@ -155,8 +155,8 @@ def resolve_workspace_for_file(file_path: str, *, cwd: Optional[str] = None) -> 
 
 
 def operator_workspace_roots() -> Set[str]:
-    """Git worktrees the operator pointed Hermes at: the launch dir and the surface-set workspace
-    (``resolve_agent_cwd``: the Desktop/TUI session cwd, ``hermes -w``'s worktree, a gateway's
+    """Git worktrees the operator pointed VAEL at: the launch dir and the surface-set workspace
+    (``resolve_agent_cwd``: the Desktop/TUI session cwd, ``vael -w``'s worktree, a gateway's
     ``terminal.cwd``).  The agent's ``cd`` moves neither (it only moves the terminal's cwd).  A repo at
     or above ``$HOME`` never counts: a dotfiles repo would trust every directory below it."""
     from agent.runtime_cwd import resolve_agent_cwd

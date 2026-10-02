@@ -1,4 +1,4 @@
-"""``hermes honcho`` subcommands: setup wizard, status, peers, sessions, identity, migrate."""
+"""``vael honcho`` subcommands: setup wizard, status, peers, sessions, identity, migrate."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ import os
 import sys
 from pathlib import Path
 
-from hermes_constants import get_hermes_home
+from vael_constants import get_hermes_home
 from plugins.memory.honcho.client import _first_parsed, _host_block, profile_host_key, resolve_active_host, resolve_config_path, HOST
 from plugins.memory.honcho.session_peers import sanitize_peer_id
 from hermes_cli.config import cfg_get
@@ -16,7 +16,7 @@ from utils import read_json_or_empty
 
 RULE = "─" * 40
 REASONING_LEVELS = ("minimal", "low", "medium", "high", "max")
-_RETRY_HINT = "  Re-run 'hermes honcho setup' to retry, or choose an API key instead.\n"
+_RETRY_HINT = "  Re-run 'vael honcho setup' to retry, or choose an API key instead.\n"
 
 # Settings a new profile host block inherits from the default block.
 _INHERITED_KEYS = (
@@ -149,7 +149,7 @@ def _write_config(cfg: dict, path: Path | None = None) -> None:
                 out = _apply_edits(cfg.snapshot, cfg, disk)
             elif path.exists():
                 out = _apply_edits(cfg.snapshot, cfg, _overlay_local(cfg.snapshot, disk))
-        from hermes_constants import mkdir_under_hermes_home
+        from vael_constants import mkdir_under_hermes_home
         mkdir_under_hermes_home(path.parent)
         atomic_json_write(path, out, mode=0o600)
         if isinstance(cfg, _ReadConfig):  # a later write on the same object applies only edits made after this one
@@ -315,10 +315,10 @@ def _sync_profiles(verbose: bool) -> int:
         return say(f"  Could not list profiles: {e}\n") or 0
     cfg = _read_config()
     if not cfg:
-        return say("  No Honcho config found. Run 'hermes honcho setup' first.\n") or 0
+        return say("  No Honcho config found. Run 'vael honcho setup' first.\n") or 0
     default_block, has_key = _default_block_and_key(cfg)
     if not default_block and not has_key:
-        return say("  Honcho not configured on default profile. Run 'hermes honcho setup' first.\n") or 0
+        return say("  Honcho not configured on default profile. Run 'vael honcho setup' first.\n") or 0
 
     created = skipped = 0
     for p in (p for p in profiles if p.name != "default"):
@@ -344,7 +344,7 @@ def cmd_sync(args) -> None:
 
 
 def sync_honcho_profiles_quiet() -> int:
-    """Sync host blocks for all profiles from `hermes update`; no output, no exceptions."""
+    """Sync host blocks for all profiles from `vael update`; no output, no exceptions."""
     return _sync_profiles(verbose=False)
 
 
@@ -356,7 +356,7 @@ def cmd_enable(args) -> None:
     block = cfg.setdefault("hosts", {}).setdefault(host, {})
     if not _resolve_api_key(cfg, block, env=False):
         profile = _active_profile_name()
-        setup = "hermes honcho setup" + (f" --target-profile {profile}" if profile != "default" else "")
+        setup = "vael honcho setup" + (f" --target-profile {profile}" if profile != "default" else "")
         return print(f"  {label}Honcho stays disabled: no API key or base URL is configured for this profile, and the default "
                      f"profile's key is not shared.\n  Run '{setup}' to sign in, or set apiKey on hosts.{host} in {_config_path()}.\n")
     if block.get("enabled") is True:
@@ -498,7 +498,7 @@ def _setup_identity_mapping(cfg: dict, hermes_host: dict, current_peer: str, new
         notice, question = (
             ("\n  Each gateway account (a Telegram user, a Discord user, ...)\n"
              "  resolves to a peer. Honcho builds one representation per peer.",
-             "Running the Hermes gateway (Telegram/Discord/etc.)? (y/N)") if gw_platforms is None else
+             "Running the VAEL gateway (Telegram/Discord/etc.)? (y/N)") if gw_platforms is None else
             ("\n  No gateway platforms connected — nothing to map.", "Configure anyway? (y/N)"))
         print(notice)
         if not _yes(_prompt(question, default="n")):
@@ -512,7 +512,7 @@ def _setup_identity_mapping(cfg: dict, hermes_host: dict, current_peer: str, new
     print("\n  This step covers the HUMAN mapping only. Each account using the\n"
           "  gateway resolves to a peer — the entity Honcho reasons about over\n"
           f"  time. This agent is already its own peer ('{ai_peer_label}'), and each\n"
-          "  Hermes profile brings its own AI peer to the gateway.\n"
+          "  VAEL profile brings its own AI peer to the gateway.\n"
           "\n  How should accounts resolve?\n"
           "    [1] single peer — one person uses this agent; every account\n"
           f"        resolves to '{peer_target}'. The common personal setup.\n"
@@ -589,7 +589,7 @@ def _ensure_sdk_installed() -> bool:
         print("  Installed.\n")
         return True
     except Exception as exc:
-        print(f"  Install failed: {exc}\n  Run manually: hermes pm install\n")
+        print(f"  Install failed: {exc}\n  Run manually: vael pm install\n")
         return False
 
 
@@ -665,9 +665,9 @@ def _setup_device_login(cfg: dict, hermes_host: dict, write_path: Path, *, open_
             open_url=webbrowser.open if open_browser else None, on_poll=lambda: print(".", end="", flush=True),
         )
     except KeyboardInterrupt:
-        print("\n  Cancelled. Re-run 'hermes honcho setup' to try again.\n")
+        print("\n  Cancelled. Re-run 'vael honcho setup' to try again.\n")
     except (AuthorizationTimeout, DeviceCodeExpired):
-        print("\n  Device code expired before approval.\n  Re-run 'hermes honcho setup' to get a new code.\n")
+        print("\n  Device code expired before approval.\n  Re-run 'vael honcho setup' to get a new code.\n")
     except AccessDenied:
         print("\n  Sign-in was denied on the approval page.\n" + _RETRY_HINT)
     except Exception as e:
@@ -737,7 +737,7 @@ def _setup_cloud_auth(cfg: dict, hermes_host: dict, write_path: Path) -> bool:
     key = new_key or current
     if not key:
         print("\n  No API key configured. Get yours at https://app.honcho.dev\n"
-              "  Run 'hermes honcho setup' again once you have a key.\n")
+              "  Run 'vael honcho setup' again once you have a key.\n")
         return False
     hermes_host.pop("oauth", None)
     hermes_host["apiKey"] = key
@@ -828,7 +828,7 @@ def _setup_wizard(args) -> None:
     cfg = _read_config()
     write_path, read_path = _local_config_path(), _config_path()
     _refuse_unparseable(write_path)  # before the questions, not after them
-    print(f"\nHoncho memory setup\n{RULE}\n  Honcho gives Hermes persistent cross-session memory.\n  Config: {write_path}")
+    print(f"\nHoncho memory setup\n{RULE}\n  Honcho gives VAEL persistent cross-session memory.\n  Config: {write_path}")
     if read_path != write_path and read_path.exists():
         print(f"  (seeding from existing config at {read_path})")
     print()
@@ -864,7 +864,7 @@ def _setup_wizard(args) -> None:
 
     _setup_identity_mapping(cfg, hermes_host, current_peer, new_host)
     print("\n  For a gateway with many users and agents, run\n"
-          "  'hermes honcho peers map' to map accounts interactively.")
+          "  'vael honcho peers map' to map accounts interactively.")
 
     _setup_tuning(cfg, hermes_host)
     hermes_host["enabled"] = True
@@ -879,7 +879,7 @@ def _setup_wizard(args) -> None:
         save_config(hermes_config)
         print("  Memory provider set to 'honcho' in config.yaml")
     except Exception as e:
-        print(f"  Could not auto-enable in config.yaml: {e}\n  Run: hermes config set memory.provider honcho")
+        print(f"  Could not auto-enable in config.yaml: {e}\n  Run: vael config set memory.provider honcho")
 
     print("  Testing connection... ", end="", flush=True)
     try:
@@ -907,18 +907,18 @@ def _setup_wizard(args) -> None:
     honcho_conclude  -- persist a user fact to memory
 
   Other commands:
-    hermes honcho status     -- show full config
-    hermes honcho mode       -- change recall/observation mode
-    hermes honcho tokens     -- tune context and dialectic budgets
-    hermes honcho peer       -- update peer names
-    hermes honcho map <name> -- map this directory to a session name
+    vael honcho status     -- show full config
+    vael honcho mode       -- change recall/observation mode
+    vael honcho tokens     -- tune context and dialectic budgets
+    vael honcho peer       -- update peer names
+    vael honcho map <name> -- map this directory to a session name
 """)
 
 
 # ── status / peers ─────────────────────────────────────────────────────────
 
 def _active_profile_name() -> str:
-    """Active Hermes profile name (respects --target-profile override)."""
+    """Active VAEL profile name (respects --target-profile override)."""
     if _profile_override:
         return _profile_override
     try:
@@ -951,14 +951,14 @@ def cmd_status(args) -> None:
     try:
         import honcho  # noqa: F401
     except ImportError:
-        print("  honcho-ai is not installed. Run: hermes honcho setup\n")
+        print("  honcho-ai is not installed. Run: vael honcho setup\n")
         return
 
     cfg = _read_config()
     active_path = _config_path()
     write_path = _local_config_path()
     from plugins.memory.honcho.client import HonchoClientConfig, get_honcho_client
-    not_found = f"  No Honcho config found at {active_path}\n  Run 'hermes honcho setup' to configure.\n"
+    not_found = f"  No Honcho config found at {active_path}\n  Run 'vael honcho setup' to configure.\n"
     try:
         hcfg = HonchoClientConfig.from_global_config(host=_host_key())
     except Exception as e:
@@ -1218,7 +1218,7 @@ def _classify_workspace_peers(
         who = "this profile" if hostk == active_host else f"profile {name}"
         labels.setdefault(sanitize_peer_id(ai), f"AI peer · {who}")
 
-    # Host blocks that are not Hermes profiles: other apps sharing the config.
+    # Host blocks that are not VAEL profiles: other apps sharing the config.
     for hostk, block in (cfg.get("hosts") or {}).items():
         if hostk in hermes_hosts or not isinstance(block, dict):
             continue
@@ -1391,7 +1391,7 @@ def cmd_peers_map(args) -> None:
     if pin:
         print("\n  pinUserPeer is on: every gateway account resolves to peer")
         print(f"  '{peer_name or '(peerName not set)'}' and aliases have no effect.")
-        print("  Turn the pin off with 'hermes honcho setup' to use per-account peers.")
+        print("  Turn the pin off with 'vael honcho setup' to use per-account peers.")
         if not _yes(_prompt("Edit aliases anyway? (y/N)", default="n")):
             print("  Nothing changed.\n")
             return
@@ -1497,7 +1497,7 @@ def cmd_sessions(args) -> None:
     """List known directory → session name mappings."""
     sessions = _read_config().get("sessions", {})
     if not sessions:
-        return print(f"  No session mappings configured.\n\n  Add one with: hermes honcho map <session-name>\n"
+        return print(f"  No session mappings configured.\n\n  Add one with: vael honcho map <session-name>\n"
                      f"  Or edit {_config_path()} directly.\n")
     cwd = os.getcwd()
     print(f"\nHoncho session mappings ({len(sessions)})\n" + RULE)
@@ -1553,7 +1553,7 @@ Honcho peers
   User peer:   {_pref(hermes, cfg, 'peerName') or '(not set)'}
     Your identity in Honcho. Messages you send build this peer's card.
   AI peer:     {_pref(hermes, cfg, 'aiPeer') or _host_key()}
-    Hermes' identity in Honcho. Seed with 'hermes honcho identity <file>'.
+    VAEL's identity in Honcho. Seed with 'vael honcho identity <file>'.
     Dialectic calls ask this peer questions to warm session context.
 
   Dialectic reasoning:  {_pref(hermes, cfg, 'dialecticReasoningLevel') or 'low'}  ({', '.join(REASONING_LEVELS)})
@@ -1572,7 +1572,7 @@ def _show_or_set_choice(args, *, attr: str, key: str, noun: str, title: str, cho
         current = _pref(_active_block(cfg), cfg, key) or default
         print(f"\nHoncho {title}\n" + RULE)
         print("\n".join(f"  {m:<{width}}  {desc}{' <-' if m == current else ''}" for m, desc in choices.items()))
-        return print(f"\n  Set with: hermes honcho {attr} [{'|'.join(choices)}]\n")
+        return print(f"\n  Set with: vael honcho {attr} [{'|'.join(choices)}]\n")
     if value not in choices:
         return print(f"  Invalid {noun} '{value}'. Options: {', '.join(choices)}\n")
     host = _host_key()
@@ -1605,12 +1605,12 @@ Honcho budgets
     the user and session, injected directly into the system prompt.
 
   Dialectic   {_pref(hermes, cfg, 'dialecticMaxChars') or 600} chars, reasoning: {_pref(hermes, cfg, 'dialecticReasoningLevel') or 'low'}
-    AI-to-AI inference. Hermes asks Honcho's AI peer a question
+    AI-to-AI inference. VAEL asks Honcho's AI peer a question
     (e.g. "what were we working on?") and Honcho runs its own model
     to synthesize an answer. Used for first-turn session continuity.
     Level controls how much reasoning Honcho spends on the answer.
 
-  Set with: hermes honcho tokens [--context N] [--dialectic N]
+  Set with: vael honcho tokens [--context N] [--dialectic N]
 """)
     _show_or_set_fields(args, (("context", "contextTokens", "context tokens -> {}", None),
                                ("dialectic", "dialecticMaxChars", "dialectic cap  -> {} chars", None)), show)
@@ -1622,7 +1622,7 @@ def cmd_identity(args) -> None:
     """Seed AI peer identity or show both peer representations."""
     cfg = _read_config()
     if not _resolve_api_key(cfg):
-        return print("  No API key configured. Run 'hermes honcho setup' first.\n")
+        return print("  No API key configured. Run 'vael honcho setup' first.\n")
     file_path = getattr(args, "file", None)
     try:
         hcfg, client = _connect(_host_key())
@@ -1642,7 +1642,7 @@ def cmd_identity(args) -> None:
               else "  No user peer card yet. Send a few messages to build one.")
         print(f"\nAI peer ({hcfg.ai_peer})\n" + RULE)
         print(ai_rep.get("representation") or ai_rep.get("card")
-              or "  No representation built yet.\n  Run 'hermes honcho identity <file>' to seed one.")
+              or "  No representation built yet.\n  Run 'vael honcho identity <file>' to seed one.")
         print()
         return
 
@@ -1653,8 +1653,8 @@ Honcho identity management
   User peer: {hcfg.peer_name or 'not set'}
   AI peer:   {hcfg.ai_peer}
 
-    hermes honcho identity --show        — show both peer representations
-    hermes honcho identity <file>        — seed AI peer from SOUL.md or any .md/.txt
+    vael honcho identity --show        — show both peer representations
+    vael honcho identity <file>        — seed AI peer from SOUL.md or any .md/.txt
 """)
         return
 
@@ -1705,13 +1705,13 @@ def _offer(question: str, action, files: list[Path]) -> None:
 
 
 def cmd_migrate(args) -> None:
-    """Step-by-step migration guide: OpenClaw native memory → Hermes + Honcho."""
+    """Step-by-step migration guide: OpenClaw native memory → VAEL + Honcho."""
     user_files = _find_memory_files(["USER.md", "MEMORY.md"])  # facts about the user
     agent_files = _find_memory_files(["SOUL.md", "IDENTITY.md", "AGENTS.md", "TOOLS.md", "BOOTSTRAP.md"])
     cfg = _read_config()
     has_key = bool(_resolve_api_key(cfg))
 
-    print("\nHoncho migration: OpenClaw native memory → Hermes\n" + "─" * 50)
+    print("\nHoncho migration: OpenClaw native memory → VAEL\n" + "─" * 50)
     print("""
   OpenClaw's native memory stores context in local markdown files
   (USER.md, MEMORY.md, SOUL.md, ...) and injects them via QMD search.
@@ -1724,19 +1724,19 @@ Step 1  Create a Honcho account
     if has_key:
         print(f"  Honcho API key already configured: {_mask(cfg['apiKey'])}\n  Skip to Step 2.")
     else:
-        print("""  Honcho is a cloud memory service that gives Hermes persistent memory
+        print("""  Honcho is a cloud memory service that gives VAEL persistent memory
   across sessions. You need an API key to use it.
 
   1. Get your API key at https://app.honcho.dev
-  2. Run:  hermes honcho setup
+  2. Run:  vael honcho setup
      Paste the key when prompted.
 """)
-        if _yes(_prompt("  Run 'hermes honcho setup' now?", default="y")):
+        if _yes(_prompt("  Run 'vael honcho setup' now?", default="y")):
             cmd_setup(args)
             cfg = _read_config()
             has_key = bool(cfg.get("apiKey", ""))
         else:
-            print("\n  Run 'hermes honcho setup' when ready, then re-run this walkthrough.")
+            print("\n  Run 'vael honcho setup' when ready, then re-run this walkthrough.")
 
     print("\nStep 2  Detected OpenClaw memory files\n")
     if user_files or agent_files:
@@ -1748,7 +1748,7 @@ Step 1  Create a Honcho account
     else:
         print("  No OpenClaw native memory files found in cwd or ~/.openclaw/.\n"
               "  If your files are elsewhere, copy them here before continuing,\n"
-              "  or seed them manually:  hermes honcho identity <path/to/file>")
+              "  or seed them manually:  vael honcho identity <path/to/file>")
 
     print("""
 Step 3  Migrate user memory files → Honcho user peer
@@ -1760,16 +1760,16 @@ Step 3  Migrate user memory files → Honcho user peer
     if user_files:
         print(f"  Found: {', '.join(f.name for f in user_files)}")
         print("""
-  These are picked up automatically the first time you run 'hermes'
+  These are picked up automatically the first time you run 'vael'
   with Honcho configured and no prior session history.
-  (Hermes calls migrate_memory_files() on first session init.)
+  (VAEL calls migrate_memory_files() on first session init.)
 
   If you want to migrate them now without starting a session:""")
-        print("    hermes honcho migrate  — this step handles it interactively\n" * len(user_files), end="")
+        print("    vael honcho migrate  — this step handles it interactively\n" * len(user_files), end="")
         if has_key:
             _offer("  Upload user memory files to Honcho now?", _migrate_upload, user_files)
         else:
-            print("  Run 'hermes honcho setup' first, then re-run this step.")
+            print("  Run 'vael honcho setup' first, then re-run this step.")
     else:
         print("  No user memory files detected. Nothing to migrate here.")
 
@@ -1780,7 +1780,7 @@ Step 4  Seed AI identity files → Honcho AI peer
   agent's character, capabilities, and behavioral rules. In OpenClaw
   these are injected via file search at prompt-build time.
 
-  In Hermes, they are seeded once into Honcho's AI peer through the
+  In VAEL, they are seeded once into Honcho's AI peer through the
   observation pipeline. Honcho builds a representation from them and
   from every subsequent assistant message (observe_me=True). Over time
   the representation reflects actual behavior, not just declaration.
@@ -1791,27 +1791,27 @@ Step 4  Seed AI identity files → Honcho AI peer
         if has_key:
             _offer("  Seed AI identity from all detected files now?", _migrate_seed, agent_files)
         else:
-            print("  Run 'hermes honcho setup' first, then seed manually:")
-            print("\n".join(f"    hermes honcho identity {f}" for f in agent_files))
+            print("  Run 'vael honcho setup' first, then seed manually:")
+            print("\n".join(f"    vael honcho identity {f}" for f in agent_files))
     else:
-        print("  No agent identity files detected.\n  To seed manually:  hermes honcho identity <path/to/SOUL.md>")
+        print("  No agent identity files detected.\n  To seed manually:  vael honcho identity <path/to/SOUL.md>")
 
     print("""
 Step 5  What changes vs. OpenClaw native memory
 
   Storage
     OpenClaw: markdown files on disk, searched via QMD at prompt-build time.
-    Hermes:   cloud-backed Honcho peers. Files can stay on disk as source
+    VAEL:   cloud-backed Honcho peers. Files can stay on disk as source
               of truth; Honcho holds the live representation.
 
   Context injection
     OpenClaw: file excerpts injected synchronously before each LLM call.
-    Hermes:   Honcho context fetched async at turn end, injected next turn.
+    VAEL:   Honcho context fetched async at turn end, injected next turn.
               First turn has no Honcho context; subsequent turns are loaded.
 
   Memory growth
     OpenClaw: you edit files manually to update memory.
-    Hermes:   Honcho observes every message and updates representations
+    VAEL:   Honcho observes every message and updates representations
               automatically. Files become the seed, not the live store.
 
   Honcho tools (available to the agent during conversation)
@@ -1823,21 +1823,21 @@ Step 5  What changes vs. OpenClaw native memory
 
   Session naming
     OpenClaw: no persistent session concept — files are global.
-    Hermes:   per-session by default — each run gets its own session
-              Map a custom name:  hermes honcho map <session-name>
+    VAEL:   per-session by default — each run gets its own session
+              Map a custom name:  vael honcho map <session-name>
 
 Step 6  Next steps
 """)
     if not has_key:
-        print("  1. hermes honcho setup              — configure API key (required)\n"
-              "  2. hermes honcho migrate            — re-run this walkthrough")
+        print("  1. vael honcho setup              — configure API key (required)\n"
+              "  2. vael honcho migrate            — re-run this walkthrough")
     else:
-        print("""  1. hermes honcho status             — verify Honcho connection
-  2. hermes                           — start a session
+        print("""  1. vael honcho status             — verify Honcho connection
+  2. vael                           — start a session
      (user memory files auto-uploaded on first turn if not done above)
-  3. hermes honcho identity --show    — verify AI peer representation
-  4. hermes honcho tokens             — tune context and dialectic budgets
-  5. hermes honcho mode               — view or change memory mode""")
+  3. vael honcho identity --show    — verify AI peer representation
+  4. vael honcho tokens             — tune context and dialectic budgets
+  5. vael honcho mode               — view or change memory mode""")
     print()
 
 
@@ -1845,7 +1845,7 @@ Step 6  Next steps
 
 # (subcommand, help, handler, ((arg, kwargs), ...)); order defines --help order.
 _SUBCOMMANDS = (
-    ("setup", "Initial Honcho setup (redirects to hermes memory setup)", None, ()),
+    ("setup", "Initial Honcho setup (redirects to vael memory setup)", None, ()),
     ("status", "Show current Honcho config and connection status", cmd_status, (
         ("--all", dict(action="store_true", help="Show config overview across all profiles")),
     )),
@@ -1880,7 +1880,7 @@ _SUBCOMMANDS = (
         ("file", dict(nargs="?", default=None, help="Path to file to seed from (e.g. SOUL.md). Omit to show usage.")),
         ("--show", dict(action="store_true", help="Show current AI peer representation from Honcho")),
     )),
-    ("migrate", "Step-by-step migration guide from openclaw-honcho to Hermes Honcho", cmd_migrate, ()),
+    ("migrate", "Step-by-step migration guide from openclaw-honcho to VAEL Honcho", cmd_migrate, ()),
     ("enable", "Enable Honcho for the active profile", cmd_enable, ()),
     ("disable", "Disable Honcho for the active profile", cmd_disable, ()),
     ("sync", "Sync Honcho config to all existing profiles", cmd_sync, ()),
@@ -1894,7 +1894,7 @@ def honcho_command(args) -> None:
     _profile_override = getattr(args, "target_profile", None)
     sub = getattr(args, "honcho_command", None)
     if sub == "setup":  # honcho setup goes through the unified memory-provider path
-        print("\n  Honcho is configured via the memory provider system.\n  Running 'hermes memory setup'...\n")
+        print("\n  Honcho is configured via the memory provider system.\n  Running 'vael memory setup'...\n")
         from hermes_cli.memory_setup import cmd_setup_provider
         return cmd_setup_provider("honcho")
     handler = cmd_status if sub is None else _HANDLERS.get(sub)
@@ -1908,7 +1908,7 @@ def honcho_command(args) -> None:
 
 
 def register_cli(subparser) -> None:
-    """Build the ``hermes honcho`` argparse subcommand tree on the ``hermes honcho`` parser."""
+    """Build the ``vael honcho`` argparse subcommand tree on the ``vael honcho`` parser."""
     subparser.add_argument("--target-profile", metavar="NAME", dest="target_profile",
                            help="Target a specific profile's Honcho config without switching")
     subs = subparser.add_subparsers(dest="honcho_command")

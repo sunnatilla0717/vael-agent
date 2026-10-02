@@ -23,7 +23,7 @@ toolsets:
   - file
   - delegation
 metadata:
-  hermes:
+  vael:
     tags: [Security, Forensics, GitHub, Supply-Chain]
     related_skills: []
 ---

@@ -1,4 +1,4 @@
-"""Stable opaque identity shared by every profile in one Hermes install."""
+"""Stable opaque identity shared by every profile in one VAEL install."""
 
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ import threading
 from typing import Optional
 import uuid
 
-from hermes_constants import get_default_hermes_root
+from vael_constants import get_default_hermes_root
 from utils import atomic_write_text
 
 _INSTALL_ID_FILENAME = "install_id"
@@ -72,7 +72,7 @@ def read_or_create_install_id(root: Path | None = None) -> Optional[str]:
         if existing is not None:
             return existing  # Existing identities remain readable on read-only roots.
         try:
-            from hermes_constants import mkdir_under_hermes_home
+            from vael_constants import mkdir_under_hermes_home
             mkdir_under_hermes_home(root)
             with _install_id_file_lock(root):
                 existing, mint = _read_existing(path)
@@ -86,7 +86,7 @@ def read_or_create_install_id(root: Path | None = None) -> Optional[str]:
 
 
 def get_install_id(*, cache: dict[str, Optional[str]] | None = None) -> Optional[str]:
-    """Return the process-cached stable id for the active Hermes root."""
+    """Return the process-cached stable id for the active VAEL root."""
     root = get_default_hermes_root()
     root_key = str(root)
     target_cache = _INSTALL_ID_CACHE if cache is None else cache

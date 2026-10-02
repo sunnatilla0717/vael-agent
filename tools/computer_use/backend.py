@@ -172,3 +172,16 @@ class ComputerUseBackend(ABC):
     def wait(self, seconds: float) -> ActionResult:  # default implementation
         time.sleep(max(0.0, min(seconds, 30.0)))
         return ActionResult(ok=True, action="wait", message=f"waited {seconds:.2f}s")
+
+    def launch_app(self, *, name: Optional[str] = None, bundle_id: Optional[str] = None,
+                   urls: Optional[List[str]] = None, additional_arguments: Optional[List[str]] = None,
+                   creates_new_application_instance: bool = False) -> Any:
+        """Optional compatibility hook: start an app that is not running yet (idempotent when it is).
+        Backends that predate app launching raise ``NotImplementedError`` and the tool layer reports
+        ``unsupported`` instead of failing the whole tool."""
+        raise NotImplementedError
+
+    def screen_info(self) -> Dict[str, Any]:
+        """Optional compatibility hook: display geometry (``displays`` / ``screen``) and ``cursor``
+        position, for multi-monitor coordinate math. ``{}`` when a backend cannot report it."""
+        return {}

@@ -1,5 +1,5 @@
-"""Unified self-relaunch for Hermes CLI: preserves inherited flags (--tui, --dev, --profile, --model…)
-across process replacement so ``hermes sessions browse`` / post-setup relaunch keep the user's mode."""
+"""Unified self-relaunch for VAEL CLI: preserves inherited flags (--tui, --dev, --profile, --model…)
+across process replacement so ``vael sessions browse`` / post-setup relaunch keep the user's mode."""
 
 import os
 import pathlib
@@ -38,7 +38,7 @@ _INHERITED_FLAGS_TABLE = _build_inherited_flag_table()
 
 
 def _extract_inherited_flags(argv: Sequence[str]) -> list[str]:
-    """Pull out flags that should carry over into a self-relaunched hermes."""
+    """Pull out flags that should carry over into a self-relaunched vael."""
     flags: list[str] = []
     i = 0
     while i < len(argv):
@@ -60,7 +60,7 @@ def _extract_inherited_flags(argv: Sequence[str]) -> list[str]:
 
 
 def resolve_hermes_bin() -> Optional[str]:
-    """Hermes entry point: ``sys.argv[0]`` if a real executable, else ``which hermes``, else ``None``
+    """VAEL entry point: ``sys.argv[0]`` if a real executable, else ``which vael``, else ``None``
     (caller falls back to ``python -m hermes_cli.main``).
 
     Python launchers are never returned: on Windows a ``.py`` can't be exec'd directly, and on
@@ -102,7 +102,7 @@ def resolve_hermes_bin() -> Optional[str]:
 def build_relaunch_argv(
     extra_args: Sequence[str], *, preserve_inherited: bool = True, original_argv: Optional[Sequence[str]] = None
 ) -> list[str]:
-    """Construct an argv list for replacing the current process with hermes."""
+    """Construct an argv list for replacing the current process with vael."""
     bin_path = resolve_hermes_bin()
     argv = [bin_path] if bin_path else [sys.executable, "-m", "hermes_cli.main"]
     src = list(original_argv) if original_argv is not None else list(sys.argv[1:])
@@ -115,7 +115,7 @@ def build_relaunch_argv(
 def relaunch(
     extra_args: Sequence[str], *, preserve_inherited: bool = True, original_argv: Optional[Sequence[str]] = None
 ) -> None:
-    """Replace the current process with a fresh hermes invocation.
+    """Replace the current process with a fresh vael invocation.
 
     POSIX: ``os.execvp`` in place (same PID, no double-fork). Windows has no real exec — its
     ``execvp`` emulation only works for a real Win32 executable, so spawn + exit instead.
@@ -129,12 +129,12 @@ def relaunch(
         except KeyboardInterrupt:
             sys.exit(130)
         except OSError as exc:
-            # Raw ``[Errno 8] Exec format error`` is cryptic; usual causes are ``hermes`` not on
+            # Raw ``[Errno 8] Exec format error`` is cryptic; usual causes are ``vael`` not on
             # PATH yet (install hasn't propagated User PATH into this shell) or a stale shim.
             print(
                 f"\nHermes relaunch failed: {exc}\n"
                 f"Command: {' '.join(new_argv)}\n"
-                f"Fix: open a new terminal so PATH picks up, then re-run hermes.",
+                f"Fix: open a new terminal so PATH picks up, then re-run vael.",
                 file=sys.stderr,
             )
             sys.exit(1)

@@ -1,13 +1,13 @@
 ---
 title: "Windows（原生）指南"
-description: "在 Windows 10 / 11 上原生运行 Hermes Agent — 安装、功能矩阵、UTF-8 控制台、Git Bash、将 gateway 作为计划任务、编辑器处理、PATH、卸载及常见问题"
+description: "在 Windows 10 / 11 上原生运行 VAEL Agent — 安装、功能矩阵、UTF-8 控制台、Git Bash、将 gateway 作为计划任务、编辑器处理、PATH、卸载及常见问题"
 sidebar_label: "Windows（原生）"
 sidebar_position: 3
 ---
 
 # Windows（原生）指南
 
-Hermes 可在 Windows 10 和 Windows 11 上原生运行——无需 WSL、Cygwin 或 Docker。本页是深度指南：原生支持哪些功能、哪些仅限 WSL、安装程序实际做了什么，以及你可能需要调整的 Windows 专属配置项。
+VAEL 可在 Windows 10 和 Windows 11 上原生运行——无需 WSL、Cygwin 或 Docker。本页是深度指南：原生支持哪些功能、哪些仅限 WSL、安装程序实际做了什么，以及你可能需要调整的 Windows 专属配置项。
 
 如果你只是想安装，[首页](../index.mdx) 或[安装页面](../getting-started/installation#windows原生powershell)上的一行命令就够了。遇到意外情况时再回来查阅本页。
 
@@ -57,7 +57,7 @@ Windows 10 源码安装支持不代表 MSIX 支持 Windows 10。
 在 Windows 的应用执行别名设置中管理这些入口。
 
 侧载版通过桌面 Update 控件交给 App Installer 更新。
-Hermes 先下载本地描述文件，再停止自己的后端、退出并等待包替换。
+VAEL 先下载本地描述文件，再停止自己的后端、退出并等待包替换。
 它不依赖 `ms-appinstaller:` URL 协议。商店版本由 Microsoft Store 更新。
 
 `Hermes-Setup.exe` 是另一种引导安装程序，会下载并配置源码安装。
@@ -99,9 +99,9 @@ Windows 支持取决于功能和架构。部分可选 SDK 不支持所有 Window
 
 Dashboard 已有 Windows ConPTY 实现，依赖 `pywinpty`。SDK 缺失或损坏时终端仍可能不可用。原生 Windows ARM64 不包含 Mem0/Google Chat SDK、Faster-Whisper 或 openWakeWord。Sherpa 支持原生 Windows ARM64，且是该平台自动选择的唤醒词引擎。
 
-## Hermes 在 Windows 上如何运行 shell 命令
+## VAEL 在 Windows 上如何运行 shell 命令
 
-Hermes 的终端工具通过 **Git Bash** 运行命令，与 Claude Code 采用相同策略。这在不重写每个工具的情况下绕过了 POSIX 与 Windows 的差异。
+VAEL 的终端工具通过 **Git Bash** 运行命令，与 Claude Code 采用相同策略。这在不重写每个工具的情况下绕过了 POSIX 与 Windows 的差异。
 
 `pm.shell()` 先读取 PM facts 中的 Git/Bash，再检查 PATH。
 当前脚本不再设置 `HERMES_GIT_BASH_PATH`。MinGit 不能替代带 Bash 的 Git for Windows。
@@ -111,7 +111,7 @@ WindowsApps 软件包中的可执行文件可能无法由包外 Python 启动，
 
 ## Windows 上的 UTF-8 控制台
 
-Python 在 Windows 上的默认 stdio 使用控制台的活动代码页（通常是 cp1252 或 cp437）。Hermes 的横幅、斜杠命令列表、工具输出、Rich 面板和技能描述均包含 Unicode 字符。若不加干预，任何此类内容都会导致 `UnicodeEncodeError: 'charmap' codec can't encode character…` 崩溃。
+Python 在 Windows 上的默认 stdio 使用控制台的活动代码页（通常是 cp1252 或 cp437）。VAEL 的横幅、斜杠命令列表、工具输出、Rich 面板和技能描述均包含 Unicode 字符。若不加干预，任何此类内容都会导致 `UnicodeEncodeError: 'charmap' codec can't encode character…` 崩溃。
 
 修复逻辑位于 `hermes_cli/stdio.py::configure_windows_stdio()`，在每个入口点（`cli.py::main`、`hermes_cli/main.py::main`、`gateway/run.py::main`）的早期调用。它会：
 
@@ -128,7 +128,7 @@ Python 在 Windows 上的默认 stdio 使用控制台的活动代码页（通常
 
 在 PR #21561 之前，在 Windows 上按 `Ctrl-X Ctrl-E` 或输入 `/edit` 会静默无响应。prompt_toolkit 有一个硬编码的 POSIX 绝对路径回退列表（`/usr/bin/nano`、`/usr/bin/pico`、`/usr/bin/vi` 等），在 Windows 上永远无法解析——即使安装了完整的 Git for Windows 也不行。
 
-Hermes 的 Windows stdio 垫片现在将 `EDITOR=notepad` 设为默认值。Notepad 随每个 Windows 安装附带，可作为阻塞式编辑器使用——`subprocess.call(["notepad", file])` 会阻塞直到窗口关闭。
+VAEL 的 Windows stdio 垫片现在将 `EDITOR=notepad` 设为默认值。Notepad 随每个 Windows 安装附带，可作为阻塞式编辑器使用——`subprocess.call(["notepad", file])` 会阻塞直到窗口关闭。
 
 **用户覆盖仍然优先**（在 setdefault 之前检查）：
 
@@ -139,7 +139,7 @@ Hermes 的 Windows stdio 垫片现在将 `EDITOR=notepad` 设为默认值。Note
 | Neovim    | `$env:EDITOR = "nvim"`                                                             |
 | Helix     | `$env:EDITOR = "hx"`                                                               |
 
-VS Code 的 `--wait` 标志至关重要——没有它，编辑器会立即返回，Hermes 收到的是空缓冲区。
+VS Code 的 `--wait` 标志至关重要——没有它，编辑器会立即返回，VAEL 收到的是空缓冲区。
 
 在 PowerShell profile 中永久设置：
 
@@ -152,7 +152,7 @@ $env:EDITOR = "code --wait"
 
 ## CLI 中用 `Ctrl+Enter` 换行
 
-Windows Terminal 将 `Ctrl+Enter` 作为独立按键序列传递。Hermes 将其绑定为"插入换行"，使你可以在 CLI 中编写多行 prompt（提示词）而无需回退到 `Esc`-然后-`Enter`。适用于 Windows Terminal、VS Code 集成终端以及任何支持 VT 转义序列的现代 Windows 控制台宿主。
+Windows Terminal 将 `Ctrl+Enter` 作为独立按键序列传递。VAEL 将其绑定为"插入换行"，使你可以在 CLI 中编写多行 prompt（提示词）而无需回退到 `Esc`-然后-`Enter`。适用于 Windows Terminal、VS Code 集成终端以及任何支持 VT 转义序列的现代 Windows 控制台宿主。
 
 在旧版 `cmd.exe` 控制台上，`Ctrl+Enter` 会折叠为普通 `Enter`——请改用 `Esc Enter`，或升级到 Windows Terminal（免费，Windows 11 默认已安装）。
 
@@ -188,7 +188,7 @@ hermes gateway uninstall   # 移除 schtasks 条目、Startup 快捷方式、pid
 
 ### 为什么不用 Windows 服务？
 
-服务需要管理员权限安装，并将 gateway 的生命周期绑定到机器启动，而非用户登录。典型的 Hermes 用户希望：登录 → gateway 可用，注销 → gateway 消失。计划任务无需提权即可实现这一点。如果你确实需要服务，可以手动使用 `nssm` 或 `sc create`——但你可能并不需要。
+服务需要管理员权限安装，并将 gateway 的生命周期绑定到机器启动，而非用户登录。典型的 VAEL 用户希望：登录 → gateway 可用，注销 → gateway 消失。计划任务无需提权即可实现这一点。如果你确实需要服务，可以手动使用 `nssm` 或 `sc create`——但你可能并不需要。
 
 ## 数据布局
 
@@ -210,7 +210,7 @@ Browser Use 则通过 `hermes tools` 配置自己的 CLI。
 ARM64 Windows 上的 Chromium/agent-browser 可以使用 x64 模拟，这与原生 Python 不同。
 详见 [浏览器自动化](./features/browser.md)。
 
-## 在 Windows 上运行 Hermes — 实用说明
+## 在 Windows 上运行 VAEL — 实用说明
 
 ### 安装后的 PATH
 
@@ -225,7 +225,7 @@ hermes --version
 
 ### 环境变量
 
-Hermes 同时支持 `$env:X`（进程作用域）和用户环境变量（永久，在系统属性 → 环境变量中设置）。将 API key 放在所选 `HERMES_HOME` 的 `.env` 中（默认 `%LOCALAPPDATA%\hermes\.env`）——与 Linux 相同：
+VAEL 同时支持 `$env:X`（进程作用域）和用户环境变量（永久，在系统属性 → 环境变量中设置）。将 API key 放在所选 `HERMES_HOME` 的 `.env` 中（默认 `%LOCALAPPDATA%\hermes\.env`）——与 Linux 相同：
 
 ```
 OPENROUTER_API_KEY=sk-or-...
@@ -241,7 +241,7 @@ TELEGRAM_BOT_TOKEN=...
 | 变量                          | 效果                                                                                                                                |
 | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
 | `HERMES_DISABLE_WINDOWS_UTF8` | 设为 `1` 可禁用 UTF-8 stdio 垫片，回退到区域设置代码页。用于排查编码 bug。                                                          |
-| `EDITOR` / `VISUAL`           | 用于 `/edit` 和 `Ctrl-X Ctrl-E` 的编辑器。如果两者均未设置，Hermes 默认使用 `notepad`。                                             |
+| `EDITOR` / `VISUAL`           | 用于 `/edit` 和 `Ctrl-X Ctrl-E` 的编辑器。如果两者均未设置，VAEL 默认使用 `notepad`。                                             |
 
 ## 卸载
 
@@ -268,7 +268,7 @@ hermes uninstall
 
 在 Linux 和 macOS 上，POSIX 惯用法 `os.kill(pid, 0)` 是一个无操作的权限检查："这个 PID 是否存活且我能向它发信号？"在 Windows 上，Python 的 `os.kill` 将 `sig=0` 映射到 `CTRL_C_EVENT`——两者在整数值 0 上发生碰撞——并通过 `GenerateConsoleCtrlEvent(0, pid)` 将 Ctrl+C 广播到包含目标 PID 的**整个控制台进程组**。这是 [bpo-14484](https://bugs.python.org/issue14484)，自 2012 年起一直未修复，因为修改它会破坏依赖当前行为的脚本。
 
-后果：任何通过 `os.kill(pid, 0)` 检查"此 PID 是否存活"的代码路径，在 Windows 上都会静默地杀死目标进程。Hermes 已将所有此类位置（11 个文件中的 14 处）迁移到 `gateway.status._pid_exists()`，该函数使用 `psutil.pid_exists()`（在 Windows 上底层使用 `OpenProcess + GetExitCodeProcess`——无信号）。如果你在编写插件或补丁，请直接使用 `psutil.pid_exists()` 或 `gateway.status._pid_exists()`——永远不要用 `os.kill(pid, 0)`。
+后果：任何通过 `os.kill(pid, 0)` 检查"此 PID 是否存活"的代码路径，在 Windows 上都会静默地杀死目标进程。VAEL 已将所有此类位置（11 个文件中的 14 处）迁移到 `gateway.status._pid_exists()`，该函数使用 `psutil.pid_exists()`（在 Windows 上底层使用 `OpenProcess + GetExitCodeProcess`——无信号）。如果你在编写插件或补丁，请直接使用 `psutil.pid_exists()` 或 `gateway.status._pid_exists()`——永远不要用 `os.kill(pid, 0)`。
 
 `scripts/check-windows-footguns.py` 在 CI 中强制执行此规则：任何新的 `os.kill(pid, 0)` 调用都会导致 `Windows footguns (blocking)` 检查失败，除非该行带有 `# windows-footgun: ok — <reason>` 标记。
 
@@ -278,7 +278,7 @@ hermes uninstall
 打开新的 PowerShell 窗口。安装程序已将 `%LOCALAPPDATA%\hermes\bin` 添加到用户 PATH，但现有 shell 需要重启才能获取更新。在此期间可以运行 `& "$env:LOCALAPPDATA\hermes\bin\hermes.exe"`。
 
 **运行工具时出现 `WinError 193: %1 is not a valid Win32 application`。**
-你触发了绕过 `.cmd` 垫片的 shebang 脚本调用。Hermes 通过 `shutil.which(cmd, path=local_bin)` 解析命令，使 PATHEXT 能识别 `.CMD`——如果你通过硬编码路径调用工具，请切换到 `.cmd` 变体（例如使用 `npx.cmd` 而非 `npx`）。
+你触发了绕过 `.cmd` 垫片的 shebang 脚本调用。VAEL 通过 `shutil.which(cmd, path=local_bin)` 解析命令，使 PATHEXT 能识别 `.CMD`——如果你通过硬编码路径调用工具，请切换到 `.cmd` 变体（例如使用 `npx.cmd` 而非 `npx`）。
 
 **`[scriptblock]::Create(...)` 失败，提示 `The assignment expression is not valid`。**
 你下载的 `install.ps1` 携带了 UTF-8 BOM。`irm | iex` 形式会自动剥离 BOM；`[scriptblock]::Create((irm ...))` 不会。请改用简单的 `irm | iex` 形式，或手动下载脚本并通过 `[IO.File]::WriteAllText($path, $text, (New-Object Text.UTF8Encoding $false))` 保存为不带 BOM 的纯 UTF-8。
@@ -293,16 +293,16 @@ hermes uninstall
 运行 `hermes doctor` 和 `hermes pm doctor`，并通过 `hermes tools` 检查所选浏览器后端。不要向签名包写入另一个 Playwright 版本。
 
 **`agent-browser` 报奇怪的 Node 版本错误。**
-运行 `hermes pm doctor` 并检查当前 Hermes 入口。PM 提供固定的 Node 版本，不要为了修复 Hermes 而删除其他程序使用的系统 Node。
+运行 `hermes pm doctor` 并检查当前 VAEL 入口。PM 提供固定的 Node 版本，不要为了修复 VAEL 而删除其他程序使用的系统 Node。
 
 **CLI 中中文/日文/阿拉伯文字符显示为 `?`。**
 UTF-8 stdio 垫片未激活。检查 `HERMES_DISABLE_WINDOWS_UTF8` 是否**未**设置（`Get-ChildItem env:HERMES_DISABLE_WINDOWS_UTF8`）。如果该变量为空但仍然看到 `?`，控制台宿主（非常旧的 `cmd.exe`）可能完全不支持 UTF-8——请切换到 Windows Terminal。
 
 **Gateway 无法发送 Telegram 图片——"`BadRequest: payload contains invalid characters`"。**
-这与 Windows 无关，但有时首先在 Windows 上暴露。通常意味着 JSON 请求体中的文件路径包含未转义的反斜杠。Telegram 应该收到 Hermes 规范化后的路径，而非原始 Windows 路径——如果你在自定义插件中看到此问题，请确保传递的是 Hermes 提供的路径，而非来自用户输入的 `str(Path(...))`。
+这与 Windows 无关，但有时首先在 Windows 上暴露。通常意味着 JSON 请求体中的文件路径包含未转义的反斜杠。Telegram 应该收到 VAEL 规范化后的路径，而非原始 Windows 路径——如果你在自定义插件中看到此问题，请确保传递的是 VAEL 提供的路径，而非来自用户输入的 `str(Path(...))`。
 
 **`git pull` 后出现"在我另一台机器上能用"的编码怪象。**
-如果你在 Windows 上使用非 UTF-8 编辑器（旧版 Windows 的 Notepad、某些中文输入法）编辑了 Hermes 配置或技能文件，该文件可能带 BOM 保存。Hermes 在大多数配置读取中能容忍 `utf-8-sig`，但折叠 YAML 标量（`description: >`）内部的 BOM 会静默破坏 YAML 解析。请将文件重新保存为不带 BOM 的纯 UTF-8。
+如果你在 Windows 上使用非 UTF-8 编辑器（旧版 Windows 的 Notepad、某些中文输入法）编辑了 VAEL 配置或技能文件，该文件可能带 BOM 保存。VAEL 在大多数配置读取中能容忍 `utf-8-sig`，但折叠 YAML 标量（`description: >`）内部的 BOM 会静默破坏 YAML 解析。请将文件重新保存为不带 BOM 的纯 UTF-8。
 
 ## 下一步
 

@@ -25,7 +25,7 @@ from pathlib import Path
 import time
 from typing import Callable, Optional
 
-from hermes_constants import hermes_home_key
+from vael_constants import hermes_home_key
 from tools.bot_desktop import runtime
 
 logger = logging.getLogger(__name__)
@@ -168,7 +168,7 @@ _TERM_GRACE_SECONDS = 5.0
 def _drain_until(proc: subprocess.Popen, on_line: Callable[[str], None], deadline: float) -> bool:
     """Stream ``proc.stdout`` lines to ``on_line`` until EOF (``True``) or ``deadline`` (``False``).
 
-    Readiness-polled rather than a blocking ``for line in proc.stdout``: from an unprivileged Hermes no
+    Readiness-polled rather than a blocking ``for line in proc.stdout``: from an unprivileged VAEL no
     signal reaches a root-owned apt/dnf child, and that child keeps the pipe's write end open, so a
     blocking read would never see EOF and the profile's install slot would be held forever.
     """

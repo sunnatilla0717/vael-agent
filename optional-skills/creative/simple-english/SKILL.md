@@ -6,7 +6,7 @@ author: AminBlg (https://github.com/AminBlg/SimpleEnglish), ported by Hermes Age
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
-  hermes:
+  vael:
     tags: [writing, documentation, ste, asd-ste100, technical-writing, editing, anti-ai-slop]
     category: creative
     homepage: https://github.com/AminBlg/SimpleEnglish
@@ -20,7 +20,7 @@ Write technical text with the rules of ASD-STE100 Simplified Technical English. 
 
 Write for that tired reader. Each sentence must survive one read.
 
-## How to use it in Hermes
+## How to use it in VAEL
 
 The text usually arrives one of three ways:
 

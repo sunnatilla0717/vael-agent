@@ -25,7 +25,7 @@ import requests
 
 from agent.secret_scope import get_secret
 from hermes_cli.config import cfg_get, load_config, read_raw_config
-from hermes_constants import get_hermes_home_override, hermes_home_key
+from vael_constants import get_hermes_home_override, hermes_home_key
 from tools.browser_camofox_state import get_camofox_identity
 from tools.registry import tool_error
 
@@ -175,7 +175,7 @@ def _env_or_cfg(env_name: str, camofox_cfg: Dict[str, Any], cfg_key: str, *, sec
 
 def _camofox_identity_override(task_id: Optional[str], camofox_cfg: Dict[str, Any]) -> Optional[Dict[str, str]]:
     """Externally configured identity (integrations owning the visible Camofox browser
-    share a user ID so Hermes uses the same profile), or None."""
+    share a user ID so VAEL uses the same profile), or None."""
     user_id = _env_or_cfg("CAMOFOX_USER_ID", camofox_cfg, "user_id", secret=True)
     if not user_id:
         return None
@@ -554,7 +554,7 @@ def _vision_llm_settings() -> tuple[float, float]:
 
 def _save_screenshot(content: bytes) -> str:
     """Write PNG bytes under ``$HERMES_HOME/browser_screenshots`` and return the path."""
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
     screenshots_dir = get_hermes_home() / "browser_screenshots"
     screenshots_dir.mkdir(parents=True, exist_ok=True)
     screenshot_path = str(screenshots_dir / f"browser_screenshot_{uuid.uuid4().hex[:8]}.png")

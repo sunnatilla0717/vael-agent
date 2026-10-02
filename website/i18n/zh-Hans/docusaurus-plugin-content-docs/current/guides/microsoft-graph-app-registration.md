@@ -137,7 +137,7 @@ chmod 600 ~/.hermes/.env
 
 ## 步骤 6：验证令牌流程
 
-Hermes 内置了 Graph 身份验证冒烟测试。在 Hermes 安装目录下执行：
+VAEL 内置了 Graph 身份验证冒烟测试。在 VAEL 安装目录下执行：
 
 ```python
 python -c "

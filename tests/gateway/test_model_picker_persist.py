@@ -22,7 +22,7 @@ closure the PR changed, against a real temp ``HERMES_HOME``.
 import asyncio
 import types
 
-import hermes_yaml as yaml
+import vael_yaml as yaml
 import pytest
 
 from gateway.config import Platform
@@ -113,7 +113,7 @@ def _setup_isolated_home(tmp_path, monkeypatch, model_yaml_value):
     monkeypatch.setattr(gateway_run, "_hermes_home", hermes_home)
     _stub_picker_dependencies(monkeypatch)
     # save_config writes to ``get_hermes_home() / config.yaml`` — point it here.
-    monkeypatch.setattr("hermes_constants.get_hermes_home", lambda: hermes_home)
+    monkeypatch.setattr("vael_constants.get_hermes_home", lambda: hermes_home)
     monkeypatch.setattr("hermes_cli.config.get_hermes_home", lambda: hermes_home)
     return cfg_path
 
@@ -259,7 +259,7 @@ async def test_multiplex_picker_global_persists_only_named_profile(
 
 def _make_store_runner(adapter, sessions_dir, monkeypatch):
     """Bare runner with a real JSONL SessionStore (the durable /model override lives there)."""
-    import hermes_state
+    import vael_state
     from gateway.config import GatewayConfig
     from gateway.session import SessionStore
 

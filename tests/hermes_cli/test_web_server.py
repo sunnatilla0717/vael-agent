@@ -12,7 +12,7 @@ from pathlib import Path
 from unittest.mock import patch, MagicMock
 
 import pytest
-import hermes_yaml as yaml
+import vael_yaml as yaml
 
 from hermes_cli.config import (
     reload_env,
@@ -69,7 +69,7 @@ def _install_example_plugin(_isolate_hermes_home):
     all). User plugins are first in the discovery search order, so
     laying down the fixture here is enough.
     """
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
     from hermes_cli import web_server
 
     user_plugins_dir = get_hermes_home() / "plugins"
@@ -247,8 +247,8 @@ class TestWebServerEndpoints:
         except ImportError:
             pytest.skip("fastapi/starlette not installed")
 
-        import hermes_state
-        from hermes_constants import get_hermes_home
+        import vael_state
+        from vael_constants import get_hermes_home
         from hermes_cli.web_server import app, _SESSION_HEADER_NAME, _SESSION_TOKEN
 
         monkeypatch.setattr(hermes_state, "DEFAULT_DB_PATH", get_hermes_home() / "state.db")
@@ -261,8 +261,8 @@ class TestWebServerEndpoints:
         """Repeated GET-only polls must not checkpoint another writer's WAL."""
         import sqlite3
 
-        from hermes_constants import get_hermes_home
-        from hermes_state import SessionDB
+        from vael_constants import get_hermes_home
+        from vael_state import SessionDB
 
         _web_server_sessions._last_auto_archive_check.clear()
         db_path = get_hermes_home() / "state.db"
@@ -339,8 +339,8 @@ class TestWebServerEndpoints:
 
     def test_get_sessions_auto_archive_uses_maintenance_writer(self):
         from hermes_cli.config import load_config, save_config
-        from hermes_constants import get_hermes_home
-        from hermes_state import SessionDB
+        from vael_constants import get_hermes_home
+        from vael_state import SessionDB
 
         db_path = get_hermes_home() / "state.db"
         seed = SessionDB(db_path=db_path)
@@ -389,8 +389,8 @@ class TestWebServerEndpoints:
     def test_get_sessions_heals_stale_schema_store(self, missing_column):
         import sqlite3
 
-        from hermes_constants import get_hermes_home
-        from hermes_state import SessionDB
+        from vael_constants import get_hermes_home
+        from vael_state import SessionDB
 
         db_path = get_hermes_home() / "state.db"
         seed = SessionDB(db_path=db_path)
@@ -435,8 +435,8 @@ class TestWebServerEndpoints:
         """
         import sqlite3
 
-        from hermes_constants import get_hermes_home
-        from hermes_state import SessionDB
+        from vael_constants import get_hermes_home
+        from vael_state import SessionDB
 
         db_path = get_hermes_home() / "state.db"
         seed = SessionDB(db_path=db_path)
@@ -477,8 +477,8 @@ class TestWebServerEndpoints:
         """
         import sqlite3
 
-        from hermes_constants import get_hermes_home
-        from hermes_state import SessionDB
+        from vael_constants import get_hermes_home
+        from vael_state import SessionDB
 
         db_path = get_hermes_home() / "state.db"
         seed = SessionDB(db_path=db_path)
@@ -520,9 +520,9 @@ class TestWebServerEndpoints:
         dashboard (close-time checkpoint, possible FTS rebuild) is the
         two-writer corruption vector. Only the stale-schema heal may write.
         """
-        import hermes_state
-        from hermes_constants import get_hermes_home
-        from hermes_state import SessionDB
+        import vael_state
+        from vael_constants import get_hermes_home
+        from vael_state import SessionDB
 
         SessionDB(db_path=get_hermes_home() / "state.db").close()
 
@@ -543,7 +543,7 @@ class TestWebServerEndpoints:
         """A store the eager reconcile cannot open must not break startup."""
         import sqlite3 as sqlite3_module
 
-        import hermes_state
+        import vael_state
 
 
         def boom(*args, **kwargs):
@@ -562,8 +562,8 @@ class TestWebServerEndpoints:
         would hammer the DB for nothing: serve reads probe-less instead, warn
         once, and never pay the writable open for that store again.
         """
-        from hermes_constants import get_hermes_home
-        from hermes_state import SessionDB
+        from vael_constants import get_hermes_home
+        from vael_state import SessionDB
 
         db_path = get_hermes_home() / "state.db"
         seed = SessionDB(db_path=db_path)
@@ -584,7 +584,7 @@ class TestWebServerEndpoints:
 
         writable_opens = []
 
-        import hermes_state
+        import vael_state
 
         original_init = hermes_state.SessionDB.__init__
 
@@ -621,7 +621,7 @@ class TestWebServerEndpoints:
         """Unscoped SQLITE_CORRUPT must not escalate a dashboard read to writes."""
         import sqlite3
 
-        import hermes_state
+        import vael_state
 
         db_path = tmp_path / "state.db"
         db_path.write_bytes(b"not-empty")
@@ -642,7 +642,7 @@ class TestWebServerEndpoints:
         """UnicodeDecodeError — pysqlite failing to decode SQLite's own error
         message over corrupt file bytes (#98924) — must route through the
         same one-writable-open heal as malformed schema."""
-        import hermes_state
+        import vael_state
 
         db_path = tmp_path / "state.db"
         db_path.write_bytes(b"not-empty")
@@ -668,7 +668,7 @@ class TestWebServerEndpoints:
         assert opens == [True, False, True]
 
     def test_get_sessions_zero_byte_store_returns_empty_list(self):
-        from hermes_constants import get_hermes_home
+        from vael_constants import get_hermes_home
 
         db_path = get_hermes_home() / "state.db"
         db_path.parent.mkdir(parents=True, exist_ok=True)
@@ -871,7 +871,7 @@ CONFIG_SCHEMA = ProviderConfigSchema(
 """
 
     def _install_flatprov(self):
-        from hermes_constants import get_hermes_home
+        from vael_constants import get_hermes_home
 
         plugin_dir = get_hermes_home() / "plugins" / "flatprov"
         plugin_dir.mkdir(parents=True, exist_ok=True)
@@ -880,7 +880,7 @@ CONFIG_SCHEMA = ProviderConfigSchema(
         return plugin_dir
 
     def test_declared_surface_put_writes_config_and_secret(self):
-        from hermes_constants import get_hermes_home
+        from vael_constants import get_hermes_home
         from hermes_cli.config import load_env
 
         self._install_flatprov()
@@ -943,7 +943,7 @@ CONFIG_SCHEMA = ProviderConfigSchema(
 
 
     def test_put_memory_provider_config_writes_config_and_secret(self):
-        from hermes_constants import get_hermes_home
+        from vael_constants import get_hermes_home
         from hermes_cli.config import load_config, load_env
 
         self._install_flatprov()
@@ -1005,7 +1005,7 @@ CONFIG_SCHEMA = ProviderConfigSchema(
     def _isolate_honcho_config(self):
         # Honcho tests write the suite-wide HERMES_HOME honcho.json; snapshot and
         # restore it so provider status/config state never leaks across tests.
-        from hermes_constants import get_hermes_home
+        from vael_constants import get_hermes_home
 
         path = get_hermes_home() / "honcho.json"
         before = path.read_bytes() if path.exists() else None
@@ -1017,7 +1017,7 @@ CONFIG_SCHEMA = ProviderConfigSchema(
 
     @staticmethod
     def _seed_local_honcho(cfg=None):
-        from hermes_constants import get_hermes_home
+        from vael_constants import get_hermes_home
 
         path = get_hermes_home() / "honcho.json"
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -1030,7 +1030,7 @@ CONFIG_SCHEMA = ProviderConfigSchema(
         monkeypatch.setenv("HONCHO_API_KEY", "guard")
         monkeypatch.delenv("HONCHO_API_KEY")
         self._seed_local_honcho()
-        from hermes_constants import get_hermes_home
+        from vael_constants import get_hermes_home
         from hermes_cli.config import load_config, load_env
 
         resp = self.client.put(
@@ -1197,7 +1197,7 @@ CONFIG_SCHEMA = ProviderConfigSchema(
 
 
     def test_import_sessions_endpoint_imports_exported_json(self):
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
 
         payload = {
             "id": "imported-web-session",
@@ -1247,7 +1247,7 @@ CONFIG_SCHEMA = ProviderConfigSchema(
         """Regression for the #39140 CTE salvage: a corrupted parent chain
         that loops (a -> b -> a) must terminate (UNION dedup) instead of
         recursing forever like UNION ALL would."""
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
 
         db = SessionDB()
         try:
@@ -1271,7 +1271,7 @@ CONFIG_SCHEMA = ProviderConfigSchema(
         subagent run (``_delegate_from``) or a /branch fork (``_branched_from``) is its own conversation and
         never listed as a continuation, so following it parks the user's chat in a hidden row; only
         compression continuations are followed."""
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
 
         db = SessionDB()
         try:
@@ -1933,7 +1933,7 @@ CONFIG_SCHEMA = ProviderConfigSchema(
         """
         from hermes_cli import profiles as profiles_mod
         from hermes_cli.config import custom_endpoint_key_env
-        from hermes_constants import get_hermes_home
+        from vael_constants import get_hermes_home
 
         default_home = get_hermes_home()
         worker_home = profiles_mod.get_profile_dir("worker")
@@ -2147,7 +2147,7 @@ CONFIG_SCHEMA = ProviderConfigSchema(
         secret by the time Save sees it. Migrating it would duplicate the
         user's secret into a second env var they never asked for.
         """
-        import hermes_yaml as yaml
+        import vael_yaml as yaml
 
         from hermes_cli.config import custom_endpoint_key_env, get_config_path, get_env_value
 
@@ -2380,7 +2380,7 @@ CONFIG_SCHEMA = ProviderConfigSchema(
 
 
     def test_get_sessions_positive_limit_still_works(self):
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
 
         db = SessionDB()
         try:
@@ -2404,7 +2404,7 @@ CONFIG_SCHEMA = ProviderConfigSchema(
 
 
     def test_profiles_sessions_positive_limit_still_works(self):
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
 
         db = SessionDB()
         try:
@@ -2423,7 +2423,7 @@ CONFIG_SCHEMA = ProviderConfigSchema(
     def test_get_session_messages_rejects_negative_limit(self):
         """limit=-1 previously bypassed the documented 500-row clamp because
         min(-1, 500) == -1, which SQLite treats as 'no limit'."""
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
 
         db = SessionDB()
         try:
@@ -2443,7 +2443,7 @@ CONFIG_SCHEMA = ProviderConfigSchema(
         """A limit above the documented 500-row cap is silently clamped
         (existing ``min(limit, 500)`` behaviour), not rejected — the request
         still succeeds."""
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
 
         db = SessionDB()
         try:
@@ -2463,7 +2463,7 @@ CONFIG_SCHEMA = ProviderConfigSchema(
         Guards the #80680 contract — display reads opt into compacted history
         explicitly; the dashboard default view stays as it was.
         """
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
 
         db = SessionDB()
         try:
@@ -2495,7 +2495,7 @@ CONFIG_SCHEMA = ProviderConfigSchema(
         """include_compacted=true returns the full display history: archived
         (active=0, compacted=1) rows plus live rows, in insertion order.
         """
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
 
         db = SessionDB()
         try:
@@ -2533,7 +2533,7 @@ CONFIG_SCHEMA = ProviderConfigSchema(
             _MERGED_SUMMARY_DELIMITER,
             _SUMMARY_END_MARKER,
         )
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
 
         handoff = (
             f"{SUMMARY_PREFIX}\n{HISTORICAL_TASK_HEADING}\nold task\n\n"
@@ -2595,7 +2595,7 @@ CONFIG_SCHEMA = ProviderConfigSchema(
         order=latest + include_compacted=true) pages back from the newest
         message and returns the window in chronological order.
         """
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
 
         db = SessionDB()
         try:
@@ -2631,7 +2631,7 @@ CONFIG_SCHEMA = ProviderConfigSchema(
 
     def test_get_session_messages_omitted_limit_defaults_to_500(self):
         """The dashboard must never load an entire unbounded transcript."""
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
 
         db = SessionDB()
         try:
@@ -2679,7 +2679,7 @@ CONFIG_SCHEMA = ProviderConfigSchema(
         ]
 
     def test_export_session_streams_bounded_message_pages(self, monkeypatch):
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
 
         db = SessionDB()
         try:
@@ -2888,8 +2888,8 @@ class TestNewEndpoints:
         except ImportError:
             pytest.skip("fastapi/starlette not installed")
 
-        import hermes_state
-        from hermes_constants import get_hermes_home
+        import vael_state
+        from vael_constants import get_hermes_home
         from hermes_cli.web_server import app, _SESSION_HEADER_NAME, _SESSION_TOKEN
 
         monkeypatch.setattr(hermes_state, "DEFAULT_DB_PATH", get_hermes_home() / "state.db")
@@ -2907,7 +2907,7 @@ class TestNewEndpoints:
     def test_profiles_create_builder_mcp_auth_is_profile_scoped(
         self, monkeypatch
     ):
-        from hermes_constants import get_hermes_home
+        from vael_constants import get_hermes_home
         import hermes_cli.profiles as profiles_mod
 
         monkeypatch.setattr(profiles_mod, "create_wrapper_script", lambda name: None)
@@ -3204,7 +3204,7 @@ class TestNewEndpoints:
 
 
     def test_analytics_usage_includes_skill_breakdown(self):
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
 
         db = SessionDB()
         try:
@@ -3264,7 +3264,7 @@ class TestNewEndpoints:
         from datetime import datetime
         from zoneinfo import ZoneInfo
 
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
 
         db = SessionDB()
         try:
@@ -3588,7 +3588,7 @@ class TestDenormalizeProviderSwitch:
         ``PUT /api/config`` — not fall back to the flat string, which the deep-merge would
         write OVER the on-disk ``model:`` dict (provider/base_url/api_mode/slots destroyed)."""
         from starlette.testclient import TestClient
-        from hermes_constants import get_hermes_home
+        from vael_constants import get_hermes_home
         from hermes_cli.model_switch import ModelSwitchResult
         from hermes_cli.web_server import app, _SESSION_HEADER_NAME, _SESSION_TOKEN
 
@@ -3804,7 +3804,7 @@ class TestStatusInstallId:
         self.client.headers[_SESSION_HEADER_NAME] = _SESSION_TOKEN
 
     def test_status_reports_persistent_install_id(self, monkeypatch):
-        from hermes_constants import get_default_hermes_root
+        from vael_constants import get_default_hermes_root
 
         monkeypatch.setattr(_gw_status, "get_running_pid_cached", lambda: None)
         monkeypatch.setattr(_gw_status, "read_runtime_status", lambda: None)
@@ -4114,7 +4114,7 @@ class TestDiscoverUserThemes:
         other = tmp_path / "other-profile"
         other.mkdir()
 
-        from hermes_constants import (
+        from vael_constants import (
             reset_hermes_home_override,
             set_hermes_home_override,
         )
@@ -4247,8 +4247,8 @@ class TestDeleteSessionEndpoint:
         except ImportError:
             pytest.skip("fastapi/starlette not installed")
 
-        import hermes_state
-        from hermes_constants import get_hermes_home
+        import vael_state
+        from vael_constants import get_hermes_home
         from hermes_cli.web_server import app, _SESSION_HEADER_NAME, _SESSION_TOKEN
 
         monkeypatch.setattr(
@@ -4271,8 +4271,8 @@ class TestDeleteSessionEndpoint:
         # artifacts are removed with the row; the endpoint historically
         # didn't, leaving secret-bearing session_<id>.json snapshots and
         # request dumps orphaned on disk after a UI delete.
-        from hermes_constants import get_hermes_home
-        from hermes_state import SessionDB
+        from vael_constants import get_hermes_home
+        from vael_state import SessionDB
 
         db_path = get_hermes_home() / "state.db"
         db = SessionDB(db_path=db_path)
@@ -4308,7 +4308,7 @@ class TestDeleteSessionEndpoint:
 
     def test_delete_named_profile_session_scrubs_profile_disk(self):
         from hermes_cli import profiles as profiles_mod
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
 
         profile_home = profiles_mod.get_profile_dir("worker")
         profile_home.mkdir(parents=True)
@@ -4360,8 +4360,8 @@ class TestBulkDeleteSessionsEndpoint:
         except ImportError:
             pytest.skip("fastapi/starlette not installed")
 
-        import hermes_state
-        from hermes_constants import get_hermes_home
+        import vael_state
+        from vael_constants import get_hermes_home
         from hermes_cli.web_server import app, _SESSION_HEADER_NAME, _SESSION_TOKEN
 
         monkeypatch.setattr(
@@ -4373,7 +4373,7 @@ class TestBulkDeleteSessionsEndpoint:
         self.auth_client.headers[_SESSION_HEADER_NAME] = _SESSION_TOKEN
 
     def _seed(self, ids):
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
 
         db = SessionDB()
         try:
@@ -4384,7 +4384,7 @@ class TestBulkDeleteSessionsEndpoint:
 
 
     def test_deletes_listed_sessions_only(self):
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
 
         self._seed(["a", "b", "c"])
         resp = self.auth_client.post(
@@ -4427,8 +4427,8 @@ class TestDeleteEmptySessionsEndpoint:
         except ImportError:
             pytest.skip("fastapi/starlette not installed")
 
-        import hermes_state
-        from hermes_constants import get_hermes_home
+        import vael_state
+        from vael_constants import get_hermes_home
         from hermes_cli.web_server import app, _SESSION_HEADER_NAME, _SESSION_TOKEN
 
         # Pin the SessionDB to the isolated HERMES_HOME so each test
@@ -4449,7 +4449,7 @@ class TestDeleteEmptySessionsEndpoint:
         * ``live``    — un-ended, empty → must survive (active)
         * ``archived``— ended, empty, archived → must survive
         """
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
 
         db = SessionDB()
         try:
@@ -4485,7 +4485,7 @@ class TestDeleteEmptySessionsEndpoint:
         """DELETE returns the deleted count and removes only the
         empty-ended-unarchived rows — same shape contract as the
         DB-level method's unit tests."""
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
 
         self._seed()
         resp = self.auth_client.delete("/api/sessions/empty")
@@ -4509,7 +4509,7 @@ class TestDeleteEmptySessionsEndpoint:
     def test_delete_removes_on_disk_files_of_deleted_sessions_only(self):
         """Deleting an empty session also removes its files in ``sessions/``.
         A kept session's files stay."""
-        from hermes_constants import get_hermes_home
+        from vael_constants import get_hermes_home
 
         self._seed()
         sessions_dir = get_hermes_home() / "sessions"
@@ -4543,8 +4543,8 @@ class TestPluginAPIAuth:
         except ImportError:
             pytest.skip("fastapi/starlette not installed")
 
-        import hermes_state
-        from hermes_constants import get_hermes_home
+        import vael_state
+        from vael_constants import get_hermes_home
         from hermes_cli.web_server import app, _SESSION_HEADER_NAME, _SESSION_TOKEN
 
         monkeypatch.setattr(hermes_state, "DEFAULT_DB_PATH", get_hermes_home() / "state.db")
@@ -4626,8 +4626,8 @@ class TestPluginAPISecretScopeProductionMount:
         except ImportError:
             pytest.skip("fastapi/starlette not installed")
 
-        import hermes_state
-        from hermes_constants import get_hermes_home
+        import vael_state
+        from vael_constants import get_hermes_home
         from hermes_cli import profiles
         from hermes_cli.web_server import app, _SESSION_HEADER_NAME, _SESSION_TOKEN
 
@@ -4724,7 +4724,7 @@ class TestDashboardPluginManifestExtensions:
         """Regression: user dashboard extensions are a dashboard-owned asset
         (like theme YAML), so they must stay visible after a context-local
         HERMES_HOME override scopes a request to another profile."""
-        from hermes_constants import (
+        from vael_constants import (
             reset_hermes_home_override,
             set_hermes_home_override,
         )
@@ -5520,8 +5520,8 @@ class TestDashboardComponentHealth:
         except ImportError:
             pytest.skip("fastapi/starlette not installed")
 
-        import hermes_state
-        from hermes_constants import get_hermes_home
+        import vael_state
+        from vael_constants import get_hermes_home
         import hermes_cli.web_server as ws
 
         monkeypatch.setattr(hermes_state, "DEFAULT_DB_PATH", get_hermes_home() / "state.db")
@@ -5587,8 +5587,8 @@ class TestSessionPatchUnread:
         except ImportError:
             pytest.skip("fastapi/starlette not installed")
 
-        import hermes_state
-        from hermes_constants import get_hermes_home
+        import vael_state
+        from vael_constants import get_hermes_home
         from hermes_cli.web_server import app, _SESSION_HEADER_NAME, _SESSION_TOKEN
 
         monkeypatch.setattr(
@@ -5599,7 +5599,7 @@ class TestSessionPatchUnread:
         self.auth_client = TestClient(app)
         self.auth_client.headers[_SESSION_HEADER_NAME] = _SESSION_TOKEN
 
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
 
         db = SessionDB()
         try:

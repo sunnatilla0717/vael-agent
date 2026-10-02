@@ -13,7 +13,7 @@ gate on the stamp, then ask here WHERE the app is. A stamp that says bundled
 over a tree that is not one is damage, and :func:`resolve_bundle_layout`
 says so instead of degrading to a checkout.
 
-Two consumers today: ``hermes desktop`` (start the app this CLI ships
+Two consumers today: ``vael desktop`` (start the app this CLI ships
 inside) and the sealed self-updater (stop the app, then relaunch it).
 """
 
@@ -161,7 +161,7 @@ def launch_detached(
     The child outlives this process: it leads a new session on POSIX, and
     on Windows it gets the detach creation flags (new process group, own
     hidden console, breakaway from any job object). Its stdio goes to the
-    null device, because the terminal that ran ``hermes desktop`` is free
+    null device, because the terminal that ran ``vael desktop`` is free
     to close the moment this call returns.
     """
     from hermes_cli._subprocess_compat import windows_detach_popen_kwargs

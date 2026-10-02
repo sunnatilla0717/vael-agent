@@ -49,7 +49,7 @@ def _is_rate_limitish(message: str) -> bool:
 
 def _fail_msg(vendor: str, kind: str, exc: Any, *, other_backends: bool = True) -> str:
     label, env_key, site = _VENDOR_HINTS[vendor]
-    alt = " or another web backend via `hermes tools`" if other_backends else ""
+    alt = " or another web backend via `vael tools`" if other_backends else ""
     return f"Keyless {label} {kind} failed: {exc}. Set {env_key} ({site}){alt} for reliable service."
 
 
@@ -65,7 +65,7 @@ def _search(vendor: str, rows: Callable[[], List[Dict[str, Any]]], catch: Any = 
 
 
 def _per_url(urls: List[str], fetch: Callable[[str], Dict[str, Any]], vendor: str, catch: Any = Exception, hint: bool = False) -> List[Dict[str, Any]]:
-    """Per-URL extract loop: a ``catch`` failure becomes an error entry (``hint`` adds the ``hermes tools`` hint)."""
+    """Per-URL extract loop: a ``catch`` failure becomes an error entry (``hint`` adds the ``vael tools`` hint)."""
     def _one(url: str) -> Dict[str, Any]:
         try:
             return fetch(url)
@@ -97,7 +97,7 @@ def _web_config_selects(name: str) -> bool:
 
 
 def provider_tier(name: str) -> str:
-    """``web.provider_tier.<name>`` (``hermes tools`` Free/Paid rows): ``free``, ``paid``, or ``auto`` (anything else/unset)."""
+    """``web.provider_tier.<name>`` (``vael tools`` Free/Paid rows): ``free``, ``paid``, or ``auto`` (anything else/unset)."""
     try:
         from hermes_cli.config import load_config
         tiers = (load_config().get("web") or {}).get("provider_tier") or {}

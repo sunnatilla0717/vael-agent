@@ -36,7 +36,7 @@ from gateway.config import GatewayConfig
 from gateway.platforms.base import Platform, SessionSource
 from gateway.platforms.event import MessageEvent
 from gateway.session import SessionEntry, SessionStore
-from hermes_constants import (
+from vael_constants import (
     get_hermes_home,
     reset_hermes_home_override,
     set_hermes_home_override,
@@ -51,7 +51,7 @@ def multiplex_homes(tmp_path, monkeypatch):
     home, serving a ``fitness`` profile whose store lives under
     ``profiles/fitness``.
     """
-    import hermes_state
+    import vael_state
 
     root = tmp_path / "hermes"
     profile = root / "profiles" / "fitness"
@@ -247,7 +247,7 @@ def test_two_primary_routed_turns_reload_profile_transcript(multiplex_homes):
     """A second routed turn sees the first turn in the profile database."""
     from gateway.profile_routing import ProfileRoute
     from gateway.run import GatewayRunner
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     root, profile = multiplex_homes
     (profile / "config.yaml").write_text("{}\n", encoding="utf-8")

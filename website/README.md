@@ -59,6 +59,24 @@ GIT_USER=<Your GitHub username> yarn deploy
 
 If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
 
+## Rebrand tooling
+
+The site is the VAEL-branded surface of the Hermes Agent docs (see
+`REBRANDING.md`). Rebrand-only helpers, all stdlib/dependency-free:
+
+- `scripts/rebrand-hermes-to-vael.py` — prose-only Hermes → VAEL rewrite for
+  hand-authored docs (skips code fences, inline code, link targets, URLs,
+  model names and attribution; skips generated pages). Dry-run by default;
+  `--write` to apply; `--rewrite-guide-refs` to repoint renamed guide slugs.
+- `scripts/generate-brand-assets.mjs` — regenerates the wordmark, favicon set
+  and the 1200x630 Open Graph card from the CyberAI palette.
+
+Generated doc trees (`docs/user-guide/skills/**`, the two skill catalogs) are
+produced by `scripts/generate-skill-docs.py`; CI fails if the committed copies
+differ, so edit the generator (or the upstream `SKILL.md`), never the output.
+Brand regressions are caught by `tests/branding/test_vael_brand.py`, which runs
+in the `VAEL Brand Guards` workflow.
+
 ## Diagram Linting
 
 CI runs `ascii-guard` to lint docs for ASCII box diagrams. Use Mermaid (````mermaid`) or plain lists/tables instead of ASCII boxes to avoid CI failures.

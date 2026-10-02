@@ -41,7 +41,7 @@ There is **no general OAuth 2.0 authorization server**. There is no
 against. There is no shared cookie or session that browser-Portal-login
 extends to other apps on the same machine.
 
-What VAEL Agent has that *feels* like OAuth — `hermes login --provider nous`
+What VAEL Agent has that *feels* like OAuth — `vael login --provider nous`
 opening a browser, user signs in, token lands in `~/.hermes/auth.json` — is a
 **VAEL-specific browser flow**. Under the hood it produces a credential
 VAEL uses as a bearer. It is not a public OAuth provider that Karakeep et al.

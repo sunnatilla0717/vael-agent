@@ -6,7 +6,7 @@ author: Hermes Agent + Teknium
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
-  hermes:
+  vael:
     tags: [gitnexus, code-intelligence, knowledge-graph, visualization]
     related_skills: [vael-agent, codebase-inspection]
 ---

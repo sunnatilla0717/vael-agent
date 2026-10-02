@@ -29,8 +29,8 @@ from urllib.parse import urlparse
 from agent.memory_provider import spawn_context_thread as _spawn_context_thread
 from agent.secret_scope import get_secret
 from hermes_cli.profiles import _get_default_hermes_home
-from hermes_constants import get_hermes_home
-from hermes_state_common import TITLE_SOURCE_DERIVED, TITLE_SOURCE_LLM
+from vael_constants import get_hermes_home
+from vael_state_common import TITLE_SOURCE_DERIVED, TITLE_SOURCE_LLM
 
 from plugins.memory.honcho.client_cache import (
     _DEFAULT_HTTP_TIMEOUT, _client_cache_key, _client_slots, _client_slots_lock,
@@ -56,7 +56,7 @@ def _sanitize_url(url: str | None) -> str | None:
 
 
 def profile_host_key(profile: str | None) -> str:
-    """Return the safe Honcho host key for a Hermes profile."""
+    """Return the safe Honcho host key for a VAEL profile."""
     if not profile or profile in {"default", "custom"}:
         return HOST
     sanitized = "".join(c if c.isalnum() or c in "_-" else "_" for c in profile).strip("_")
@@ -274,7 +274,7 @@ def _connection_fields(look: _HostLookup, host: str, path: Path) -> dict[str, An
                        "is NOT inherited (profiles are credential-isolated). Set apiKey on "
                        "hosts.%s in %s or this profile runs unauthenticated.", host, HOST, host, path)
     # The SDK's native format (and Claude Desktop) nests the URL at endpoint.baseUrl;
-    # read it before the flat Hermes spellings.
+    # read it before the flat VAEL spellings.
     endpoint_block = raw.get("endpoint")
     native_base_url = endpoint_block.get("baseUrl") if isinstance(endpoint_block, dict) else None
     base_url = _sanitize_url(host_block.get("baseUrl") or host_block.get("base_url") or native_base_url
@@ -435,7 +435,7 @@ class HonchoClientConfig:
     @classmethod
     def from_global_config(cls, host: str | None = None, config_path: Path | None = None) -> HonchoClientConfig:
         """Config from the resolved Honcho config path, falling back to env. ``host=None``
-        derives it from the active Hermes profile."""
+        derives it from the active VAEL profile."""
         resolved_host = host or resolve_active_host()
         path = config_path or resolve_config_path()
         if not path.exists():
@@ -621,7 +621,7 @@ def get_honcho_client(config: HonchoClientConfig | None = None) -> Honcho:
 
     if not config.api_key and not config.base_url:
         raise ValueError("Honcho API key not found. Get your API key at https://app.honcho.dev, "
-                         "then run 'hermes honcho setup' or set HONCHO_API_KEY. "
+                         "then run 'vael honcho setup' or set HONCHO_API_KEY. "
                          "For local instances, set HONCHO_BASE_URL instead.")
 
     # Build inside the singleton factory so racing callers share one client.
@@ -636,7 +636,7 @@ def _build_client(config: HonchoClientConfig) -> "Honcho":
         from honcho import Honcho
     except ImportError:
         raise ImportError("honcho-ai is required for Honcho integration. Install it with: pip install honcho-ai  "
-                          "(or run `hermes honcho setup` to configure).")
+                          "(or run `vael honcho setup` to configure).")
 
     # config.yaml honcho.base_url / timeout fill whatever honcho.json left unset.
     base_url, timeout = config.base_url, config.timeout

@@ -400,7 +400,7 @@ class WebhookAdapter(BasePlatformAdapter):
         Runs on every POST before auth, so it never takes the CLI writer lock: writers publish via
         atomic rename, which also gives the file a new inode, so a restored mtime cannot hide a change.
         """
-        from hermes_constants import get_hermes_home
+        from vael_constants import get_hermes_home
         subs_path = get_hermes_home() / _DYNAMIC_ROUTES_FILENAME
         try:
             st = subs_path.stat()

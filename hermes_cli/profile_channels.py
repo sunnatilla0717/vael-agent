@@ -1,7 +1,7 @@
 """Messaging-channel settings a profile clone must NOT inherit.
 
 A ``--clone``d profile that keeps the source's bot tokens, allowlists and platform state makes two
-gateways fight over one bot (standalone) or blocks ``hermes gateway migrate --multiplex`` with a
+gateways fight over one bot (standalone) or blocks ``vael gateway migrate --multiplex`` with a
 duplicate-credential finding per platform.
 
 The inventory is OWNERSHIP-based and evaluated in the SOURCE profile's plugin scope: every adapter
@@ -66,7 +66,7 @@ def _plugin_scope(source_dir: Optional[Path]):
     if source_dir is None:
         yield
         return
-    from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+    from vael_constants import reset_hermes_home_override, set_hermes_home_override
     token = set_hermes_home_override(str(source_dir))
     try:
         yield
@@ -446,7 +446,7 @@ def clone_channels_refusal(source_dir: Path, source_label: str) -> Optional[str]
         f"--clone-channels would copy {', '.join(platforms)} from '{source_label}', which the running "
         "multiplexed gateway already serves: the bot can only belong to one profile, so the copy would be "
         "parked as a duplicate credential. Clone without --clone-channels and give the new profile its own bot "
-        "(hermes -p <name> setup), or route its chats with gateway.profile_routes instead."
+        "(vael -p <name> setup), or route its chats with gateway.profile_routes instead."
     )
 
 
@@ -472,7 +472,7 @@ def _config_platform_tokens(config_path: Path) -> Dict[str, str]:
 def shared_channel_credentials(profile_dir: Path, source_dir: Path) -> List[str]:
     """Platforms whose CONNECTING credential (bot token / app id / account) in ``profile_dir`` is
     byte-identical to ``source_dir``'s — the bots that will collide. Pure file reads: no secret
-    manager, no gateway config load, so ``hermes profile list`` can afford it per profile."""
+    manager, no gateway config load, so ``vael profile list`` can afford it per profile."""
     wanted = credential_env_keys()
     mine = _env_values(profile_dir / ".env", wanted)
     theirs = _env_values(source_dir / ".env", wanted)
@@ -486,9 +486,9 @@ def shared_channel_credentials(profile_dir: Path, source_dir: Path) -> List[str]
 def shared_credential_warning(profile: str, platforms: List[str], source: str = "default") -> str:
     return (
         f"⚠ Profile '{profile}' shares its {', '.join(platforms)} credential with {source}: the bot can "
-        f"only belong to one profile. Give '{profile}' its own bot (hermes -p {profile} setup, or the "
+        f"only belong to one profile. Give '{profile}' its own bot (vael -p {profile} setup, or the "
         f"dashboard Messaging page) or remove the token from '{profile}'; a multiplexed gateway parks "
-        f"the duplicate and `hermes gateway migrate --multiplex` refuses until it is gone."
+        f"the duplicate and `vael gateway migrate --multiplex` refuses until it is gone."
     )
 
 
@@ -500,6 +500,6 @@ def format_stripped_notice(profile: str, platforms: List[str], clone_flag: str =
     return [
         f"Messaging channels were NOT cloned ({', '.join(platforms)}): a copied bot token or allowlist "
         "would make two gateways fight over one bot.",
-        f"  Configure this profile's own bots:  hermes -p {profile} setup   (or the dashboard Messaging page)",
-        f"  To copy the source's channels anyway:  hermes profile create {profile} {clone_flag} --clone-channels",
+        f"  Configure this profile's own bots:  vael -p {profile} setup   (or the dashboard Messaging page)",
+        f"  To copy the source's channels anyway:  vael profile create {profile} {clone_flag} --clone-channels",
     ]

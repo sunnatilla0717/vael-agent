@@ -255,8 +255,8 @@ class TestMultiplexProfileScope:
     ):
         """The gate must consult the profile's own config.yaml + secret scope,
         not the default profile's env values."""
-        import hermes_yaml as yaml
-        from hermes_constants import (
+        import vael_yaml as yaml
+        from vael_constants import (
             reset_hermes_home_override,
             set_hermes_home_override,
         )
@@ -307,8 +307,8 @@ class TestMultiplexProfileScope:
     ):
         """Loader parity (#125985): the documented top-level platforms.buzz shape passes the
         scoped gate, and an unconfigured sibling profile still fails closed (A→B→A)."""
-        import hermes_yaml as yaml
-        from hermes_constants import (
+        import vael_yaml as yaml
+        from vael_constants import (
             reset_hermes_home_override,
             set_hermes_home_override,
         )

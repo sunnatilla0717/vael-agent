@@ -1,4 +1,4 @@
-"""Name what a draining gateway is waiting on while ``hermes update`` blocks on it.
+"""Name what a draining gateway is waiting on while ``vael update`` blocks on it.
 
 The gateway's in-band restart (SIGUSR1 → ``request_restart``) defers ``stop()`` until in-flight
 work finishes, capped by ``agent.restart_after_turn_timeout`` (30 min by default). From the
@@ -29,7 +29,7 @@ def _fmt_elapsed(seconds: object) -> str:
 def _cron_job_name(job_id: str, home: Optional[Path]) -> Optional[str]:
     """``name`` from the profile's ``jobs.json`` (None when unreadable — the id alone still identifies it)."""
     try:
-        from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+        from vael_constants import reset_hermes_home_override, set_hermes_home_override
         from cron.jobs import load_jobs
 
         token = set_hermes_home_override(home) if home else None

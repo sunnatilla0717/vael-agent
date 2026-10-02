@@ -74,7 +74,7 @@ def _codex_device_code_start_error(resp: Any) -> str:
     if "device" in lower and ("authori" in lower or "enable" in lower):
         message = (
             "OpenAI rejected the device-code login request. Your OpenAI "
-            "account may need device-code authorization enabled before Hermes "
+            "account may need device-code authorization enabled before VAEL "
             "can start this dashboard login. Enable device-code authorization "
             "in OpenAI, then return here and click Login again."
         )
@@ -627,14 +627,14 @@ def _oauth_provider_disconnect_command(
 
 def _oauth_provider_disconnect_hint(provider: Dict[str, Any], status: Dict[str, Any]) -> Optional[str]:
     """Return the manual disconnect path when the API cannot clear this provider."""
-    # "anthropic" is flow == "external" (no in-dashboard login) but Hermes still
+    # "anthropic" is flow == "external" (no in-dashboard login) but VAEL still
     # OWNS its credential (the PKCE file ~/.hermes/.anthropic_oauth.json and its
-    # credential-pool entry, written by `hermes auth add anthropic`), so it is
+    # credential-pool entry, written by `vael auth add anthropic`), so it is
     # excluded from the "external providers can't be auto-disconnected" rule.
     if provider.get("flow") == "external" and provider.get("id") != "anthropic":
         if _oauth_provider_disconnect_command(provider):
             # Fallback wording for surfaces without the one-click "run in terminal" path.
-            return "Managed outside Hermes — run the disconnect command to remove it."
+            return "Managed outside VAEL — run the disconnect command to remove it."
         return "Managed by that provider's CLI; remove it there."
     if status.get("source") == "env_var":
         return "Remove the API key from Settings → Keys instead."
@@ -644,7 +644,7 @@ def _oauth_provider_disconnect_hint(provider: Dict[str, Any], status: Dict[str, 
 def _build_oauth_catalog() -> list[Dict[str, Any]]:
     """Accounts-tab provider list: ``_OAUTH_PROVIDER_CATALOG`` cards first (curated
     order, win on metadata), then every other accounts-tab ``provider_catalog()`` entry
-    in ``hermes model`` order, so plugin-added OAuth/external providers appear automatically."""
+    in ``vael model`` order, so plugin-added OAuth/external providers appear automatically."""
     rows: list[Dict[str, Any]] = []
     seen: set[str] = set()
     for entry in _OAUTH_PROVIDER_CATALOG:
@@ -659,7 +659,7 @@ def _build_oauth_catalog() -> list[Dict[str, Any]]:
             seen.add(d.slug)
             rows.append({
                 "id": d.slug, "name": d.label, "flow": "external",
-                "cli_command": f"hermes auth add {d.slug}", "docs_url": d.signup_url or "", "status_fn": None,
+                "cli_command": f"vael auth add {d.slug}", "docs_url": d.signup_url or "", "status_fn": None,
             })
     except Exception:
         pass

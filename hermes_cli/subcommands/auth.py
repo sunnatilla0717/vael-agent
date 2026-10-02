@@ -1,4 +1,4 @@
-"""``hermes auth`` subcommand parser."""
+"""``vael auth`` subcommand parser."""
 
 from __future__ import annotations
 
@@ -70,7 +70,7 @@ def build_auth_parser(subparsers, *, cmd_auth: Callable) -> None:
         "--no-browser", action="store_true", help="Do not auto-open a browser for sign-in")
     auth_upgrade.add_argument("--timeout", type=float, help="Network timeout in seconds")
     auth_spotify = auth_subparsers.add_parser(
-        "spotify", help="Authenticate Hermes with Spotify via PKCE")
+        "spotify", help="Authenticate VAEL with Spotify via PKCE")
     auth_spotify.add_argument(
         "spotify_action", nargs="?", choices=["login", "status", "logout"], default="login")
     auth_spotify.add_argument(

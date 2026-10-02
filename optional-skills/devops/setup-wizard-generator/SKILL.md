@@ -6,7 +6,7 @@ author: "Matt Pocock (mattpocock/skills, wizard) + Hermes Agent"
 license: MIT
 platforms: [linux, macos]
 metadata:
-  hermes:
+  vael:
     tags: [wizard, setup, onboarding, credentials, secrets, migration, bash, human-in-the-loop]
     related_skills: []
 ---

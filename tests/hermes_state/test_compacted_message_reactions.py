@@ -2,7 +2,7 @@
 
 import pytest
 
-from hermes_state import SessionDB
+from vael_state import SessionDB
 
 
 @pytest.mark.parametrize("react_before_compaction", [False, True])

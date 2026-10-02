@@ -26,7 +26,7 @@ from datetime import datetime, timezone
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, REPO_ROOT)
-import hermes_yaml as yaml
+import vael_yaml as yaml
 
 LOCAL_SKILL_DIRS = [
     ("skills", "built-in"),
@@ -287,12 +287,12 @@ def extract_local_skills():
             rel = os.path.relpath(root, base_path)
             category = rel.split(os.sep)[0]
 
+            from agent.skill_utils import skill_metadata_block
+
             tags = []
-            metadata = fm.get("metadata")
-            if isinstance(metadata, dict):
-                hermes_meta = metadata.get("hermes", {})
-                if isinstance(hermes_meta, dict):
-                    tags = hermes_meta.get("tags", [])
+            hermes_meta = skill_metadata_block(fm)
+            if hermes_meta:
+                tags = hermes_meta.get("tags", [])
             if not tags:
                 tags = fm.get("tags", [])
             if isinstance(tags, str):

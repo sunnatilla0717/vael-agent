@@ -64,7 +64,7 @@ class _RecordingSessionDB:
 
 
 def _run_booked_job(monkeypatch, tmp_path):
-    import hermes_state
+    import vael_state
     import run_agent
 
     instances: list[_RecordingSessionDB] = []
@@ -78,7 +78,7 @@ def _run_booked_job(monkeypatch, tmp_path):
     monkeypatch.setattr(hermes_state, "SessionDB", _RecordingSessionDB)
     monkeypatch.setattr(run_agent, "AIAgent", _FakeCronAgent)
     monkeypatch.setattr(
-        "hermes_constants.resolve_reasoning_config", lambda *_a, **_k: None
+        "vael_constants.resolve_reasoning_config", lambda *_a, **_k: None
     )
     # The runtime key is read from the environment (never a literal here);
     # AIAgent and SessionDB are fakes above, so the value is never used.

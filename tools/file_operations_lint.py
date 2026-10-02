@@ -22,7 +22,7 @@ LINTERS = {
     '.rs': 'rustfmt --check {file} 2>&1',
 }
 
-# Node linters Hermes runs on the host (local backend) under its PM-managed Node,
+# Node linters VAEL runs on the host (local backend) under its PM-managed Node,
 # never the user's: the terminal PATH puts the user's dirs first, and ``npx tsc``
 # re-execs ``env node`` through that PATH.
 _MANAGED_NODE_LINTERS = {'.js': ('node', '--check'), '.ts': ('npx', 'tsc', '--noEmit')}
@@ -197,7 +197,7 @@ class LintMixin:
         import subprocess
 
         from hermes_cli._subprocess_compat import windows_hide_flags
-        from hermes_constants import with_hermes_node_path
+        from vael_constants import with_hermes_node_path
         from tools.environments.local import _IS_WINDOWS, _msys_to_windows_path, hermes_subprocess_env
 
         tool, *args = _MANAGED_NODE_LINTERS[ext]

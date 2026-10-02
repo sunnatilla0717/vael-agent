@@ -35,7 +35,7 @@ def _expand_tilde(path: str) -> str:
     if not path or "~" not in path:
         return path
     try:
-        from hermes_constants import get_subprocess_home
+        from vael_constants import get_subprocess_home
 
         home = get_subprocess_home()
     except Exception:
@@ -171,7 +171,7 @@ def _anchor(text: str, base, container_paths: bool) -> Path | PurePosixPath:
 
 def _ssh_remote_anchor(task_id: str) -> str:
     """Working directory on the SSH target, read RAW: ``_authoritative_workspace_root``
-    expands ``~`` on the Hermes host, which names a directory the remote does not have.
+    expands ``~`` on the VAEL host, which names a directory the remote does not have.
 
     Same precedence (session record, registered override, ``$TERMINAL_CWD``); a
     value that is neither ``~``-prefixed nor POSIX-absolute (a Windows or relative
@@ -220,7 +220,7 @@ def _ssh_remote_home(task_id: str) -> str | None:
 
 
 def _resolve_ssh_path(filepath: str, task_id: str) -> PurePosixPath:
-    """Resolve *filepath* in the SSH target's namespace, never via the Hermes host
+    """Resolve *filepath* in the SSH target's namespace, never via the VAEL host
     (``Path.resolve()`` and ``get_subprocess_home()`` both name host directories).
 
     ``~`` becomes the remote home once the live environment has detected it, so the

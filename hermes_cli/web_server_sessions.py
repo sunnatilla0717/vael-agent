@@ -9,7 +9,7 @@ import time
 from pathlib import Path
 from typing import Dict, Optional
 
-from hermes_state_common import _RESET_CHILD_SQL, _sql_json_extract
+from vael_state_common import _RESET_CHILD_SQL, _sql_json_extract
 
 # Same logger the code used before extraction (record parity).
 _log = logging.getLogger("hermes_cli.web_server")
@@ -87,7 +87,7 @@ def _session_db_read_probe_statements() -> tuple:
     """Stale-schema probes for read-only opens (which skip _reconcile_columns()).
     Derived from SCHEMA_SQL so a new column is probed automatically — a
     hand-written list once went stale and emptied the sidebar after update."""
-    from hermes_state_schema import schema_read_probe_statements
+    from vael_state_schema import schema_read_probe_statements
 
     return schema_read_probe_statements()
 
@@ -118,8 +118,8 @@ def _open_session_db_at_path(db_path: Path, *, read_only: bool):
     """
     import sqlite3
 
-    from hermes_state import SessionDB, is_malformed_schema_error
-    from hermes_state_registry import acquire, release_or_close
+    from vael_state import SessionDB, is_malformed_schema_error
+    from vael_state_registry import acquire, release_or_close
 
     # Read-only file/sidecar preflight (port of kilocode#12508): repair-or-refuse BEFORE the first
     # connection so users get an actionable message instead of an opaque "attempt to write a readonly
@@ -192,7 +192,7 @@ def _open_session_db_at_path(db_path: Path, *, read_only: bool):
 def _session_db_path_for_profile(profile: Optional[str]) -> Path:
     """state.db path for ``profile`` (None/empty = this process's own)."""
     from hermes_cli.web_server_cron import _cron_profile_home
-    from hermes_state import _default_db_path
+    from vael_state import _default_db_path
 
     if profile:
         _name, home = _cron_profile_home(profile)
@@ -217,7 +217,7 @@ _last_auto_archive_check: Dict[str, float] = {}
 
 def _maybe_auto_archive_for_profile(profile: Optional[str]) -> None:
     """Config-gated stale-session auto-archive for ``profile``; never raises.
-    ``hermes serve`` runs neither CLI nor gateway startup hooks, so this
+    ``vael serve`` runs neither CLI nor gateway startup hooks, so this
     session-list trigger is what makes ``sessions.auto_archive`` work there."""
     try:
         key = profile or ""
@@ -228,7 +228,7 @@ def _maybe_auto_archive_for_profile(profile: Optional[str]) -> None:
         _last_auto_archive_check[key] = now
 
         from hermes_cli.config import load_config as _load_full_config
-        from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+        from vael_constants import reset_hermes_home_override, set_hermes_home_override
 
         # The config that governs a store is the one in that store's OWN home. A zero-arg
         # load_config() resolves through the PROCESS HERMES_HOME, so the dashboard swept every
@@ -246,7 +246,7 @@ def _maybe_auto_archive_for_profile(profile: Optional[str]) -> None:
 
         # A live gateway owns this profile's store and runs the same sweep on its own
         # housekeeping tick ("state.db maintenance tick" in gateway/run.py, profile-scoped so a
-        # multiplexed secondary's store is swept too). Opening it WRITABLE from `hermes
+        # multiplexed secondary's store is swept too). Opening it WRITABLE from `vael
         # serve` adds a second writer to a database another process is already archiving,
         # for zero extra coverage (#110405). `_check_gateway_running` is the canonical
         # per-profile predicate (`_maybe_run_skill_maintenance` below uses it): its
@@ -269,7 +269,7 @@ def _skill_maintenance_idle_for(started_at: float) -> Optional[float]:
     """Measure chat inactivity, not socket inactivity (Desktop stays connected)."""
     import tui_gateway.server as gateway
 
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
 
     home = get_hermes_home().resolve()
     with gateway._sessions_lock:
@@ -284,7 +284,7 @@ def _skill_maintenance_idle_for(started_at: float) -> Optional[float]:
 
 
 def _maybe_run_skill_maintenance(started_at: float) -> None:
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
     from hermes_cli.profiles import _check_gateway_running
 
     # A live messaging gateway already owns these chores for this profile.

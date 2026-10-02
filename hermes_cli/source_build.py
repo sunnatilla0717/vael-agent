@@ -30,7 +30,7 @@ def source_build_env(base_env: dict | None = None, *, explicit: bool = False) ->
     from pm import ensure
     from pm.environments import project_python, running_from_selected_environment
     from pm.paths import repo_root
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
 
     # The historical update runs on store Python with the selected environment
     # activated in-process. Icon generation starts an isolated child, which needs
@@ -136,7 +136,7 @@ def build_update_products(project_root: Path, *, desktop: bool) -> None:
         publish_stage("Building the desktop app")
         # The desktop build mutates checkout-scoped node_modules and
         # apps/desktop/release; serialize it against a concurrent manual
-        # `hermes desktop` (#93940). The update path waits rather than exits:
+        # `vael desktop` (#93940). The update path waits rather than exits:
         # the in-flight build it queues behind produces the same fresh tree
         # this update needs.
         from hermes_cli.desktop_build_lock import DesktopBuildLock

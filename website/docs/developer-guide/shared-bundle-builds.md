@@ -1,6 +1,6 @@
 # Shared bundle builds
 
-Hermes separates dependency preparation, product builds, and distribution
+VAEL separates dependency preparation, product builds, and distribution
 packaging. The compiler and agent-assembly interfaces live in
 [`scripts/build/README.md`](https://github.com/NousResearch/hermes-agent/blob/main/scripts/build/README.md). These are current
 interfaces, not proof that every distribution passed native acceptance.
@@ -267,9 +267,9 @@ consume the assembler's command map and retain their PATH and extra-Python
 collision policies.
 
 **Nix wheel policy:** `nix/python.nix:128–135` sets `HERMES_NIX_BUILD=1` only
-for the Hermes derivation. `setup.py:34–72` rejects general Hermes wheel/sdist
+for the VAEL derivation. `setup.py:34–72` rejects general VAEL wheel/sdist
 builds. The shared assembler uses the installed Nix code without another copy.
-Other providers use source-layout code and metadata, not a public Hermes wheel.
+Other providers use source-layout code and metadata, not a public VAEL wheel.
 
 Termux retains bionic wheel compilation, offline installation, native library
 paths, and its fixed prefix. Its installed root contains `app`, `tools`,

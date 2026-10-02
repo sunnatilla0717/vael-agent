@@ -625,7 +625,7 @@ def prompt_enable_tool_gateway(config: Dict[str, object], *, force_fresh: bool =
     return changed
 
 
-# Inline Nous Portal login for the Tool Gateway picker (`hermes tools`)
+# Inline Nous Portal login for the Tool Gateway picker (`vael tools`)
 
 
 def ensure_nous_portal_access(*, capability: str = "the Nous Tool Gateway", coverage_category: Optional[str] = None) -> bool:

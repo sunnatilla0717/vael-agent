@@ -210,7 +210,7 @@ def _toolchain_bin(root, *names):
 
 
 def _pm_ships(monkeypatch, *, node_dirs=(), uv=None):
-    import hermes_constants
+    import vael_constants
     import pm
 
     monkeypatch.setattr(pm, "ensure", lambda name, **kw: None)

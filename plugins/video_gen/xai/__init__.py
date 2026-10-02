@@ -38,7 +38,7 @@ MAX_REFERENCE_IMAGES = 7
 _REMOTE_PREFIXES = ("http://", "https://")
 _TERMINAL_POLL_STATUSES = {"done", "failed", "error", "expired", "cancelled"}
 _IMAGE_TO_VIDEO_COMPAT_MODEL_IDS = {"grok-imagine-video-1.5-preview", "grok-imagine-video-1.5-2026-05-30"}
-_AUTH_REQUIRED_MSG = ("No xAI credentials found. Sign in via `hermes auth add xai-oauth` "
+_AUTH_REQUIRED_MSG = ("No xAI credentials found. Sign in via `vael auth add xai-oauth` "
                       "(SuperGrok / Premium+) or set XAI_API_KEY from https://console.x.ai/.")
 _PUBLIC_URL_HINT = "(e.g. the `image`/`public_url` from a prior Imagine result)"
 _MODELS: Dict[str, Dict[str, Any]] = {
@@ -85,7 +85,7 @@ def _xai_error(error: str, error_type: str, prompt: str, model: str = "", aspect
 
 def _media_ref_to_xai_url(value: str, *, kind: str, fallback_mime: str) -> str:
     """URL/data URI accepted by xAI for ``kind`` (``image``/``video``) inputs: remote URLs and matching data URIs pass
-    through; a readable local file of the right MIME class is inlined as base64 (after Hermes' read deny-list /
+    through; a readable local file of the right MIME class is inlined as base64 (after VAEL's read deny-list /
     credential-store guard, which fails open if unavailable); anything else is returned as-is so the caller rejects it."""
     ref = (value or "").strip()
     path = Path(ref).expanduser()

@@ -23,7 +23,7 @@ import pytest
 
 from hermes_cli import update_cmd
 from hermes_cli import update_cmd_validation
-from hermes_constants import partial_update_hint
+from vael_constants import partial_update_hint
 
 def _write_skewed_tree(root: Path, *, skewed: bool) -> None:
     """Build a tiny two-package tree that mimics the real failure.
@@ -359,7 +359,7 @@ def test_hint_does_not_claim_partial_update_for_lookalike_third_party(modname):
     assert partial_update_hint(exc) == []
 
 @pytest.mark.parametrize("modname", ["tools.todo_tool", "agent.context_compressor",
-                                     "hermes_constants", "hermes_cli.config", "cli"])
+                                     "vael_constants", "hermes_cli.config", "cli"])
 def test_hint_fires_for_each_first_party_root(modname):
     exc = ImportError("cannot import name 'X'")
     exc.name = modname

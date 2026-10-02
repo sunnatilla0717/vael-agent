@@ -27,14 +27,14 @@ description: "构建一个自动化 AI 代码审查器，监控你的仓库、�
 本指南使用 **cron 任务**按计划轮询 PR——无需服务器或公开端点，在 NAT 和防火墙后面同样可用。
 
 :::tip 想要实时审查？
-如果你有可用的公开端点，请查看[使用 Webhook 自动化 GitHub PR 评论](./webhook-github-pr-review.md)——GitHub 会在 PR 被打开或更新时立即向 Hermes 推送事件。
+如果你有可用的公开端点，请查看[使用 Webhook 自动化 GitHub PR 评论](./webhook-github-pr-review.md)——GitHub 会在 PR 被打开或更新时立即向 VAEL 推送事件。
 :::
 
 ---
 
 ## 前提条件
 
-- **已安装 Hermes Agent** — 参见[安装指南](../getting-started/installation.md)
+- **已安装 VAEL Agent** — 参见[安装指南](../getting-started/installation.md)
 - **Gateway 已运行**（用于 cron 任务）：
   ```bash
   hermes gateway install   # Install as a service
@@ -60,7 +60,7 @@ description: "构建一个自动化 AI 代码审查器，监控你的仓库、�
 
 ## 第一步：验证配置
 
-确保 Hermes 可以访问 GitHub。启动对话：
+确保 VAEL 可以访问 GitHub。启动对话：
 
 ```bash
 hermes
@@ -78,7 +78,7 @@ Run: gh pr list --repo NousResearch/hermes-agent --state open --limit 3
 
 ## 第二步：手动试审一个 PR
 
-仍在对话中，让 Hermes 审查一个真实的 PR：
+仍在对话中，让 VAEL 审查一个真实的 PR：
 
 ```
 Review this pull request. Read the diff, check for bugs, security issues,
@@ -87,7 +87,7 @@ and code quality. Be specific about line numbers and quote problematic code.
 Run: gh pr diff 3888 --repo NousResearch/hermes-agent
 ```
 
-Hermes 将会：
+VAEL 将会：
 1. 执行 `gh pr diff` 获取代码变更
 2. 通读整个 diff
 3. 生成包含具体发现的结构化审查报告
@@ -98,7 +98,7 @@ Hermes 将会：
 
 ## 第三步：创建审查 Skill
 
-Skill 为 Hermes 提供一致的审查准则，在会话和 cron 运行之间持久保存。没有 skill，审查质量会参差不齐。
+Skill 为 VAEL 提供一致的审查准则，在会话和 cron 运行之间持久保存。没有 skill，审查质量会参差不齐。
 
 ```bash
 mkdir -p ~/.hermes/skills/code-review
@@ -143,7 +143,7 @@ For each finding:
 
 ## 第四步：教会它你的团队规范
 
-这才是让审查器真正有用的关键。启动一个会话，向 Hermes 传授你的团队标准：
+这才是让审查器真正有用的关键。启动一个会话，向 VAEL 传授你的团队标准：
 
 ```
 Remember: In our backend repo, we use Python with FastAPI.
@@ -280,7 +280,7 @@ Gateway 在精简环境中运行。请确保 `gh` 在系统 PATH 中，然后重
 
 ### 审查结果过于泛泛
 1. 添加 `code-review` skill（第三步）
-2. 通过 memory（记忆）向 Hermes 传授你的团队规范（第四步）
+2. 通过 memory（记忆）向 VAEL 传授你的团队规范（第四步）
 3. 它对你的技术栈了解越多，审查质量越好
 
 ### Cron 任务未运行

@@ -1,8 +1,8 @@
-"""hermes.process.exit: how Hermes processes (and watchdog-killed turns) end.
+"""hermes.process.exit: how VAEL processes (and watchdog-killed turns) end.
 
 A crash or SIGKILL cannot record itself. Each long-lived entrypoint drops a small marker under its
 profile's store dir at start and restamps it on the way out (``clean``, ``crash`` + class from the
-excepthook, ``watchdog`` from a hard-exit watchdog). The NEXT Hermes start in that profile reports
+excepthook, ``watchdog`` from a hard-exit watchdog). The NEXT VAEL start in that profile reports
 every marker whose owner is gone; one still ``running`` whose pid fails the canonical start-time
 liveness check was killed. Reporting runs on a daemon thread so startup never waits on the Relay
 runtime; a claimed-but-unreported marker (the reporter died mid-way) is reclaimed later.
@@ -74,7 +74,7 @@ def _excepthook(previous: Any) -> Any:
 def begin_process(kind: str) -> None:
     """Mark this process as a running ``kind`` and report dead predecessors. Once per process."""
     try:
-        from hermes_constants import get_hermes_home
+        from vael_constants import get_hermes_home
 
         from .shared_metrics_desktop import ONBOARDING_LATCH_DIRNAME
         from .shared_metrics_setup import markers_dir as setup_markers_dir
@@ -176,7 +176,7 @@ def settle_claim(claimed: Path, original: Path, saved: bool) -> None:
 
 
 def _report_dead_markers(home: Path, own: Path) -> None:
-    from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+    from vael_constants import reset_hermes_home_override, set_hermes_home_override
 
     from . import shared_metrics_contract as contract
     from .shared_metrics_events import emit_saved
@@ -210,7 +210,7 @@ def arm_turn(agent: Any) -> None:
     """At turn entry (profile scope bound): the owning home for an off-thread watchdog abort, and
     a fresh once-per-turn latch shared by both turn watchdogs."""
     try:
-        from hermes_constants import get_hermes_home
+        from vael_constants import get_hermes_home
 
         agent._metrics_turn_home = str(get_hermes_home())
         agent._metrics_watchdog_abort_counted = False
@@ -226,7 +226,7 @@ def record_watchdog_turn_abort(agent: Any) -> None:
         if not home or getattr(agent, "_metrics_watchdog_abort_counted", True):
             return
         agent._metrics_watchdog_abort_counted = True
-        from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+        from vael_constants import reset_hermes_home_override, set_hermes_home_override
 
         from . import shared_metrics_contract as contract
         from .shared_metrics_events import _emit

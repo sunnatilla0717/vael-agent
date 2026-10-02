@@ -14,7 +14,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 
-from hermes_constants import get_hermes_home, reset_hermes_home_override, set_hermes_home_override
+from vael_constants import get_hermes_home, reset_hermes_home_override, set_hermes_home_override
 from tools.browser_tool_origin import origin as _bt
 from tools import browser_tool_cdp as _cdp
 from tools import browser_tool_cloud as _cloud
@@ -70,14 +70,14 @@ def _stop_all_lightpanda() -> None:
 
 def _emergency_cleanup_all_sessions():
     """atexit: close this process's sessions, then sweep orphans left by crashed
-    hermes processes — every clean exit reaps accumulated orphans, not only
+    vael processes — every clean exit reaps accumulated orphans, not only
     processes that used the browser tool."""
     try:
         if _bt._cleanup_done:
             return
         _bt._cleanup_done = True
     except Exception:
-        # Interpreter shutdown (or a half-updated tree mid-`hermes update` where the
+        # Interpreter shutdown (or a half-updated tree mid-`vael update` where the
         # origin's fresh import fails, e.g. #112437): no resolvable state, nothing to clean.
         return
 
@@ -101,13 +101,13 @@ def _emergency_cleanup_all_sessions():
     # Lightpanda servers we spawned that fell out of ``_active_sessions``.
     _best_effort("Lightpanda cleanup on exit", _stop_all_lightpanda)
     # Safe even if we never used the browser — owner_pid liveness protects daemons
-    # owned by other live hermes processes.
+    # owned by other live vael processes.
     _best_effort("Orphan reap on exit", _reap_orphaned_browser_sessions)
 
 
 @contextlib.contextmanager
 def _session_owner_scope(task_id: str):
-    """Run under the Hermes home + secret scope owning ``task_id``'s session (no-op if unrecorded).
+    """Run under the VAEL home + secret scope owning ``task_id``'s session (no-op if unrecorded).
 
     The janitor thread is process-global, so each teardown must re-enter its OWN
     profile's scope rather than inherit the spawning profile's; never falls
@@ -199,7 +199,7 @@ def _human_holds_shared_browser(task_id: str) -> bool:
 
 
 def _write_owner_pid(socket_dir: str, session_name: str) -> None:
-    """Record this hermes PID in ``<socket_dir>/<session>.owner_pid`` so the orphan
+    """Record this vael PID in ``<socket_dir>/<session>.owner_pid`` so the orphan
     reaper can tell live-owner daemons from crashed-owner ones. Best-effort: an
     OSError falls back to the legacy ``tracked_names`` heuristic."""
     try:
@@ -322,7 +322,7 @@ def _terminate_verified_daemon(daemon_pid: int, session_name: str, log) -> bool:
 def _reap_socket_dir(socket_dir: str, session_name: str, tracked_names: set) -> bool:
     """Reap one ``agent-browser-<session>`` dir if orphaned; True when a daemon was killed.
 
-    A live ``owner_pid`` means another hermes process owns it — leave it UNLESS untracked
+    A live ``owner_pid`` means another vael process owns it — leave it UNLESS untracked
     here and idle past ``BROWSER_ORPHAN_GRACE_SECONDS`` (owner-alive alone made leaked
     daemons immortal); no owner_pid (legacy) falls back to this process's tracking. A
     pidless dir is only stale after the grace period (deleting it immediately races the
@@ -374,7 +374,7 @@ def _reap_socket_dir(socket_dir: str, session_name: str, tracked_names: set) -> 
 
 
 def _reap_orphaned_browser_sessions():
-    """Kill agent-browser daemons whose owning hermes process is gone (an unclean exit loses
+    """Kill agent-browser daemons whose owning vael process is gone (an unclean exit loses
     ``_active_sessions`` but node + Chromium keep running). Scans the tmp dir for
     ``agent-browser-*`` socket dirs; safe from any context."""
     import glob
@@ -467,7 +467,7 @@ def _stop_browser_cleanup_thread():
 
 
 def _update_session_activity(task_id: str):
-    """Touch the activity timestamp and record the owning Hermes home on first sight (the
+    """Touch the activity timestamp and record the owning VAEL home on first sight (the
     janitor tears down under the owner's scope). Does NOT reset ``_cleanup_failures``.
 
     See #86402.

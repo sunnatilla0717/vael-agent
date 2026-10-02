@@ -18,7 +18,7 @@ from pathlib import Path
 import pytest
 
 from hermes_cli import update_cmd
-from hermes_constants import venv_bin_dir, venv_python_path
+from vael_constants import venv_bin_dir, venv_python_path
 
 # ---------------------------------------------------------------------------
 # Two-phase replace

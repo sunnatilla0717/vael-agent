@@ -1,7 +1,7 @@
 ---
 sidebar_position: 2
 title: "添加工具"
-description: "如何向 Hermes Agent 添加新工具——schema、handler、注册与 toolset"
+description: "如何向 VAEL Agent 添加新工具——schema、handler、注册与 toolset"
 ---
 
 # 添加工具
@@ -9,11 +9,11 @@ description: "如何向 Hermes Agent 添加新工具——schema、handler、注
 在编写工具之前，先问自己：**这是否应该是一个 [skill](creating-skills.md)？**
 
 :::warning 仅限内置核心工具
-本页面用于向仓库本身添加 **Hermes 内置工具**。
-如果你想要个人专用、项目本地或其他自定义工具，而不修改 Hermes 核心，请使用插件方式：
+本页面用于向仓库本身添加 **VAEL 内置工具**。
+如果你想要个人专用、项目本地或其他自定义工具，而不修改 VAEL 核心，请使用插件方式：
 
 - [插件](../user-guide/features/plugins.md)
-- [构建 Hermes 插件](./plugins/index.md)
+- [构建 VAEL 插件](./plugins/index.md)
 
 大多数自定义工具创建场景默认使用插件。只有当你明确希望在 `tools/` 和 `toolsets.py` 中发布新的内置工具时，才遵循本页面。
 :::

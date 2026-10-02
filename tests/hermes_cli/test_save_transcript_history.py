@@ -8,7 +8,7 @@ import pytest
 
 
 def _compacted_store(path):
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     db = SessionDB(db_path=path)
     db.create_session("s1", "telegram")
@@ -37,7 +37,7 @@ def _gateway_save(db, fmt, out):
     from gateway.platforms.event import MessageEvent
     from gateway.run import GatewayRunner
     from gateway.session import SessionEntry, SessionSource, build_session_key
-    from hermes_state import AsyncSessionDB
+    from vael_state import AsyncSessionDB
 
     source = SessionSource(platform=Platform.TELEGRAM, user_id="u1", chat_id="c1", user_name="t", chat_type="dm")
     runner = object.__new__(GatewayRunner)

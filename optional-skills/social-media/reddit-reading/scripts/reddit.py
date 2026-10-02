@@ -14,7 +14,7 @@ Two backends, chosen automatically:
   when it hits a 429 and retries once.
 
     python3 reddit.py sub LocalLLaMA [--sort hot|new|top] [--limit N]
-    python3 reddit.py search "hermes agent" [--sub LocalLLaMA] [--sort new] [--limit N]
+    python3 reddit.py search "vael agent" [--sub LocalLLaMA] [--sort new] [--limit N]
     python3 reddit.py thread https://www.reddit.com/r/x/comments/abc123/... [--limit N]
     python3 reddit.py user spez [--limit N]
     python3 reddit.py doctor            # which backend is active, and why
@@ -247,7 +247,7 @@ def cmd_doctor(a, token):
         "anonymous .rss needs no account, login, cookie or key; ~1 request/minute per IP",
         "www.reddit.com .json, api.reddit.com and old.reddit are 403 / an empty shell for server IPs",
         "for more than a few calls per task register a free 'script' app at reddit.com/prefs/apps and set "
-        "REDDIT_CLIENT_ID/REDDIT_CLIENT_SECRET in .env (app-only credentials; Hermes never logs in as the user)",
+        "REDDIT_CLIENT_ID/REDDIT_CLIENT_SECRET in .env (app-only credentials; VAEL never logs in as the user)",
     ]
     return report
 

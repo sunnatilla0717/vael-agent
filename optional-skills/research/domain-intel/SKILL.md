@@ -6,7 +6,7 @@ author: FurkanL0, Hermes Agent
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
-  hermes:
+  vael:
     tags: [Domains, OSINT, DNS, Research]
     related_skills: []
 ---

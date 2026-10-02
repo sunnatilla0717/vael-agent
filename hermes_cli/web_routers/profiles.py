@@ -40,7 +40,7 @@ from hermes_cli.web_server_profiles import (
     _fallback_profile_dicts, _hub_action_name, _write_profile_mcp_servers,
 )
 from hermes_cli.web_server_sessions import _open_session_db_at_path
-from hermes_state_health import STORAGE_CORRUPT, note_storage_error, storage_state
+from vael_state_health import STORAGE_CORRUPT, note_storage_error, storage_state
 from starlette.concurrency import run_in_threadpool
 from hermes_cli.web_models import (
     ProfileCreate, ProfileActiveUpdate, ProfileExport, ProfileImport, ProfileRename,
@@ -102,7 +102,7 @@ def _profile_to_dict(info) -> Dict[str, Any]:
 def _profile_setup_command(name: str) -> str:
     """Return the shell command used to configure a profile in the CLI."""
     _resolve_profile_dir(name)
-    return "hermes setup" if name == "default" else f"{name} setup"
+    return "vael setup" if name == "default" else f"{name} setup"
 
 
 def _scope_profile_name(path: Path) -> Optional[str]:
@@ -111,7 +111,7 @@ def _scope_profile_name(path: Path) -> Optional[str]:
     ``"default"`` for the default root (its basename -- ``.hermes`` or a custom root -- is not a
     profile name; launched from ``profiles/<name>`` the root is a *different* profile), the
     directory name for ``profiles/<name>``."""
-    from hermes_constants import get_default_hermes_root
+    from vael_constants import get_default_hermes_root
     resolved = path.resolve()
     if resolved == get_process_hermes_home().resolve():
         return None
@@ -875,7 +875,7 @@ async def create_profile_endpoint(body: ProfileCreate):
 
 @router.get("/api/profiles/active")
 async def get_active_profile_endpoint():
-    """``active`` is the sticky default written by ``hermes profile use`` (what new CLI
+    """``active`` is the sticky default written by ``vael profile use`` (what new CLI
     invocations pick up); ``current`` is the profile this running dashboard is scoped to."""
     from hermes_cli import profiles as profiles_mod
 
@@ -896,7 +896,7 @@ async def get_active_profile_endpoint():
 
 @router.post("/api/profiles/active")
 async def set_active_profile_endpoint(body: ProfileActiveUpdate):
-    """Set the sticky active profile (mirrors ``hermes profile use``); does not retarget the
+    """Set the sticky active profile (mirrors ``vael profile use``); does not retarget the
     running dashboard, only subsequent CLI commands and gateways."""
     from hermes_cli import profiles as profiles_mod
     with _profile_errors("POST /api/profiles/active failed"):
@@ -1056,7 +1056,7 @@ async def update_profile_model_endpoint(name: str, body: ProfileModelUpdate):
 
 @router.post("/api/profiles/{name}/describe-auto")
 async def describe_profile_auto_endpoint(name: str, body: ProfileDescribeAuto):
-    """Auto-generate a profile's description via the auxiliary LLM (mirrors ``hermes profile
+    """Auto-generate a profile's description via the auxiliary LLM (mirrors ``vael profile
     describe <name> --auto``). A failed generation is ``ok: false`` with a reason rather than
     an HTTP error so the UI can surface it inline and let the operator retry."""
     # Resolution stays on the loop: it owns the 400/404 mapping the 500 fallback would flatten.

@@ -52,7 +52,7 @@ def run_tool_round(
 ) -> ToolRoundVerdict:
     """Execute one tool round in the exact original order. Persist-before-execute is a
     durability invariant: resume must see the executed block if a destructive tool restarts
-    Hermes; a failed canonical append ends the turn rather than running tools from
+    VAEL; a failed canonical append ends the turn rather than running tools from
     process-only state."""
     from agent.conversation_loop import _invalid_tool_name_error_content
 
@@ -122,12 +122,12 @@ def run_tool_round(
         ]
 
     # Persist the tool-call turn before any tool side effects so resume sees the executed
-    # block if a destructive tool restarts Hermes.
+    # block if a destructive tool restarts VAEL.
     try:
         _tool_turn_persisted = agent._flush_messages_to_session_db(messages, conversation_history)
     except Exception as exc:
         _tool_turn_persisted = False
-        from hermes_state import classify_persistence_error
+        from vael_state import classify_persistence_error
         agent._last_persistence_error_cause = classify_persistence_error(exc)
         logger.warning(
             "Incremental tool-call persistence failed before execution "

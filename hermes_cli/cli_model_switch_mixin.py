@@ -40,7 +40,7 @@ def _resolve_cli_reasoning(cli) -> None:
     the launch model's effort and 400s (#112921, #96012). ``agent.switch_model`` re-resolves its own
     copy for the live-agent path."""
     from cli import CLI_CONFIG
-    from hermes_constants import resolve_reasoning_config
+    from vael_constants import resolve_reasoning_config
     # getattr: tests drive /new unbound on a SimpleNamespace without ``model`` (blank -> config default).
     cli.reasoning_config = resolve_reasoning_config(CLI_CONFIG, getattr(cli, "model", None) or "")
 
@@ -54,7 +54,7 @@ def stored_session_route(session_meta, *, current_model, current_provider):
     stored_model = str((session_meta or {}).get("model") or "").strip()
     if not stored_model:
         return None
-    from hermes_state import SessionDB as _SessionDB
+    from vael_state import SessionDB as _SessionDB
     runtime = _SessionDB.session_gateway_runtime(session_meta)
     base_url = runtime.get("base_url") or None
     provider = _heal_bare_custom_provider(runtime.get("provider") or None, base_url=base_url, model=stored_model)
@@ -215,7 +215,7 @@ _MODEL_USAGE_COL = 36
 def _picker_reasoning_rows() -> list[tuple[str, str]]:
     """``(value, label)`` rows for the picker's effort step: the canonical ladder, the off state,
     then a keep-current row (empty value = leave the effort alone)."""
-    from hermes_constants import VALID_REASONING_EFFORTS
+    from vael_constants import VALID_REASONING_EFFORTS
     rows = [(lvl, lvl) for lvl in VALID_REASONING_EFFORTS]
     rows.append(("none", t("cli.model.effort_none")))
     rows.append(("", t("cli.model.effort_keep_current")))
@@ -724,7 +724,7 @@ class CLIModelSwitchMixin:
                 self._close_model_picker()
                 return
             provider_data = providers[selected]
-            # Curated list (same as `hermes model` / gateway pickers); live catalog only when
+            # Curated list (same as `vael model` / gateway pickers); live catalog only when
             # it is empty (user-defined endpoints, per-resource providers such as azure-foundry).
             # Disk-cached like the gateway pickers: the live probe can walk several api-version
             # fallbacks with a 6 s timeout each, which must not block the REPL on every select.
@@ -883,7 +883,7 @@ class CLIModelSwitchMixin:
 
         Usage:
             /codex-runtime                       — show current state
-            /codex-runtime auto                  — Hermes default (chat_completions)
+            /codex-runtime auto                  — VAEL default (chat_completions)
             /codex-runtime codex_app_server      — hand turns to codex subprocess
             /codex-runtime on / off              — synonyms for the above
         """

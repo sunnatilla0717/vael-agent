@@ -12,7 +12,7 @@ from contextlib import redirect_stdout
 
 import pytest
 
-import hermes_constants
+import vael_constants
 
 
 @pytest.fixture

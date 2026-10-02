@@ -753,7 +753,7 @@ class TestFilterDashboardRespawnCandidates:
     def test_own_home_defaults_to_get_hermes_home(self, monkeypatch):
         from pathlib import Path
 
-        import hermes_constants
+        import vael_constants
         from hermes_cli.dashboard_procs import _filter_dashboard_respawn_candidates
 
         monkeypatch.setattr(

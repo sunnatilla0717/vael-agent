@@ -6,7 +6,7 @@ description: "在关键生命周期节点运行自定义代码——记录活动
 
 # Event Hooks
 
-Hermes 有四套 hook 系统，可在关键生命周期节点运行自定义代码：
+VAEL 有四套 hook 系统，可在关键生命周期节点运行自定义代码：
 
 | 系统 | 注册方式 | 运行环境 | 使用场景 |
 |------|---------|---------|---------|
@@ -187,7 +187,7 @@ async def handle(event_type: str, context: dict):
 
 这是社区中流行的一种模式：在 `~/.hermes/BOOT.md` 放置一个 Markdown 检查清单，让 agent 在每次 gateway 启动时执行一次。适用于"每次启动时检查隔夜 cron 失败情况，若有失败则在 Discord 上通知我"，或"汇总过去 24 小时的 deploy.log 并发布到 Slack #ops"等场景。
 
-本教程展示如何以用户自定义 hook 的方式自行构建。Hermes 不内置 BOOT.md hook——你可以精确配置自己想要的行为。
+本教程展示如何以用户自定义 hook 的方式自行构建。VAEL 不内置 BOOT.md hook——你可以精确配置自己想要的行为。
 
 #### 我们要构建什么
 
@@ -336,7 +336,7 @@ hermes logs --follow --level INFO | grep boot-md
 
 #### 为什么这不是内置功能
 
-Hermes 早期版本将此作为内置 hook 发布，每次 gateway 启动时都会静默生成一个使用裸默认值的 agent。这让使用自定义端点的用户感到意外，也让不知道它在运行的用户无从察觉。将其作为文档化模式保留——由你在 hooks 目录中构建——意味着你能清楚地看到它的行为，并通过编写文件来选择启用。
+VAEL 早期版本将此作为内置 hook 发布，每次 gateway 启动时都会静默生成一个使用裸默认值的 agent。这让使用自定义端点的用户感到意外，也让不知道它在运行的用户无从察觉。将其作为文档化模式保留——由你在 hooks 目录中构建——意味着你能清楚地看到它的行为，并通过编写文件来选择启用。
 
 ### 工作原理
 
@@ -552,9 +552,9 @@ return "Recalled memories:\n- User likes Python"
 return None
 ```
 
-**上下文注入位置：** 始终注入到**用户消息**，而非系统 prompt。这保留了 prompt 缓存——系统 prompt 在各轮次间保持不变，已缓存的 token 得以复用。系统 prompt 是 Hermes 的领域（模型指导、工具执行、个性、技能）。插件在用户输入旁边贡献上下文。
+**上下文注入位置：** 始终注入到**用户消息**，而非系统 prompt。这保留了 prompt 缓存——系统 prompt 在各轮次间保持不变，已缓存的 token 得以复用。系统 prompt 是 VAEL 的领域（模型指导、工具执行、个性、技能）。插件在用户输入旁边贡献上下文。
 
-干净的用户消息 `content` 保持不变。为保证 replay 和 prompt cache 稳定，Hermes 可能把实际发送给 API 的消息（包括插件注入上下文）持久化到该行的 `api_content` sidecar。
+干净的用户消息 `content` 保持不变。为保证 replay 和 prompt cache 稳定，VAEL 可能把实际发送给 API 的消息（包括插件注入上下文）持久化到该行的 `api_content` sidecar。
 
 当**多个插件**返回上下文时，其输出按插件发现顺序（按目录名字母顺序）以双换行符连接。
 
@@ -1181,7 +1181,7 @@ Completion 和 cleanup 后触发，通常位于 worker 进程；`summary` 可能
 
 ## Shell Hooks
 
-在 `cli-config.yaml` 中声明 shell 脚本 hook，Hermes 会在对应的插件 hook 事件触发时将其作为子进程运行——在 CLI 和 gateway 会话中均适用。无需编写 Python 插件。
+在 `cli-config.yaml` 中声明 shell 脚本 hook，VAEL 会在对应的插件 hook 事件触发时将其作为子进程运行——在 CLI 和 gateway 会话中均适用。无需编写 Python 插件。
 
 当你希望用一个即插即用的单文件脚本（Bash、Python 或任何带 shebang 的脚本）来实现以下功能时，使用 shell hooks：
 
@@ -1222,7 +1222,7 @@ hooks_auto_accept: false         # See "Consent model" below
 
 ### JSON 通信协议
 
-每次事件触发时，Hermes 为每个匹配的 hook（在 matcher 允许的情况下）生成一个子进程，将 JSON 载荷通过 **stdin** 传入，并从 **stdout** 读取 JSON 响应。
+每次事件触发时，VAEL 为每个匹配的 hook（在 matcher 允许的情况下）生成一个子进程，将 JSON 载荷通过 **stdin** 传入，并从 **stdout** 读取 JSON 响应。
 
 **stdin——脚本接收的载荷：**
 
@@ -1319,7 +1319,7 @@ else
 fi
 ```
 
-Claude Code 的 `UserPromptSubmit` 事件在 Hermes 中没有对应的独立事件——`pre_llm_call` 在相同位置触发，且已支持上下文注入。在此使用即可。
+Claude Code 的 `UserPromptSubmit` 事件在 VAEL 中没有对应的独立事件——`pre_llm_call` 在相同位置触发，且已支持上下文注入。在此使用即可。
 
 #### 4. 记录每次子 agent 完成
 
@@ -1339,7 +1339,7 @@ printf '{}\n'
 
 ### 授权模型
 
-每个唯一的 `(event, command)` 对在 Hermes 首次遇到时会提示用户审批，然后将决定持久化到 `~/.hermes/shell-hooks-allowlist.json`。后续运行（CLI 或 gateway）跳过提示。
+每个唯一的 `(event, command)` 对在 VAEL 首次遇到时会提示用户审批，然后将决定持久化到 `~/.hermes/shell-hooks-allowlist.json`。后续运行（CLI 或 gateway）跳过提示。
 
 三种方式可绕过交互式提示——满足其一即可：
 

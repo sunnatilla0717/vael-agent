@@ -41,7 +41,7 @@ def _print_tui_exit_summary(session_id: Optional[str], active_session_file: Opti
 
     db = None
     try:
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
         db = SessionDB(read_only=True)  # exit epilogue only reads
         session = db.get_session(target)
         if not session:
@@ -64,9 +64,9 @@ def _print_tui_exit_summary(session_id: Optional[str], active_session_file: Opti
     from hermes_cli.profiles import get_active_profile_name
     active_profile = get_active_profile_name()
     profile_flag = "" if active_profile in ("default", "custom") else f" -p {active_profile}"
-    print(f"\n{t('cli.session.exit_resume_hint')}\n  hermes --tui --resume {target}{profile_flag}")
+    print(f"\n{t('cli.session.exit_resume_hint')}\n  vael --tui --resume {target}{profile_flag}")
     if title:
-        print(f'  hermes --tui -c "{title}"{profile_flag}')
+        print(f'  vael --tui -c "{title}"{profile_flag}')
     print(f"\nSession:        {target}")
     if title:
         print(f"Title:          {title}")
@@ -95,10 +95,10 @@ def _find_bundled_tui(hermes_cli_dir: Path | None = None) -> Path | None:
 
 def _restore_tui_workspace(tui_dir: Path) -> bool:
     """Best-effort ``git restore`` of a missing ``ui-tui/`` (Windows AV/NTFS filters can delete
-    tracked files after ``hermes update``); True when the directory exists afterwards.
+    tracked files after ``vael update``); True when the directory exists afterwards.
 
     On Windows an antivirus / NTFS filter driver can leave tracked ``ui-tui/`` files deleted in the working
-    tree after ``hermes update`` (HEAD stays intact; the files just vanish — see issue #49145). Those files
+    tree after ``vael update`` (HEAD stays intact; the files just vanish — see issue #49145). Those files
     are tracked, so ``git restore`` puts them back deterministically. Best-effort: returns False (rather
     than raising) when git is unavailable, this isn't a checkout, or the restore leaves the directory still
     missing — the caller then prints the manual-recovery message.
@@ -133,14 +133,14 @@ def _ensure_tui_workspace(tui_dir: Path) -> None:
         return
 
     print(
-        "Error: the TUI workspace is missing from this Hermes checkout.\n"
+        "Error: the TUI workspace is missing from this VAEL checkout.\n"
         f"Expected directory: {tui_dir}\n"
-        "This usually means `hermes update` left tracked ui-tui files deleted.\n"
+        "This usually means `vael update` left tracked ui-tui files deleted.\n"
         "Recovery:\n"
-        "  1. From the Hermes checkout, run `git restore -- ui-tui`\n"
+        "  1. From the VAEL checkout, run `git restore -- ui-tui`\n"
         "  2. Run `npm install --silent --no-fund --no-audit --progress=false`\n"
-        "  3. Retry `hermes --tui`\n"
-        "If the checkout is still inconsistent, run `hermes update --force`.",
+        "  3. Retry `vael --tui`\n"
+        "If the checkout is still inconsistent, run `vael update --force`.",
         file=sys.stderr)
     sys.exit(1)
 
@@ -156,8 +156,8 @@ def _tui_node_bin(bin: str) -> str:
     if not path:
         print(
             f"Node.js is required for the TUI but `{bin}` was not found. Install it from "
-            "https://nodejs.org (run `hermes doctor` for the install hint for your OS), then "
-            "retry `hermes --tui`. To keep working now, run `hermes --cli`."
+            "https://nodejs.org (run `vael doctor` for the install hint for your OS), then "
+            "retry `vael --tui`. To keep working now, run `vael --cli`."
         )
         sys.exit(1)
     return path
@@ -359,12 +359,12 @@ def _launch_tui(
     tui_dir = PROJECT_ROOT / "ui-tui"
 
     import tempfile
-    # TUI child is a hermes process: propagate the profile-home contract via
+    # TUI child is a vael process: propagate the profile-home contract via
     # the single factory; keep secrets (the TUI/agent needs provider creds).
     from tools.environments.local import build_subprocess_env
     env = build_subprocess_env(scrub_secrets=False, inherit_profile_home=True)
     # The directory this launch was invoked from is the source of truth. An inherited
-    # HERMES_CWD (exported by an outer `hermes --tui`, or by the user's own shell) merely
+    # HERMES_CWD (exported by an outer `vael --tui`, or by the user's own shell) merely
     # names *a* real directory, so the is_dir() repair in _apply_tui_python_env keeps it
     # and the gateway starts in last session's project. `--worktree` still wins below.
     env["HERMES_CWD"] = _safe_tui_cwd(env)
@@ -438,7 +438,7 @@ def _launch_tui(
     env["NODE_OPTIONS"] = " ".join(_tokens)
     # HERMES_TUI_RESUME is an internal hand-off to the Ink app. We start from a
     # full os.environ snapshot, so a stale exported value would make a plain
-    # `hermes --tui` try to resume a non-existent session; only forward the id
+    # `vael --tui` try to resume a non-existent session; only forward the id
     # argparse resolved for this invocation.
     env.pop("HERMES_TUI_RESUME", None)
     if resume_session_id:
@@ -462,7 +462,7 @@ def _launch_tui(
                 from cli import _cleanup_worktree
                 _cleanup_worktree(wt_info)
 
-    # Exit code 42 = TUI requested an update. Relaunch as `hermes update`;
+    # Exit code 42 = TUI requested an update. Relaunch as `vael update`;
     # preserve_inherited=False keeps --tui and other flags out of the subcommand.
     if code == 42:
         from hermes_cli.relaunch import relaunch
@@ -474,11 +474,11 @@ def _launch_tui(
 
 def _pin_kanban_board_env() -> None:
     """Pin the active kanban board into ``HERMES_KANBAN_BOARD`` so in-process tools and shelled-out
-    ``hermes kanban`` calls agree even if a concurrent ``boards switch`` flips the file mid-turn.
+    ``vael kanban`` calls agree even if a concurrent ``boards switch`` flips the file mid-turn.
 
-    Without this, in-process tools (``kanban_*``) and shelled-out CLI calls (``hermes kanban …``) resolve
+    Without this, in-process tools (``kanban_*``) and shelled-out CLI calls (``vael kanban …``) resolve
     the board on different paths: the env-pin if set, otherwise the global ``<root>/kanban/current`` file. A
-    concurrent ``hermes kanban boards switch`` from another session can flip the file mid-turn, so the same
+    concurrent ``vael kanban boards switch`` from another session can flip the file mid-turn, so the same
     chat sees its tool calls hit board A while its shell calls hit board B (#20074). Pinning at chat boot
     mirrors what the dispatcher already does for spawned workers.
     """
@@ -502,7 +502,7 @@ def _resolve_use_tui(args) -> bool:
     ``HERMES_TUI=1`` → TUI; ``display.interface`` config; default classic.
 
     The TTY gate is load-bearing: ambient preferences must never hijack a piped
-    ``hermes chat -q`` (kanban workers, cron) — the Ink no-TTY bail-out exits 0 and
+    ``vael chat -q`` (kanban workers, cron) — the Ink no-TTY bail-out exits 0 and
     the worker dies with a protocol violation. Explicit ``--tui`` still bails out.
     """
     if getattr(args, "cli", False):

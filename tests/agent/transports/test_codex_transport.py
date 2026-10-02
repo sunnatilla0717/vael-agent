@@ -43,7 +43,7 @@ class TestCodexBuildKwargs:
     ])
     def test_astra_copilot_forwards_configured_reasoning(self, transport, model, effort, expected):
         from agent.reasoning_params import ReasoningParamsMixin
-        from hermes_constants import resolve_reasoning_config
+        from vael_constants import resolve_reasoning_config
 
         reasoning = resolve_reasoning_config({"agent": {"reasoning_effort": effort}}, model)
         agent = SimpleNamespace(model=model, reasoning_config=reasoning)

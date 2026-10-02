@@ -19,7 +19,7 @@ from pathlib import Path
 
 import pytest
 
-import hermes_constants
+import vael_constants
 from hermes_cli import gateway_migrate as gm
 
 

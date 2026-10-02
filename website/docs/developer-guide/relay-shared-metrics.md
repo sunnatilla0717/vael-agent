@@ -5,17 +5,17 @@ description: "NeMo Relay shared metrics: what is exported, consent and retention
 
 # NeMo Relay Shared Metrics
 
-Hermes includes NeMo Relay as a normal runtime dependency on platforms for
+VAEL includes NeMo Relay as a normal runtime dependency on platforms for
 which Relay publishes a native wheel. The shared-metrics integration is built
-into Hermes and does not require a Hermes observability plugin. Hermes remains
+into VAEL and does not require a VAEL observability plugin. VAEL remains
 importable without Relay on other native targets. Those targets use an
 explicit reduced-capability no-op host:
-Hermes execution remains available, while Relay scopes, middleware, plugins,
+VAEL execution remains available, while Relay scopes, middleware, plugins,
 and subscribers are unavailable. The `hermes-agent[nemo-relay]` extra remains
 as a no-op compatibility alias for existing installation commands.
 
 > [!WARNING]
-> This removes the Hermes `observability/nemo_relay` plugin. Existing users
+> This removes the VAEL `observability/nemo_relay` plugin. Existing users
 > must remove `observability/nemo_relay` (or its legacy `nemo_relay` alias)
 > from `plugins.enabled` and move exporter configuration into a Relay
 > `plugins.toml`. `HERMES_NEMO_RELAY_PLUGINS_TOML` can select an explicit
@@ -24,19 +24,19 @@ as a no-op compatibility alias for existing installation commands.
 > `HERMES_NEMO_RELAY_ATIF_*` settings. Those legacy variables no longer
 > configure Relay exporters themselves.
 
-On supported platforms, Hermes requires NeMo Relay 0.9 for managed provider
+On supported platforms, VAEL requires NeMo Relay 0.9 for managed provider
 and tool calls.
 
 ## Runtime Dependency and Data Boundary
 
-Hermes installs the platform-specific `nemo-relay` native wheel from the
+VAEL installs the platform-specific `nemo-relay` native wheel from the
 bounded `>=0.9,<0.10` dependency range. The published package is built from
 the [NVIDIA NeMo Relay repository](https://github.com/NVIDIA/NeMo-Relay).
 Unsupported platforms use the explicit no-op runtime described above rather
 than downloading a different implementation.
 
 When Relay managed execution is active, the provider request and response pass
-through that native module in the Hermes process so configured interceptors can
+through that native module in the VAEL process so configured interceptors can
 operate on the real call. This is separate from the shared-metrics data
 contract. Shared-metrics mode installs no rich-observability network exporter,
 and its subscriber
@@ -47,7 +47,7 @@ sends whole packages rather than live spans. Enabling a
 separately configured rich-observability or dynamic plugin can create a
 different data path and requires its own policy review.
 
-Collection remains off unless Hermes policy enables it:
+Collection remains off unless VAEL policy enables it:
 
 ```yaml
 telemetry:
@@ -59,7 +59,7 @@ This choice is read from the profile's own `config.yaml`. A machine-managed
 configuration overlay cannot enable or disable shared metrics on the profile's
 behalf.
 
-Hermes uses Relay's normal process-wide plugin discovery. Relay reads these
+VAEL uses Relay's normal process-wide plugin discovery. Relay reads these
 files, lowest precedence first:
 
 | Layer | Linux and macOS | Windows |
@@ -69,7 +69,7 @@ files, lowest precedence first:
 
 `HERMES_NEMO_RELAY_PLUGINS_TOML` replaces the user file with an explicit file;
 the system file still applies above it. Repository-local configuration is
-ignored. If an explicitly selected file cannot be loaded, Hermes reports the
+ignored. If an explicitly selected file cannot be loaded, VAEL reports the
 error and continues without Relay plugins rather than falling back to another
 configuration.
 
@@ -103,7 +103,7 @@ retain the same `session_id` and add `hermes.session.segment` plus
 
 ## Working-Directory Scope Data
 
-When Hermes knows a session or task's logical working directory, its
+When VAEL knows a session or task's logical working directory, its
 `hermes.session` and `hermes.turn` start scopes include it as `data.cwd` in
 ATOF. A turn running in a task worktree can therefore differ from its owning
 session. Unknown directories are omitted, and scope-end data remains reserved
@@ -117,11 +117,11 @@ exporter for that process.
 
 ## Process-Wide Plugin Policy and Profile Isolation
 
-Relay plugin configuration is a process-level deployment choice, not a Hermes
+Relay plugin configuration is a process-level deployment choice, not a VAEL
 profile setting. The first hosted profile triggers lazy initialization, and
-every additional profile hosted by that Hermes process shares the resulting
+every additional profile hosted by that VAEL process shares the resulting
 static middleware, dynamic plugins, subscribers, exporters, and guardrail
-policy. After initialization succeeds, Hermes logs the files it loaded:
+policy. After initialization succeeds, VAEL logs the files it loaded:
 
 ```text
 The Relay plugin host is active process-wide and applies to all profiles hosted by this Hermes process. Configuration files: /home/user/.config/nemo-relay/plugins.toml; /etc/nemo-relay/plugins.toml
@@ -137,19 +137,19 @@ profile.
 A worker plugin running in a separate worker process does not create a
 per-profile security boundary. One process-wide activation dispatches calls
 from all hosted profiles to that worker while preserving the invoking
-profile's Relay scope stack. Native dynamic plugins are loaded into the Hermes
+profile's Relay scope stack. Native dynamic plugins are loaded into the VAEL
 process and share the same policy boundary.
 
-Run profiles in separate Hermes processes when they require different trust
+Run profiles in separate VAEL processes when they require different trust
 levels, plugin credentials, exporter destinations, or guardrail policies.
 This process-wide plugin contract does not change each profile's independent
 shared-metrics consent, local SQLite state, or ATIF trajectory grouping.
 
-Hermes core owns one Relay host and one isolated Relay session scope per Hermes
+VAEL core owns one Relay host and one isolated Relay session scope per VAEL
 session. Core lifecycle producers use
 `agent.relay_runtime` to obtain the shared session handle or
 run Relay scope, LLM, tool, and mark APIs in that session context. New product
-marks do not require Hermes plugin registration. Shared-metrics marks must
+marks do not require VAEL plugin registration. Shared-metrics marks must
 still contain only fields approved by the versioned allowlist; the hard
 dependency does not change the collection or privacy policy.
 
@@ -167,10 +167,10 @@ Hermes turn, API, tool, and approval hooks
   -> immutable JSON delta package
 ```
 
-Hermes sends an empty `LLMRequest` into the metrics-owned lifecycle. This does
+VAEL sends an empty `LLMRequest` into the metrics-owned lifecycle. This does
 not describe the separate managed-execution call through the native runtime
 documented above. The terminal metrics event contains the model identifier and
-provider route that Hermes used for the logical call, such as
+provider route that VAEL used for the logical call, such as
 `nvidia/nemotron-3-ultra` through `openrouter`. These identifiers are
 lowercased and structurally bounded, but they are not normalized through a
 checked-in model catalog. Pricing and model-family classification belong to
@@ -188,16 +188,16 @@ counters created by older builds can be exported without losing data.
 The first consented session start emits an empty `hermes.client.active` Relay
 mark. The profile-scoped subscriber creates a random UUID install identity and
 uses a transactional compare-and-set to record at most one client-active
-counter in any rolling 24-hour window. The metric has no dimensions; Hermes
+counter in any rolling 24-hour window. The metric has no dimensions; VAEL
 version, OS family, architecture, and install method remain bounded package
-resources. Concurrent Hermes processes share the SQLite latch, so simultaneous
+resources. Concurrent VAEL processes share the SQLite latch, so simultaneous
 starts cannot double-count one install. A later session or task can attempt the
 mark again, but the subscriber suppresses it until the rolling window expires.
 
 Each task run is a Relay `Function` scope named `hermes.task_run`, parented to
-the owning Hermes session. The start counter contains only bounded execution
+the owning VAEL session. The start counter contains only bounded execution
 surface and entrypoint values plus, for gateway tasks, the built-in messaging
-`platform` (`telegram`, `discord`, `slack`, ...; platforms Hermes ships under
+`platform` (`telegram`, `discord`, `slack`, ...; platforms VAEL ships under
 `plugins/platforms/` by name, a `plugin-catalog/` platform by its catalog entry
 name only when the installer's own record proves a catalog install, every other
 plugin platform `plugin`, every other surface `none`). The terminal counter
@@ -211,18 +211,18 @@ carried duration, retries and per-task model/tool call counts on the terminal ro
 itself, which made almost every task its own row; call counts per turn live on
 `hermes.task_cost.count`. Raw exit
 reasons never leave the machine. Retries are additional
-provider attempts for the same Hermes API request ID; they do not inflate the
-logical model-call count. Tool calls are deduplicated by their Hermes tool-call
+provider attempts for the same VAEL API request ID; they do not inflate the
+logical model-call count. Tool calls are deduplicated by their VAEL tool-call
 ID after a terminal tool result is observed. The outer `AIAgent` execution
 boundary closes the task for normal returns, early returns, exceptions, and
-cancellations. Active task ownership follows the task ID if Hermes rotates its
+cancellations. Active task ownership follows the task ID if VAEL rotates its
 conversation session during context compression.
 
 Each tool invocation is represented by a Relay tool lifecycle named
 `hermes.tool_call`. The terminal counter contains only bounded tool category,
 outcome and approval outcome; the same event feeds `hermes.tool_call.latency`
 with tool category, latency bucket and explicit retry-count bucket (package v2
-carried latency and retries on the terminal row, one row per few calls). Hermes
+carried latency and retries on the terminal row, one row per few calls). VAEL
 derives the category from the toolset already declared in its runtime registry;
 custom and unrecognized toolsets collapse to `other` rather than exporting
 tool or plugin names. The same terminal event also feeds
@@ -230,10 +230,10 @@ tool or plugin names. The same terminal event also feeds
 `tool_name` is exported only for tools declared in the repository's static
 `toolsets.TOOLSETS` (`toolsets.BUILTIN_TOOL_NAMES`, captured before any runtime
 custom toolset is created); MCP tools report `mcp` and every plugin or custom
-tool reports `plugin`. `error_class` maps Hermes's own `error_type` values
+tool reports `plugin`. `error_class` maps VAEL's own `error_type` values
 (`tool_error`, `timeout`, `interrupted`, `invalid_arguments`, `blocked`,
 `contract_violation`); any other value, such as an exception class name,
-collapses to `exception`. Hermes does not infer retries from repeated tool names or
+collapses to `exception`. VAEL does not infer retries from repeated tool names or
 adjacent calls; when the
 hook does not provide an explicit retry relationship, the retry bucket is
 `unknown`. Approval decisions are emitted as `hermes.tool_approval` marks and
@@ -247,7 +247,7 @@ Successful skill mutations emit `hermes.skill.lifecycle` marks with only a
 bounded action and provenance. Successful loads emit `hermes.skill.load`
 marks with bounded provenance, first-use or reuse state, reuse-after-patch
 state, a use-count bucket and `skill_name`: the skill's name only when it is a
-skill Hermes ships (`skills/` or `optional-skills/`), otherwise `custom`. Hermes
+skill VAEL ships (`skills/` or `optional-skills/`), otherwise `custom`. VAEL
 derives reuse and patch-generation continuity transactionally in its existing
 `skills/.usage.json` state; local or agent-created skill names and exact counts
 or generations never enter Relay metrics events, SQLite dimensions, or packages. A use after a new patch is counted once as
@@ -303,7 +303,7 @@ itself ships.
 | Metric | Dimensions | Question it answers |
 |---|---|---|
 | `hermes.session.count` | entrypoint, surface, platform, turn/failed-turn buckets, active-duration bucket, last outcome, message / model-call / tool-call count buckets (`0` … `101_to_250`, `251_to_1000`, `gte_1001`) | How deep is real usage per surface; do sessions end right after a failure? One row per conversation, written when the surface closes it: the session ids a compression rotation hands it to merge into one row (the retired id closes as soon as its in-flight turn ends); a gateway reset, idle expiry, `/new` or `/branch` starts a new conversation even though it records the old session as its parent. Background review forks that reuse the session id add no turns, calls or messages. Messages are user turns + primary-model replies + tool results; model calls are logical primary API requests (retries excluded). |
-| `hermes.install.milestone` | milestone, install age bucket | How long from install to first success, first gateway message, first cron run, first delegation, first created skill (one Hermes' background review created does not count), first long session? Recorded once per install. |
+| `hermes.install.milestone` | milestone, install age bucket | How long from install to first success, first gateway message, first cron run, first delegation, first created skill (one VAEL's background review created does not count), first long session? Recorded once per install. |
 | `hermes.setup.completed` | surface (`cli`/`desktop`), provider | Which providers people choose at setup, and on which surface. |
 | `hermes.model_tokens.sum` | call role, model, provider, auxiliary task, token type | Token volume per model/provider, prompt-cache share, and what auxiliary work (compression, titles, vision, ...) costs. The value is a token sum, not an event count. |
 | `hermes.model_route.count` `ttft_bucket` | time to first token | Perceived latency per provider/model. |
@@ -315,11 +315,11 @@ itself ships.
 | `hermes.memory.op.count` | op (`add`/`replace`/`remove`/`read`/`search`/`other`), provider (`builtin`, a bundled memory plugin, else `plugin`), origin (`foreground`/`background_review`), outcome (`success`/`failed`/`rejected`) | Is the learning loop writing memory, who asks for it (the user's turn or the background review), and how often writes are refused or fail. Never the memory text. |
 | `hermes.curator.run.count` | trigger (`scheduled`/`manual`), outcome (`success`/`failed`/`skipped`), archived/merged/patched/created buckets | Does the skill curator run, and does it actually consolidate anything. Dry runs report `skipped`; a scheduled check that finds another process already running the pass records nothing. Never skill names. |
 | `hermes.delegation.run.count` | subagent-count bucket, depth (`1`–`3`, `gte_4`), mode (`foreground`/`background`), outcome (`success`/`partial`/`failed`/`cancelled`) | How wide and deep delegate_task fan-outs go and how often every child finishes. One row per call, however many completion units it splits into. |
-| `hermes.execution_backend.count` | kind (`terminal`/`browser`/`code`), backend, outcome, error class | Which sandboxes carry real work and how reliable each is. Terminal backends are the `terminal.backend` values (else `other`); browser backends are `local`, `lightpanda`, `cdp`, `camofox`, `extension` or a bundled cloud provider (else `other`); execute_code is `local` or `remote`. A command's own nonzero exit is still a backend success, but a foreground command that hits its timeout is `failed`/`timeout`; terminal and execute_code calls a guard refuses before they reach the backend, Hermes' own listings for TUI/Desktop path completion, and calls made by the background review and curator forks are not counted. |
-| `hermes.platform.health` | platform, event (`connect_ok`/`connect_failed`/`reconnect`/`disconnect`), error class (`auth`/`network`/`rate_limited`/`config`/`other`) | Which messaging platforms fail to connect or drop, and why. Classified from exception types, HTTP statuses and Hermes's own fatal codes, never error text. |
+| `hermes.execution_backend.count` | kind (`terminal`/`browser`/`code`), backend, outcome, error class | Which sandboxes carry real work and how reliable each is. Terminal backends are the `terminal.backend` values (else `other`); browser backends are `local`, `lightpanda`, `cdp`, `camofox`, `extension` or a bundled cloud provider (else `other`); execute_code is `local` or `remote`. A command's own nonzero exit is still a backend success, but a foreground command that hits its timeout is `failed`/`timeout`; terminal and execute_code calls a guard refuses before they reach the backend, VAEL's own listings for TUI/Desktop path completion, and calls made by the background review and curator forks are not counted. |
+| `hermes.platform.health` | platform, event (`connect_ok`/`connect_failed`/`reconnect`/`disconnect`), error class (`auth`/`network`/`rate_limited`/`config`/`other`) | Which messaging platforms fail to connect or drop, and why. Classified from exception types, HTTP statuses and VAEL's own fatal codes, never error text. |
 | `hermes.platform.delivery` | platform, outcome (`sent`/`failed`), failure class (`rate_limited`/`too_long`/`auth`/`network`/`forbidden`/`other`) | How often replies fail to reach the user per platform (one count per logical reply, retries included). |
 | `hermes.gateway.reply_latency` | platform, first-response bucket (`lt_2s` … `gte_60s`) | Time from an accepted inbound message to the first visible reply text (stream first chunk or final message). |
-| `hermes.cron.run` | outcome (`success`/`failed`/`missed`/`skipped`), delivery kind (`local`/`platform`/`webhook`/`none`/`other`), duration bucket | Do scheduled jobs run, fail, get skipped by a gate or overlap, or get missed while Hermes was down. Job names, prompts, schedules and targets are never included. |
+| `hermes.cron.run` | outcome (`success`/`failed`/`missed`/`skipped`), delivery kind (`local`/`platform`/`webhook`/`none`/`other`), duration bucket | Do scheduled jobs run, fail, get skipped by a gate or overlap, or get missed while VAEL was down. Job names, prompts, schedules and targets are never included. |
 | `hermes.startup.latency` | surface (`cli`, `tui`, `desktop_attach`, `gateway_boot`, `serve_boot`), latency bucket (`lt_500ms` … `gte_10s`) | How long each surface takes from launch to usable, so startup regressions show per surface and release. One row per process start: CLI = process start to first rendered prompt (or a `-q` query dispatched; Kanban workers excluded), TUI = Ink process start to gateway ready, Desktop = app start to backend attached, gateway = process start to adapters connected, `hermes serve` = process start to listening. Not counted: a process re-exec'd in place (e.g. `hermes sessions browse` resuming a session) and each dashboard Chat-tab terminal; a TUI/Desktop reconnect to the same backend never re-counts. |
 | `hermes.update.run` | kind, outcome, failed_stage, duration_bucket, from_version_age_bucket, apply_mode | Whether updates succeed, how long they take, where they fail, and how stale the version being updated from was. `hermes update` rows are derived from the final update receipt, once per run (`kind` is `desktop` when Desktop's source-checkout hand-off ran it); a run the pre-update interpreter finishes is parked locally with only these fields, only while collection is on, and counted by the next start; Desktop packaged self-updates (`apply_mode=package`) are reported once by the app, after the restart that applies them. |
 | `hermes.update.stage` | stage, outcome, duration_bucket | Per-stage result and wall time of `hermes update` (plan, snapshot, apply, deps, build, restart, verify), from the receipt's stage timestamps. |
@@ -363,7 +363,7 @@ local database, so each fires once per install however many processes reach it.
 
 #### Per-model quality, friction and context pressure
 
-Provider and model follow the model-route rules: a provider Hermes ships (built in,
+Provider and model follow the model-route rules: a provider VAEL ships (built in,
 an in-tree `plugins/model-providers/` profile or a public models.dev id) and its
 model id; custom endpoints, provider plugins installed under
 `$HERMES_HOME/plugins/model-providers/` or from pip (names and aliases included),
@@ -373,21 +373,21 @@ whose endpoint is a loopback server (`lmstudio`, under any of its aliases) keeps
 name, but its model reads `custom`. A model whose provider is unknown, or whose id is a URL, a file path or a
 network address (`host:port`, an IP address, `localhost`) or an AWS ARN (it carries the account
 id), reads `custom`. On Azure providers the model id is a deployment name its owner
-chose, so it passes only when it is a public model id (Hermes' model catalogs or
+chose, so it passes only when it is a public model id (VAEL's model catalogs or
 the local models.dev cache, e.g. `gpt-4o`); `acme-legal-prod` reads `custom`. The local
 subscriber re-runs these rules on the provider/model fields of every mark and drops a
 row they would rewrite.
 
 | Metric | Dimensions | Question it answers |
 |---|---|---|
-| `hermes.model_tool_quality.count` | provider, model, call role, issue (`none`, `invalid_json`, `unknown_tool`, `schema_mismatch`, `empty_arguments`, `repaired`) | Which models emit broken tool calls, and how often Hermes had to repair them. Every emitted call counts once (clean ones as `none`), so the value is a rate denominator. `empty_arguments` only counts for tools with required parameters; `repaired` means Hermes fixed the tool name or the argument JSON and ran the call. |
+| `hermes.model_tool_quality.count` | provider, model, call role, issue (`none`, `invalid_json`, `unknown_tool`, `schema_mismatch`, `empty_arguments`, `repaired`) | Which models emit broken tool calls, and how often VAEL had to repair them. Every emitted call counts once (clean ones as `none`), so the value is a rate denominator. `empty_arguments` only counts for tools with required parameters; `repaired` means VAEL fixed the tool name or the argument JSON and ran the call. |
 | `hermes.model_friction.count` | provider, model, signal (`retry`, `undo`, `interrupt`, `quick_abandon`, `switch_away`) | Which models users fight with. Attributed to the model that produced the turn: `/retry` and `/undo` where they execute, a user interrupt of an interactive turn, a session that ends within 60 seconds of a failed turn, and `/model` switching away from the model. |
-| `hermes.context_peak.count` | provider, model, peak fill bucket, window bucket (`lt_32k` … `gte_1m`), limit hit (`yes`/`no`) | How close sessions get to each model's context window, and how often they overflow it. One row per closed conversation: the session ids a compression rotation hands it to report once, with the fullest segment; `limit_hit` means a primary call was rejected as too large (context overflow or HTTP 413), the rejections Hermes answers with a forced compression. |
+| `hermes.context_peak.count` | provider, model, peak fill bucket, window bucket (`lt_32k` … `gte_1m`), limit hit (`yes`/`no`) | How close sessions get to each model's context window, and how often they overflow it. One row per closed conversation: the session ids a compression rotation hands it to report once, with the fullest segment; `limit_hit` means a primary call was rejected as too large (context overflow or HTTP 413), the rejections VAEL answers with a forced compression. |
 
 <!-- ---- v5 harness ---- -->
 #### Agent-harness accuracy
 
-These tune the agent loop itself. Hermes' own background review and curator
+These tune the agent loop itself. VAEL's own background review and curator
 loops never count; delegated subagents do (their tool calls, loops and replies
 are model behaviour too). Command text, file paths, tool arguments and reply text never
 leave — only the closed values below.
@@ -397,7 +397,7 @@ leave — only the closed values below.
 | `hermes.file_edit.count` | tool (`patch`, `write_file`), mode (`replace`, `v4a`, `whole_file`), outcome (`applied`, `already_applied`, `no_match`, `ambiguous`, `failed`), match strategy (the patch tool's fuzzy-match chain: `exact`, `line_trimmed`, `whitespace_normalized`, `indentation_flexible`, `escape_normalized`, `trimmed_boundary`, `unicode_normalized`, `block_anchor`, `context_aware`; `none` when nothing was matched) | Which fuzzy-match strategies earn their keep, and how often edits miss or are ambiguous. One row per edit tool call; a multi-hunk V4A patch reports the loosest strategy any hunk needed. |
 | `hermes.loop_guard.count` | provider, model, signal (`repeated_tool_call`, `loop_detected`, `iteration_cap`), detector (`exact_failure`, `idempotent_no_progress`, `same_tool_failure`, `identical_call_streak`, `identical_cycle`, `web_search_cap`, `subagent_cap`, `iteration_budget`) | How often each stuck-loop guard fires, per model. `repeated_tool_call` is a warning the call still ran with, `loop_detected` a block or halt, `iteration_cap` a turn that spent its iteration budget. At most once per turn per signal and detector. |
 | `hermes.tool_recovery.count` | provider, model, tool (built-in name, else `mcp` / `plugin`), next tool (`same`, `different`, `none`), next outcome (`success`, `error`, `no_tool_call`, `gave_up`) | Whether models recover after a failed tool call. One row per failed call, resolved against the model's next round: its next call to the same tool, else its first call; `no_tool_call` when it answered in text instead, `gave_up` when the turn ended without its reply (halted, budget spent, interrupted, errored). |
-| `hermes.terminal.outcome.count` | backend (the terminal backends), command kind (`git`, `package_manager`, `build`, `test_runner`, `python`, `node`, `shell_builtin`, `shell`, `file_ops`, `network`, `container`, `other`), outcome (`ok`, `nonzero`, `timeout`, `killed`) | Which kinds of commands fail or time out, per backend. The kind comes from a fixed table of the first program word (after env assignments and `sudo`-style wrappers). One row per foreground command that reached an exit status; `timeout` / `killed` come from Hermes' own deadline and interrupt flags, so a command's own `exit 124` is `nonzero`. `hermes.execution_backend.count` counts the same calls by whether the backend served them — disjoint dimensions, not a second count of outcomes. |
+| `hermes.terminal.outcome.count` | backend (the terminal backends), command kind (`git`, `package_manager`, `build`, `test_runner`, `python`, `node`, `shell_builtin`, `shell`, `file_ops`, `network`, `container`, `other`), outcome (`ok`, `nonzero`, `timeout`, `killed`) | Which kinds of commands fail or time out, per backend. The kind comes from a fixed table of the first program word (after env assignments and `sudo`-style wrappers). One row per foreground command that reached an exit status; `timeout` / `killed` come from VAEL's own deadline and interrupt flags, so a command's own `exit 124` is `nonzero`. `hermes.execution_backend.count` counts the same calls by whether the backend served them — disjoint dimensions, not a second count of outcomes. |
 | `hermes.model_reply_issue.count` | provider, model, issue (`none`, `empty`, `reasoning_only`, `refusal`, `truncated_length`) | Which models return unusable replies. One row per primary model response (usable ones as `none`, the rate denominator). `refusal` and `truncated_length` come only from the structured finish reason (`content_filter`, `length`); `empty` is a valid response with no visible text, tool call or reasoning. |
 <!-- ---- end v5 harness ---- -->
 
@@ -405,7 +405,7 @@ leave — only the closed values below.
 #### Efficiency: turn cost, waste, tool overhead and prompt-cache breaks
 
 Provider and model follow the model-route rules above. A "user turn" is one user
-message through its final reply; Hermes-owned work (background memory/skill review,
+message through its final reply; VAEL-owned work (background memory/skill review,
 the curator, delegated subagents' own turns) is not a user turn. `cache_break` and
 `tool_output_truncation` describe model and tool behaviour, so delegated
 subagents count there; background review and the curator never do.
@@ -415,9 +415,9 @@ subagents count there; background review and the curator never do.
 | `hermes.task_cost.count` | provider, model, tokens bucket (`lt_2k` … `gte_1m`, `unknown`), tool calls bucket, API calls bucket (`0` … `51_to_100`, `gte_101`), outcome (`completed`, `interrupted`, `failed`) | What a user turn costs per model. Tokens are prompt (cache reads/writes included) plus completion over the turn's primary calls; `unknown` when the provider reported no usage. One row per interactive turn the user saw end (a session-close abort is not a turn). |
 | `hermes.wasted_tokens.count` | provider, model, reason (`interrupt`, `retry`, `undo`), tokens bucket | How many tokens users throw away. One row per turn an interrupt, `/retry` or `/undo` discarded (`/undo N` counts N turns), attributed to the model that produced that turn; a turn interrupted and then undone counts once. `unknown` when this process never saw the turn (restart, remote host). |
 | `hermes.tool_output_truncation.count` | tool (shipped tool name, else `mcp` / `plugin`), truncated (`yes`/`no`), original size bucket (characters: `lt_1k` … `gte_500k`) | Which tools produce output too large to keep inline. One row per tool result; `yes` when the tool cut its own output (terminal, `execute_code` and MCP head/tail truncation; the size is then the original) or the per-result cap or per-turn budget spilled it to disk. |
-| `hermes.tool_overhead.count` | enabled tool count bucket, tool schema tokens bucket (`0`, `lt_2k` … `gte_40k`), execution surface | What carrying tool definitions costs. One row per closed interactive conversation: the tools it had enabled and Hermes's own estimate of the tokens their definitions add to each request. |
-| `hermes.tool_enabled_unused.count` | toolset (a toolset Hermes ships; MCP servers, plugins and user toolsets read `custom`), used (`yes`/`no`) | Which default toolsets are paid for but never used. One row per enabled toolset per closed interactive conversation (bounded by the shipped toolsets). |
-| `hermes.cache_break.count` | provider, model, cause (`compression`, `model_switch`, `toolset_change`, `system_prompt_rebuild`, `provider_reported_miss`, `cache_expired`) | How often Hermes throws away a warm prompt cache, and why. `compression` is expected; `model_switch`, `toolset_change` (the tool array changed mid-conversation) and `system_prompt_rebuild` (a continuing conversation rebuilt its system prompt instead of replaying the stored bytes) are Hermes-known causes; `provider_reported_miss` is a primary call reading zero cached tokens right after a warm read on the same model with no Hermes-known cause, `cache_expired` the same after at least five idle minutes. A known cause is not counted again as a miss. |
+| `hermes.tool_overhead.count` | enabled tool count bucket, tool schema tokens bucket (`0`, `lt_2k` … `gte_40k`), execution surface | What carrying tool definitions costs. One row per closed interactive conversation: the tools it had enabled and VAEL's own estimate of the tokens their definitions add to each request. |
+| `hermes.tool_enabled_unused.count` | toolset (a toolset VAEL ships; MCP servers, plugins and user toolsets read `custom`), used (`yes`/`no`) | Which default toolsets are paid for but never used. One row per enabled toolset per closed interactive conversation (bounded by the shipped toolsets). |
+| `hermes.cache_break.count` | provider, model, cause (`compression`, `model_switch`, `toolset_change`, `system_prompt_rebuild`, `provider_reported_miss`, `cache_expired`) | How often VAEL throws away a warm prompt cache, and why. `compression` is expected; `model_switch`, `toolset_change` (the tool array changed mid-conversation) and `system_prompt_rebuild` (a continuing conversation rebuilt its system prompt instead of replaying the stored bytes) are VAEL-known causes; `provider_reported_miss` is a primary call reading zero cached tokens right after a warm read on the same model with no VAEL-known cause, `cache_expired` the same after at least five idle minutes. A known cause is not counted again as a miss. |
 <!-- ---- end v5 efficiency ---- -->
 
 <!-- ---- v5 engagement ---- -->
@@ -426,7 +426,7 @@ subagents count there; background review and the curator never do.
 | Metric | Dimensions | Question it answers |
 |---|---|---|
 | `hermes.engagement.surface_day.count` | surface (`cli`, `tui`, `desktop`, `gateway`, `acp`), active-minutes bucket (`0`, `lt_5m`, `5m_to_30m`, `30m_to_2h`, `2h_to_6h`, `gte_6h`) | How long each surface is actually used per day. One row per surface used on a closed UTC day. |
-| `hermes.engagement.day.count` | active-minutes bucket, surfaces-used count (`0`–`3`, `gte_4`), primary provider, primary model, active-profile count bucket | Days active per week, multi-surface use, and next-day / next-week return by model. One row per closed UTC day a person used Hermes on. The root (default) profile also writes a host row on days only other profiles were active: `surfaces_used_count` `0`, active minutes `0`, carrying the active-profile count; exclude `surfaces_used_count=0` rows when counting days active. |
+| `hermes.engagement.day.count` | active-minutes bucket, surfaces-used count (`0`–`3`, `gte_4`), primary provider, primary model, active-profile count bucket | Days active per week, multi-surface use, and next-day / next-week return by model. One row per closed UTC day a person used VAEL on. The root (default) profile also writes a host row on days only other profiles were active: `surfaces_used_count` `0`, active minutes `0`, carrying the active-profile count; exclude `surfaces_used_count=0` rows when counting days active. |
 | `hermes.model_switch_after.count` | provider, model (the model switched away from), turns-before-switch bucket (`1`, `2_to_3`, `4_to_10`, `11_to_30`, `gte_31`) | How long users stay on a model before `/model` leaves it. Counts the user turns sent on the old model in the conversation (compression segments included; a turn that failed over to a fallback still counts for the model it was sent on; background review forks are not turns); a switch before any turn on the current model is not counted. |
 
 Active time is accumulated locally per UTC day: the sum of the gaps between
@@ -440,7 +440,7 @@ exactly once per profile however many processes see the rollover; they are
 dated to the day they describe. The primary model is the one that served the
 most of those user turns that day (`none` when none did), named by the model-route
 rules. Days active per week and return by model are derived server-side from
-these daily rows and the existing `install_id`: Hermes keeps no weekly window
+these daily rows and the existing `install_id`: VAEL keeps no weekly window
 and no identifier beyond `install_id` for them.
 
 `active_profile_count_bucket` counts the distinct profiles of the host with a
@@ -459,9 +459,9 @@ database and the count is not reported.
 
 | Metric | Dimensions | Question it answers |
 |---|---|---|
-| `hermes.tool_unavailable.count` | provider, model, tool name (shipped built-ins only) | Which toolsets should be on by default: the model called a tool Hermes ships that this session did not enable. Any other unknown name (plugin, MCP, hallucinated) stays a `model_tool_quality` `unknown_tool` issue only. A built-in the session enabled but deferred behind `tool_search` (reachable through `tool_call`) is not unavailable. Background reviews, delegated children and cron jobs, whose toolsets are narrowed on purpose, are excluded. |
-| `hermes.provider_setup.count` | provider (catalog name; custom endpoints read `custom`), surface (`cli_setup`, `cli_model`, `tui`, `desktop`, `dashboard`), event (`started`, `completed`, `failed`, `abandoned`), failure class (`auth`, `network`, `no_models`, `cancelled`, `other`; `none` unless failed) | Where connecting a provider breaks down. `started` counts once a provider is picked; the flow's end is recorded by the surface that ran it. In the CLI pickers Esc ends the flow `failed`/`cancelled`; Back (Left arrow) keeps it open, so picking the same provider again continues it (one `started`), while picking another provider or leaving the command ends it `cancelled`. A flow nobody finished leaves a local marker that the next setup start or Hermes start in the profile reports as `abandoned` (its process is gone, or it has been pending over an hour); an OAuth device code left to expire is also `abandoned`. A new or changed provider API key saved from a form (TUI/Desktop/dashboard) and a newly added custom endpoint start and complete in one action; clearing a key, re-saving the same key, editing an existing endpoint, ecosystem tokens (`GITHUB_TOKEN`, `GH_TOKEN`, `HF_TOKEN`) and keys a tool's settings panel also asks for (e.g. `GEMINI_API_KEY`, `XAI_API_KEY`, `DEEPINFRA_API_KEY`) are not counted from the generic key form (the Desktop's onboarding and model settings mark their saves as a provider connection, so those count). Never a key, token, base URL or error text. Leaving the provider picker before choosing one is not counted. |
-| `hermes.feature_adoption.count` | feature (`memory`, `skills_created`, `delegation`, `cron`, `gateway_platform`, `desktop`, `tui`, `mcp`, `plugins`, `browser`, `voice`, `kanban`, `projects`, `bot_mode`, `curator`), days since install (`same_day`, `1d_to_7d`, `7d_to_30d`, `30d_to_90d`, `gte_90d`, `unknown`) | How long after install each major feature is first really used. Once per feature per install, latched in the local database, derived from the counters above (a foreground memory write, a skill created at the user's request (not by Hermes' background review), a successful MCP/plugin/browser/TTS/kanban tool call, a Desktop/TUI/gateway task, a cron run, a manual curator run; the scheduled curator pass does not count) plus direct first-use reports for Bot Mode messages and project creation. The age is the owning profile's (its first session). |
+| `hermes.tool_unavailable.count` | provider, model, tool name (shipped built-ins only) | Which toolsets should be on by default: the model called a tool VAEL ships that this session did not enable. Any other unknown name (plugin, MCP, hallucinated) stays a `model_tool_quality` `unknown_tool` issue only. A built-in the session enabled but deferred behind `tool_search` (reachable through `tool_call`) is not unavailable. Background reviews, delegated children and cron jobs, whose toolsets are narrowed on purpose, are excluded. |
+| `hermes.provider_setup.count` | provider (catalog name; custom endpoints read `custom`), surface (`cli_setup`, `cli_model`, `tui`, `desktop`, `dashboard`), event (`started`, `completed`, `failed`, `abandoned`), failure class (`auth`, `network`, `no_models`, `cancelled`, `other`; `none` unless failed) | Where connecting a provider breaks down. `started` counts once a provider is picked; the flow's end is recorded by the surface that ran it. In the CLI pickers Esc ends the flow `failed`/`cancelled`; Back (Left arrow) keeps it open, so picking the same provider again continues it (one `started`), while picking another provider or leaving the command ends it `cancelled`. A flow nobody finished leaves a local marker that the next setup start or VAEL start in the profile reports as `abandoned` (its process is gone, or it has been pending over an hour); an OAuth device code left to expire is also `abandoned`. A new or changed provider API key saved from a form (TUI/Desktop/dashboard) and a newly added custom endpoint start and complete in one action; clearing a key, re-saving the same key, editing an existing endpoint, ecosystem tokens (`GITHUB_TOKEN`, `GH_TOKEN`, `HF_TOKEN`) and keys a tool's settings panel also asks for (e.g. `GEMINI_API_KEY`, `XAI_API_KEY`, `DEEPINFRA_API_KEY`) are not counted from the generic key form (the Desktop's onboarding and model settings mark their saves as a provider connection, so those count). Never a key, token, base URL or error text. Leaving the provider picker before choosing one is not counted. |
+| `hermes.feature_adoption.count` | feature (`memory`, `skills_created`, `delegation`, `cron`, `gateway_platform`, `desktop`, `tui`, `mcp`, `plugins`, `browser`, `voice`, `kanban`, `projects`, `bot_mode`, `curator`), days since install (`same_day`, `1d_to_7d`, `7d_to_30d`, `30d_to_90d`, `gte_90d`, `unknown`) | How long after install each major feature is first really used. Once per feature per install, latched in the local database, derived from the counters above (a foreground memory write, a skill created at the user's request (not by VAEL's background review), a successful MCP/plugin/browser/TTS/kanban tool call, a Desktop/TUI/gateway task, a cron run, a manual curator run; the scheduled curator pass does not count) plus direct first-use reports for Bot Mode messages and project creation. The age is the owning profile's (its first session). |
 | `hermes.feature_disabled.count` | kind (`toolset`, `skill`, `plugin`, `platform`, `setting`, `memory`, `curator`, `compression`), name, surface (`cli_tools`, `cli_config`, `cli_slash`, `tui`, `desktop`, `dashboard`), event (`disabled`, `re_enabled`) | What users turn off. Diffed at the config write itself: a default-on toolset removed, a skill or plugin added to its disabled list, a default-`true` setting set false (and each moved back). Names are public only when shipped — toolset key, bundled/catalog skill, bundled/catalog plugin (messaging-platform plugins report as `platform`), `DEFAULT_CONFIG` key path (never a value) — else `custom`. Uninstalling a catalog skill counts as `disabled`. Only user entry points record (`hermes tools` / `config` / `skills` / `plugins`, chat slash commands, TUI/Desktop, dashboard); setup and migrations do not, even when a migration runs inside one of them (`hermes config migrate`, a profile created from the dashboard). A setting whose value is a `${VAR}` template is not compared. The diff and the record run on a background thread after the write, outside every config lock. At most once per (kind, name, event) per day. |
 <!-- ---- end v5 signals ---- -->
 
@@ -477,7 +477,7 @@ files are immutable delta documents that conform to a closed JSON schema and
 are written with atomic replacement as compact JSON (`jq .` pretty-prints one).
 Once the ingest has accepted or refused a package, the database keeps only its
 send state and drops its copy of the body; the file is the local history copy.
-Each package records the Hermes version,
+Each package records the VAEL version,
 OS family, architecture, and install method as bounded client resources.
 Unrecognized platform or installation values are exported as `unknown`; raw
 platform strings, hostnames, and paths are never included. Fully packaged
@@ -513,7 +513,7 @@ decision has been made.
 > 2026-08-27 — see A.2 for the record, including the superseded
 > HMAC-pseudonym design).
 
-The install identity is scoped to one `HERMES_HOME`. To reset it, stop Hermes
+The install identity is scoped to one `HERMES_HOME`. To reset it, stop VAEL
 processes and remove `$HERMES_HOME/telemetry/shared_metrics`. This deliberately
 removes the old identity, aggregate database, and queued local packages
 together; the next consented session creates a new identity. Disabling shared
@@ -522,7 +522,7 @@ local state.
 
 ## Smoke Test
 
-Run a real Hermes CLI turn against the deterministic local model server:
+Run a real VAEL CLI turn against the deterministic local model server:
 
 ```bash
 ./.venv/bin/python scripts/smoke_nemo_relay_shared_metrics.py
@@ -550,7 +550,7 @@ Sending is off by default and requires both `telemetry.shared_metrics.enabled`
 and `telemetry.shared_metrics.send`.
 
 The exporter sends the package files already written under
-`$HERMES_HOME/telemetry/shared_metrics/outbox/` to the Hermes telemetry ingest
+`$HERMES_HOME/telemetry/shared_metrics/outbox/` to the VAEL telemetry ingest
 service. That service validates only the envelope (`schema_version` plus a UUID
 `package_id`) and stores the body verbatim in S3.
 
@@ -579,7 +579,7 @@ Both keys are asked once per profile, with the same three answers everywhere
 | --- | --- |
 | `hermes setup` | At the end of every flow (Quick, Full, Blank Slate, Portal, `--quick`). |
 | `hermes` / `hermes --tui` | Once before an interactive chat starts. Skipped for `-q`, piped or JSON output, spawned actions and Desktop-hosted panes. |
-| Hermes Desktop | A strip above the composer, after first-run onboarding. It never blocks the composer or takes focus. |
+| VAEL Desktop | A strip above the composer, after first-run onboarding. It never blocks the composer or takes focus. |
 | Web dashboard | A banner above every page, for the profile being managed. |
 
 "No thanks" is the default in the terminal, so pressing Enter never opts

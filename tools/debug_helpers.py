@@ -8,7 +8,7 @@ import os
 import uuid
 from typing import Any, Dict
 
-from hermes_constants import get_hermes_home
+from vael_constants import get_hermes_home
 
 logger = logging.getLogger(__name__)
 

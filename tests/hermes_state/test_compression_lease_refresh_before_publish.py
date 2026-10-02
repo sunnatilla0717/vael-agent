@@ -11,8 +11,8 @@ from unittest.mock import patch
 
 import pytest
 
-from hermes_state import SessionDB
-from hermes_state_errors import CompressionSessionBusyError
+from vael_state import SessionDB
+from vael_state_errors import CompressionSessionBusyError
 
 
 def _setup_db(tmp_path):

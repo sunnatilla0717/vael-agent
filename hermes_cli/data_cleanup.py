@@ -16,7 +16,7 @@ class DataRemovalPlan:
 
 
 def plan_data_removal(home: Path, project: Path, userdata: Path | None = None) -> DataRemovalPlan:
-    from hermes_constants import get_default_hermes_root
+    from vael_constants import get_default_hermes_root
     from pm.environments import base_venv, installs_root, store_root
     from hermes_cli.steward import is_bundled_payload
     from tools.checkpoint_pruning import store_lock_path
@@ -74,7 +74,7 @@ def plan_data_removal(home: Path, project: Path, userdata: Path | None = None) -
         userdata = None  # Desktop preferences belong to the app, not a named profile.
     if userdata is not None and not userdata.resolve().is_relative_to(home):
         if userdata.resolve() == Path.home().resolve() or home.is_relative_to(userdata.resolve()):
-            raise ValueError(f"desktop data directory must not contain the Hermes or user home: {userdata}")
+            raise ValueError(f"desktop data directory must not contain the VAEL or user home: {userdata}")
         visit(userdata.parent.resolve() / userdata.name)
     return DataRemovalPlan(home, tuple(remove), tuple(sorted(keep)))
 

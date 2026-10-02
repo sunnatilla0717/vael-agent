@@ -1404,7 +1404,7 @@ class GatewayShutdownMixin:
         already on the default root, is the host.
         """
         from gateway.config_loader import drop_bridged_env
-        from hermes_constants import get_default_hermes_root, get_hermes_home
+        from vael_constants import get_default_hermes_root, get_hermes_home
         from tools.environments.local import host_gateway_child_env, served_profile_child_env
 
         home = get_hermes_home()
@@ -2137,7 +2137,7 @@ class GatewayShutdownMixin:
             # Shared SessionDB instances still held by the process-wide registry (tools, cron, mirror).
             # This is the safety net that guarantees no WAL write lock survives past gateway shutdown
             # (#90837).
-            from hermes_state_registry import close_all
+            from vael_state_registry import close_all
             closed = close_all()
             if closed:
                 logger.debug("Closed %d shared SessionDB instance(s) at shutdown", closed)

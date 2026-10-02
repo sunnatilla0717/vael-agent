@@ -17,9 +17,9 @@ from unittest.mock import ANY, patch
 
 import pytest
 
-import hermes_state
-import hermes_state_wal
-from hermes_state import DeletedWalGenerationError, SessionDB
+import vael_state
+import vael_state_wal
+from vael_state import DeletedWalGenerationError, SessionDB
 
 
 @pytest.fixture

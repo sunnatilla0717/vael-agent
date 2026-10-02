@@ -1,4 +1,4 @@
-"""On-demand worktree + branch reclaim (``hermes worktree`` / ``/worktree prune``).
+"""On-demand worktree + branch reclaim (``vael worktree`` / ``/worktree prune``).
 
 The startup pruner (``cli._prune_stale_worktrees``) is conservative and silent — clean, fully
 merged scratch past an age tier only. This module also reclaims trees whose only "dirt" is
@@ -110,7 +110,7 @@ def _dirty_split(path: str) -> tuple[bool, List[str]]:
 def _archive_untracked(tree: Path, untracked: List[str]) -> Optional[Path]:
     """Copy untracked files out of a doomed tree; None on any failure (caller must then keep)."""
     stamp = time.strftime("%Y%m%d-%H%M%S")
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
     dest = get_hermes_home() / "archive" / "worktree-prune" / f"{tree.name}-{stamp}"
     try:
         for rel in untracked:
@@ -134,7 +134,7 @@ def _classify_tree(_ops, repo_root: str, entry: Path, merge_cache, remote_heads)
     if _KANBAN_RE.match(entry.name):
         return "keep", "kanban task tree (owned by kanban gc)", []
     if _ops._worktree_lock_is_live(repo_root, path, timeout=5) == "live":
-        return "keep", "in use by a running hermes session", []
+        return "keep", "in use by a running vael session", []
     tracked_dirty, untracked = _dirty_split(path)
     if tracked_dirty:
         return "keep", "uncommitted tracked changes (real work)", []
@@ -157,7 +157,7 @@ def _classify_tree(_ops, repo_root: str, entry: Path, merge_cache, remote_heads)
 def audit_external_trees(repo_root: str) -> List[ExternalTreeRecord]:
     """List linked worktrees registered OUTSIDE ``.worktrees/``.
 
-    ``hermes -w`` scratch trees all live under ``<repo>/.worktrees/``, but
+    ``vael -w`` scratch trees all live under ``<repo>/.worktrees/``, but
     ``git worktree list --porcelain`` also knows about trees the user (or
     another tool) registered elsewhere. Those are someone else's state, so
     the reclaim paths never touch them — but hiding them entirely makes the

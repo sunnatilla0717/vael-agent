@@ -1,12 +1,12 @@
 ---
 sidebar_position: 2.5
 title: "Platform Support"
-description: "Which operating systems, distribution methods, and features Hermes Agent supports."
+description: "Which operating systems, distribution methods, and features VAEL Agent supports."
 ---
 
 # Platform Support
 
-Hermes Agent maintains support for many platforms and distribution methods, but we can't support every possible install method.
+VAEL Agent maintains support for many platforms and distribution methods, but we can't support every possible install method.
 
 ---
 
@@ -16,7 +16,7 @@ We strive to never break installations and updates for these. Issues & regressio
 
 | OS / Architecture                                                             | Installation methods                                                                                                           | Notes                                                                                                                                                     |
 | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **macOS** (Apple Silicon)                                                     | [Hermes Desktop](https://hermes-agent.nousresearch.com/), [`install.sh`](./installation.md) |
+| **macOS** (Apple Silicon)                                                     | [VAEL Desktop](https://hermes-agent.nousresearch.com/), [`install.sh`](./installation.md) |
 | [**Windows 10 / 11**](../user-guide/windows-native.md) (x86_64, aarch64) | [`install.ps1`](./installation.md), [MSIX desktop](../user-guide/windows-native.md) | The MSIX package requires Windows 11 22H2 or later. Optional dependencies have [architecture limits](../user-guide/windows-native.md). |
 | **Linux / [WSL2](../user-guide/windows-wsl-quickstart.md)** (x86_64, aarch64) | [`install.sh`](./installation.md)                                                           | We test on the latest Ubuntu and WSL2. If your distro has glibc, systemd, and follows the Filesystem Hierarchy Standard, it's likely to work pretty well. |
 | [**Docker Container**](../user-guide/docker.md) (x86_64, aarch64) | [`docker pull`](../user-guide/docker.md)                                                                           | Docker installs do not support `hermes update`. Updating is done by running a new image.                                                                  |

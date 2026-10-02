@@ -659,7 +659,7 @@ class TestRoutedProfileEnv:
     def test_hook_child_sees_routed_profile_home_and_no_default_secrets(self, tmp_path, monkeypatch):
         """Under multiplexing the child gets the ROUTED HERMES_HOME, the default profile's secrets
         stay out of its env, and the payload names the firing profile."""
-        from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+        from vael_constants import reset_hermes_home_override, set_hermes_home_override
 
         launch, routed = tmp_path / "launch", tmp_path / "routed"
         launch.mkdir(); routed.mkdir()

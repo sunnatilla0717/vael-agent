@@ -71,7 +71,7 @@ _XAI_CLIENT_WEB_SEARCH_ALIAS = "hermes_web_search"
 # OpenCode's /v1/responses endpoints (Zen and Go, including custom providers pointing at opencode.ai)
 # reserve certain function names server-side and reject client tools that use them with HTTP 400 ("custom
 # function name 'X' is reserved"). Same treatment as the xAI web_search collision: rename on the wire
-# (hermes_<name>), map back in normalize_response so Hermes dispatch is unaffected. See #85589.
+# (hermes_<name>), map back in normalize_response so VAEL dispatch is unaffected. See #85589.
 _OPENCODE_RESERVED_TOOL_NAMES = ("web_search", "search_files")
 _PERPLEXITY_RESERVED_TOOL_NAMES = (
     "web_search",
@@ -192,7 +192,7 @@ def _openai_prefers_native_web_search() -> bool:
 
     Same contract as :func:`_xai_prefers_native_web_search` with one deliberate
     difference: it fails CLOSED (False). A resolution failure must leave the client-side
-    Hermes tool in place rather than swap in a built-in the endpoint might reject.
+    VAEL tool in place rather than swap in a built-in the endpoint might reject.
 
     Only consulted for the Codex backend (``chatgpt.com/backend-api/codex``); a custom
     OpenAI-compatible endpoint does not implement the server-side tool.
@@ -217,7 +217,7 @@ def _alias_wire_tools(
     """Apply provider-reserved tool-name aliasing; returns ``(tools, {alias: original})`` for THIS request.
 
     xAI: a client ``web_search`` collides with Grok's native search — native mode
-    swaps it 1:1 for the built-in, client mode keeps Hermes dispatch under an alias.
+    swaps it 1:1 for the built-in, client mode keeps VAEL dispatch under an alias.
 
     OpenAI Codex: the Responses endpoint carries the same collision, so the backend
     selection drives the same 1:1 swap (``web.search_backend: openai-native``).
@@ -248,11 +248,11 @@ def _alias_wire_tools(
         response_tools, _oc_aliases = _alias_reserved_tools(response_tools, _OPENCODE_RESERVED_TOOL_NAMES)
         wire_aliases.update(_oc_aliases)
     # Perplexity's Agent API reserves the same names as server-side tools.
-    # Keep Hermes's client-side functions available under wire aliases.
+    # Keep VAEL's client-side functions available under wire aliases.
     if response_tools and _is_perplexity_responses_backend(params):
         response_tools, _pplx_aliases = _alias_reserved_tools(response_tools, _PERPLEXITY_RESERVED_TOOL_NAMES)
         wire_aliases.update(_pplx_aliases)
-    # xAI server-side web search vs Hermes web providers. grok models on xAI's /v1/responses surface have a
+    # xAI server-side web search vs VAEL web providers. grok models on xAI's /v1/responses surface have a
     # *native*, server-executed web search. A client-side function literally named ``web_search`` collides
     # with that engine: declared as a plain ``function`` rather than ``{"type": "web_search"}``, the search
     # dispatches but never reconciles → incomplete turn + 3 retries. Verified live against
@@ -260,7 +260,7 @@ def _alias_wire_tools(
     # config: 1. **Native** (active/configured backend is ``xai``, or resolution fails): drop the client
     # ``web_search`` function and declare xAI's built-in instead. 1:1 swap only when client ``web_search``
     # was already present — never an additive grant. 2. **Client** (Firecrawl / Tavily / Exa / … configured
-    # or resolved): keep Hermes dispatch so ``web.backend`` / ``web.search_backend`` is honored, but rename
+    # or resolved): keep VAEL dispatch so ``web.backend`` / ``web.search_backend`` is honored, but rename
     # the wire tool to ``hermes_web_search`` so Grok cannot hijack the name. The alias is mapped back to
     # ``web_search`` in ``normalize_response``. Request-local alias provenance: every wire alias THIS
     # request emits is recorded here and stashed on the transport, so the reverse rewrite in

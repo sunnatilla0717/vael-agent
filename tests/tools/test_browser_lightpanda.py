@@ -275,7 +275,7 @@ class TestLightpandaFallbackWarning:
              patch("tools.browser_tool_lightpanda_fallback._chrome_fallback_screenshot", return_value={
                  "success": True, "data": {"path": str(chrome_shot)}
              }), \
-             patch("hermes_constants.get_hermes_dir", return_value=tmp_path), \
+             patch("vael_constants.get_hermes_dir", return_value=tmp_path), \
              patch("agent.auxiliary_client.call_llm", return_value=_Response()):
             response = json.loads(bt.browser_vision("what is this?", task_id="vision-structured"))
 

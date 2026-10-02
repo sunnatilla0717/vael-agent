@@ -33,7 +33,7 @@ def _wait_for(pred, timeout: float = 3.0) -> bool:
 
 
 def _watching(server, home: Path, monkeypatch) -> list:
-    from hermes_constants import hermes_home_key
+    from vael_constants import hermes_home_key
     events: list = []
     monkeypatch.setattr(server, "_broadcast_global_event", lambda ev, payload=None: events.append((ev, payload)))
     monkeypatch.setattr(server, "_hermes_home", str(home))
@@ -48,7 +48,7 @@ def _lease_events(events, **want):
 
 def test_takeover_in_another_process_is_broadcast(tmp_path, monkeypatch):
     import tui_gateway.server as server
-    from hermes_constants import hermes_home_key
+    from vael_constants import hermes_home_key
     home = tmp_path / "home"
     home.mkdir()
     events = _watching(server, home, monkeypatch)

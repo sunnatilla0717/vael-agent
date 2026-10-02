@@ -9,7 +9,7 @@ from datetime import datetime, timezone
 from dataclasses import dataclass
 from typing import Callable, Optional
 
-from hermes_constants import get_hermes_home
+from vael_constants import get_hermes_home
 from tools.tool_backend_helpers import fast_search_entitled, managed_nous_tools_enabled
 
 logger = logging.getLogger(__name__)
@@ -33,7 +33,7 @@ def _clean(value: object) -> Optional[str]:
 
 
 def auth_json_path():
-    """Return the Hermes auth store path, respecting HERMES_HOME overrides."""
+    """Return the VAEL auth store path, respecting HERMES_HOME overrides."""
     return get_hermes_home() / "auth.json"
 
 

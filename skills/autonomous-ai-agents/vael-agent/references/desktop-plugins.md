@@ -120,7 +120,7 @@ The ONLY import surface is `@hermes/plugin-sdk` (plus `react` /
   (use `host.notify` for the in-app toast); gated by Settings ▸ Notifications ▸
   "Plugin notifications" and throttled per plugin — reserve it for genuinely
   notable events. `activate` accepts a plugin deep link
-  (`hermes://index-network/intent/1`), a hash path (`/index-network/intent/1`),
+  (`vael://index-network/intent/1`), a hash path (`/index-network/intent/1`),
   or `{ path, params }` — same resolver as OS deep links. Action buttons may
   set their own `activate` or an `onAction`
   callback (renderer-only; only the action id crosses IPC).

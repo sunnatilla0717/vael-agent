@@ -276,7 +276,7 @@ class TestDelegationCleanup:
     def test_run_single_child_calls_close(self, monkeypatch, tmp_path):
         """_run_single_child finally block should call close() on child."""
         from unittest.mock import MagicMock
-        from hermes_constants import (
+        from vael_constants import (
             get_hermes_home,
             reset_hermes_home_override,
             set_hermes_home_override,
@@ -361,7 +361,7 @@ class TestDelegationCleanup:
         from unittest.mock import MagicMock
 
         from agent import relay_runtime
-        from hermes_constants import (
+        from vael_constants import (
             reset_hermes_home_override,
             set_hermes_home_override,
         )

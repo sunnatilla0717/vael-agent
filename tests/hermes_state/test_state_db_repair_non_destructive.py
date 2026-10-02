@@ -65,9 +65,9 @@ from types import SimpleNamespace
 
 import pytest
 
-import hermes_state
-import hermes_state_repair
-from hermes_state_repair import repair_state_db_schema
+import vael_state
+import vael_state_repair
+from vael_state_repair import repair_state_db_schema
 
 PAGE_SIZE = 4096
 

@@ -1,12 +1,12 @@
 ---
 sidebar_position: 5
 title: "Microsoft Teams"
-description: "将 Hermes Agent 设置为 Microsoft Teams 机器人"
+description: "将 VAEL Agent 设置为 Microsoft Teams 机器人"
 ---
 
 # Microsoft Teams 设置
 
-将 Hermes Agent 作为机器人接入 Microsoft Teams。与 Slack 的 Socket Mode 不同，Teams 通过调用**公开 HTTPS webhook**（钩子）来投递消息，因此你的实例需要一个可公开访问的端点——本地开发时使用开发隧道，生产环境使用真实域名。
+将 VAEL Agent 作为机器人接入 Microsoft Teams。与 Slack 的 Socket Mode 不同，Teams 通过调用**公开 HTTPS webhook**（钩子）来投递消息，因此你的实例需要一个可公开访问的端点——本地开发时使用开发隧道，生产环境使用真实域名。
 
 如果你需要的是来自 Microsoft Graph 事件的会议摘要，而非普通的机器人对话，请使用专用设置页面：[Teams 会议](./teams-meetings.md)。
 
@@ -18,7 +18,7 @@ description: "将 Hermes Agent 设置为 Microsoft Teams 机器人"
 | **群聊** | 机器人仅在被 @提及时响应。 |
 | **频道** | 机器人仅在被 @提及时响应。 |
 
-Teams 将 @提及作为普通消息投递，其中包含 `<at>BotName</at>` 标签，Hermes 在处理前会自动去除这些标签。
+Teams 将 @提及作为普通消息投递，其中包含 `<at>BotName</at>` 标签，VAEL 在处理前会自动去除这些标签。
 
 ---
 
@@ -58,7 +58,7 @@ cloudflared tunnel --url http://localhost:3978  # 如已修改 TEAMS_PORT，请�
 
 从输出中复制 `https://` URL——下一步会用到。开发期间保持隧道运行。
 
-公开隧道 URL 使用 HTTPS，但 Hermes 的本地 webhook 监听器使用纯 HTTP。隧道会终止 TLS，并将 HTTP 转发到 `3978` 端口；不要将本地隧道端口配置为 HTTPS。
+公开隧道 URL 使用 HTTPS，但 VAEL 的本地 webhook 监听器使用纯 HTTP。隧道会终止 TLS，并将 HTTP 转发到 `3978` 端口；不要将本地隧道端口配置为 HTTPS。
 
 生产环境请将机器人端点指向服务器的公开域名（参见[生产部署](#production-deployment)）。
 
@@ -203,7 +203,7 @@ platforms:
 
 ## 生产部署
 
-对于永久服务器，请在反向代理处终止 TLS，并将请求转发到 Hermes 的纯 HTTP 监听器，通常为 `http://127.0.0.1:3978`。使用该代理的公开 HTTPS 端点注册机器人：
+对于永久服务器，请在反向代理处终止 TLS，并将请求转发到 VAEL 的纯 HTTP 监听器，通常为 `http://127.0.0.1:3978`。使用该代理的公开 HTTPS 端点注册机器人：
 
 ```bash
 teams app create \
@@ -217,7 +217,7 @@ teams app create \
 teams app update --id <teamsAppId> --endpoint "https://your-domain.com/api/messages"
 ```
 
-确保公开 HTTPS 端点可从互联网访问并使用有效的 TLS 证书。Teams 会拒绝自签名证书。请将 Hermes 监听器置于代理后方；`3978` 端口本身不提供 HTTPS。
+确保公开 HTTPS 端点可从互联网访问并使用有效的 TLS 证书。Teams 会拒绝自签名证书。请将 VAEL 监听器置于代理后方；`3978` 端口本身不提供 HTTPS。
 
 ---
 
@@ -226,7 +226,7 @@ teams app update --id <teamsAppId> --endpoint "https://your-domain.com/api/messa
 | 问题 | 解决方案 |
 |------|----------|
 | `health` 端点正常但机器人不响应 | 检查隧道是否仍在运行，以及机器人的消息端点是否与隧道 URL 匹配 |
-| Teams 发送消息时日志显示 `"UNKNOWN / HTTP/1.0" 400` | 隧道或反向代理正在将 HTTPS 转发到 Hermes 的纯 HTTP 监听器。请在代理处终止 TLS，并将 HTTP 转发到 `3978` 端口 |
+| Teams 发送消息时日志显示 `"UNKNOWN / HTTP/1.0" 400` | 隧道或反向代理正在将 HTTPS 转发到 VAEL 的纯 HTTP 监听器。请在代理处终止 TLS，并将 HTTP 转发到 `3978` 端口 |
 | 日志中出现 `KeyError: 'teams'` | 重启容器——此问题已在当前版本中修复 |
 | 机器人响应时出现认证错误 | 验证 `TEAMS_CLIENT_ID`、`TEAMS_CLIENT_SECRET` 和 `TEAMS_TENANT_ID` 是否均已正确设置 |
 | `No inference provider configured` | 检查 `~/.hermes/.env` 中是否设置了 `ANTHROPIC_API_KEY`（或其他提供商密钥） |

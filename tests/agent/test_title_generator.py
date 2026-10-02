@@ -16,7 +16,7 @@ from agent.title_generator import (
     wait_for_title_upgrades,
     _title_language,
 )
-from hermes_state import SessionDB
+from vael_state import SessionDB
 
 
 class TestGenerateTitle:

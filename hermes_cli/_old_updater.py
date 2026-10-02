@@ -111,7 +111,7 @@ def _run_child(request: dict) -> tuple[int, dict]:
     """One JSON exchange; the old process never imports the updated graph."""
     root = Path(__file__).resolve().parents[1]
     home = os.environ.get("HERMES_HOME")
-    constants = sys.modules.get("hermes_constants")
+    constants = sys.modules.get("vael_constants")
     override = vars(constants).get("_HERMES_HOME_OVERRIDE") if constants else None
     if override is not None:
         value = override.get()
@@ -150,8 +150,8 @@ def stop_for_relaunch(*, incomplete: bool = False) -> NoReturn:
         # A newly retired completion hook has no complete captured worklist.
         # It must not start another update or invent a successful receipt.
         print(
-            "You're updating from an older version of Hermes Agent. "
-            "To complete this update, run `hermes update` again.",
+            "You're updating from an older version of VAEL Agent. "
+            "To complete this update, run `vael update` again.",
             file=sys.stderr,
         )
         raise SystemExit(1)

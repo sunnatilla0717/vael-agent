@@ -27,9 +27,9 @@ from hermes_cli.web_models import (
 from hermes_cli.web_routers._common import (
     CORRUPT_STORE_DETAIL, corrupt_store_as_status, log as _log, destructive_profile, http_failure,
 )
-from hermes_state import is_malformed_db_error
-from hermes_state_errors import SessionActiveWriteGuardError, StateDbReplacedError, is_transient_sqlite_error
-from hermes_state_health import STORAGE_CORRUPT, note_storage_error, storage_state
+from vael_state import is_malformed_db_error
+from vael_state_errors import SessionActiveWriteGuardError, StateDbReplacedError, is_transient_sqlite_error
+from vael_state_health import STORAGE_CORRUPT, note_storage_error, storage_state
 
 list_router = APIRouter()
 search_router = APIRouter()
@@ -75,7 +75,7 @@ _PRUNE_ROW_KEYS = ("id", "source", "title", "model", "started_at", "last_active"
 
 
 def _prune_sessions(body: SessionPrune):
-    """Delete ended sessions matching filters (mirrors `hermes sessions prune`)."""
+    """Delete ended sessions matching filters (mirrors `vael sessions prune`)."""
     from hermes_cli.config import get_hermes_home
     has_window = body.started_before is not None or body.started_after is not None
     if body.older_than_days is not None and body.older_than_days < 1 and not has_window:
@@ -164,7 +164,7 @@ def _resolve_session_id(db, session_id: str) -> Optional[str]:
             detail=(
                 "Session store is corrupt (database disk image is malformed). "
                 "Sessions cannot be read until it is repaired — run "
-                "`hermes doctor` for diagnosis."),
+                "`vael doctor` for diagnosis."),
         ) from exc
     except StateDbReplacedError:
         # RuntimeError family, not sqlite3: same 503 payload as the analytics reads (#110054).
@@ -504,7 +504,7 @@ async def delete_empty_sessions_endpoint(profile: Optional[str] = None):
 
 @manage_router.get("/api/sessions/stats")
 async def get_session_stats(profile: Optional[str] = None):
-    """Session-store statistics (mirrors `hermes sessions stats`)."""
+    """Session-store statistics (mirrors `vael sessions stats`)."""
     def _stats(db):
         out = {
             "total": db.session_count(include_archived=True),
@@ -754,7 +754,7 @@ async def get_session_timeline(
     ``next_cursor`` is a stable logical first-row id; pass it as ``after_row_id``.
     Entry ``row_id`` addresses the current representative for /messages/around.
     """
-    from hermes_state_timeline import get_session_timeline as read_timeline
+    from vael_state_timeline import get_session_timeline as read_timeline
 
     owner = _serving_profile(profile)
 
@@ -772,7 +772,7 @@ async def get_session_messages_around(
     limit: int = Query(120, ge=1, le=120),
 ):
     """Bounded display page starting at a timeline prompt; no intervening payloads."""
-    from hermes_state_timeline import get_session_messages_around as read_around
+    from vael_state_timeline import get_session_messages_around as read_around
 
     owner = _serving_profile(profile)
 

@@ -34,7 +34,7 @@ from agent.turn_context import (
     compose_multimodal_context_part,
     compose_user_api_content,
 )
-from hermes_state import SessionDB
+from vael_state import SessionDB
 
 
 # ---------------------------------------------------------------------------

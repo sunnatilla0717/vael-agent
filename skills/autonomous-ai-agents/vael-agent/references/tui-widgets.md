@@ -1,6 +1,6 @@
 # TUI Widgets — Live Panels for the Ink TUI Dock
 
-Author widget apps for the VAEL TUI (`hermes --tui`): glanceable ambient
+Author widget apps for the VAEL TUI (`vael --tui`): glanceable ambient
 panels docked above the status bar, or modal overlays that own the keyboard.
 Widgets are plain ESM files the TUI loads at startup — no build step, no
 repo changes. This skill does not cover desktop-app or web-dashboard
@@ -15,7 +15,7 @@ widgets.
 
 ## Prerequisites
 
-- The TUI must be in use (`hermes --tui`). Widgets do not render in the
+- The TUI must be in use (`vael --tui`). Widgets do not render in the
   classic CLI or messaging platforms.
 - Network-backed widgets need whatever credentials their API needs; fetch
   failures must land as an error phase, never a crash.

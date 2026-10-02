@@ -5,7 +5,7 @@ description: "Running one kanban board across several per-profile gateways: sing
 
 # Multi-gateway deployment
 
-Hermes supports multiple gateway processes running concurrently — one per profile
+VAEL supports multiple gateway processes running concurrently — one per profile
 (default, writer, admin, coder, researcher). Each gateway opens its own connection
 to platform APIs and delivers messages for its profile's subscribers.
 

@@ -69,7 +69,7 @@ _PRE_SANDBOX_KANBAN_OVERRIDE = os.environ.get("HERMES_KANBAN_HOME", "").strip()
 _PRE_SANDBOX_HERMES_HOME = os.environ.get("HERMES_HOME", "")
 
 # Capture before any test fixture can override Path.home()/LOCALAPPDATA.
-from hermes_constants import _get_platform_default_hermes_home
+from vael_constants import _get_platform_default_hermes_home
 
 _NATIVE_HERMES_PARENT = _get_platform_default_hermes_home().parent
 
@@ -94,7 +94,7 @@ def _hermes_home_points_at_production(value: str) -> bool:
         # ``%LOCALAPPDATA%\hermes``, and a dev shell exporting that path used to be honored as
         # "custom", pinning import-time paths (``tui_gateway.server._hermes_home``) to the live
         # install so the state.db guard tripped on every store-touching test (#112692).
-        from hermes_state_guard import _real_platform_state_root
+        from vael_state_guard import _real_platform_state_root
 
         resolved = Path(value).expanduser().resolve()
         real_root = _real_platform_state_root() or (Path.home() / ".hermes").resolve()
@@ -118,7 +118,7 @@ def _hermes_home_points_at_production(value: str) -> bool:
 # relocate even user-set temp directories inside a guarded home. Pin the
 # system default so the import-time hook stays a no-op. The parallel runner
 # exports its own disk-backed TMPDIR anyway.
-from hermes_constants import SCRATCH_DIR_MARKER_ENV, SCRATCH_TMP_ENV_VARS
+from vael_constants import SCRATCH_DIR_MARKER_ENV, SCRATCH_TMP_ENV_VARS
 
 _HERMES_EXPORTED_TMP = os.environ.get(SCRATCH_DIR_MARKER_ENV, "")
 if _HERMES_EXPORTED_TMP:
@@ -127,7 +127,7 @@ if _HERMES_EXPORTED_TMP:
             del os.environ[_key]
     del os.environ[SCRATCH_DIR_MARKER_ENV]
 
-from hermes_state_guard import _real_platform_state_root
+from vael_state_guard import _real_platform_state_root
 
 _real_test_root = _real_platform_state_root() or (Path.home() / ".hermes").resolve()
 _guarded_tmp_roots = [_real_test_root]
@@ -282,9 +282,9 @@ def _hermetic_environment(tmp_path, tmp_path_factory, monkeypatch):
     #    too, to distinguish standard profiles from custom deployments.
     #    Patch only the Hermes default, not HOME/Path.home(). Subprocesses need
     #    a stable HOME. Hardcoded real-home I/O must still trip the guard.
-    import hermes_constants
+    import vael_constants
 
-    platform_default = hermes_constants._get_platform_default_hermes_home
+    platform_default = vael_constants._get_platform_default_hermes_home
 
     def isolated_platform_default() -> Path:
         root = platform_default()
@@ -293,7 +293,7 @@ def _hermetic_environment(tmp_path, tmp_path_factory, monkeypatch):
         return tmp_path / root.name if root.parent == _NATIVE_HERMES_PARENT else root
 
     monkeypatch.setattr(
-        hermes_constants, "_get_platform_default_hermes_home", isolated_platform_default
+        vael_constants, "_get_platform_default_hermes_home", isolated_platform_default
     )
     fake_hermes_home = tmp_path / "hermes_test"
     fake_hermes_home.mkdir()
@@ -305,7 +305,7 @@ def _hermetic_environment(tmp_path, tmp_path_factory, monkeypatch):
     # A test that pins the process home (hermes_constants.pin_process_hermes_home) must not
     # leak that module-global into the next test's routed-profile decisions.
     try:
-        import hermes_constants as _hc
+        import vael_constants as _hc
         monkeypatch.setattr(_hc, "_PINNED_PROCESS_HERMES_HOME", None, raising=False)
     except Exception:
         pass
@@ -360,7 +360,7 @@ def _hermetic_environment(tmp_path, tmp_path_factory, monkeypatch):
     if tui_server_mod is not None and hasattr(tui_server_mod, "_served_profile_homes"):
         monkeypatch.setattr(tui_server_mod, "_served_profile_homes", set())
 
-    hermes_state_mod = sys.modules.get("hermes_state")
+    hermes_state_mod = sys.modules.get("vael_state")
     if hermes_state_mod is not None and hasattr(hermes_state_mod, "DEFAULT_DB_PATH"):
         monkeypatch.setattr(
             hermes_state_mod, "DEFAULT_DB_PATH", fake_hermes_home / "state.db"
@@ -517,7 +517,7 @@ def _close_leaked_session_dbs():
     if wait is not None:
         wait()
     try:
-        from hermes_state_guard import _test_instance_registry as registry
+        from vael_state_guard import _test_instance_registry as registry
     except Exception:
         return
     if not registry:
@@ -622,7 +622,7 @@ def _capture_real_kanban_root() -> Path:
         # the env still holds the tempdir and the resolver would be wrong) —
         # honor it via the normal resolver (it may be a profile dir whose
         # root matters).
-        from hermes_constants import get_default_hermes_root
+        from vael_constants import get_default_hermes_root
         return get_default_hermes_root().resolve()
     # No pre-existing HERMES_HOME: the real root is the platform default,
     # NOT the sandbox tempdir now sitting in the env.
@@ -705,7 +705,7 @@ def _kanban_write_guard(_hermetic_environment, monkeypatch):
 
 @pytest.fixture(autouse=True)
 def _state_db_write_guard(request, monkeypatch):
-    _hs = sys.modules.get("hermes_state")
+    _hs = sys.modules.get("vael_state")
     if _hs is None or not hasattr(_hs, "_STATE_DB_GUARD_BYPASS"):
         yield
         return
@@ -832,7 +832,7 @@ def _reset_tui_gateway_server_state():
     # to a stale per-test tmpdir. Force the main-thread ContextVar back
     # to its default.
     try:
-        from hermes_constants import get_hermes_home_override, set_hermes_home_override
+        from vael_constants import get_hermes_home_override, set_hermes_home_override
 
         if get_hermes_home_override() is not None:
             set_hermes_home_override(None)
@@ -1011,7 +1011,7 @@ def _relocate_basetemp_outside_operator_home(config) -> None:
     Windows) turns the sandbox back into the live install and ``get_profile_dir("default")``
     writes fixtures over the operator's config.yaml / .env / MEMORY.md (#111101).
     """
-    from hermes_constants import _get_platform_default_hermes_home
+    from vael_constants import _get_platform_default_hermes_home
 
     native = _get_platform_default_hermes_home().resolve()
     factory = config._tmp_path_factory
@@ -1043,7 +1043,7 @@ def _pytest_disk_temp_root(native: Path) -> Path:
     one (``scripts/run_tests_parallel.py::_runner_scratch_root``), else a plain (not
     dot-prefixed — hidden-dir search tests would see every fixture as hidden) sibling of
     the native home. Entries idle for a day are swept on the way in."""
-    from hermes_constants_scratch import prune_idle_entries
+    from vael_constants_scratch import prune_idle_entries
 
     if os.name != "nt" and os.path.isdir("/var/tmp"):  # no-tmp: ok — disk-backed FHS root
         root = Path("/var/tmp/hermes-pytest")  # no-tmp: ok — /var/tmp is disk-backed by FHS, never tmpfs

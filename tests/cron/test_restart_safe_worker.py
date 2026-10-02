@@ -146,7 +146,7 @@ def test_external_worker_adopts_execution_and_runs_payload_once(
         }),
         encoding="utf-8",
     )
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
 
     observed_homes = []
     adopted = Mock(
@@ -326,9 +326,9 @@ def test_launch_external_worker_treats_a_routed_fire_as_multiplexed(tmp_path, mo
     and the worker inherited the launch profile's residue. The payload must carry ``True`` and the
     worker env must not carry a launch-only value — and the context must not outlive the handoff."""
     import cron.scheduler as scheduler
-    import hermes_constants
+    import vael_constants
     from agent import secret_scope
-    from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+    from vael_constants import reset_hermes_home_override, set_hermes_home_override
     from tools.process_registry import GatewayChildDispatch
 
     launch = tmp_path / "launch"

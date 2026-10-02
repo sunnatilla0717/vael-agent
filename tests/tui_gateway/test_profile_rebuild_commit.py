@@ -3,13 +3,13 @@ import threading
 from types import SimpleNamespace
 
 import pytest
-import hermes_yaml as yaml
+import vael_yaml as yaml
 
 
 @pytest.mark.parametrize("explicit_profile", [None, "default"])
 def test_tools_configure_uses_live_session_profile(tmp_path, monkeypatch, explicit_profile):
     from tui_gateway import server
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
 
     home = tmp_path / ".hermes"
     profile = home / "profiles" / "worker"
@@ -48,8 +48,8 @@ def test_tools_configure_uses_live_session_profile(tmp_path, monkeypatch, explic
 @pytest.mark.parametrize("has_agent_db", [True, False])
 def test_rebuild_preparation_failure_keeps_reachable_owner(tmp_path, monkeypatch, path, has_agent_db):
     from tui_gateway import server
-    from hermes_state import SessionDB
-    from hermes_constants import get_hermes_home
+    from vael_state import SessionDB
+    from vael_constants import get_hermes_home
 
     home = tmp_path / ".hermes"
     profile = home / "profiles" / "worker"

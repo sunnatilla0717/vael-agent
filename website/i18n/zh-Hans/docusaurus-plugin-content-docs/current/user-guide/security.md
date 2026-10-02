@@ -6,7 +6,7 @@ description: "安全模型、危险命令审批、用户授权、容器隔离及
 
 # 安全
 
-Hermes Agent 采用纵深防御安全模型。本页涵盖所有安全边界——从命令审批到容器隔离，再到消息平台上的用户授权。
+VAEL Agent 采用纵深防御安全模型。本页涵盖所有安全边界——从命令审批到容器隔离，再到消息平台上的用户授权。
 
 ## 概述
 
@@ -22,7 +22,7 @@ Hermes Agent 采用纵深防御安全模型。本页涵盖所有安全边界—�
 
 ## 危险命令审批
 
-在执行任何命令之前，Hermes 会将其与一份精心维护的危险模式列表进行比对。若匹配，用户必须明确批准。
+在执行任何命令之前，VAEL 会将其与一份精心维护的危险模式列表进行比对。若匹配，用户必须明确批准。
 
 ### 审批模式
 
@@ -64,7 +64,7 @@ YOLO 模式会绕过当前会话中**所有**危险命令审批提示。可通�
 
 YOLO 模式在 CLI 和 gateway 会话中均可使用。在内部，它会设置 `HERMES_YOLO_MODE` 环境变量，该变量在每次命令执行前都会被检查。
 
-当 YOLO 激活时，Hermes 会显示两个持久的视觉提醒，以确保用户不会忘记审批提示已被绕过：
+当 YOLO 激活时，VAEL 会显示两个持久的视觉提醒，以确保用户不会忘记审批提示已被绕过：
 
 - 当 YOLO 已激活时，会话开始时显示一条红色横幅：`⚠ YOLO mode — all approval prompts bypassed`。YOLO 关闭时隐藏，以保持默认横幅整洁。
 - 状态栏中所有宽度层级均显示 `⚠ YOLO` 片段，随着 YOLO 的切换实时更新（富文本渲染器和纯文本回退均支持）。
@@ -77,7 +77,7 @@ YOLO 模式会禁用会话中**所有**危险命令安全检查——**但硬性
 
 ### 硬性黑名单（始终生效的底线）
 
-某些命令极具破坏性——不可逆的文件系统清除、fork 炸弹、直接写入块设备——无论以下任何情况，Hermes 都**拒绝**执行：
+某些命令极具破坏性——不可逆的文件系统清除、fork 炸弹、直接写入块设备——无论以下任何情况，VAEL 都**拒绝**执行：
 
 - `--yolo` / `/yolo` 已开启
 - `approvals.mode: off`
@@ -195,7 +195,7 @@ command_allowlist:
 
 ## 用户授权（Gateway）
 
-运行消息 gateway 时，Hermes 通过分层授权系统控制谁可以与机器人交互。
+运行消息 gateway 时，VAEL 通过分层授权系统控制谁可以与机器人交互。
 
 ### 授权检查顺序
 
@@ -241,7 +241,7 @@ or configure platform allowlists (e.g., TELEGRAM_ALLOWED_USERS=your_id).
 
 ### DM 配对系统
 
-为实现更灵活的授权，Hermes 提供了基于验证码的配对系统。无需预先提供用户 ID，未知用户会收到一次性配对码，由机器人所有者通过 CLI 批准。
+为实现更灵活的授权，VAEL 提供了基于验证码的配对系统。无需预先提供用户 ID，未知用户会收到一次性配对码，由机器人所有者通过 CLI 批准。
 
 **工作原理：**
 
@@ -299,7 +299,7 @@ hermes pairing clear-pending
 
 ## 容器隔离
 
-使用 `docker` 终端后端时，Hermes 对每个容器应用严格的安全加固。
+使用 `docker` 终端后端时，VAEL 对每个容器应用严格的安全加固。
 
 ### Docker 安全标志
 
@@ -408,7 +408,7 @@ required_credential_files:
     description: Google OAuth2 client credentials
 ```
 
-加载后，Hermes 会检查这些文件是否存在于活跃 profile 的 `HERMES_HOME` 中，并将其注册为挂载：
+加载后，VAEL 会检查这些文件是否存在于活跃 profile 的 `HERMES_HOME` 中，并将其注册为挂载：
 
 - **Docker**：只读绑定挂载（`-v host:container:ro`）
 - **Modal**：在沙箱创建时挂载，并在每次命令前同步（处理会话中途的 OAuth 配置）
@@ -430,7 +430,7 @@ terminal:
 | 沙箱 | 默认过滤 | 透传覆盖 |
 |---------|---------------|---------------------|
 | **execute_code** | 阻止名称中包含 `KEY`、`TOKEN`、`SECRET`、`PASSWORD`、`CREDENTIAL`、`PASSWD`、`AUTH` 的变量；仅允许安全前缀变量通过 | ✅ 透传变量绕过两项检查 |
-| **terminal**（本地） | 阻止明确的 Hermes 基础设施变量（提供商密钥、gateway token、工具 API 密钥） | ✅ 透传变量绕过黑名单 |
+| **terminal**（本地） | 阻止明确的 VAEL 基础设施变量（提供商密钥、gateway token、工具 API 密钥） | ✅ 透传变量绕过黑名单 |
 | **terminal**（Docker） | 默认不传入宿主机环境变量 | ✅ 透传变量 + `docker_forward_env` 通过 `-e` 转发 |
 | **terminal**（Modal） | 默认不传入宿主机环境/文件 | ✅ 凭据文件挂载；环境变量通过同步透传 |
 | **MCP** | 阻止所有变量，仅允许安全系统变量 + 显式配置的 `env` | ❌ 不受透传影响（改用 MCP `env` 配置） |
@@ -441,7 +441,7 @@ terminal:
 - 凭据文件以**只读**方式挂载到 Docker 容器中
 - Skills Guard 在安装前会扫描技能内容中的可疑环境变量访问模式
 - 缺失/未设置的变量永远不会被注册（不存在的内容无法泄露）
-- Hermes 基础设施密钥（提供商 API 密钥、gateway token）不应添加到 `env_passthrough`——它们有专用机制。声明此类名称时会被拒绝；已声明的名称若之后被某个平台适配器占用（例如在技能加载后才注册的插件适配器），从那时起便不再转发
+- VAEL 基础设施密钥（提供商 API 密钥、gateway token）不应添加到 `env_passthrough`——它们有专用机制。声明此类名称时会被拒绝；已声明的名称若之后被某个平台适配器占用（例如在技能加载后才注册的插件适配器），从那时起便不再转发
 
 ## MCP 凭据处理
 
@@ -543,7 +543,7 @@ security:
 
 ### Tirith 预执行安全扫描
 
-Hermes 集成了 [tirith](https://github.com/sheeki03/tirith) 用于在执行前进行内容级命令扫描。Tirith 能检测单纯模式匹配所遗漏的威胁：
+VAEL 集成了 [tirith](https://github.com/sheeki03/tirith) 用于在执行前进行内容级命令扫描。Tirith 能检测单纯模式匹配所遗漏的威胁：
 
 - 同形字 URL 欺骗（国际化域名攻击）
 - 管道传解释器模式（`curl | bash`、`wget | sh`）
@@ -562,7 +562,7 @@ security:
 
 当 `tirith_fail_open` 为 `true`（默认）时，若 tirith 未安装或超时，命令照常执行。在高安全性环境中，将其设置为 `false` 可在 tirith 不可用时阻止命令执行。
 
-Tirith 为 Linux（x86_64 / aarch64）和 macOS（x86_64 / arm64）提供预构建二进制文件。在没有预构建二进制文件的平台（Windows 等）上，tirith 会被静默跳过——模式匹配防护仍然运行，CLI 不会显示"不可用"横幅。若要在 Windows 上使用 tirith，请在 WSL 下运行 Hermes。
+Tirith 为 Linux（x86_64 / aarch64）和 macOS（x86_64 / arm64）提供预构建二进制文件。在没有预构建二进制文件的平台（Windows 等）上，tirith 会被静默跳过——模式匹配防护仍然运行，CLI 不会显示"不可用"横幅。若要在 Windows 上使用 tirith，请在 WSL 下运行 VAEL。
 
 Tirith 的判定与审批流程集成：安全命令直接通过，可疑和被阻止的命令会触发用户审批，并附上完整的 tirith 发现（严重性、标题、描述、更安全的替代方案）。用户可以批准或拒绝——默认选择为拒绝，以确保无人值守场景的安全。
 
@@ -628,7 +628,7 @@ SSH 连接详情保存在 `.env`（而非 `config.yaml`）中，以避免随 pro
 
 ## 供应链安全公告检查
 
-Hermes 内置了一个公告扫描器，用于标记活跃 venv 中与已知受损版本目录匹配的 Python 包（例如 2026 年 5 月的 `mistralai 2.4.6` 供应链投毒事件）。实现位于 `hermes_cli/security_advisories.py`。
+VAEL 内置了一个公告扫描器，用于标记活跃 venv 中与已知受损版本目录匹配的 Python 包（例如 2026 年 5 月的 `mistralai 2.4.6` 供应链投毒事件）。实现位于 `hermes_cli/security_advisories.py`。
 
 运行方式：
 

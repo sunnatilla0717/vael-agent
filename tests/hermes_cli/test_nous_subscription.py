@@ -457,7 +457,7 @@ def _block_legacy_agent_browser_checks(monkeypatch):
             None if cmd == "agent-browser" else real_which(cmd, *args, **kwargs)
         ),
     )
-    monkeypatch.setattr("hermes_constants.agent_browser_runnable", lambda path: False)
+    monkeypatch.setattr("vael_constants.agent_browser_runnable", lambda path: False)
 
 
 def test_has_agent_browser_uses_passive_runtime_resolution(monkeypatch):
@@ -502,7 +502,7 @@ def test_has_agent_browser_import_failure_does_not_run_another_resolver(monkeypa
         ),
     )
     monkeypatch.setattr(
-        "hermes_constants.agent_browser_runnable",
+        "vael_constants.agent_browser_runnable",
         lambda path: path == "/fake/bin/agent-browser",
     )
 

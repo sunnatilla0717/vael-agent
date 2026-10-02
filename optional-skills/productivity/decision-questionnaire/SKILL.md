@@ -6,7 +6,7 @@ author: "Matt Pocock (mattpocock/skills, to-questionnaire) + Hermes Agent"
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
-  hermes:
+  vael:
     tags: [questionnaire, decision, async, stakeholder, discovery, communication]
     related_skills: [meeting-action-items, document-to-action-items]
 ---

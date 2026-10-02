@@ -1,4 +1,4 @@
-"""Relay subscriber for the persisted Hermes shared-metrics slice."""
+"""Relay subscriber for the persisted VAEL shared-metrics slice."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ from typing import Any
 
 from agent.relay_runtime import RUNTIME_INSTANCE_KEY
 from hermes_cli.config import detect_install_method
-from hermes_constants import get_hermes_home
+from vael_constants import get_hermes_home
 
 from . import shared_metrics_engagement as engagement
 from . import shared_metrics_signals as signals
@@ -66,7 +66,7 @@ def _named(metric_name: str, dimensions: dict | None) -> tuple[str, dict] | None
 
 
 class SharedMetricsSubscriber:
-    """Persist validated Hermes counters from Relay lifecycle events."""
+    """Persist validated VAEL counters from Relay lifecycle events."""
 
     def __init__(
         self,
@@ -125,7 +125,7 @@ class SharedMetricsSubscriber:
             try:
                 engagement.record(self.store, self._client_resource, surface=surface, route=route)
             except Exception:
-                logger.warning("Unable to update the Hermes engagement rollup", exc_info=True)
+                logger.warning("Unable to update the VAEL engagement rollup", exc_info=True)
 
     def _persist(self, metric_name: str, dimensions: dict, amount: int) -> None:
         store, resource = self.store, self._client_resource
@@ -182,7 +182,7 @@ class SharedMetricsSubscriber:
                 except Exception:
                     saved = False
                     logger.warning(
-                        "Unable to persist the Hermes shared metric: %s", metric_name, exc_info=True
+                        "Unable to persist the VAEL shared metric: %s", metric_name, exc_info=True
                     )
         if ticket and saved:
             with self._lock:

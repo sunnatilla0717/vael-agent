@@ -1,4 +1,4 @@
-"""Core NeMo Relay adapters for physical Hermes provider attempts."""
+"""Core NeMo Relay adapters for physical VAEL provider attempts."""
 
 from __future__ import annotations
 
@@ -40,7 +40,7 @@ def _api_mode(metadata: dict[str, Any] | None) -> str:
 
 
 def _relay_operation_name(provider_name: str, metadata: dict[str, Any] | None) -> str:
-    """Return Relay's canonical operation name when Hermes knows the API mode."""
+    """Return Relay's canonical operation name when VAEL knows the API mode."""
     protocol = _RELAY_PROTOCOL_BY_API_MODE.get(_api_mode(metadata))
     return protocol[0] if protocol is not None else provider_name
 
@@ -98,7 +98,7 @@ class _ManagedAttempt:
         )
 
     def run_callback(self, callback: Callable[..., Any], *args: Any) -> Any:
-        """Run a Hermes callback in a fresh copy of the captured context.
+        """Run a VAEL callback in a fresh copy of the captured context.
         Relay can invoke callbacks while another still owns the captured Context (hence the
         copy); nested relay calls run unmanaged — see relay_runtime.managed_callback_guard."""
         def guarded() -> Any:
@@ -173,7 +173,7 @@ class _ManagedAttempt:
 
 
 def _current_session_id() -> str | None:
-    """Return the inherited Hermes turn's session id, or None outside a live turn."""
+    """Return the inherited VAEL turn's session id, or None outside a live turn."""
     turn = relay_runtime.active_turn()
     return None if turn is None else turn.lease.session_id
 
@@ -183,7 +183,7 @@ def execute(
     session_id: str | None = None, metadata: dict[str, Any] | None = None, defer_logical_completion: bool = False,
 ) -> Any:
     """Run one non-streaming physical provider attempt through Relay.
-    ``session_id`` defaults to the inherited Hermes turn's session (unmanaged when there is none)."""
+    ``session_id`` defaults to the inherited VAEL turn's session (unmanaged when there is none)."""
     attempt = _ManagedAttempt.resolve(session_id, request, metadata, name=name, model_name=model_name)
     if attempt is None:
         return callback(request)
@@ -211,7 +211,7 @@ async def execute_async(
     return attempt.result(managed, defer_logical_completion)
 
 
-# Run under the inherited Hermes turn when present (callers that do not know a session id).
+# Run under the inherited VAEL turn when present (callers that do not know a session id).
 execute_current = execute
 execute_current_async = execute_async
 
@@ -227,7 +227,7 @@ def stream_current(
     finalizer: Callable[[], Any], metadata: dict[str, Any] | None = None,
     defer_logical_completion: bool = False, completed_response_predicate: Callable[[Any], bool] | None = None,
 ) -> Any:
-    """Run a provider stream under the inherited Hermes turn when present.
+    """Run a provider stream under the inherited VAEL turn when present.
     With ``completed_response_predicate`` set, a factory that ignores ``stream=True`` and returns a
     complete response is unwrapped and returned directly (pre-Relay behavior). Detecting that primes
     the lazy pipeline: a genuine first chunk is buffered, but provider latency and pre-first-yield
@@ -648,7 +648,7 @@ class AnthropicStreamAccumulator:
         return {**self._message, "content": blocks}
 
     def response(self, base: Any = None) -> Any:
-        """Return the attribute-shaped response consumed by Hermes."""
+        """Return the attribute-shaped response consumed by VAEL."""
         assembled = self.finalize()
         content = assembled.pop("content", [])
         merged = {**_jsonable_dict(base), **assembled}
@@ -713,7 +713,7 @@ def _complete_logical(
             )
         except Exception:
             # Provider result is authoritative; retain the handle so turn finalization can retry.
-            logger.warning("Hermes Relay logical LLM finalization failed", exc_info=True)
+            logger.warning("VAEL Relay logical LLM finalization failed", exc_info=True)
             return
         if popped is False:
             logger.debug(

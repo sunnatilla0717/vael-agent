@@ -1,13 +1,13 @@
 ---
 sidebar_position: 3
 title: "常见问题与故障排查"
-description: "Hermes Agent 常见问题解答及常见问题解决方案"
+description: "VAEL Agent 常见问题解答及常见问题解决方案"
 ---
 
 # 常见问题与故障排查
 
 本页的 Python 依赖命令使用 [PM 准备的源码环境](./package-management.md#developer-workflow)。
-依赖变更后，请重新激活该 checkout 并重启 Hermes。
+依赖变更后，请重新激活该 checkout 并重启 VAEL。
 
 针对最常见问题的快速解答与修复方法。
 
@@ -15,9 +15,9 @@ description: "Hermes Agent 常见问题解答及常见问题解决方案"
 
 ## 常见问题
 
-### Hermes 支持哪些 LLM 提供商？
+### VAEL 支持哪些 LLM 提供商？
 
-Hermes Agent 可与任何兼容 OpenAI 的 API 配合使用。支持的提供商包括：
+VAEL Agent 可与任何兼容 OpenAI 的 API 配合使用。支持的提供商包括：
 
 - **[OpenRouter](https://openrouter.ai/)** — 通过一个 API key 访问数百个模型（推荐，灵活性强）
 - **Nous Portal** — Nous Research 自有推理端点
@@ -33,28 +33,28 @@ Hermes Agent 可与任何兼容 OpenAI 的 API 配合使用。支持的提供商
 
 ### 支持 Windows 吗？
 
-**原生不支持。** Hermes Agent 需要类 Unix 环境。在 Windows 上，请安装 [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) 并在其中运行 Hermes。标准安装命令在 WSL2 中可完美运行：
+**原生不支持。** VAEL Agent 需要类 Unix 环境。在 Windows 上，请安装 [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) 并在其中运行 VAEL。标准安装命令在 WSL2 中可完美运行：
 
 ```bash
 curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
 ```
 
-### 我在 WSL2 中运行 Hermes，如何控制 Windows 上的普通 Chrome？
+### 我在 WSL2 中运行 VAEL，如何控制 Windows 上的普通 Chrome？
 
 推荐使用 MCP bridge（桥接），而非 `/browser connect`。
 
 推荐方案：
 
-- 在 WSL2 内运行 Hermes
+- 在 WSL2 内运行 VAEL
 - 继续使用 Windows 上已登录的普通 Chrome
 - 通过 `cmd.exe` 或 `powershell.exe` 将 `chrome-devtools-mcp` 添加为 MCP 服务器
-- 让 Hermes 使用生成的 MCP 浏览器工具
+- 让 VAEL 使用生成的 MCP 浏览器工具
 
-这比强制 Hermes 核心浏览器传输直接跨越 WSL2/Windows 边界进行附加更为可靠。
+这比强制 VAEL 核心浏览器传输直接跨越 WSL2/Windows 边界进行附加更为可靠。
 
 参见：
 
-- [在 Hermes 中使用 MCP](../guides/use-mcp-with-hermes.md#wsl2-bridge-hermes-in-wsl-to-windows-chrome)
+- [在 VAEL 中使用 MCP](../guides/use-mcp-with-vael.md#wsl2-bridge-hermes-in-wsl-to-windows-chrome)
 - [浏览器自动化](../user-guide/features/browser.md#wsl2--windows-chrome优先使用-mcp-而非-browser-connect)
 
 ### 支持 Android 吗？
@@ -63,7 +63,7 @@ aarch64 设备可使用预发布的 Termux APT 软件包。请参阅 [Termux 指
 
 ### 我的数据会被发送到哪里？
 
-API 调用**仅发送至您配置的 LLM 提供商**（例如 OpenRouter、您本地的 Ollama 实例）。Hermes Agent 不收集遥测数据、使用数据或分析数据。您的对话、记忆和技能均存储在本地 `~/.hermes/` 目录中。
+API 调用**仅发送至您配置的 LLM 提供商**（例如 OpenRouter、您本地的 Ollama 实例）。VAEL Agent 不收集遥测数据、使用数据或分析数据。您的对话、记忆和技能均存储在本地 `~/.hermes/` 目录中。
 
 ### 可以离线使用 / 使用本地模型吗？
 
@@ -87,25 +87,25 @@ model:
   base_url: http://localhost:11434/v1
 ```
 
-Hermes 会将端点、提供商和 base URL 持久化到 `config.yaml`，重启后仍然有效。如果您的本地服务器只加载了一个模型，`/model custom` 会自动检测到它。您也可以在 config.yaml 中设置 `provider: custom` — 这是一个一等提供商，不是其他任何东西的别名。
+VAEL 会将端点、提供商和 base URL 持久化到 `config.yaml`，重启后仍然有效。如果您的本地服务器只加载了一个模型，`/model custom` 会自动检测到它。您也可以在 config.yaml 中设置 `provider: custom` — 这是一个一等提供商，不是其他任何东西的别名。
 
 此方式适用于 Ollama、vLLM、llama.cpp server、SGLang、LocalAI 等。详情请参阅[配置指南](../user-guide/configuration.md)。
 
 :::tip Ollama 用户
-如果您在 Ollama 中设置了自定义 `num_ctx`（例如 `ollama run --num_ctx 16384`），请确保在 Hermes 中设置匹配的上下文长度 — Ollama 的 `/api/show` 报告的是模型的*最大*上下文，而非您配置的实际 `num_ctx`。
+如果您在 Ollama 中设置了自定义 `num_ctx`（例如 `ollama run --num_ctx 16384`），请确保在 VAEL 中设置匹配的上下文长度 — Ollama 的 `/api/show` 报告的是模型的*最大*上下文，而非您配置的实际 `num_ctx`。
 :::
 
 :::tip 本地模型超时问题
-Hermes 会自动检测本地端点并放宽流式传输超时（读取超时从 120s 提升至 1800s，禁用停滞流检测）。如果在非常大的上下文下仍然超时，请在 `.env` 中设置 `HERMES_STREAM_READ_TIMEOUT=1800`。详情请参阅[本地 LLM 指南](../guides/local-llm-on-mac.md#超时设置)。
+VAEL 会自动检测本地端点并放宽流式传输超时（读取超时从 120s 提升至 1800s，禁用停滞流检测）。如果在非常大的上下文下仍然超时，请在 `.env` 中设置 `HERMES_STREAM_READ_TIMEOUT=1800`。详情请参阅[本地 LLM 指南](../guides/local-llm-on-mac.md#超时设置)。
 :::
 
 ### 费用是多少？
 
-Hermes Agent 本身**免费且开源**（MIT 许可证）。您只需为所选提供商的 LLM API 用量付费。本地模型完全免费运行。
+VAEL Agent 本身**免费且开源**（MIT 许可证）。您只需为所选提供商的 LLM API 用量付费。本地模型完全免费运行。
 
 ### 多人可以使用同一个实例吗？
 
-可以。[消息网关](../user-guide/messaging/index.md)允许多个用户通过 Telegram、Discord、Slack、WhatsApp 或 Home Assistant 与同一个 Hermes Agent 实例交互。访问权限通过白名单（特定用户 ID）和私信配对（第一个发消息的用户获得访问权）来控制。
+可以。[消息网关](../user-guide/messaging/index.md)允许多个用户通过 Telegram、Discord、Slack、WhatsApp 或 Home Assistant 与同一个 VAEL Agent 实例交互。访问权限通过白名单（特定用户 ID）和私信配对（第一个发消息的用户获得访问权）来控制。
 
 ### 记忆（memory）和技能（skills）有什么区别？
 
@@ -116,7 +116,7 @@ Hermes Agent 本身**免费且开源**（MIT 许可证）。您只需为所选�
 
 ### 可以在我自己的 Python 项目中使用吗？
 
-可以。导入 `AIAgent` 类，以编程方式使用 Hermes：
+可以。导入 `AIAgent` 类，以编程方式使用 VAEL：
 
 ```python
 from run_agent import AIAgent
@@ -158,16 +158,16 @@ ls ~/.local/bin/hermes
 
 #### Python 版本不受支持
 
-Hermes 要求 Python 3.14（`>=3.14,<3.15`），不是任意更新版本。
+VAEL 要求 Python 3.14（`>=3.14,<3.15`），不是任意更新版本。
 源码安装脚本和软件包会提供相应的运行时。
 手动开发环境请按照 [开发指南](../developer-guide/contributing.md)准备。
 不要在签名应用或容器内部替换 Python 来修复版本错误。
 
 #### 终端命令提示 `node: command not found`（或 `nvm`、`pyenv`、`asdf` 等）
 
-**原因：** Hermes 在启动时通过运行一次 `bash -l` 构建每个会话的环境快照。bash 登录 shell 会读取 `/etc/profile`、`~/.bash_profile` 和 `~/.profile`，但**不会 source `~/.bashrc`** — 因此在 `~/.bashrc` 中安装自身的工具（`nvm`、`asdf`、`pyenv`、`cargo`、自定义 `PATH` 导出）对快照不可见。当 Hermes 在 systemd 下运行或在未预加载交互式 shell 配置的最小 shell 中运行时，此问题最为常见。
+**原因：** VAEL 在启动时通过运行一次 `bash -l` 构建每个会话的环境快照。bash 登录 shell 会读取 `/etc/profile`、`~/.bash_profile` 和 `~/.profile`，但**不会 source `~/.bashrc`** — 因此在 `~/.bashrc` 中安装自身的工具（`nvm`、`asdf`、`pyenv`、`cargo`、自定义 `PATH` 导出）对快照不可见。当 VAEL 在 systemd 下运行或在未预加载交互式 shell 配置的最小 shell 中运行时，此问题最为常见。
 
-**解决方案：** Hermes 默认自动 source `~/.bashrc`。如果这还不够 — 例如您是 zsh 用户，PATH 在 `~/.zshrc` 中，或者您从独立文件初始化 `nvm` — 请在 `~/.hermes/config.yaml` 中列出需要额外 source 的文件：
+**解决方案：** VAEL 默认自动 source `~/.bashrc`。如果这还不够 — 例如您是 zsh 用户，PATH 在 `~/.zshrc` 中，或者您从独立文件初始化 `nvm` — 请在 `~/.hermes/config.yaml` 中列出需要额外 source 的文件：
 
 ```yaml
 terminal:
@@ -290,7 +290,7 @@ hermes chat --model openrouter/meta-llama/llama-3.1-70b-instruct
 
 #### 上下文长度超限
 
-**原因：** 对话内容超出模型的上下文窗口，或 Hermes 检测到的模型上下文长度有误。
+**原因：** 对话内容超出模型的上下文窗口，或 VAEL 检测到的模型上下文长度有误。
 
 **解决方案：**
 ```bash
@@ -304,7 +304,7 @@ hermes chat
 hermes chat --model openrouter/google/gemini-3-flash-preview
 ```
 
-如果在第一次长对话时就出现此问题，Hermes 可能检测到了错误的模型上下文长度。检查检测结果：
+如果在第一次长对话时就出现此问题，VAEL 可能检测到了错误的模型上下文长度。检查检测结果：
 
 查看 CLI 启动行 — 它会显示检测到的上下文长度（例如 `📊 Context limit: 128000 tokens`）。您也可以在会话中使用 `/usage` 查看。
 
@@ -336,14 +336,14 @@ custom_providers:
 
 #### 命令被标记为危险而阻止
 
-**原因：** Hermes 检测到潜在的破坏性命令（例如 `rm -rf`、`DROP TABLE`）。这是一项安全功能。
+**原因：** VAEL 检测到潜在的破坏性命令（例如 `rm -rf`、`DROP TABLE`）。这是一项安全功能。
 
 **解决方案：** 出现提示时，检查命令并输入 `y` 批准执行。您也可以：
 - 要求智能体使用更安全的替代方案
 - 在[安全文档](../user-guide/security.md)中查看完整的危险模式列表
 
 :::tip
-这是预期行为 — Hermes 绝不会静默执行破坏性命令。审批提示会向您显示将要执行的确切内容。
+这是预期行为 — VAEL 绝不会静默执行破坏性命令。审批提示会向您显示将要执行的确切内容。
 :::
 
 #### 通过消息网关时 `sudo` 不起作用
@@ -581,7 +581,7 @@ hermes chat
 
 另请参阅：
 - [MCP（模型上下文协议）](../user-guide/features/mcp.md)
-- [在 Hermes 中使用 MCP](../guides/use-mcp-with-hermes.md)
+- [在 VAEL 中使用 MCP](../guides/use-mcp-with-vael.md)
 - [MCP 配置参考](./mcp-config-reference.md)
 
 #### MCP 超时错误
@@ -594,7 +594,7 @@ hermes chat
 - 对于远程 HTTP MCP 服务器，检查网络连接
 
 :::warning
-如果 MCP 服务器在请求中途崩溃，Hermes 会报告超时。请检查服务器自身的日志（而非仅 Hermes 日志）以诊断根本原因。
+如果 MCP 服务器在请求中途崩溃，VAEL 会报告超时。请检查服务器自身的日志（而非仅 VAEL 日志）以诊断根本原因。
 :::
 
 ---
@@ -629,7 +629,7 @@ Profiles 是构建在 `HERMES_HOME` 之上的托管层。您*可以*在每次命
 
 **场景：** 您日常使用 GPT-5.4，但 Gemini 或 Grok 写社交媒体内容更好。每次手动切换模型很繁琐。
 
-**解决方案：委托配置。** Hermes 可以自动将子智能体路由到不同的模型。在 `~/.hermes/config.yaml` 中设置：
+**解决方案：委托配置。** VAEL 可以自动将子智能体路由到不同的模型。在 `~/.hermes/config.yaml` 中设置：
 
 ```yaml
 delegation:
@@ -637,7 +637,7 @@ delegation:
   provider: "openrouter"                    # 子智能体的提供商
 ```
 
-现在当您告诉 Hermes "帮我写一个关于 X 的 Twitter 帖子"并生成 `delegate_task` 子智能体时，该子智能体将在 Gemini 上运行，而非您的主模型。您的主对话仍在 GPT-5.4 上进行。
+现在当您告诉 VAEL "帮我写一个关于 X 的 Twitter 帖子"并生成 `delegate_task` 子智能体时，该子智能体将在 Gemini 上运行，而非您的主模型。您的主对话仍在 GPT-5.4 上进行。
 
 您也可以在 prompt 中明确指定：*"委托一个任务来撰写关于我们产品发布的社交媒体帖子。让你的子智能体负责实际写作。"* 智能体将使用 `delegate_task`，它会自动读取委托配置。
 
@@ -653,9 +653,9 @@ delegation:
 
 ### 在一个 WhatsApp 号码上运行多个智能体（按聊天绑定）
 
-**场景：** 在 OpenClaw 中，您可以将多个独立智能体绑定到特定的 WhatsApp 聊天 — 一个用于家庭购物清单群组，另一个用于您的私聊。Hermes 能做到吗？
+**场景：** 在 OpenClaw 中，您可以将多个独立智能体绑定到特定的 WhatsApp 聊天 — 一个用于家庭购物清单群组，另一个用于您的私聊。VAEL 能做到吗？
 
-**当前限制：** Hermes 的每个 profile 都需要自己的 WhatsApp 号码/会话。您无法将多个 profiles 绑定到同一个 WhatsApp 号码上的不同聊天 — WhatsApp bridge（Baileys）每个号码使用一个已认证的会话。
+**当前限制：** VAEL 的每个 profile 都需要自己的 WhatsApp 号码/会话。您无法将多个 profiles 绑定到同一个 WhatsApp 号码上的不同聊天 — WhatsApp bridge（Baileys）每个号码使用一个已认证的会话。
 
 **变通方案：**
 
@@ -671,7 +671,7 @@ delegation:
 
 ### 控制 Telegram 中显示的内容（隐藏日志和推理过程）
 
-**场景：** 您在 Telegram 中看到了网关执行日志、Hermes 推理过程和工具调用详情，而不是最终输出。
+**场景：** 您在 Telegram 中看到了网关执行日志、VAEL 推理过程和工具调用详情，而不是最终输出。
 
 **解决方案：** `config.yaml` 中的 `display.tool_progress` 设置控制显示多少工具活动：
 
@@ -717,7 +717,7 @@ skills:
 
 **场景：** 您有一个 Telegram 或 Discord 线程，多人在其中 @ bot。您希望该线程中的所有 @ 都属于一个共享对话，而非每个用户各自独立的会话。
 
-**当前行为：** Hermes 在大多数平台上按用户 ID 创建会话，因此每个人都有自己的对话上下文。这是出于隐私和上下文隔离的设计考量。
+**当前行为：** VAEL 在大多数平台上按用户 ID 创建会话，因此每个人都有自己的对话上下文。这是出于隐私和上下文隔离的设计考量。
 
 **变通方案：**
 
@@ -727,13 +727,13 @@ skills:
 
 3. **使用 Discord 频道。** Discord 会话按频道键控，因此同一频道中的所有用户共享上下文。为共享对话使用专用频道。
 
-### 将 Hermes 迁移到另一台机器
+### 将 VAEL 迁移到另一台机器
 
 **场景：** 您在一台机器上积累了技能、cron 作业和记忆，想将所有内容迁移到新的专用 Linux 机器。
 
 **解决方案：**
 
-1. 在新机器上安装 Hermes Agent：
+1. 在新机器上安装 VAEL Agent：
    ```bash
    curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
    ```
@@ -743,7 +743,7 @@ skills:
    hermes backup
    ```
    归档保存到 `~/hermes-backup-<timestamp>.zip`。
-   完整备份涵盖 Hermes 数据根目录中的配置、凭据、记忆、技能、会话和 profiles。
+   完整备份涵盖 VAEL 数据根目录中的配置、凭据、记忆、技能、会话和 profiles。
    它不是应用程序或运行时的完整镜像。
 
 3. 将 zip 文件复制到新机器并导入：
@@ -776,7 +776,7 @@ hermes profile import ./work-backup.tar.gz work
 | 功能 | `hermes backup` | `hermes profile export` |
 | :--- | :--- | :--- |
 | **使用场景** | **整机迁移** | **移植/共享特定 profile** |
-| **范围** | Hermes 数据根目录，下列排除项除外 | 单个 profile 目录 |
+| **范围** | VAEL 数据根目录，下列排除项除外 | 单个 profile 目录 |
 | **包含内容** | 所有 profiles、全局配置、API key、会话 | 单个 profile：SOUL.md、记忆、会话、技能 |
 | **凭据** | **包含**（`.env` 和 `auth.json`） | **排除**（为安全共享而剥离） |
 | **格式** | `.zip` | `.tar.gz` |
@@ -802,14 +802,14 @@ rsync -av --exclude='hermes-agent' ~/.hermes/ newmachine:~/.hermes/
 ```
 
 :::tip
-`hermes backup` 即使在 Hermes 正在运行时也能生成一致的快照。还原的归档文件不包含机器本地的运行时文件，如 `gateway.pid` 和 `cron.pid`。
+`hermes backup` 即使在 VAEL 正在运行时也能生成一致的快照。还原的归档文件不包含机器本地的运行时文件，如 `gateway.pid` 和 `cron.pid`。
 :::
 
 ### 安装后重新加载 shell 时出现权限拒绝
 
-**场景：** 运行 Hermes 安装程序后，`source ~/.zshrc` 提示权限拒绝错误。
+**场景：** 运行 VAEL 安装程序后，`source ~/.zshrc` 提示权限拒绝错误。
 
-**原因：** 这通常发生在 `~/.zshrc`（或 `~/.bashrc`）文件权限不正确，或安装程序无法干净写入时。这不是 Hermes 特有的问题 — 而是 shell 配置权限问题。
+**原因：** 这通常发生在 `~/.zshrc`（或 `~/.bashrc`）文件权限不正确，或安装程序无法干净写入时。这不是 VAEL 特有的问题 — 而是 shell 配置权限问题。
 
 **解决方案：**
 ```bash
@@ -858,4 +858,4 @@ hermes chat -q "hello" --model anthropic/claude-opus-4.7
 
 1. **搜索现有 issue：** [GitHub Issues](https://github.com/NousResearch/hermes-agent/issues)
 2. **向社区提问：** [Nous Research Discord](https://discord.gg/nousresearch)
-3. **提交 bug 报告：** 请包含您的操作系统、Python 版本（`python3 --version`）、Hermes 版本（`hermes --version`）以及完整的错误信息
+3. **提交 bug 报告：** 请包含您的操作系统、Python 版本（`python3 --version`）、VAEL 版本（`hermes --version`）以及完整的错误信息

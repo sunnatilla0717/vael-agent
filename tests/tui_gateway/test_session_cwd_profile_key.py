@@ -14,7 +14,7 @@ import tui_gateway.server as server
 
 def test_secondary_profile_session_cwd_is_found_inside_its_scope(monkeypatch, tmp_path):
     from agent import secret_scope
-    from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+    from vael_constants import reset_hermes_home_override, set_hermes_home_override
 
     monkeypatch.setattr(terminal_tool, "_task_env_overrides", {})
     monkeypatch.setattr(terminal_tool, "_session_cwd", {})

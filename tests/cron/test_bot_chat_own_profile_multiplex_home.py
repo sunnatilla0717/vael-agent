@@ -13,7 +13,7 @@ import pytest
 
 import cron.scheduler_delivery as delivery
 from agent.secret_scope import set_multiplex_active
-from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+from vael_constants import reset_hermes_home_override, set_hermes_home_override
 
 
 @pytest.fixture

@@ -1,37 +1,42 @@
 /**
- * Hermes Agent — Custom Docusaurus Theme
- * Matches the landing page branding: amber-on-dark, terminal aesthetic
- * Colors from landingpage/style.css
+ * VAEL Agent — Custom Docusaurus Theme
+ * CyberAI direction: Claude-orange on warm charcoal, terminal aesthetic.
+ * Single source of truth for the palette is docs/design-system.md
+ * (#D97757 primary, #CC785C accent). Keep the hexes in sync with it.
  */
 
-/* Import fonts to match landing page */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+/* System font stacks only — matches the desktop app's SYSTEM_SANS and drops
+   the Google Fonts request (no webfont dependency for the default look). */
 
 :root {
-  /* Dark amber palette for light mode — readable on white (WCAG AA compliant)
-     Current gold #FFD700 has only 1.4:1 contrast on white; these tones pass 4.5:1+ */
-  --ifm-color-primary: #8B6508;
-  --ifm-color-primary-dark: #7A5800;
-  --ifm-color-primary-darker: #6E4F00;
-  --ifm-color-primary-darkest: #5A4100;
-  --ifm-color-primary-light: #9E7410;
-  --ifm-color-primary-lighter: #B38319;
-  --ifm-color-primary-lightest: #C89222;
+  /* Light mode runs on warm paper. #D97757 is only 3.1:1 on white, so the
+     light-mode primary is the same hue darkened to #B74C29 (5.2:1, WCAG AA).
+     Dark mode below uses the brand hex directly (5.9:1 on warm charcoal). */
+  --ifm-color-primary: #B74C29;
+  --ifm-color-primary-dark: #A84626;
+  --ifm-color-primary-darker: #9D4123;
+  --ifm-color-primary-darkest: #8B3A1F;
+  --ifm-color-primary-light: #C4512C;
+  --ifm-color-primary-lighter: #CF562E;
+  --ifm-color-primary-lightest: #D3603A;
 
-  --ifm-font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --ifm-font-family-monospace: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  --ifm-font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'SF Pro Text', system-ui, Roboto, 'Helvetica Neue', sans-serif;
+  --ifm-font-family-monospace: 'JetBrains Mono', 'Cascadia Mono', 'Cascadia Code', 'Fira Code', 'SFMono-Regular', 'DejaVu Sans Mono', monospace;
 
   --ifm-code-font-size: 90%;
   --ifm-heading-font-weight: 600;
 
-  --ifm-link-color: #7A5800;
-  --ifm-link-hover-color: #5A4100;
+  --ifm-background-color: #FBF7F1;
+  --ifm-font-color-base: #1F1B16;
 
-  /* Catalog tier pills are inline styles. Gold #FFD700 is 1.4:1 on white;
-     these light-mode tones stay above 4.5:1. Dark mode overrides below. */
+  --ifm-link-color: #B74C29;
+  --ifm-link-hover-color: #8B3A1F;
+
+  /* Catalog tier pills are inline styles. Brand orange #D97757 is 3.1:1 on
+     white; these light-mode tones stay above 4.5:1. Dark mode overrides below. */
   --plugin-catalog-official: var(--ifm-color-primary-darker);
-  --plugin-catalog-official-bg: rgba(110, 79, 0, 0.1);
-  --plugin-catalog-official-border: rgba(110, 79, 0, 0.4);
+  --plugin-catalog-official-bg: rgba(157, 65, 35, 0.1);
+  --plugin-catalog-official-border: rgba(157, 65, 35, 0.4);
   --plugin-catalog-community: #475569;
   --plugin-catalog-community-bg: rgba(71, 85, 105, 0.1);
   --plugin-catalog-community-border: rgba(71, 85, 105, 0.35);
@@ -39,54 +44,54 @@
   --plugin-catalog-link: #1d4ed8;
 }
 
-/* Dark mode — the PRIMARY mode, matches landing page */
+/* Dark mode — the PRIMARY mode (warm charcoal home turf) */
 [data-theme='dark'] {
-  --ifm-color-primary: #FFD700;
-  --ifm-color-primary-dark: #E6C200;
-  --ifm-color-primary-darker: #D9B700;
-  --ifm-color-primary-darkest: #B39600;
-  --ifm-color-primary-light: #FFDD33;
-  --ifm-color-primary-lighter: #FFE14D;
-  --ifm-color-primary-lightest: #FFEB80;
+  --ifm-color-primary: #D97757;
+  --ifm-color-primary-dark: #D3633E;
+  --ifm-color-primary-darker: #D0572F;
+  --ifm-color-primary-darkest: #B34A28;
+  --ifm-color-primary-light: #DD876B;
+  --ifm-color-primary-lighter: #E1957C;
+  --ifm-color-primary-lightest: #E5A38E;
 
-  --ifm-background-color: #07070d;
-  --ifm-background-surface-color: #0f0f18;
-  --ifm-navbar-background-color: #07070dEE;
-  --ifm-footer-background-color: #050509;
-  --ifm-color-emphasis-100: #14142a;
-  --ifm-color-emphasis-200: #1a1a30;
+  --ifm-background-color: #191410;
+  --ifm-background-surface-color: #221A15;
+  --ifm-navbar-background-color: #191410EE;
+  --ifm-footer-background-color: #14100C;
+  --ifm-color-emphasis-100: #241D18;
+  --ifm-color-emphasis-200: #2A211B;
 
-  --ifm-font-color-base: #e8e4dc;
-  --ifm-font-color-secondary: #9a968e;
+  --ifm-font-color-base: #F5EDE3;
+  --ifm-font-color-secondary: #A9998B;
 
-  --ifm-link-color: #FFD700;
-  --ifm-link-hover-color: #FFBF00;
+  --ifm-link-color: #D97757;
+  --ifm-link-hover-color: #E1957C;
 
-  --plugin-catalog-official: #ffd700;
-  --plugin-catalog-official-bg: rgba(255, 215, 0, 0.08);
-  --plugin-catalog-official-border: rgba(255, 215, 0, 0.25);
+  --plugin-catalog-official: #D97757;
+  --plugin-catalog-official-bg: rgba(217, 119, 87, 0.08);
+  --plugin-catalog-official-border: rgba(217, 119, 87, 0.25);
   --plugin-catalog-community: #94a3b8;
   --plugin-catalog-community-bg: rgba(148, 163, 184, 0.08);
   --plugin-catalog-community-border: rgba(148, 163, 184, 0.2);
 
-  --ifm-code-background: #0f0f18;
+  --ifm-code-background: #241D18;
 
-  --ifm-toc-border-color: rgba(255, 215, 0, 0.08);
-  --ifm-hr-border-color: rgba(255, 215, 0, 0.08);
+  --ifm-toc-border-color: rgba(217, 119, 87, 0.08);
+  --ifm-hr-border-color: rgba(217, 119, 87, 0.08);
 
-  --docusaurus-highlighted-code-line-bg: rgba(255, 215, 0, 0.08);
+  --docusaurus-highlighted-code-line-bg: rgba(217, 119, 87, 0.08);
 }
 
 /* Subtle dot grid background matching landing page */
 [data-theme='dark'] .main-wrapper {
-  background-image: radial-gradient(rgba(255, 215, 0, 0.02) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(217, 119, 87, 0.02) 1px, transparent 1px);
   background-size: 32px 32px;
 }
 
 /* Navbar styling */
 .navbar {
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 215, 0, 0.08);
+  border-bottom: 1px solid rgba(217, 119, 87, 0.08);
 }
 
 /* backdrop-filter creates a stacking context that hides
@@ -108,22 +113,22 @@
 }
 
 [data-theme='dark'] .menu__link--active:not(.menu__link--sublist) {
-  background-color: rgba(255, 215, 0, 0.08);
-  border-left: 3px solid #FFD700;
+  background-color: rgba(217, 119, 87, 0.08);
+  border-left: 3px solid #D97757;
   padding-left: calc(var(--ifm-menu-link-padding-horizontal) - 3px);
 }
 
 /* Light mode sidebar active */
 [data-theme='light'] .menu__link--active:not(.menu__link--sublist) {
-  background-color: rgba(139, 101, 8, 0.08);
-  border-left: 3px solid #8B6508;
+  background-color: rgba(183, 76, 41, 0.08);
+  border-left: 3px solid #B74C29;
   padding-left: calc(var(--ifm-menu-link-padding-horizontal) - 3px);
 }
 
 /* Code blocks */
 [data-theme='dark'] .prism-code {
-  background-color: #0a0a12 !important;
-  border: 1px solid rgba(255, 215, 0, 0.06);
+  background-color: #141110 !important;
+  border: 1px solid rgba(217, 119, 87, 0.06);
 }
 
 /* Text diagrams: preserve spacing, disable ligatures, and prefer box-drawing-safe fonts */
@@ -164,9 +169,9 @@ pre.prism-code.language-ascii code {
   width: 100%;
   max-width: 900px;
   margin: 1.25rem auto 0.5rem;
-  border: 1px solid rgba(255, 215, 0, 0.08);
+  border: 1px solid rgba(217, 119, 87, 0.08);
   border-radius: 12px;
-  background: #0a0a12;
+  background: #141110;
 }
 
 .docs-figure-caption {
@@ -178,8 +183,8 @@ pre.prism-code.language-ascii code {
 
 /* Admonitions — gold-tinted */
 [data-theme='dark'] .alert--info {
-  --ifm-alert-background-color: rgba(255, 215, 0, 0.05);
-  --ifm-alert-border-color: rgba(255, 215, 0, 0.15);
+  --ifm-alert-background-color: rgba(217, 119, 87, 0.05);
+  --ifm-alert-border-color: rgba(217, 119, 87, 0.15);
 }
 
 /* Table styling */
@@ -188,41 +193,41 @@ pre.prism-code.language-ascii code {
 }
 
 [data-theme='dark'] table th {
-  background-color: rgba(255, 215, 0, 0.06);
-  border-color: rgba(255, 215, 0, 0.12);
+  background-color: rgba(217, 119, 87, 0.06);
+  border-color: rgba(217, 119, 87, 0.12);
 }
 
 [data-theme='dark'] table td {
-  border-color: rgba(255, 215, 0, 0.06);
+  border-color: rgba(217, 119, 87, 0.06);
 }
 
 /* Light mode table styling */
 [data-theme='light'] table th {
-  background-color: rgba(139, 101, 8, 0.06);
-  border-color: rgba(139, 101, 8, 0.15);
+  background-color: rgba(183, 76, 41, 0.06);
+  border-color: rgba(183, 76, 41, 0.15);
 }
 
 [data-theme='light'] table td {
-  border-color: rgba(139, 101, 8, 0.10);
+  border-color: rgba(183, 76, 41, 0.10);
 }
 
 /* Footer */
 .footer {
-  border-top: 1px solid rgba(255, 215, 0, 0.08);
+  border-top: 1px solid rgba(217, 119, 87, 0.08);
 }
 
 .footer a {
-  color: #9a968e;
+  color: #A9998B;
   transition: color 0.2s;
 }
 
 [data-theme='dark'] .footer a:hover {
-  color: #FFD700;
+  color: #D97757;
   text-decoration: none;
 }
 
 [data-theme='light'] .footer a:hover {
-  color: #7A5800;
+  color: #8B3A1F;
   text-decoration: none;
 }
 
@@ -233,22 +238,22 @@ pre.prism-code.language-ascii code {
 }
 
 [data-theme='dark'] ::-webkit-scrollbar-track {
-  background: #07070d;
+  background: #191410;
 }
 
 [data-theme='dark'] ::-webkit-scrollbar-thumb {
-  background: #1a1a30;
+  background: #2A211B;
   border-radius: 4px;
 }
 
 [data-theme='dark'] ::-webkit-scrollbar-thumb:hover {
-  background: #2a2a40;
+  background: #3A2E26;
 }
 
 /* Search bar */
 [data-theme='dark'] .DocSearch-Button {
-  background-color: #0f0f18;
-  border: 1px solid rgba(255, 215, 0, 0.08);
+  background-color: #221A15;
+  border: 1px solid rgba(217, 119, 87, 0.08);
 }
 
 /* ─── Mobile sidebar improvements ─────────────────────────────────────────── */
@@ -264,7 +269,7 @@ pre.prism-code.language-ascii code {
     font-weight: 600;
     font-size: 1rem;
     padding: 0.75rem 0.75rem;
-    border-bottom: 1px solid rgba(255, 215, 0, 0.06);
+    border-bottom: 1px solid rgba(217, 119, 87, 0.06);
   }
 
   /* Category caret — more visible */
@@ -275,7 +280,7 @@ pre.prism-code.language-ascii code {
   /* Indent subcategories clearly */
   .menu__list .menu__list {
     padding-left: 0.75rem;
-    border-left: 1px solid rgba(255, 215, 0, 0.06);
+    border-left: 1px solid rgba(217, 119, 87, 0.06);
     margin-left: 0.5rem;
   }
 
@@ -292,7 +297,7 @@ pre.prism-code.language-ascii code {
 }
 
 /* Hero banner for docs landing if needed */
-.hero--hermes {
-  background: linear-gradient(135deg, #07070d 0%, #0f0f18 100%);
+.hero--vael {
+  background: linear-gradient(135deg, #191410 0%, #221A15 100%);
   padding: 4rem 0;
 }

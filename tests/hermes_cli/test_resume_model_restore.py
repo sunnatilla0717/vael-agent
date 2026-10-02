@@ -10,7 +10,7 @@ import json
 
 
 import cli as cli_mod
-from hermes_state import SessionDB
+from vael_state import SessionDB
 
 
 def _make_stub(**overrides):

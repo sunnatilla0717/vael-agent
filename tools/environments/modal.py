@@ -11,7 +11,7 @@ import threading
 from pathlib import Path
 from typing import Any, Optional
 
-from hermes_constants import get_hermes_home
+from vael_constants import get_hermes_home
 from tools.environments.base import BaseEnvironment, _load_json_store, _save_json_store
 from tools.environments.base_output import _ThreadedProcessHandle
 from tools.environments.file_sync import (
@@ -260,7 +260,7 @@ class ModalEnvironment(BaseEnvironment):
         if self._persistent:
             async def _snapshot():
                 # ttl=None: the SDK default (30 days) would silently expire an idle
-                # persistent sandbox's snapshot; Hermes owns its lifetime.
+                # persistent sandbox's snapshot; VAEL owns its lifetime.
                 return (await self._sandbox.snapshot_filesystem.aio(ttl=None)).object_id
             try:
                 snapshot_id = self._worker.run_coroutine(_snapshot(), timeout=60)

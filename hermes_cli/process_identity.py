@@ -1,6 +1,6 @@
 """Process identity: spawn tags, the machine-wide spawn ledger, and the Windows job-object self-attach.
 
-Three layers make every long-lived Hermes process positively identifiable, so reapers (``hermes
+Three layers make every long-lived VAEL process positively identifiable, so reapers (``vael
 update``, Desktop startup sweeps) never guess lineage from PPID archaeology or cmdline matching:
 1. spawn tags (``HERMES_SPAWN`` env stamped by the spawner); 2. a ``(pid, create_time)`` ledger;
 3. Windows job-object self-attach with ``KILL_ON_JOB_CLOSE`` so the whole child tree dies with the
@@ -45,7 +45,7 @@ def install_id(project_root: Optional[Path] = None) -> str:
     """Stable 12-hex identifier for THIS install (derived from its path)."""
     if project_root is None:
         try:
-            from hermes_constants import PROJECT_ROOT as _root
+            from vael_constants import PROJECT_ROOT as _root
 
             project_root = Path(_root)
         except Exception:
@@ -133,7 +133,7 @@ class LedgerEntry:
 def _ledger_path() -> Path:
     """Machine-root ledger path (shared by every profile of this install)."""
     try:
-        from hermes_constants import get_default_hermes_root
+        from vael_constants import get_default_hermes_root
 
         return Path(get_default_hermes_root()) / LEDGER_FILENAME
     except Exception:
@@ -211,7 +211,7 @@ def register_self(purpose: str, *, project_root: Optional[Path] = None, detail: 
     pipeline can relaunch a manually-started serve with its real bind address, and ``isolated``
     so attach-first discovery skips a backend that opted out of the host singleton.
     """
-    from hermes_constants import hermes_home_key
+    from vael_constants import hermes_home_key
 
     tag = parse_spawn_tag(os.environ.get(SPAWN_ENV_VAR))
     spawner_pid, spawner_create = (tag.spawner_pid, tag.spawner_create) if tag else _desktop_spawner_identity()
@@ -228,7 +228,7 @@ def register_self(purpose: str, *, project_root: Optional[Path] = None, detail: 
     try:
         import sys as _sys
 
-        # 10 tokens: enough for `hermes serve --host X --port N --profile P` while bounding
+        # 10 tokens: enough for `vael serve --host X --port N --profile P` while bounding
         # pathological argv. Structured detail is canonical; argv is the human-readable fallback.
         entry.argv = " ".join(_sys.argv[:10])
     except Exception:
@@ -303,7 +303,7 @@ def _append_entry(entry: LedgerEntry) -> bool:
         ]
         pruned.append(asdict(entry))
         try:
-            from hermes_constants import mkdir_under_hermes_home
+            from vael_constants import mkdir_under_hermes_home
             mkdir_under_hermes_home(path.parent)
             # argv may carry surrogate-escaped bytes (non-UTF-8 paths); ensure_ascii keeps the
             # utf-8 text handle from raising UnicodeEncodeError (a ValueError, not an OSError).
@@ -318,7 +318,7 @@ def register_child(pid: int, purpose: str, *, project_root: Optional[Path] = Non
     """Record a CHILD process this process just spawned. Best-effort.
 
     Mirror of :func:`register_self` for children that cannot register themselves (stdio MCP
-    helpers: arbitrary ``npx``/binary servers never import Hermes code). Records the child's
+    helpers: arbitrary ``npx``/binary servers never import VAEL code). Records the child's
     ``(pid, create_time)`` with THIS process as spawner, so a helper whose spawner is provably gone
     is a reapable orphan and one whose spawner is alive is never reaped.
     """

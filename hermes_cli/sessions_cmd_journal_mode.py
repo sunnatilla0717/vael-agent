@@ -1,4 +1,4 @@
-"""`hermes sessions set-journal-mode delete|wal` — the offline self-service path for #100896.
+"""`vael sessions set-journal-mode delete|wal` — the offline self-service path for #100896.
 
 ``database.journal_mode: delete`` can never self-apply on a store that is already WAL:
 ``apply_wal_with_fallback`` deliberately never live-downgrades (#68545 — other gateway/cron/worker connections
@@ -30,7 +30,7 @@ def _header_mode(db_path: Path) -> str:
 def _refusal(target: str, current: str, *, on_cross_vm_fs: bool) -> Optional[str]:
     """Admission checks independent of holder discovery, which is enforced for every platform."""
     if current == "not-a-database" or current.startswith("unknown("):
-        return (f"its file header reads {current}, so it is not a Hermes SQLite store this command can convert "
+        return (f"its file header reads {current}, so it is not a VAEL SQLite store this command can convert "
                 "(pass --db PATH to point at one).")
     if target == "wal" and on_cross_vm_fs:
         return ("WAL shared memory silently corrupts on cross-VM filesystems (virtiofs/9p — Docker Desktop, "
@@ -40,9 +40,9 @@ def _refusal(target: str, current: str, *, on_cross_vm_fs: bool) -> Optional[str
 
 
 def cmd_set_journal_mode(args) -> int:
-    from hermes_state import _default_db_path
-    from hermes_state_holders import describe_holder_pid, foreign_state_db_holders
-    from hermes_state_wal import (_path_on_cross_vm_fs, _set_journal_mode_no_wait, is_sqlite_wal_reset_vulnerable,
+    from vael_state import _default_db_path
+    from vael_state_holders import describe_holder_pid, foreign_state_db_holders
+    from vael_state_wal import (_path_on_cross_vm_fs, _set_journal_mode_no_wait, is_sqlite_wal_reset_vulnerable,
                                   resolve_journal_mode)
 
     target = args.mode

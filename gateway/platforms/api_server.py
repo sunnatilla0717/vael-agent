@@ -159,7 +159,7 @@ from gateway.browser_control_broker import (
 from gateway.platforms._shared import coerce_port as _coerce_port
 from gateway.platforms._shared import get_scoped_secret as _get_scoped_secret
 from gateway.platforms.tcp_site import start_tcp_site
-from hermes_state_errors import SessionActiveWriteGuardError
+from vael_state_errors import SessionActiveWriteGuardError
 
 
 logger = logging.getLogger(__name__)
@@ -737,7 +737,7 @@ class ResponseStore:
             self._conn = sqlite3.connect(":memory:", check_same_thread=False)
             self._db_path = None
         # Shared WAL-fallback so response_store.db degrades gracefully on NFS/SMB/FUSE homes.
-        from hermes_state_wal import apply_wal_with_fallback
+        from vael_state_wal import apply_wal_with_fallback
         apply_wal_with_fallback(self._conn, db_label="response_store.db")
         self._conn.execute(
             "CREATE TABLE IF NOT EXISTS responses ("
@@ -1063,7 +1063,7 @@ def _names_launch_profile(profile: str) -> bool:
     un-prefixed and prefixed requests are one profile and must key one session."""
     try:
         from hermes_cli.profiles import profile_matches_home
-        from hermes_constants import get_routing_process_hermes_home
+        from vael_constants import get_routing_process_hermes_home
         return profile_matches_home(profile, home=get_routing_process_hermes_home())
     except Exception:
         return False
@@ -1244,7 +1244,7 @@ class APIServerAdapter(OpenAICompatRoutesMixin, BasePlatformAdapter):
         self._app: Optional["web.Application"] = None
         self._runner: Optional["web.AppRunner"] = None
         self._site: Optional["web.TCPSite"] = None
-        from hermes_constants import get_hermes_home
+        from vael_constants import get_hermes_home
         self._response_store = ResponseStore()  # this home's; a /p/<profile>/ route gets its own
         self._response_store_home = str(get_hermes_home())
         self._response_stores: Dict[str, ResponseStore] = {}
@@ -1702,7 +1702,7 @@ class APIServerAdapter(OpenAICompatRoutesMixin, BasePlatformAdapter):
                 from agent.secret_scope import is_multiplex_active
                 if is_multiplex_active():
                     from gateway.run import _profile_runtime_scope
-                    from hermes_constants import get_hermes_home
+                    from vael_constants import get_hermes_home
                     return _profile_runtime_scope(get_hermes_home())
             return nullcontext()
         from gateway.run import _profile_runtime_scope
@@ -1875,7 +1875,7 @@ class APIServerAdapter(OpenAICompatRoutesMixin, BasePlatformAdapter):
     def _current_response_store(self) -> "ResponseStore":
         """Responses state of the routed profile's home. Conversation names are client-chosen, so one
         shared store let any profile's key read, chain onto and overwrite another's (#84253)."""
-        from hermes_constants import get_hermes_home
+        from vael_constants import get_hermes_home
         home = get_hermes_home()
         if str(home) == self._response_store_home:
             return self._response_store
@@ -1890,7 +1890,7 @@ class APIServerAdapter(OpenAICompatRoutesMixin, BasePlatformAdapter):
     def _open_and_cache_session_db(self, home) -> Optional[Any]:
         """Cached SessionDB for ``home`` (shared by both ``_ensure_session_db*``). Never writes
         ``self._session_db`` (explicit override only), so no profile pins later requests."""
-        from hermes_state_registry import acquire
+        from vael_state_registry import acquire
         key = str(home)
         with self._session_db_cache_lock:
             if self._session_db_cache_closed:
@@ -1923,7 +1923,7 @@ class APIServerAdapter(OpenAICompatRoutesMixin, BasePlatformAdapter):
             if db is shared_db:
                 continue
             try:
-                from hermes_state_registry import release_or_close
+                from vael_state_registry import release_or_close
                 release_or_close(db)
             except Exception:
                 logger.debug("Failed to close API-server SessionDB", exc_info=True)
@@ -1934,7 +1934,7 @@ class APIServerAdapter(OpenAICompatRoutesMixin, BasePlatformAdapter):
         if self._session_db is not None:
             return self._session_db
         try:
-            from hermes_constants import get_hermes_home
+            from vael_constants import get_hermes_home
             return self._open_and_cache_session_db(get_hermes_home())
         except Exception as e:
             logger.debug("SessionDB unavailable for API server: %s", e)
@@ -1946,7 +1946,7 @@ class APIServerAdapter(OpenAICompatRoutesMixin, BasePlatformAdapter):
         if self._session_db is not None:
             return self._session_db
         try:
-            from hermes_constants import get_hermes_home
+            from vael_constants import get_hermes_home
             home = get_hermes_home()
             key = str(home)
             with self._session_db_cache_lock:
@@ -2797,7 +2797,7 @@ class APIServerAdapter(OpenAICompatRoutesMixin, BasePlatformAdapter):
         except Exception:
             # Unscoped fallback (tests/manual wiring): controlled root under the Hermes home.
             try:
-                from hermes_state import get_hermes_home
+                from vael_state import get_hermes_home
                 root = Path(get_hermes_home()) / "artifacts" / "browser-control"
             except Exception:
                 raise ArtifactError("no artifact root is resolvable") from None
@@ -3272,7 +3272,7 @@ class APIServerAdapter(OpenAICompatRoutesMixin, BasePlatformAdapter):
         # get_hermes_home() for this request) — without it the transcript/dump scrub is skipped.
         sessions_dir = None
         try:
-            from hermes_constants import get_hermes_home
+            from vael_constants import get_hermes_home
             sessions_dir = Path(get_hermes_home()) / "sessions"
         except Exception:
             logger.debug("sessions dir unavailable for delete of %s", session_id, exc_info=True)

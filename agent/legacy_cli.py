@@ -11,11 +11,11 @@ from __future__ import annotations
 
 # hermes_bootstrap first (UTF-8 stdio on Windows; no-op on POSIX), like every other entry point.
 try:
-    import hermes_bootstrap  # noqa: F401
+    import vael_bootstrap  # noqa: F401
 except ModuleNotFoundError:
-    pass  # partial `hermes update` — only skips the Windows UTF-8 stdio setup
+    pass  # partial `vael update` — only skips the Windows UTF-8 stdio setup
 
-# The `hermes-agent` console script lands here without hermes_cli.main: repair a `hermes update` killed
+# The `hermes-agent` console script lands here without hermes_cli.main: repair a `vael update` killed
 # while git wrote the new tree before importing anything else from the checkout.
 from hermes_cli import _early_recovery
 
@@ -31,9 +31,9 @@ def _build_parser() -> argparse.ArgumentParser:
 
     parser = argparse.ArgumentParser(
         prog="hermes-agent",
-        description="Legacy single-query Hermes Agent runner. For the full CLI use `hermes`.",
+        description="Legacy single-query VAEL Agent runner. For the full CLI use `vael`.",
     )
-    parser.add_argument("--version", action="version", version=f"Hermes Agent v{__version__} ({__release_date__})")
+    parser.add_argument("--version", action="version", version=f"VAEL Agent v{__version__} ({__release_date__})")
     parser.add_argument("prompt", nargs="*", help="query to run (same as --query)")
     parser.add_argument("--query", "-q", help="natural-language query to run")
     parser.add_argument("--model", default="", help="model id (provider/model)")
@@ -71,7 +71,7 @@ def main(argv: Optional[List[str]] = None, *, run: Optional[Callable[..., object
     query = args.query or positional or None
     if query is None and not args.list_tools:
         parser.print_help()
-        print("\nNo query given: pass one with --query (or run `hermes` for the interactive CLI).")
+        print("\nNo query given: pass one with --query (or run `vael` for the interactive CLI).")
         return 0
 
     if run is None:

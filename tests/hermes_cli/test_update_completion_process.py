@@ -72,7 +72,7 @@ def transition(tmp_path):
         "    from hermes_cli.probe import event\n"
         "    event('activate')\n"
     )
-    (root / "hermes_constants.py").write_text(
+    (root / "vael_constants.py").write_text(
         # source_completion's update lock resolves the process home through
         # hermes_constants (never a profile override), like the Rust updater does.
         "import os\n"

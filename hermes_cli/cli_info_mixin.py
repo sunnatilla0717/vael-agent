@@ -15,7 +15,7 @@ import threading
 import time
 
 from agent.i18n import t
-from hermes_constants import is_termux as _is_termux_environment
+from vael_constants import is_termux as _is_termux_environment
 from rich.markup import escape as _escape
 from utils import base_url_hostname, file_signature
 
@@ -209,7 +209,7 @@ class CLIInfoMixin:
             self._console_print(f"[dim]   {t('cli.banner.hermes_models_switch_hint')}[/]")
 
         # Project-local skills one-liner: trusted → count; untrusted-with-skills → point at
-        # `hermes skills trust`. Never raises.
+        # `vael skills trust`. Never raises.
         try:
             from agent.skill_utils import (
                 get_project_skills_dirs, get_untrusted_project_skills_root, iter_skill_index_files)
@@ -525,7 +525,7 @@ class CLIInfoMixin:
 
     def _show_gateway_status(self):
         """Show status of the gateway and connected messaging platforms."""
-        from hermes_constants import display_hermes_home
+        from vael_constants import display_hermes_home
         from gateway.config import load_gateway_config, Platform
 
         print()
@@ -825,7 +825,7 @@ class CLIInfoMixin:
                 i += 1
 
         try:
-            from hermes_state import SessionDB, _default_db_path
+            from vael_state import SessionDB, _default_db_path
             from agent.insights import InsightsEngine
             if not _default_db_path().exists():
                 print(f"  {t('cli.insights.no_session_data')}")
@@ -853,7 +853,7 @@ class CLIInfoMixin:
         cache** (the next message re-sends the full input prefix, expensive on long-context / high-reasoning
         models). See #1474.
         """
-        import hermes_yaml as _yaml
+        import vael_yaml as _yaml
 
         now = time.monotonic()
         if now - self._last_config_check < CONFIG_WATCH_INTERVAL:

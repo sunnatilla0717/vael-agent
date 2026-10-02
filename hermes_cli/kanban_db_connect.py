@@ -170,7 +170,7 @@ def _dispatch_tick_lock(db_path: Path):
     gateway's async watcher must never stall; the loser retries next interval.
     Without ``fcntl``/``msvcrt`` it degrades to a no-op (yields ``True``).
 
-    Motivation (issue #35240): a ``hermes gateway run --replace`` / ``gateway restart`` invoked from a shell
+    Motivation (issue #35240): a ``vael gateway run --replace`` / ``gateway restart`` invoked from a shell
     on a systemd/launchd host can leave an orphan gateway whose dispatcher escapes the service cgroup,
     survives ``systemctl restart``, and becomes a *second* long-lived writer on the same ``kanban.db``. The
     startup guard (``_guard_supervised_gateway_conflict``) blocks the common way an orphan is born, but this
@@ -571,7 +571,7 @@ def repair_db(db_path: Optional[Path] = None, *, board: Optional[str] = None) ->
     Same policy as :func:`_guard_existing_db_is_healthy` (quarantine BEFORE
     any mutation; REINDEX under the init flock; anything non-index stays
     corrupt), but returns a :class:`RepairResult` instead of raising so
-    ``hermes kanban repair`` can pick its exit code. ``OperationalError``
+    ``vael kanban repair`` can pick its exit code. ``OperationalError``
     (locked/busy) still propagates raw: a locked healthy DB must not be
     quarantined."""
     path = db_path if db_path is not None else _kb.kanban_db_path(board=board)
@@ -643,7 +643,7 @@ def _open_configured(path: Path, under_lock) -> tuple[sqlite3.Connection, Any]:
         with _INIT_LOCK:
             # WAL doesn't work on network filesystems; the helper falls back to
             # DELETE with one ERROR log (see hermes_state_wal._WAL_INCOMPAT_MARKERS).
-            from hermes_state_wal import apply_wal_with_fallback
+            from vael_state_wal import apply_wal_with_fallback
             apply_wal_with_fallback(conn, db_label=f"kanban.db ({path.name})")
             # FULL (not NORMAL): fsync before each checkpoint to narrow the
             # crash window that can leave a b-tree page header torn.
@@ -688,7 +688,7 @@ def connect(db_path: Optional[Path] = None, *, board: Optional[str] = None) -> s
 
     # Fast path: once THIS process has initialized this path, skip the
     # cross-process init lock. Taking it on every connect let a single stalled
-    # holder (e.g. an external `hermes kanban list` mid-integrity-probe) block
+    # holder (e.g. an external `vael kanban list` mid-integrity-probe) block
     # the gateway dispatcher's next-tick connect() forever, and steady-state has
     # nothing for it to protect (no schema/migration writes).
     resolved = str(path.resolve())
@@ -715,7 +715,7 @@ def connect(db_path: Optional[Path] = None, *, board: Optional[str] = None) -> s
         # Read-only file/sidecar preflight first, so a stray read-only kanban.db
         # fails actionably instead of "attempt to write a readonly database".
         # See #12508.
-        from hermes_state import preflight_db_writability
+        from vael_state import preflight_db_writability
         preflight_db_writability(path, db_label=f"kanban.db ({path.name})")
         # Cheap byte-level header check before any sqlite connection, then the
         # full integrity probe (cached per path via _INITIALIZED_PATHS).
@@ -768,7 +768,7 @@ def init_db(db_path: Optional[Path] = None, *, board: Optional[str] = None) -> P
 
 
 # Nullable/defaulted columns of the v1 ``tasks`` CREATE TABLE that external
-# harnesses seeding a board with a reduced schema have omitted. Hermes's own
+# harnesses seeding a board with a reduced schema have omitted. VAEL's own
 # DBs always carry them, so this is a no-op there; without it a board that
 # also has ``task_runs`` fails every ``connect()`` inside
 # ``_backfill_legacy_inflight_runs`` ("no such column: claim_lock") — before

@@ -1,8 +1,8 @@
-"""Boundaries the AUTOMATIC multiplex migration (``hermes update``) must not cross, and the opt-out.
+"""Boundaries the AUTOMATIC multiplex migration (``vael update``) must not cross, and the opt-out.
 
 The multiplexer replaces a kernel-enforced boundary (separate UNIX users, separate service domains,
 separate HERMES_HOME trees) with in-process isolation. An operator may choose that with
-``hermes gateway migrate --multiplex``; an unattended update hook must not choose it for them.
+``vael gateway migrate --multiplex``; an unattended update hook must not choose it for them.
 ``build_migration_plan`` records the same findings as NOTICES so a dry run shows them; only
 :func:`maybe_auto_migrate_after_update` treats them as blockers (#109954).
 """
@@ -147,7 +147,7 @@ _AUTO_MIGRATION_GUARDS: tuple[Callable[[MigrationPlan, ProfileGateway], Optional
 
 def auto_migration_blockers(plan: MigrationPlan) -> list[str]:
     """Every boundary a standalone secondary sits behind; empty when the fleet is one user, one service
-    domain, one profiles/ tree — the only shape ``hermes update`` may fold on its own."""
+    domain, one profiles/ tree — the only shape ``vael update`` may fold on its own."""
     findings = [
         finding
         for profile in plan.standalone_secondaries

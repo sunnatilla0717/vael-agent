@@ -154,7 +154,7 @@ async def _close_unless_sidecar_allowed(ws: WebSocket) -> bool:
 # --- /api/console: the curated console engine, in-process, exchanging JSON
 # frames with the dashboard xterm overlay. Never spawns a PTY, shell or CLI.
 
-_CONSOLE_PROMPT = "hermes> "
+_CONSOLE_PROMPT = "vael> "
 _CONSOLE_COMMAND_TIMEOUT_SECONDS = 60.0
 # Cancel/timeout interrupt the worker cooperatively; this bounds how long the prompt waits for it to exit.
 _CONSOLE_UNWIND_TIMEOUT_SECONDS = 10.0
@@ -324,7 +324,7 @@ async def console_ws(ws: WebSocket) -> None:
             if command_id == command_generation:
                 pending_confirmation = None
                 await out.error_then_complete(
-                    "Command timed out. Hermes Console returned to the prompt.", line, command_id, "timeout",
+                    "Command timed out. VAEL Console returned to the prompt.", line, command_id, "timeout",
                 )
         except Exception as exc:
             if command_id == command_generation:
@@ -451,7 +451,7 @@ async def pty_ws(ws: WebSocket) -> None:
         await ws.send_text(
             "\r\n\x1b[31mChat unavailable: the embedded terminal requires a "
             "POSIX PTY, which native Windows Python doesn't provide.\x1b[0m\r\n"
-            "\x1b[33mInstall Hermes inside WSL2 to use the dashboard's /chat "
+            "\x1b[33mInstall VAEL inside WSL2 to use the dashboard's /chat "
             "tab — the rest of the dashboard works here.\x1b[0m\r\n"
         )
         await ws.close(code=1011)

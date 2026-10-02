@@ -22,7 +22,7 @@ import pytest
 
 import plugins.memory.honcho.client as client_mod
 import plugins.memory.honcho.client_cache as client_cache_mod
-from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+from vael_constants import reset_hermes_home_override, set_hermes_home_override
 from plugins.memory.honcho.client import (
     HonchoClientConfig,
     get_honcho_client,
@@ -154,7 +154,7 @@ class TestBackgroundThreadIsolation:
 
     def test_spawn_context_thread_sees_profile_override(self, tmp_path):
         """spawn_context_thread must carry the caller's HERMES_HOME override."""
-        from hermes_constants import get_hermes_home
+        from vael_constants import get_hermes_home
         from agent.memory_provider import spawn_context_thread
 
         home_b = tmp_path / "profiles" / "b"
@@ -177,7 +177,7 @@ class TestBackgroundThreadIsolation:
     def test_plain_thread_does_not_see_override(self, tmp_path):
         """Control: documents WHY propagation is needed — a plain thread
         resolves the process home, not the caller's profile override."""
-        from hermes_constants import get_hermes_home
+        from vael_constants import get_hermes_home
 
         home_b = tmp_path / "profiles" / "b"
         home_b.mkdir(parents=True)

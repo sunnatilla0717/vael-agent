@@ -493,7 +493,7 @@ class TestSwrRefreshProfileScope:
     def test_refresh_under_profile_override_writes_that_profiles_cache(self, isolated_home, tmp_path):
         from agent.secret_scope import set_multiplex_active
         from hermes_cli import model_catalog
-        from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+        from vael_constants import reset_hermes_home_override, set_hermes_home_override
 
         old = _valid_manifest()
         fresh = {**_valid_manifest(), "updated_at": "2026-05-01T00:00:00Z"}
@@ -526,7 +526,7 @@ class TestSwrRefreshProfileScope:
     def test_inflight_refresh_for_one_profile_does_not_suppress_another(self, isolated_home, tmp_path):
         from agent.secret_scope import set_multiplex_active
         from hermes_cli import model_catalog
-        from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+        from vael_constants import reset_hermes_home_override, set_hermes_home_override
 
         old = _valid_manifest()
         path_a = self._seed_expired(isolated_home, old)

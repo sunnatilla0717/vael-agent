@@ -24,8 +24,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from hermes_state import SessionDB
-from hermes_state_common import is_automatic_end_reason
+from vael_state import SessionDB
+from vael_state_common import is_automatic_end_reason
 
 
 @pytest.fixture

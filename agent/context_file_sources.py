@@ -30,7 +30,7 @@ _STATUS_DISPLAY = {
     "flagged": ("⚠", "loaded — matched prompt-injection pattern(s); review the file"),
     "empty": ("○", "not loaded — empty file"),
     "unreadable": ("✗", "not loaded — could not be read"),
-    "suppressed": ("○", "not loaded — cwd fell back to the Hermes install tree"),
+    "suppressed": ("○", "not loaded — cwd fell back to the VAEL install tree"),
 }
 
 
@@ -61,7 +61,7 @@ def list_context_file_sources(
     cwd: Optional[str] = None, context_length: Optional[int] = None, allow_install_tree_fallback: bool = False,
     home_override: "Path | None" = None, skip_soul: bool = False,
 ) -> List[Dict[str, Any]]:
-    """One dict per context file Hermes considered, in the builder's priority order.
+    """One dict per context file VAEL considered, in the builder's priority order.
 
     Same signature semantics as ``build_context_files_prompt`` (``cwd=None`` → launch dir, install-tree guard
     unless *allow_install_tree_fallback*). Keys: ``label``, ``path``, ``chars``, ``est_tokens``, ``loaded``

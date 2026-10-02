@@ -1,4 +1,4 @@
-"""Shell completion script generation for hermes CLI. Walks the live argparse parser tree, so
+"""Shell completion script generation for vael CLI. Walks the live argparse parser tree, so
 completion scripts never go stale; no extra dependencies."""
 
 from __future__ import annotations
@@ -67,9 +67,9 @@ def generate_bash(parser: argparse.ArgumentParser) -> str:
                 f"            return\n"
                 f"            ;;")
     cases_str = "\n".join(cases)
-    return f"""# Hermes Agent bash completion
+    return f"""# VAEL Agent bash completion
 # Add to ~/.bashrc:
-#   eval "$(hermes completion bash)"
+#   eval "$(vael completion bash)"
 
 _hermes_profiles() {{
     local profiles_dir="$HOME/.hermes/profiles"
@@ -105,7 +105,7 @@ _hermes_completion() {{
     fi
 }}
 
-complete -F _hermes_completion hermes
+complete -F _hermes_completion vael
 """
 
 
@@ -152,10 +152,10 @@ def generate_zsh(parser: argparse.ArgumentParser) -> str:
                 f"                    _describe '{cmd} command' {safe}_cmds\n"
                 f"                    ;;")
     sub_cases_str = "\n".join(sub_cases)
-    return f"""#compdef hermes
-# Hermes Agent zsh completion
+    return f"""#compdef vael
+# VAEL Agent zsh completion
 # Add to ~/.zshrc:
-#   eval "$(hermes completion zsh)"
+#   eval "$(vael completion zsh)"
 
 _hermes_profiles() {{
     local -a profiles
@@ -183,7 +183,7 @@ _hermes() {{
             subcmds=(
 {top_cmds_str}
             )
-            _describe 'hermes command' subcmds
+            _describe 'vael command' subcmds
             ;;
         args)
             case ${{line[1]}} in
@@ -193,7 +193,7 @@ _hermes() {{
     esac
 }}
 
-compdef _hermes hermes
+compdef _hermes vael
 """
 
 
@@ -201,9 +201,9 @@ def generate_fish(parser: argparse.ArgumentParser) -> str:
     subcommands = _sorted_subcommands(parser)
     top_cmds_str = " ".join(cmd for cmd, _ in subcommands)
     lines: list[str] = [
-        "# Hermes Agent fish completion",
+        "# VAEL Agent fish completion",
         "# Add to your config:",
-        "#   hermes completion fish | source",
+        "#   vael completion fish | source",
         "",
         "# Helper: list available profiles",
         "function __hermes_profiles",
@@ -216,16 +216,16 @@ def generate_fish(parser: argparse.ArgumentParser) -> str:
         "end",
         "",
         "# Disable file completion by default",
-        "complete -c hermes -f",
+        "complete -c vael -f",
         "",
         "# Complete profile names after -p / --profile",
-        "complete -c hermes -f -s p -l profile"
+        "complete -c vael -f -s p -l profile"
         " -d 'Profile name' -xa '(__hermes_profiles)'",
         "",
         "# Top-level subcommands"]
     for cmd, info in subcommands:
         lines.append(
-            f"complete -c hermes -f "
+            f"complete -c vael -f "
             f"-n 'not __fish_seen_subcommand_from {top_cmds_str}' "
             f"-a {cmd} -d '{_clean(info.get('help', ''))}'")
     lines += ["", "# Subcommand completions"]
@@ -235,13 +235,13 @@ def generate_fish(parser: argparse.ArgumentParser) -> str:
         lines.append(f"# {cmd}")
         for sc, sinfo in sorted(info["subcommands"].items()):
             lines.append(
-                f"complete -c hermes -f "
+                f"complete -c vael -f "
                 f"-n '__fish_seen_subcommand_from {cmd}' "
                 f"-a {sc} -d '{_clean(sinfo.get('help', ''))}'")
         if cmd == "profile":  # profile names for the actions that take one
             for action in sorted(_PROFILE_NAME_ACTIONS):
                 lines.append(
-                    f"complete -c hermes -f "
+                    f"complete -c vael -f "
                     f"-n '__fish_seen_subcommand_from {action}; "
                     f"and __fish_seen_subcommand_from profile' "
                     f"-a '(__hermes_profiles)' -d 'Profile name'")

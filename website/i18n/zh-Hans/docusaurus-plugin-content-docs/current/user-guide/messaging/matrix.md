@@ -1,29 +1,29 @@
 ---
 sidebar_position: 9
 title: "Matrix"
-description: "将 Hermes Agent 设置为 Matrix 机器人"
+description: "将 VAEL Agent 设置为 Matrix 机器人"
 ---
 
 # Matrix 设置
 
 本页的 Python 依赖命令使用 [PM 准备的源码环境](../../reference/package-management.md#developer-workflow)。
-依赖变更后，请重新激活该 checkout 并重启 Hermes。
+依赖变更后，请重新激活该 checkout 并重启 VAEL。
 
-Hermes Agent 与 Matrix 集成，Matrix 是一种开放的联邦消息协议。Matrix 允许你运行自己的 homeserver，也可以使用 matrix.org 等公共 homeserver——无论哪种方式，你都保持对通信的控制权。机器人通过 `mautrix` Python SDK 连接，通过 Hermes Agent 管道（包括工具调用、记忆和推理）处理消息，并实时响应。它支持文本、文件附件、图片、音频、视频，以及可选的端对端加密（E2EE）。
+VAEL Agent 与 Matrix 集成，Matrix 是一种开放的联邦消息协议。Matrix 允许你运行自己的 homeserver，也可以使用 matrix.org 等公共 homeserver——无论哪种方式，你都保持对通信的控制权。机器人通过 `mautrix` Python SDK 连接，通过 VAEL Agent 管道（包括工具调用、记忆和推理）处理消息，并实时响应。它支持文本、文件附件、图片、音频、视频，以及可选的端对端加密（E2EE）。
 
-Hermes 兼容任何 Matrix homeserver——Synapse、Conduit、Dendrite 或 matrix.org。
+VAEL 兼容任何 Matrix homeserver——Synapse、Conduit、Dendrite 或 matrix.org。
 
-在开始设置之前，先了解大多数人最想知道的：Hermes 连接后的行为方式。
+在开始设置之前，先了解大多数人最想知道的：VAEL 连接后的行为方式。
 
-## Hermes 的行为方式
+## VAEL 的行为方式
 
 | 场景 | 行为 |
 |---------|----------|
-| **私聊（DM）** | Hermes 响应每条消息，无需 `@提及`。每个 DM 有独立的会话。设置 `MATRIX_DM_MENTION_THREADS=true` 可在 DM 中被 `@提及` 时创建线程。 |
-| **房间** | 默认情况下，Hermes 需要 `@提及` 才会响应。设置 `MATRIX_REQUIRE_MENTION=false` 或将房间 ID 添加到 `MATRIX_FREE_RESPONSE_ROOMS` 可开启自由响应模式。房间邀请会被自动接受。 |
-| **线程** | Hermes 支持 Matrix 线程（MSC3440）。在线程中回复时，Hermes 会将线程上下文与主房间时间线隔离。机器人已参与的线程无需提及即可响应。 |
-| **自动线程** | 默认情况下，Hermes 会为其在房间中响应的每条消息自动创建线程，以保持对话隔离。设置 `MATRIX_AUTO_THREAD=false` 可禁用此功能。设置 `MATRIX_DM_AUTO_THREAD=true`（默认 false）可同时为私聊消息自动创建线程——这与 `MATRIX_DM_MENTION_THREADS` 不同，后者仅在私聊中 @提及 Bot 时才创建线程。 |
-| **多用户共享房间** | 默认情况下，Hermes 在房间内按用户隔离会话历史。同一房间中的两个人不会共享同一对话记录，除非你明确禁用该功能。 |
+| **私聊（DM）** | VAEL 响应每条消息，无需 `@提及`。每个 DM 有独立的会话。设置 `MATRIX_DM_MENTION_THREADS=true` 可在 DM 中被 `@提及` 时创建线程。 |
+| **房间** | 默认情况下，VAEL 需要 `@提及` 才会响应。设置 `MATRIX_REQUIRE_MENTION=false` 或将房间 ID 添加到 `MATRIX_FREE_RESPONSE_ROOMS` 可开启自由响应模式。房间邀请会被自动接受。 |
+| **线程** | VAEL 支持 Matrix 线程（MSC3440）。在线程中回复时，VAEL 会将线程上下文与主房间时间线隔离。机器人已参与的线程无需提及即可响应。 |
+| **自动线程** | 默认情况下，VAEL 会为其在房间中响应的每条消息自动创建线程，以保持对话隔离。设置 `MATRIX_AUTO_THREAD=false` 可禁用此功能。设置 `MATRIX_DM_AUTO_THREAD=true`（默认 false）可同时为私聊消息自动创建线程——这与 `MATRIX_DM_MENTION_THREADS` 不同，后者仅在私聊中 @提及 Bot 时才创建线程。 |
+| **多用户共享房间** | 默认情况下，VAEL 在房间内按用户隔离会话历史。同一房间中的两个人不会共享同一对话记录，除非你明确禁用该功能。 |
 | **LaTeX 数学公式** | 回复中的 `$...$`（行内）和 `$$...$$`（独立行）会以 Element 的 `data-mx-maths` 标记发送，启用了 **设置 → 实验室 → 渲染消息中的 LaTeX 数学公式** 的客户端会用 KaTeX 排版。未配对的美元符号（`$5 or $10`）保持原样，纯文本 `body` 仍保留原始 TeX 供其他客户端显示。 |
 
 :::tip
@@ -113,11 +113,11 @@ register_new_matrix_user -c /etc/synapse/homeserver.yaml http://localhost:8008
 
 ### 方式 C：使用你自己的账户
 
-你也可以以自己的用户身份运行 Hermes。这意味着机器人以你的名义发帖——适合个人助手场景。
+你也可以以自己的用户身份运行 VAEL。这意味着机器人以你的名义发帖——适合个人助手场景。
 
 ## 第二步：获取访问令牌
 
-Hermes 需要访问令牌（access token）来向 homeserver 进行身份验证。有两种方式：
+VAEL 需要访问令牌（access token）来向 homeserver 进行身份验证。有两种方式：
 
 ### 方式 A：访问令牌（推荐）
 
@@ -149,7 +149,7 @@ curl -X POST https://your-server/_matrix/client/v3/login \
 
 ### 方式 B：密码登录
 
-你可以不提供访问令牌，而是提供机器人的用户 ID 和密码。Hermes 会在启动时自动登录。这种方式更简单，但密码会存储在你的 `.env` 文件中。
+你可以不提供访问令牌，而是提供机器人的用户 ID 和密码。VAEL 会在启动时自动登录。这种方式更简单，但密码会存储在你的 `.env` 文件中。
 
 ```bash
 MATRIX_USER_ID=@hermes:your-server.org
@@ -158,7 +158,7 @@ MATRIX_PASSWORD=your-password
 
 ## 第三步：找到你的 Matrix 用户 ID
 
-Hermes Agent 使用你的 Matrix 用户 ID 来控制谁可以与机器人交互。Matrix 用户 ID 的格式为 `@username:server`。
+VAEL Agent 使用你的 Matrix 用户 ID 来控制谁可以与机器人交互。Matrix 用户 ID 的格式为 `@username:server`。
 
 查找方式：
 
@@ -170,7 +170,7 @@ Hermes Agent 使用你的 Matrix 用户 ID 来控制谁可以与机器人交互�
 Matrix 用户 ID 始终以 `@` 开头，并包含 `:` 后跟服务器名称。例如：`@alice:matrix.org`、`@bob:your-server.com`。
 :::
 
-## 第四步：配置 Hermes Agent
+## 第四步：配置 VAEL Agent
 
 ### 方式 A：交互式设置（推荐）
 
@@ -239,7 +239,7 @@ hermes gateway
 
 ## 端对端加密（E2EE）
 
-Hermes 支持 Matrix 端对端加密，你可以在加密房间中与机器人聊天。
+VAEL 支持 Matrix 端对端加密，你可以在加密房间中与机器人聊天。
 
 ### 前提条件
 
@@ -274,7 +274,7 @@ sudo dnf install libolm-devel
 MATRIX_ENCRYPTION=true
 ```
 
-启用 E2EE 后，Hermes 会：
+启用 E2EE 后，VAEL 会：
 
 - 将加密密钥存储在 `~/.hermes/platforms/matrix/store/`（旧版安装：`~/.hermes/matrix/store/`）
 - 在首次连接时上传设备密钥
@@ -291,12 +291,12 @@ MATRIX_RECOVERY_KEY=EsT... 你的恢复密钥
 
 **查找位置：** 在 Element 中，前往 **设置** → **安全与隐私** → **加密** → 你的恢复密钥（也称为"安全密钥"）。这是你首次设置交叉签名时被要求保存的密钥。
 
-每次启动时，如果设置了 `MATRIX_RECOVERY_KEY`，Hermes 会从 homeserver 的安全密钥存储中导入交叉签名密钥并对当前设备进行签名。此操作是幂等的，可以永久启用。
+每次启动时，如果设置了 `MATRIX_RECOVERY_KEY`，VAEL 会从 homeserver 的安全密钥存储中导入交叉签名密钥并对当前设备进行签名。此操作是幂等的，可以永久启用。
 
 :::warning[删除加密存储]
 如果你删除了 `~/.hermes/platforms/matrix/store/crypto.db`，机器人将失去其加密身份。仅使用相同的设备 ID 重启**不能**完全恢复——homeserver 仍持有使用旧身份密钥签名的一次性密钥，对等方无法建立新的 Olm 会话。
 
-Hermes 在启动时会检测到此情况并拒绝启用 E2EE，日志显示：`device XXXX has stale one-time keys on the server signed with a previous identity key`。
+VAEL 在启动时会检测到此情况并拒绝启用 E2EE，日志显示：`device XXXX has stale one-time keys on the server signed with a previous identity key`。
 
 **最简恢复方式：生成新的访问令牌**（获得一个没有过期密钥历史的全新设备 ID）。请参阅下方"从带有 E2EE 的旧版本升级"章节。这是最可靠的路径，无需操作 homeserver 数据库。
 
@@ -320,7 +320,7 @@ Hermes 在启动时会检测到此情况并拒绝启用 E2EE，日志显示：`d
    ```
    注意：通过管理员 API 删除设备也可能使关联的访问令牌失效。之后你可能需要生成新令牌。
 
-2. 删除本地加密存储并重启 Hermes：
+2. 删除本地加密存储并重启 VAEL：
    ```bash
    rm -f ~/.hermes/platforms/matrix/store/crypto.db*
    # 重启 hermes
@@ -428,7 +428,7 @@ curl -H "Authorization: Bearer YOUR_TOKEN" \
 python -c "import pm; pm.sync_venv(['matrix'], explicit=True)"
 ```
 
-或通过 Hermes extras：
+或通过 VAEL extras：
 
 ```bash
 cd ~/.hermes/hermes-agent && python -c "import pm; pm.sync_venv(['matrix'], explicit=True)"
@@ -450,7 +450,7 @@ cd ~/.hermes/hermes-agent && python -c "import pm; pm.sync_venv(['matrix'], expl
 如果你同时手动删除了 `crypto.db`，请参阅 E2EE 章节中的"删除加密存储"警告——还需要额外步骤来清除 homeserver 上的过期一次性密钥。
 :::
 
-如果你之前使用 `MATRIX_ENCRYPTION=true` 运行 Hermes，并正在升级到使用新的基于 SQLite 的加密存储的版本，机器人的加密身份已发生变化。你的 Matrix 客户端（Element）可能缓存了旧的设备密钥，并拒绝与机器人共享加密会话。
+如果你之前使用 `MATRIX_ENCRYPTION=true` 运行 VAEL，并正在升级到使用新的基于 SQLite 的加密存储的版本，机器人的加密身份已发生变化。你的 Matrix 客户端（Element）可能缓存了旧的设备密钥，并拒绝与机器人共享加密会话。
 
 **症状**：机器人连接并在日志中显示"E2EE 已启用"，但所有消息显示"无法解密事件"，机器人从不响应。
 
@@ -505,7 +505,7 @@ cd ~/.hermes/hermes-agent && python -c "import pm; pm.sync_venv(['matrix'], expl
 :::
 
 :::tip
-**新安装不受影响。** 此迁移仅在你之前使用旧版 Hermes 配置了可用的 E2EE 并正在升级时才需要。
+**新安装不受影响。** 此迁移仅在你之前使用旧版 VAEL 配置了可用的 E2EE 并正在升级时才需要。
 
 **为什么需要新的访问令牌？** 每个 Matrix 访问令牌绑定到特定的设备 ID。使用相同设备 ID 但新的加密密钥会导致其他 Matrix 客户端不信任该设备（它们将身份密钥的变更视为潜在的安全漏洞）。新的访问令牌获得一个没有过期密钥历史的新设备 ID，其他客户端会立即信任它。
 :::
@@ -610,7 +610,7 @@ services:
 
 | 设置 | 说明 |
 |---------|-------------|
-| `GATEWAY_PROXY_URL` | 远程 Hermes API 服务器的 URL（例如 `http://192.168.1.100:8642`） |
+| `GATEWAY_PROXY_URL` | 远程 VAEL API 服务器的 URL（例如 `http://192.168.1.100:8642`） |
 | `GATEWAY_PROXY_KEY` | 用于身份验证的 Bearer token（必须与主机上的 `API_SERVER_KEY` 匹配） |
 | `gateway.proxy_url` | 与 `GATEWAY_PROXY_URL` 相同，但在 `config.yaml` 中配置 |
 
@@ -639,11 +639,11 @@ services:
 
 **原因**：长时间运行的工具执行可能延迟同步循环，或 homeserver 响应较慢。
 
-**解决方法**：同步循环在出错时每 5 秒自动重试。检查 Hermes 日志中与同步相关的警告。如果机器人持续落后，请确保你的 homeserver 有足够的资源。
+**解决方法**：同步循环在出错时每 5 秒自动重试。检查 VAEL 日志中与同步相关的警告。如果机器人持续落后，请确保你的 homeserver 有足够的资源。
 
 ### 机器人离线
 
-**原因**：Hermes gateway 未运行，或连接失败。
+**原因**：VAEL gateway 未运行，或连接失败。
 
 **解决方法**：检查 `hermes gateway` 是否正在运行。查看终端输出中的错误消息。常见问题：homeserver URL 错误、访问令牌过期、homeserver 不可达。
 
@@ -659,12 +659,12 @@ services:
 始终设置 `MATRIX_ALLOWED_USERS` 以限制可与机器人交互的用户。若不设置，gateway 默认拒绝所有用户作为安全措施。只添加你信任的人的用户 ID——授权用户可完整访问 agent 的所有功能，包括工具调用和系统访问。
 :::
 
-有关保护 Hermes Agent 部署的更多信息，请参阅[安全指南](../security.md)。
+有关保护 VAEL Agent 部署的更多信息，请参阅[安全指南](../security.md)。
 
 ## 注意事项
 
 - **任何 homeserver**：兼容 Synapse、Conduit、Dendrite、matrix.org 或任何符合规范的 Matrix homeserver。无需特定的 homeserver 软件。
 - **联邦**：如果你在联邦 homeserver 上，机器人可以与其他服务器的用户通信——只需将他们的完整 `@user:server` ID 添加到 `MATRIX_ALLOWED_USERS`。
 - **自动加入**：机器人自动接受房间邀请并加入，加入后立即开始响应。
-- **媒体支持**：Hermes 可以发送和接收图片、音频、视频和文件附件。媒体通过 Matrix 内容仓库 API 上传到你的 homeserver。
+- **媒体支持**：VAEL 可以发送和接收图片、音频、视频和文件附件。媒体通过 Matrix 内容仓库 API 上传到你的 homeserver。
 - **原生语音消息（MSC3245）**：Matrix 适配器自动为传出的语音消息添加 `org.matrix.msc3245.voice` 标志。这意味着 TTS 响应和语音音频在支持 MSC3245 的 Element 及其他客户端中以**原生语音气泡**形式呈现，而非普通音频文件附件。带有 MSC3245 标志的传入语音消息也会被正确识别并路由到语音转文字转录。无需任何配置——自动生效。

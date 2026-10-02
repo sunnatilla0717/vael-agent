@@ -1,4 +1,4 @@
-"""OpenRouter OAuth PKCE login (``hermes auth add openrouter --type oauth``).
+"""OpenRouter OAuth PKCE login (``vael auth add openrouter --type oauth``).
 
 Contract: https://openrouter.ai/docs/guides/overview/auth/oauth. The browser is sent to
 ``/auth?callback_url=...&code_challenge=...&code_challenge_method=S256``; the redirect carries
@@ -76,7 +76,7 @@ def _openrouter_loopback_code(auth_url_params: Dict[str, str], *, open_browser: 
     redirect_uri = f"http://127.0.0.1:{server.server_address[1]}{path}"
     auth_url = f"{OPENROUTER_AUTH_URL}?{urlencode({'callback_url': redirect_uri, **auth_url_params})}"
 
-    print(f"Open this URL to authorize Hermes with OpenRouter:\n  {auth_url}\n\nDocs: {OPENROUTER_OAUTH_DOCS_URL}")
+    print(f"Open this URL to authorize VAEL with OpenRouter:\n  {auth_url}\n\nDocs: {OPENROUTER_OAUTH_DOCS_URL}")
     if open_browser and _can_open_graphical_browser():
         try:
             opened = webbrowser.open(auth_url)

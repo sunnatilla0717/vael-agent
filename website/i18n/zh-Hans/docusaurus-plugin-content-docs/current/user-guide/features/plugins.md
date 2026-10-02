@@ -2,17 +2,17 @@
 sidebar_position: 11
 sidebar_label: "Plugins"
 title: "Plugins"
-description: "通过插件系统为 Hermes 添加自定义工具、hook 和集成"
+description: "通过插件系统为 VAEL 添加自定义工具、hook 和集成"
 ---
 
 # Plugins
 
-Hermes 提供了一套插件系统，可在不修改核心代码的情况下添加自定义工具、hook（钩子）和集成。
+VAEL 提供了一套插件系统，可在不修改核心代码的情况下添加自定义工具、hook（钩子）和集成。
 
 如果你想为自己、团队或某个项目创建自定义工具，这通常是正确的路径。开发者指南中的
-[Adding Tools](../../developer-guide/adding-tools.md) 页面针对的是存放在 `tools/` 和 `toolsets.py` 中的 Hermes 内置核心工具。
+[Adding Tools](../../developer-guide/adding-tools.md) 页面针对的是存放在 `tools/` 和 `toolsets.py` 中的 VAEL 内置核心工具。
 
-**→ [构建 Hermes Plugin](../../developer-guide/plugins/index.md)** — 包含完整可运行示例的分步指南。
+**→ [构建 VAEL Plugin](../../developer-guide/plugins/index.md)** — 包含完整可运行示例的分步指南。
 
 ## 快速概览
 
@@ -26,7 +26,7 @@ Hermes 提供了一套插件系统，可在不修改核心代码的情况下添�
 └── tools.py         # tool 处理器（调用时实际执行的代码）
 ```
 
-启动 Hermes — 你的工具会与内置工具一同出现，模型可立即调用它们。
+启动 VAEL — 你的工具会与内置工具一同出现，模型可立即调用它们。
 
 ### 最小可运行示例
 
@@ -84,11 +84,11 @@ def register(ctx):
     ctx.register_hook("post_tool_call", on_tool_call)
 ```
 
-将两个文件放入 `~/.hermes/plugins/hello-world/`，重启 Hermes，模型即可立即调用 `hello_world`。每次工具调用后，hook 会打印一行日志。
+将两个文件放入 `~/.hermes/plugins/hello-world/`，重启 VAEL，模型即可立即调用 `hello_world`。每次工具调用后，hook 会打印一行日志。
 
-面向模型的工具描述应写在 `schema["description"]` 中。可选的 `ctx.register_tool(description=...)` 值是独立的 `ToolEntry` 注册表元数据：省略时，它会默认使用 schema 中的描述；但如果 schema 缺少 `description`，Hermes 不会把该元数据反向复制到 schema。建议只在 schema 中定义一次描述。如果同时提供两个值，请保持同步；模型看到的是 schema 中的值。
+面向模型的工具描述应写在 `schema["description"]` 中。可选的 `ctx.register_tool(description=...)` 值是独立的 `ToolEntry` 注册表元数据：省略时，它会默认使用 schema 中的描述；但如果 schema 缺少 `description`，VAEL 不会把该元数据反向复制到 schema。建议只在 schema 中定义一次描述。如果同时提供两个值，请保持同步；模型看到的是 schema 中的值。
 
-`./.hermes/plugins/` 下的项目本地插件默认禁用。仅对可信仓库启用，方法是在启动 Hermes 前设置 `HERMES_ENABLE_PROJECT_PLUGINS=true`。
+`./.hermes/plugins/` 下的项目本地插件默认禁用。仅对可信仓库启用，方法是在启动 VAEL 前设置 `HERMES_ENABLE_PROJECT_PLUGINS=true`。
 
 ## 插件能做什么
 
@@ -118,7 +118,7 @@ def register(ctx):
 
 | 来源 | 路径 | 使用场景 |
 |--------|------|----------|
-| 内置 | `<repo>/plugins/` | 随 Hermes 附带 — 参见 [Built-in Plugins](./built-in-plugins.md) |
+| 内置 | `<repo>/plugins/` | 随 VAEL 附带 — 参见 [Built-in Plugins](./built-in-plugins.md) |
 | 用户 | `~/.hermes/plugins/` | 个人插件 |
 | 项目 | `.hermes/plugins/` | 项目专属插件（需要 `HERMES_ENABLE_PROJECT_PLUGINS=true`） |
 | pip | `hermes_agent.plugins` entry_points | 分发包 |
@@ -128,7 +128,7 @@ def register(ctx):
 
 ### 插件子分类
 
-在每个来源内，Hermes 还识别将插件路由到专用发现系统的子分类目录：
+在每个来源内，VAEL 还识别将插件路由到专用发现系统的子分类目录：
 
 | 子目录 | 内容 | 发现系统 |
 |---|---|---|
@@ -168,7 +168,7 @@ hermes plugins disable <name>     # 从允许列表移除并添加到禁用列�
 
 ### 允许列表不控制的内容
 
-某些类别的插件绕过 `plugins.enabled` — 它们是 Hermes 内置功能的一部分，若默认关闭会破坏基本功能：
+某些类别的插件绕过 `plugins.enabled` — 它们是 VAEL 内置功能的一部分，若默认关闭会破坏基本功能：
 
 | 插件类型 | 激活方式 |
 |---|---|
@@ -184,7 +184,7 @@ hermes plugins disable <name>     # 从允许列表移除并添加到禁用列�
 
 ### 现有用户的迁移
 
-当你升级到支持选择加入插件的 Hermes 版本（config schema v21+）时，已安装在 `~/.hermes/plugins/` 下且不在 `plugins.disabled` 中的用户插件会**自动纳入** `plugins.enabled`。你的现有配置继续正常工作。内置独立插件**不会**自动纳入 — 即使是现有用户也需要明确选择加入。（内置平台/后端插件从未需要纳入，因为它们从未被控制。）
+当你升级到支持选择加入插件的 VAEL 版本（config schema v21+）时，已安装在 `~/.hermes/plugins/` 下且不在 `plugins.disabled` 中的用户插件会**自动纳入** `plugins.enabled`。你的现有配置继续正常工作。内置独立插件**不会**自动纳入 — 即使是现有用户也需要明确选择加入。（内置平台/后端插件从未需要纳入，因为它们从未被控制。）
 
 ## 可用 hook
 
@@ -200,7 +200,7 @@ hermes plugins disable <name>     # 从允许列表移除并添加到禁用列�
 
 ## 插件类型
 
-Hermes 有四种插件：
+VAEL 有四种插件：
 
 | 类型 | 作用 | 选择方式 | 位置 |
 |------|-------------|-----------|----------|
@@ -213,13 +213,13 @@ Memory provider 和 context engine 是 **provider 插件** — 每种类型同�
 
 ## 可插拔接口 — 各场景对应文档
 
-上表展示了四种插件类别，但在"通用插件"中，`PluginContext` 暴露了多个不同的扩展点 — Hermes 还接受 Python 插件系统之外的扩展（配置驱动的后端、shell hook 命令、外部服务器等）。使用下表找到适合你需求的文档：
+上表展示了四种插件类别，但在"通用插件"中，`PluginContext` 暴露了多个不同的扩展点 — VAEL 还接受 Python 插件系统之外的扩展（配置驱动的后端、shell hook 命令、外部服务器等）。使用下表找到适合你需求的文档：
 
 | 想要添加… | 方式 | 编写指南 |
 |---|---|---|
-| LLM 可调用的**工具** | Python 插件 — `ctx.register_tool()` | [Build a Hermes Plugin](../../developer-guide/plugins/index.md) · [Adding Tools](../../developer-guide/adding-tools.md) |
-| **生命周期 hook**（LLM 前后、会话开始/结束、工具过滤） | Python 插件 — `ctx.register_hook()` | [Hooks reference](./hooks.md) · [Build a Hermes Plugin](../../developer-guide/plugins/index.md) |
-| CLI / gateway 的**斜杠命令** | Python 插件 — `ctx.register_command()` | [Build a Hermes Plugin](../../developer-guide/plugins/index.md) · [Extending the CLI](../../developer-guide/extending-the-cli.md) |
+| LLM 可调用的**工具** | Python 插件 — `ctx.register_tool()` | [Build a VAEL Plugin](../../developer-guide/plugins/index.md) · [Adding Tools](../../developer-guide/adding-tools.md) |
+| **生命周期 hook**（LLM 前后、会话开始/结束、工具过滤） | Python 插件 — `ctx.register_hook()` | [Hooks reference](./hooks.md) · [Build a VAEL Plugin](../../developer-guide/plugins/index.md) |
+| CLI / gateway 的**斜杠命令** | Python 插件 — `ctx.register_command()` | [Build a VAEL Plugin](../../developer-guide/plugins/index.md) · [Extending the CLI](../../developer-guide/extending-the-cli.md) |
 | `hermes <thing>` 的**子命令** | Python 插件 — `ctx.register_cli_command()` | [Extending the CLI](../../developer-guide/extending-the-cli.md) |
 | 插件附带的**skill** | Python 插件 — `ctx.register_skill()` | [Creating Skills](../../developer-guide/creating-skills.md) |
 | **推理后端**（LLM provider：OpenAI 兼容、Codex、Anthropic-Messages、Bedrock） | Provider 插件 — 在 `plugins/model-providers/<name>/` 中调用 `register_provider(ProviderProfile(...))` | **[Model Provider Plugins](../../developer-guide/model-provider-plugin.md)** · [Adding Providers](../../developer-guide/adding-providers.md) |
@@ -230,7 +230,7 @@ Memory provider 和 context engine 是 **provider 插件** — 每种类型同�
 | **视频生成后端**（Veo、Kling、Pixverse、Grok-Imagine、Runway 等） | 后端插件 — `ctx.register_video_gen_provider()` | [Video Generation Provider Plugins](../../developer-guide/video-gen-provider-plugin.md) |
 | **TTS 后端**（任意 CLI — Piper、VoxCPM、Kokoro、xtts、语音克隆脚本等） | 配置驱动（推荐）— 在 `config.yaml` 的 `tts.providers.<name>` 下以 `type: command` 声明。或 Python 后端插件 — 对需要超出 shell 模板的 Python SDK / 流式引擎使用 `ctx.register_tts_provider()`。 | [TTS Setup](./tts.md#自定义命令提供商) · [Python plugin guide](./tts.md#python-插件提供商) |
 | **STT 后端**（自定义 whisper 二进制、本地 ASR CLI） | 配置驱动 — 将 `HERMES_LOCAL_STT_COMMAND` 环境变量设置为 shell 模板 | [Voice Message Transcription (STT)](./tts.md#语音消息转录stt) |
-| **通过 MCP 使用外部工具**（文件系统、GitHub、Linear、Notion、任意 MCP 服务器） | 配置驱动 — 在 `config.yaml` 中以 `command:` / `url:` 声明 `mcp_servers.<name>`。Hermes 自动发现服务器的工具并与内置工具一同注册。 | [MCP](./mcp.md) |
+| **通过 MCP 使用外部工具**（文件系统、GitHub、Linear、Notion、任意 MCP 服务器） | 配置驱动 — 在 `config.yaml` 中以 `command:` / `url:` 声明 `mcp_servers.<name>`。VAEL 自动发现服务器的工具并与内置工具一同注册。 | [MCP](./mcp.md) |
 | **额外 skill 来源**（自定义 GitHub 仓库、私有 skill 索引） | CLI — `hermes skills tap add <repo>` | [Skills Hub](./skills.md#skills-hub) · [发布自定义 tap](./skills.md#发布自定义-skill-tap) |
 | **Gateway 事件 hook**（在 `gateway:startup`、`session:start`、`agent:end`、`command:*` 时触发） | 将 `HOOK.yaml` + `handler.py` 放入 `~/.hermes/hooks/<name>/` | [Event Hooks](./hooks.md#gateway-event-hooks) |
 | **Shell hook**（在事件时运行 shell 命令 — 通知、审计日志、桌面提醒） | 配置驱动 — 在 `config.yaml` 的 `hooks:` 下声明 | [Shell Hooks](./hooks.md#shell-hooks) |

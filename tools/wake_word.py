@@ -1,4 +1,4 @@
-"""Wake-word ("Hey Hermes") detection — hands-free session trigger.
+"""Wake-word ("Hey VAEL") detection — hands-free session trigger.
 
 One always-on hotword listener shared by CLI, TUI and desktop GUI (a single owner,
 gated by ``wake_surface_enabled``). Engines live in :mod:`tools.wake_word_engines`;
@@ -35,7 +35,7 @@ logger = logging.getLogger(__name__)
 
 SAMPLE_RATE = 16000  # 16 kHz mono int16 — Whisper-native and what every engine expects.
 
-# Minimum gap between two wake fires, so one "hey hermes" can't retrigger across
+# Minimum gap between two wake fires, so one "hey vael" can't retrigger across
 # several frames while the caller is still reacting.
 _FIRE_COOLDOWN_SECONDS = 2.0
 _START_TIMEOUT_SECONDS = 5.0
@@ -76,14 +76,14 @@ class WakeWordInUse(RuntimeError):
 # frames via wake.feed), or "auto" (local when a device exists, else client).
 _DEFAULTS: Dict[str, Any] = {
     "enabled": False, "surface": "auto", "input_device": None, "capture": "auto",
-    "provider": "auto", "phrase": "hey hermes", "sensitivity": 0.6,
+    "provider": "auto", "phrase": "hey vael", "sensitivity": 0.6,
     "confirmation_frames": _DEFAULT_CONFIRMATION_FRAMES, "start_new_session": True,
 }
 
-# Bundled "hey hermes" model (tools/wakewords/) — the default; alias names resolve
+# Bundled "hey vael" model (tools/wakewords/) — the default; alias names resolve
 # to it, not to an openWakeWord built-in.
 _BUNDLED_MODEL_NAME = "hey_hermes"
-_BUNDLED_MODEL_ALIASES = frozenset({"", "hey_hermes", "hey hermes", "hermes"})
+_BUNDLED_MODEL_ALIASES = frozenset({"", "hey_hermes", "hey vael", "hermes"})
 
 
 def _bundled_wakeword_path() -> str:
@@ -142,7 +142,7 @@ def _confirmation_frames(cfg: Dict[str, Any]) -> int:
 def wake_phrase(cfg: Optional[Dict[str, Any]] = None) -> str:
     """Human-facing wake phrase label (purely cosmetic; engine keys detection)."""
     cfg = cfg if cfg is not None else load_wake_word_config()
-    return str(_get(cfg, "phrase")) or "hey hermes"
+    return str(_get(cfg, "phrase")) or "hey vael"
 
 
 def resolve_capture_mode(cfg: Optional[Dict[str, Any]] = None, *, prefer_client: bool = False,
@@ -277,7 +277,7 @@ def _resample_audio_frame(np, frame, output_length: int):
 def silent_audio_hint(details: Dict[str, Any]) -> str:
     """Platform-specific remediation for an armed stream delivering silence."""
     if sys.platform == "darwin":
-        return ("Microphone delivers only silence. Grant the Hermes backend "
+        return ("Microphone delivers only silence. Grant the VAEL backend "
                 "microphone access in System Settings > Privacy & Security > "
                 "Microphone, then toggle the wake word.")
     fix = ("Set wake_word.input_device to a different PortAudio input device"
@@ -404,7 +404,7 @@ def check_wake_word_requirements(cfg: Optional[Dict[str, Any]] = None, *,
         missing = " and ".join(
             name for name, ok in (("speech-to-text", stt_ok), ("text-to-speech", tts_ok)) if not ok
         )
-        hint = (f"Wake word needs {missing} configured — run `hermes tools` "
+        hint = (f"Wake word needs {missing} configured — run `vael tools` "
                 f"(Voice section) or see the voice-mode docs.")
 
     capture_mode = resolve_capture_mode(cfg)
@@ -763,7 +763,7 @@ _detector_lock = threading.Lock()
 
 
 def _lock_path() -> Path:
-    from hermes_constants import get_default_hermes_root
+    from vael_constants import get_default_hermes_root
     return get_default_hermes_root() / "runtime" / "wake-word.lock"
 
 

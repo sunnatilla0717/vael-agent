@@ -1,7 +1,7 @@
-"""``hermes gateway migrate --multiplex``: converge a per-profile-gateway install onto the ONE
+"""``vael gateway migrate --multiplex``: converge a per-profile-gateway install onto the ONE
 host gateway, with a table-driven preflight.
 
-Multiplex-only (Teknium ruling): exactly one ``hermes gateway run`` per host, serving every
+Multiplex-only (Teknium ruling): exactly one ``vael gateway run`` per host, serving every
 profile. This command is the supported convergence path, and it is defined by TOPOLOGY, not by a
 config flag — a host is converged when no secondary profile owns a gateway process or a supervisor
 unit any more. That makes it re-runnable: a half-migrated host (flag flipped, a unit left behind, a
@@ -16,7 +16,7 @@ compensates an already-destructive state instead of initiating one.
 
 The preflight reuses the gateway's own conflict logic (``GatewayRunner._adapter_credential_fingerprint``,
 ``platform_binds_port``, the adapters' ``serves_profile_prefix`` declaration) so its verdict matches
-what the multiplexer would do at startup. ``hermes update`` calls :func:`maybe_auto_migrate_after_update`.
+what the multiplexer would do at startup. ``vael update`` calls :func:`maybe_auto_migrate_after_update`.
 """
 
 from __future__ import annotations
@@ -35,7 +35,7 @@ from typing import Callable, Iterator, Optional
 logger = logging.getLogger(__name__)
 
 MANIFEST_NAME = "gateway_migration.json"
-MIGRATE_COMMAND = "hermes gateway migrate --multiplex"
+MIGRATE_COMMAND = "vael gateway migrate --multiplex"
 _SERVED_WAIT_SECONDS = 90.0
 
 
@@ -95,7 +95,7 @@ def _service_label(service: tuple[str, bool]) -> str:
 
 
 def _remove_verb(service: tuple[str, bool]) -> str:
-    """An s6 slot is parked down (it stays registered as the `hermes -p X gateway start` target), every
+    """An s6 slot is parked down (it stays registered as the `vael -p X gateway start` target), every
     other unit is uninstalled."""
     return "park" if service[0] == "s6" else "uninstall"
 
@@ -189,7 +189,7 @@ class MigrationPlan:
 
     def eligible_for_migration(self) -> bool:
         """>= 2 profiles, at least one secondary with its own gateway, multiplex off, no blockers.
-        This is the AUTO-migration (``hermes update``) bar; the explicit command also proceeds with
+        This is the AUTO-migration (``vael update``) bar; the explicit command also proceeds with
         zero standalone secondaries (see :func:`cmd_migrate`)."""
         return (
             len(self.profiles) >= 2 and bool(self.standalone_secondaries)
@@ -211,11 +211,11 @@ def _home_env(home: Path) -> Iterator[None]:
     a routed home and take only ``home``'s own secrets — with the env var swapped, the routed-home
     checks read ``home`` as the launch profile and handed the launch profile's credentials to the
     default gateway."""
-    from hermes_constants import (
+    from vael_constants import (
         get_routing_process_hermes_home, pin_process_hermes_home, process_hermes_home_is_pinned,
         reset_hermes_home_override, set_hermes_home_override,
     )
-    import hermes_constants
+    import vael_constants
     previous = os.environ.get("HERMES_HOME")
     pinned_here = not process_hermes_home_is_pinned()
     if pinned_here:
@@ -237,7 +237,7 @@ def _home_env(home: Path) -> Iterator[None]:
 
 
 def _default_home() -> Path:
-    from hermes_constants import get_default_hermes_root
+    from vael_constants import get_default_hermes_root
     return get_default_hermes_root()
 
 
@@ -275,7 +275,7 @@ def _own_gateway_pid(home: Path, owner) -> Optional[int]:
     Ownership is what this command may stop, and the host multiplexer is not owned by the profiles
     it serves: it is one process, launched from one home. Deriving ownership from
     :func:`_live_gateway_pid` made every secondary on a CONVERGED host report the host gateway's
-    PID, so the plan called the host half-migrated and each `hermes update` SIGTERMed the only
+    PID, so the plan called the host half-migrated and each `vael update` SIGTERMed the only
     gateway it had. The host process counts only for the home it was actually launched from; every
     other profile it serves owns nothing.
     """
@@ -304,7 +304,7 @@ def _installed_services(home: Path) -> list[tuple[str, bool]]:
     if gw._running_under_s6():
         from hermes_cli.gateway_multiplex_s6 import named_slot_name, slot_is_up
         from hermes_cli.service_manager import S6ServiceManager
-        from hermes_constants import profile_name_for_home
+        from vael_constants import profile_name_for_home
         name = profile_name_for_home(home) or "default"
         slot_dir = S6ServiceManager().scandir / named_slot_name(name)
         if slot_dir.is_dir() and (name == "default" or slot_is_up(name)):
@@ -324,7 +324,7 @@ def _windows_task_installed() -> bool:
     """Is a per-profile Windows gateway installed for the ACTIVE ``HERMES_HOME``?
 
     ``get_task_name()`` is home-suffixed, so this answers per profile exactly the way the systemd
-    unit path does. Either half counts: ``hermes gateway install`` falls back to a Startup-folder
+    unit path does. Either half counts: ``vael gateway install`` falls back to a Startup-folder
     entry when it cannot register a scheduled task, and a migration that removed only the task
     would leave the fallback launching a second gateway at the next logon.
     """
@@ -384,10 +384,10 @@ def _stop_gateway_process(home: Path) -> None:
 
 def _s6_slot_op(verb: str, home: Path) -> None:
     """The s6 leg of :func:`_service_op`. A named profile's slot is never uninstalled: it stays
-    registered DOWN (``down`` file) as the target of a later ``hermes -p X gateway start``, exactly
+    registered DOWN (``down`` file) as the target of a later ``vael -p X gateway start``, exactly
     the shape the container's boot produces. The root slot is (re)started so it re-reads its config."""
     from hermes_cli.gateway_multiplex_s6 import bring_root_slot_up, park_named_slot
-    from hermes_constants import profile_name_for_home
+    from vael_constants import profile_name_for_home
     name = profile_name_for_home(home) or "default"
     if name == "default":
         if verb in ("start", "restart"):
@@ -413,7 +413,7 @@ def _read_multiplex_flag(default_home: Path) -> bool:
 
 def _write_multiplex_flag(default_home: Path, value: bool) -> None:
     """Set ``gateway.multiplex_profiles`` in the DEFAULT profile's config.yaml through the config API
-    (same read-guard + nested-set + atomic write ``hermes config set`` uses; no raw YAML edits)."""
+    (same read-guard + nested-set + atomic write ``vael config set`` uses; no raw YAML edits)."""
     from hermes_cli.config import _set_nested, _write_user_config, require_readable_config_before_write
     cfg_path = default_home / "config.yaml"
     user_config = require_readable_config_before_write(cfg_path)
@@ -491,7 +491,7 @@ def _credential_key_names(platform_value: str) -> str:
 
 def duplicate_credential_lines(configs: list[tuple[str, object]]) -> list[str]:
     """One finding per platform credential two profiles both hold, with the remedy. The SINGLE
-    source for the migrate preflight, ``hermes doctor`` and ``hermes gateway status``, so all three
+    source for the migrate preflight, ``vael doctor`` and ``vael gateway status``, so all three
     name the same duplicates the same way: profile names + key names only, never a value or hash."""
     owners: dict[tuple, str] = {}
     lines: list[str] = []
@@ -657,7 +657,7 @@ def build_migration_plan() -> MigrationPlan:
     from hermes_cli.gateway_migrate_guards import auto_migration_blockers
     # Notices, not blockers: the explicit command is the operator's decision; only the update hook
     # refuses to cross these boundaries on its own.
-    plan.notices.extend(f"Not migrated automatically by `hermes update`: {b}" for b in auto_migration_blockers(plan))
+    plan.notices.extend(f"Not migrated automatically by `vael update`: {b}" for b in auto_migration_blockers(plan))
     plan.notices.append(
         "Profiles created after the migration are served by the running multiplexer as soon as "
         "they exist (it rescans profiles/ on create/delete and every 30s)."
@@ -812,7 +812,7 @@ def format_update_warning(plan: MigrationPlan, auto_blockers: list[str]) -> list
         "  setup, but this install cannot be migrated automatically yet:",
         *[f"    • {b}" for b in (*plan.blockers, *auto_blockers)],
         f"  After fixing the above, run:  {MIGRATE_COMMAND}",
-        "  (`hermes update` will migrate automatically once nothing blocks it.)",
+        "  (`vael update` will migrate automatically once nothing blocks it.)",
     ]
 
 
@@ -1088,7 +1088,7 @@ def apply_migration(plan: MigrationPlan, *, served_wait: float = _SERVED_WAIT_SE
         return True
     missing = sorted(expected - set(served or []))
     _print(["", f"⚠ Migration applied, but the default gateway has not confirmed serving: {', '.join(missing)}",
-            "  Check `hermes gateway status` and the gateway log; the flag and manifest are in place.",
+            "  Check `vael gateway status` and the gateway log; the flag and manifest are in place.",
             f"  Re-run {MIGRATE_COMMAND} once it is healthy — it resumes from the manifest."])
     return False
 
@@ -1129,7 +1129,7 @@ def rollback_migration(default_home: Optional[Path] = None) -> bool:
     or the retired ``false``; both resolve to multiplex at boot once nothing blocks it).
 
     Returns True only when a gateway is VERIFIABLY live again; the manifest is kept otherwise so
-    the next ``hermes gateway migrate --multiplex`` resumes.
+    the next ``vael gateway migrate --multiplex`` resumes.
     """
     default_home = default_home or _default_home()
     manifest = _read_manifest(default_home)
@@ -1193,7 +1193,7 @@ def rollback_migration(default_home: Optional[Path] = None) -> bool:
     live = _wait_for_live_gateway(default_home, _COMPENSATOR_WAIT_SECONDS)
     if live is None:
         print(f"  ✗ default: no gateway confirmed serving this host within {_COMPENSATOR_WAIT_SECONDS:.0f}s "
-              f"(check `hermes gateway status` and the gateway log)")
+              f"(check `vael gateway status` and the gateway log)")
         print(incomplete)
         return False
     _manifest_path(default_home).unlink(missing_ok=True)
@@ -1231,7 +1231,7 @@ def _host_supports_migration() -> Optional[str]:
 
 
 def cmd_migrate(args) -> None:
-    """``hermes gateway migrate [--multiplex] [--dry-run] [--yes]``."""
+    """``vael gateway migrate [--multiplex] [--dry-run] [--yes]``."""
     reason = _host_supports_migration()
     if reason:
         print(f"✗ {reason}")
@@ -1260,7 +1260,7 @@ def cmd_migrate(args) -> None:
 
 
 def maybe_auto_migrate_after_update() -> None:
-    """``hermes update`` hook: with >= 2 profiles, per-profile gateways present and multiplex off,
+    """``vael update`` hook: with >= 2 profiles, per-profile gateways present and multiplex off,
     migrate automatically when unblocked (deterministic, never prompts) or print the blocker block.
     ``gateway.auto_multiplex_migration: false`` on the default profile opts out; a secondary behind a
     service-domain / UNIX-user / HERMES_HOME boundary blocks this path only (the explicit command decides)."""

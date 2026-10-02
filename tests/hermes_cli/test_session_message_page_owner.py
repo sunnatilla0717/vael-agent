@@ -7,7 +7,7 @@ from fastapi.testclient import TestClient
 
 @pytest.mark.parametrize("serving_profile", ["work", None])
 def test_message_pages_identify_the_serving_profile(tmp_path, monkeypatch, serving_profile):
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
     default_home = tmp_path / ".hermes"
@@ -53,7 +53,7 @@ def test_message_pages_type_untyped_failed_turn_rows(tmp_path, monkeypatch):
     """Desktop cold-loads and pages through REST, not ``session.resume``: a failed-turn boundary
     written before the closers typed it must reach it as ``failed_turn``, not model text."""
     from agent.turn_failure_copy import FAILED_TURN_DISPLAY_KIND, FAILED_TURN_NOTICE, PARTIAL_FAILED_TURN_NOTICE
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     home = tmp_path / ".hermes"
     home.mkdir()

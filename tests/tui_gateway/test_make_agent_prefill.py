@@ -10,7 +10,7 @@ from __future__ import annotations
 import json
 import types
 
-from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+from vael_constants import reset_hermes_home_override, set_hermes_home_override
 from tui_gateway import server
 
 

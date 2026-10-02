@@ -8,9 +8,9 @@ sidebar_position: 6
 # 网页搜索与提取
 
 本页的 Python 依赖命令使用 [PM 准备的源码环境](../../reference/package-management.md#developer-workflow)。
-依赖变更后，请重新激活该 checkout 并重启 Hermes。
+依赖变更后，请重新激活该 checkout 并重启 VAEL。
 
-Hermes Agent 内置两个可供模型调用的网页工具，由多个提供商支持：
+VAEL Agent 内置两个可供模型调用的网页工具，由多个提供商支持：
 
 - **`web_search`** — 搜索网页并返回排序结果
 - **`web_extract`** — 从一个或多个 URL 获取并提取可读内容
@@ -30,7 +30,7 @@ Hermes Agent 内置两个可供模型调用的网页工具，由多个提供商�
 | **Parallel** | `PARALLEL_API_KEY` | ✔ | ✔ | 付费 |
 | **xAI (Grok)** | `XAI_API_KEY` 或 `hermes auth login xai-oauth` | ✔ | — | 付费（SuperGrok 或按 token 计费） |
 
-Brave Search、DDGS 和 xAI 均为**仅搜索**——如果同时需要 `web_extract`，可将其中任意一个与 Firecrawl/Tavily/Exa/Parallel 配合使用。DDGS 底层使用 [`ddgs` Python 包](https://pypi.org/project/ddgs/)；若尚未安装，请运行 `python -c "import pm; pm.sync_venv(['ddgs'], explicit=True)"`（或让 Hermes 在首次使用时懒加载安装）。xAI 通过 Responses API 运行 Grok 服务端的 `web_search` 工具——结果由 LLM 生成而非基于索引，因此标题、描述和 URL 选择均为模型输出（参见下方[信任模型说明](#xai-grok)）。
+Brave Search、DDGS 和 xAI 均为**仅搜索**——如果同时需要 `web_extract`，可将其中任意一个与 Firecrawl/Tavily/Exa/Parallel 配合使用。DDGS 底层使用 [`ddgs` Python 包](https://pypi.org/project/ddgs/)；若尚未安装，请运行 `python -c "import pm; pm.sync_venv(['ddgs'], explicit=True)"`（或让 VAEL 在首次使用时懒加载安装）。xAI 通过 Responses API 运行 Grok 服务端的 `web_search` 工具——结果由 LLM 生成而非基于索引，因此标题、描述和 URL 选择均为模型输出（参见下方[信任模型说明](#xai-grok)）。
 
 **按能力拆分：** 搜索和提取可分别使用不同的提供商——例如搜索使用 SearXNG（免费），提取使用 Firecrawl。详见下方[按能力配置](#per-capability-configuration)。
 
@@ -94,7 +94,7 @@ FIRECRAWL_API_URL=http://localhost:3002
 
 ### SearXNG（免费，自托管）
 
-SearXNG 是一个注重隐私的开源元搜索引擎，聚合来自 70 多个搜索引擎的结果。**无需 API 密钥**——只需将 Hermes 指向一个运行中的 SearXNG 实例。
+SearXNG 是一个注重隐私的开源元搜索引擎，聚合来自 70 多个搜索引擎的结果。**无需 API 密钥**——只需将 VAEL 指向一个运行中的 SearXNG 实例。
 
 SearXNG 为**仅搜索**——`web_extract` 需要单独的提取提供商。
 
@@ -170,7 +170,7 @@ curl -s "http://localhost:8888/search?q=test&format=json" | python3 -c \
 
 您应该看到类似 `10 results` 的输出。如果收到 `403 Forbidden`，说明 JSON 格式仍未启用——请重新检查第 4 步。
 
-**7. 配置 Hermes：**
+**7. 配置 VAEL：**
 
 ```bash
 # ~/.hermes/.env
@@ -214,7 +214,7 @@ web:
   extract_backend: "firecrawl"   # 或 tavily、exa、parallel
 ```
 
-使用此配置，Hermes 对所有搜索查询使用 SearXNG，对 URL 提取使用 Firecrawl——将免费搜索与高质量提取相结合。
+使用此配置，VAEL 对所有搜索查询使用 SearXNG，对 URL 提取使用 Firecrawl——将免费搜索与高质量提取相结合。
 
 ---
 
@@ -336,7 +336,7 @@ web:
 
 ### 自动检测
 
-如果未显式配置后端，Hermes 根据已设置的凭证选择第一个可用的后端：
+如果未显式配置后端，VAEL 根据已设置的凭证选择第一个可用的后端：
 
 | 存在的凭证 | 自动选择的后端 |
 |--------------------|-----------------------|
@@ -359,7 +359,7 @@ xAI Web Search **不在**自动检测链中——设置了 `XAI_API_KEY`（或�
 ```
 
 源码检出也可以在 [PM 激活](../../reference/package-management.md#developer-workflow)后检查模块。
-使用你打算检查网页配置的 Hermes 数据目录：
+使用你打算检查网页配置的 VAEL 数据目录：
 
 ```bash
 # 从 Hermes 源码目录的干净 shell 运行

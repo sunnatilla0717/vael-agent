@@ -163,7 +163,7 @@ diagnostics and garbage collection rather than deleting the shared data root.
 - **Wrong version:** inspect command resolution, then use `hermes --version`
   from the activated checkout.
 - **Missing dependencies:** run `python -m pm.cli install` from the intended
-  source environment, then restart the affected Hermes process.
+  source environment, then restart the affected VAEL process.
 - **Gateway already running:** inspect `hermes gateway status` for the
   selected profile. Stop the identified owner; do not kill unrelated processes.
 - **Different skills after first run:** newer code can sync bundled skills into

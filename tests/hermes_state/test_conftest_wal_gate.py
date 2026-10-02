@@ -14,7 +14,7 @@ import sqlite3
 
 import pytest
 
-from hermes_state_wal import is_sqlite_wal_reset_vulnerable
+from vael_state_wal import is_sqlite_wal_reset_vulnerable
 from tests.conftest import _wal_is_usable
 
 
@@ -58,7 +58,7 @@ def test_conftest_does_not_import_hermes_state_at_collection():
     blocked: list[str] = []
 
     def guard(name, *args, **kwargs):
-        if name == "hermes_state" or name.startswith("hermes_state."):
+        if name == "vael_state" or name.startswith("hermes_state."):
             blocked.append(name)
             raise AssertionError(
                 "conftest._wal_is_usable imported hermes_state — this caches "
@@ -66,12 +66,12 @@ def test_conftest_does_not_import_hermes_state_at_collection():
             )
         return real_import(name, *args, **kwargs)
 
-    saved = sys.modules.pop("hermes_state", None)
+    saved = sys.modules.pop("vael_state", None)
     builtins.__import__ = guard
     try:
         _wal_is_usable()  # must not raise
     finally:
         builtins.__import__ = real_import
         if saved is not None:
-            sys.modules["hermes_state"] = saved
+            sys.modules["vael_state"] = saved
     assert not blocked

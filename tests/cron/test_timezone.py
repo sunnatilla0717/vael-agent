@@ -15,7 +15,7 @@ import pytest
 from datetime import datetime, timedelta, timezone
 from unittest.mock import patch
 
-import hermes_time
+import vael_time
 
 
 def _reset_hermes_time_cache():
@@ -113,7 +113,7 @@ class TestGetTimezone:
         """Under the multiplexed gateway HERMES_TIMEZONE holds only the DEFAULT profile's value
         (bridged at startup), so a routed profile must resolve from its own config.yaml."""
         from agent.secret_scope import set_multiplex_active
-        from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+        from vael_constants import reset_hermes_home_override, set_hermes_home_override
 
         default_home, routed_home = tmp_path / "default", tmp_path / "routed"
         default_home.mkdir()
@@ -151,7 +151,7 @@ class TestGetTimezone:
         """
         import threading
 
-        from hermes_constants import (
+        from vael_constants import (
             reset_hermes_home_override,
             set_hermes_home_override,
         )

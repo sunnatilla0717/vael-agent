@@ -6,7 +6,7 @@ survive process restarts and appear in ``session_search``; ``load_session`` /
 """
 from __future__ import annotations
 
-from hermes_constants import get_hermes_home, translate_cwd_for_wsl_backend, windows_path_to_wsl
+from vael_constants import get_hermes_home, translate_cwd_for_wsl_backend, windows_path_to_wsl
 
 import copy
 import json
@@ -323,7 +323,7 @@ class SessionManager:
         acquire, so the ACP server holds ONE writer on state.db instead of two (#100896)."""
         if self._db_instance is None:
             try:
-                from hermes_state_registry import acquire
+                from vael_state_registry import acquire
                 self._db_instance = acquire(get_hermes_home() / "state.db")
             except Exception:
                 logger.debug("SessionDB unavailable for ACP persistence", exc_info=True)
@@ -504,7 +504,7 @@ class SessionManager:
         from hermes_cli.config import load_config
         from hermes_cli.runtime_provider import resolve_runtime_provider
         from hermes_cli.tools_config import _get_platform_tools, enabled_mcp_server_names
-        from hermes_constants import resolve_reasoning_config
+        from vael_constants import resolve_reasoning_config
 
         config = load_config()
         model_cfg = config.get("model")

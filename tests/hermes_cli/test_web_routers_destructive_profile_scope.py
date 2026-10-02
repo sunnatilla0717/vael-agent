@@ -19,7 +19,7 @@ import json
 import zipfile
 
 import pytest
-import hermes_yaml as yaml
+import vael_yaml as yaml
 
 
 @pytest.fixture(autouse=True)
@@ -47,7 +47,7 @@ def _multiplex_state_is_per_test():
 @pytest.fixture
 def homes(tmp_path, monkeypatch, _isolate_hermes_home):
     """Isolated launch home + one named profile, both seeded with real files."""
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
     from hermes_cli import profiles
 
     launch_home = get_hermes_home()
@@ -81,7 +81,7 @@ def client(monkeypatch, homes):
     except ImportError:
         pytest.skip("fastapi/starlette not installed")
 
-    import hermes_state
+    import vael_state
     from hermes_cli.web_server import app, _SESSION_HEADER_NAME, _SESSION_TOKEN
 
     monkeypatch.setattr(hermes_state, "DEFAULT_DB_PATH", homes["launch"] / "state.db")

@@ -57,6 +57,14 @@ def _valid_mcp_args(invocation: Any) -> Optional[List[str]]:
 def _has_path_separator(value: str) -> bool:
     return os.sep in value or (os.altsep is not None and os.altsep in value)
 
+def _is_executable_file(path: str) -> bool:
+    """True when *path* is a real, runnable file. ``shutil.which`` only matches files carrying a PATHEXT extension on
+    Windows, so an explicit override naming an extensionless binary (Git-Bash/MSYS2 shim, version-suffixed build)
+    would look "not installed" even though the user pointed straight at it."""
+    if not os.path.isfile(path):
+        return False
+    return True if os.name == "nt" else os.access(path, os.X_OK)
+
 def _wsl_windows_path_to_posix(path: str) -> str:
     """Translate a Windows absolute manifest command to its DrvFS ``/mnt/<drive>/...`` form when Hermes runs in WSL
     (a Windows cua-driver manifest can report ``C:\\...`` while Hermes spawns via POSIX). Non-Windows paths and
@@ -64,7 +72,7 @@ def _wsl_windows_path_to_posix(path: str) -> str:
     if not re.match(r"^[A-Za-z]:[\\/]", path):
         return path
     try:
-        from hermes_constants import is_wsl
+        from vael_constants import is_wsl
         wsl = is_wsl()
     except Exception:
         wsl = False
@@ -73,12 +81,17 @@ def _wsl_windows_path_to_posix(path: str) -> str:
     return "/".join(["/mnt", drive, *win.parts[1:]]) if wsl and drive else path
 
 def resolve_cua_driver_cmd(override: Optional[str] = None) -> Optional[str]:
-    """Read PM's selected binary without installing; never replace an explicit override."""
+    """Read PM's selected binary without installing; never replace an explicit override.
+
+    An override that spells out a path is honored whenever that exact file exists and is runnable — no PATH/PATHEXT
+    lookup needed. This keeps an explicit ``HERMES_CUA_DRIVER_CMD`` authoritative on Windows, where ``shutil.which``
+    cannot see extensionless binaries; a bare name (no separator) still resolves through PATH as before."""
     configured = (override if override is not None else os.environ.get(_CUA_DRIVER_CMD_ENV, "")).strip()
     if configured:
         expanded = os.path.expanduser(configured)
-        resolved = shutil.which(expanded)
-        return expanded if resolved and _has_path_separator(expanded) else resolved
+        if _has_path_separator(expanded) and _is_executable_file(expanded):
+            return expanded
+        return shutil.which(expanded)
     from pm import installed_package
 
     installed = installed_package("cua-driver")

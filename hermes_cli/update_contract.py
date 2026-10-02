@@ -69,7 +69,7 @@ def _steward_refusal(steward: str) -> UpdateRefusal:
         return _refusal(steward, method, lambda _command: steward_update_message(steward))
     # desktop-app and future package managers have no CLI remediation: the
     # steward's own instructions are the remediation, and
-    # recommended_update_command_for_method would falsely answer "hermes
+    # recommended_update_command_for_method would falsely answer "vael
     # update" for methods it doesn't know.
     command = (
         "Manage updates from within the desktop app"
@@ -117,7 +117,7 @@ def evaluate_update_admission(project_root: Path) -> Optional[UpdateRefusal]:
 
         steward = sealed_steward(project_root)
         if steward is None:
-            from hermes_constants import is_termux
+            from vael_constants import is_termux
 
             if is_termux():
                 from hermes_cli.steward import SOURCE_ON_TERMUX_UPDATE_COMMAND, SOURCE_ON_TERMUX_UPDATE_MESSAGE

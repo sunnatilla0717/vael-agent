@@ -7,7 +7,7 @@ description: "Send text from any shell script, cron job, CI hook, or monitoring 
 # Pipe Script Output to Messaging Platforms
 
 `hermes send` is a small, scriptable CLI that pushes a message to any
-messaging platform Hermes is already configured for. Think of it as a
+messaging platform VAEL is already configured for. Think of it as a
 cross-platform `curl` for notifications — you don't need a running
 gateway, you don't need an LLM, and you don't need to re-paste bot tokens
 into each of your scripts.
@@ -76,7 +76,7 @@ hermes send --list telegram
 | `platform:#channel` | `discord:#ops` | Human-friendly channel name (resolved against the channel directory) |
 | `platform:+E164` | `signal:+15551234567` | Phone-addressed platforms: Signal, SMS, WhatsApp |
 
-Any platform Hermes ships adapters for works as a target:
+Any platform VAEL ships adapters for works as a target:
 `telegram`, `discord`, `slack`, `signal`, `sms`, `whatsapp`, `matrix`,
 `mattermost`, `feishu`, `dingtalk`, `wecom`, `weixin`, `email`, and
 others.
@@ -102,7 +102,7 @@ branch on them the same way they would on `curl` or `grep`.
 2. **`--file PATH`** — `hermes send --to telegram --file msg.txt`
 3. **Piped stdin** — `echo hi | hermes send --to telegram`
 
-When stdin is a TTY (no pipe), Hermes does **not** wait for input — you'll
+When stdin is a TTY (no pipe), VAEL does **not** wait for input — you'll
 get a clear usage error instead. This keeps scripts from hanging if they
 accidentally omit the body.
 
@@ -124,8 +124,8 @@ if [ "$ram_pct" -ge 85 ]; then
 fi
 ```
 
-Because `hermes send` reuses your Hermes config, the same script works on
-any host where Hermes is installed — no need to export bot tokens into
+Because `hermes send` reuses your VAEL config, the same script works on
+any host where VAEL is installed — no need to export bot tokens into
 each machine's environment manually.
 
 :::tip Don't alert the gateway about itself
@@ -187,7 +187,7 @@ msg_id=$(hermes send --to discord:#ops --json "build started" \
 Signal, SMS, WhatsApp Cloud API, and most others — `hermes send` calls
 the platform's REST endpoint directly using credentials from
 `~/.hermes/.env` and `~/.hermes/config.yaml` (or the equivalent files under
-your resolved Hermes home — `%LOCALAPPDATA%\hermes` on Windows, or the profile
+your resolved VAEL home — `%LOCALAPPDATA%\hermes` on Windows, or the profile
 directory when `HERMES_HOME` / `-p` is set). It's a standalone subprocess
 that exits as soon as the message is delivered.
 
@@ -238,7 +238,7 @@ IDs.
 
 ## Comparison with Other Approaches
 
-| Approach | Multi-platform | Reuses Hermes creds | Needs gateway | Best for |
+| Approach | Multi-platform | Reuses VAEL creds | Needs gateway | Best for |
 |----------|----------------|---------------------|---------------|----------|
 | `hermes send` | ✅ | ✅ | No (bot-token) | Everything below |
 | Raw `curl` to each platform | Each scripted separately | Manual | No | Critical watchdogs |

@@ -79,7 +79,7 @@ export default function PluginPage({ data }: { data: PluginPageData }) {
     : null;
   const added = formatDate(plugin.addedAt);
   const updated = formatDate(plugin.updatedAt);
-  const metaDescription = (prose || plugin.description || `${plugin.name} — a Hermes Agent plugin`).slice(0, 160);
+  const metaDescription = (prose || plugin.description || `${plugin.name} — a VAEL Agent plugin`).slice(0, 160);
 
   return (
     <Layout title={`${plugin.name} · Plugin Catalog`} description={metaDescription}>
@@ -165,9 +165,9 @@ export default function PluginPage({ data }: { data: PluginPageData }) {
               <a
                 className={styles.installBtn}
                 href={desktopInstallLink(plugin.name)}
-                title="Opens the Install Plugin dialog in Hermes Desktop at the reviewed version. No app? Use the install command."
+                title="Opens the Install Plugin dialog in VAEL Desktop at the reviewed version. No app? Use the install command."
               >
-                Open in Hermes Desktop
+                Open in VAEL Desktop
               </a>
               <div className={styles.installCmd}>
                 <code>{plugin.installCommand}</code>

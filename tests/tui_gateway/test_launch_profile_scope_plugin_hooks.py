@@ -22,7 +22,7 @@ import pytest
 
 from agent.secret_scope import set_multiplex_active
 from hermes_cli import plugins as plugins_mod
-from hermes_constants import get_hermes_home, get_hermes_home_override
+from vael_constants import get_hermes_home, get_hermes_home_override
 from tools.daemon_pool import DaemonThreadPoolExecutor
 from tools.thread_context import propagate_context_to_thread
 import tui_gateway.server as server
@@ -54,7 +54,7 @@ def two_homes(tmp_path, monkeypatch):
         return None
 
     # Plugin managers are keyed per home: each profile loads its own copy of the plugin.
-    from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+    from vael_constants import reset_hermes_home_override, set_hermes_home_override
     for home in (launch, routed):
         token = set_hermes_home_override(str(home))
         try:

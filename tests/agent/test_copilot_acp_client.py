@@ -209,7 +209,7 @@ def test_run_prompt_preserves_real_home_when_profile_home_available(monkeypatch,
     # when is_container() is True — on a containerized CI runner that real
     # probe flips the resolution this test asserts. The host/VM branch is the
     # contract under test; pin containment off.
-    monkeypatch.setattr("hermes_constants.is_container", lambda: False)
+    monkeypatch.setattr("vael_constants.is_container", lambda: False)
 
     captured = {}
     client = _make_home_client(tmp_path)

@@ -1,10 +1,10 @@
-"""Frozen compat surface for releases that finish `hermes update` via the post-swap hand-off.
+"""Frozen compat surface for releases that finish `vael update` via the post-swap hand-off.
 
 Releases from 2026-09-16 (94ced1a2b2) lazily import ``hermes_cli.update_handoff``
 from the NEW tree after the checkout swap. Like every other retired updater
 hook, this module keeps that import working by routing into the historical
 takeover (``hermes_cli._old_updater`` → ``_update_takeover.py``) instead of
-re-executing ``hermes update --post-swap``; the pulled tree is never imported
+re-executing ``vael update --post-swap``; the pulled tree is never imported
 into the pre-pull interpreter.
 
 Guarded by tests/compat/old_updater_surface.json — do not remove a public name
@@ -31,7 +31,7 @@ def is_post_swap_child() -> bool:
 
 def write_handoff(payload: dict[str, Any]) -> Path:
     """Persist the post-swap payload under HERMES_HOME; returns its path."""
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
 
     directory = get_hermes_home() / "logs" / "update_receipts"
     directory.mkdir(parents=True, exist_ok=True)
@@ -55,7 +55,7 @@ def post_swap_python() -> Path:
     if sys.platform != "win32":
         return Path(sys.executable)
     from hermes_cli._launchers import _is_windows
-    from hermes_constants import project_venv_dir
+    from vael_constants import project_venv_dir
     from pm.environments import venv_python
 
     venv_dir = project_venv_dir(Path(__file__).resolve().parents[1])
@@ -108,7 +108,7 @@ def _takeover_request(payload: dict[str, Any], argv_tail: list[str] | None) -> d
 def _continue_legacy_post_swap(handoff_path: str | Path, *, argv_tail: list[str]) -> int:
     """Complete the command shape shipped before PM owned source updates.
 
-    Those releases start the replacement checkout as ``hermes update <flags>
+    Those releases start the replacement checkout as ``vael update <flags>
     --post-swap FILE``. The replacement bootstrap calls this before importing
     its PM or CLI graph, then the existing takeover child prepares and finishes
     the update entirely on replacement code.

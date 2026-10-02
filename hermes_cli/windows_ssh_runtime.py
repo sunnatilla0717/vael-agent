@@ -13,7 +13,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
 
-from hermes_constants import get_default_hermes_root
+from vael_constants import get_default_hermes_root
 
 _HEX32 = re.compile(r"[0-9a-f]{32}\Z")
 _HEX16 = re.compile(r"[0-9a-f]{16}\Z")
@@ -315,7 +315,7 @@ def process_state(pid: int, creation_time_ns: int, hermes_path: str, spawn_nonce
         return {"alive": True, "owned": False, "indeterminate": True, "reason": "argv-unavailable"}
     expected = os.path.normcase(os.path.abspath(hermes_path))
     arg0 = os.path.normcase(os.path.abspath(argv[0]))
-    # argv[0] is the hermes exe or (normally) the base Python, whose path varies by venv/uv
+    # argv[0] is the vael exe or (normally) the base Python, whose path varies by venv/uv
     # layout — so match "a python running our module" (`-c` bootstrap or plain `-m`). Identity
     # is anchored by the unforgeable creation-time + secret owner-nonce below.
     is_python = os.path.basename(arg0).startswith("python")
@@ -360,15 +360,15 @@ def _resolve_direct_command(hermes_path: str) -> list[str]:
     out = subprocess.run([hermes_path, "--print-runtime-command"], capture_output=True,
                          text=True, encoding="utf-8", errors="replace", timeout=30)
     if out.returncode != 0:
-        raise ValueError("could not resolve Hermes runtime; refresh this installation's launcher")
+        raise ValueError("could not resolve VAEL runtime; refresh this installation's launcher")
     try:
         command = json.loads(out.stdout)
     except ValueError as exc:
-        raise ValueError("Hermes launcher did not report a runtime command") from exc
+        raise ValueError("VAEL launcher did not report a runtime command") from exc
     if (not isinstance(command, list) or not command
             or not all(isinstance(part, str) and "\x00" not in part for part in command)
             or not os.path.isabs(command[0]) or not os.path.isfile(command[0])):
-        raise ValueError("Hermes launcher reported an invalid runtime command")
+        raise ValueError("VAEL launcher reported an invalid runtime command")
     return command
 
 
@@ -377,7 +377,7 @@ def spawn_backend(payload: dict[str, Any]) -> dict[str, Any]:
     spawn_nonce = _nonce(str(payload["spawnNonce"]))
     configured_path = str(payload["hermesPath"])
     if not os.path.isabs(configured_path):
-        raise ValueError("Hermes path must be absolute")
+        raise ValueError("VAEL path must be absolute")
     hermes_path = os.path.abspath(configured_path)
     token_path = str(_token_path(ownership_id, spawn_nonce))
     profile = str(payload.get("profile") or "")
@@ -411,7 +411,7 @@ def spawn_backend(payload: dict[str, Any]) -> dict[str, Any]:
 def inspect_hermes(hermes_path: str) -> dict[str, Any]:
     path = os.path.abspath(hermes_path)
     if not os.path.isabs(hermes_path) or not os.path.isfile(path):
-        raise ValueError("Hermes path is not an executable file")
+        raise ValueError("VAEL path is not an executable file")
     version = subprocess.run([path, "--version"], capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=20)
     help_result = subprocess.run([path, "serve", "--help"], capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=20)
     help_text = help_result.stdout + help_result.stderr

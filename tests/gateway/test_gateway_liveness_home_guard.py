@@ -11,7 +11,7 @@ import json
 import pytest
 
 from gateway import status
-import hermes_constants
+import vael_constants
 
 _LIVE_PID = 4242
 

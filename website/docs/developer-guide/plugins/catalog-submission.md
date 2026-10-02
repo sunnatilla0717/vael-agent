@@ -1,13 +1,13 @@
 ---
 sidebar_label: "Catalog submission"
 title: "Submitting to the Plugin Catalog"
-description: "The full admission guidelines for the Hermes plugin catalog: what to check before you submit, the rules every entry follows, and what reviewers look at"
+description: "The full admission guidelines for the VAEL plugin catalog: what to check before you submit, the rules every entry follows, and what reviewers look at"
 ---
 
 # Submitting to the Plugin Catalog
 
 The [plugin catalog](../../user-guide/features/plugin-catalog.md) is a human-reviewed
-directory of Hermes plugins. Being listed is the trust signal: users install a
+directory of VAEL plugins. Being listed is the trust signal: users install a
 catalog plugin by name, at the exact commit a maintainer read. This page holds
 the complete guidelines for getting a plugin in and keeping it there.
 
@@ -21,14 +21,14 @@ for word, and a test fails the build if the two drift apart.
 - **A public repository.** The `repo` URL is an `https://` URL anyone can clone
   (GitHub or GitLab).
 - **A loadable plugin at the commit you pin.** The tree has a `plugin.yaml`
-  manifest plus at least one entrypoint Hermes loads: `__init__.py` (Python),
+  manifest plus at least one entrypoint VAEL loads: `__init__.py` (Python),
   `desktop/plugin.js` (Desktop), `plugin.json` (portable Agent Plugin) or
   `dashboard/manifest.json` (web dashboard). If the plugin lives in a monorepo,
   point `subdir` at its directory. The
   [plugin developer guide](./index.md) covers the layout.
-- **Public surfaces only.** Extend Hermes through hooks, middleware, the
+- **Public surfaces only.** Extend VAEL through hooks, middleware, the
   `ctx.register_*` APIs, provider plugins and the
-  [Desktop plugin SDK](../desktop-plugin-sdk.md). Never patch Hermes
+  [Desktop plugin SDK](../desktop-plugin-sdk.md). Never patch VAEL
   code or Desktop markup at runtime. If the hook you need is missing, see
   [Asking for a hook](#asking-for-a-hook).
 - **Validation passes locally.** Run the same check catalog CI runs, against a
@@ -40,7 +40,7 @@ for word, and a test fails the build if the two drift apart.
 
   It checks the manifest and `requires_hermes`, that the plugin loads, that the
   `capabilities` you declare match what it registers, `config_schema` and
-  `requires_env`, Python dependencies against Hermes's core constraints, the
+  `requires_env`, Python dependencies against VAEL's core constraints, the
   install security scan, and the `desktop surface` and `no core override`
   rules. Fix every failure before opening the PR, and read the warnings, since
   a reviewer will.
@@ -53,7 +53,7 @@ for word, and a test fails the build if the two drift apart.
    [entry schema](https://github.com/NousResearch/hermes-agent/blob/main/plugin-catalog/README.md#entry-schema)
    and in [What's in an entry](../../user-guide/features/plugin-catalog.md#whats-in-an-entry).
    Pin `sha` to a full 40-character commit, and quote `version`.
-2. In the PR description, say what the plugin does, which Hermes surfaces it
+2. In the PR description, say what the plugin does, which VAEL surfaces it
    uses, and everything rule 13 asks you to disclose. Add screenshots for
    anything with a UI.
 3. Wait for the catalog CI job to go green. It clones your repo at the pinned
@@ -88,7 +88,7 @@ the gallery. There is no separate listing to maintain.
 5. **Owner-or-major-contributor submissions, or a maintainer-curated sweep.**
    An entry may be submitted by the plugin repository's owner or a major
    contributor to it; drive-by submissions of third-party repos are declined.
-   Hermes maintainers may also add entries in batches from a reviewed sweep
+   VAEL maintainers may also add entries in batches from a reviewed sweep
    of community plugins (every pin validated and scanned at the pinned
    commit, self-updater and credential-store checks run, English-first UI).
    Authors of swept-in entries keep control: a PR from the owner adjusting
@@ -115,7 +115,7 @@ the gallery. There is no separate listing to maintain.
    hide, click or rewrite core UI). `hermes plugins validate` refuses these at
    admission (`desktop surface` check); a plugin that needs a capability the
    SDK lacks asks for an SDK hook instead of patching around it.
-9. **No runtime overrides of Hermes core.** A listed plugin extends Hermes only
+9. **No runtime overrides of VAEL core.** A listed plugin extends VAEL only
    through public surfaces: hooks, middleware, provider profiles and the
    other `register_*` APIs, and Desktop SDK slots and routes. It must not
    replace, wrap or rebind core functions, methods, module attributes or
@@ -125,10 +125,10 @@ the gallery. There is no separate listing to maintain.
    can break both. `hermes plugins validate` refuses these at admission (`no
    core override` check). If the hook you need does not exist, open an issue
    describing it: we would rather add the seam than list a patch.
-10. **Dependency security policy is the plugin's.** Hermes's 14-day
-   `exclude-newer` quarantine covers Hermes's own dependencies only; a plugin's
+10. **Dependency security policy is the plugin's.** VAEL's 14-day
+   `exclude-newer` quarantine covers VAEL's own dependencies only; a plugin's
    `python_dependencies` / `pyproject.toml` install under the plugin's policy
-   (no quarantine, still inside Hermes's core constraints). Reviewers read the
+   (no quarantine, still inside VAEL's core constraints). Reviewers read the
    dependency list at the pinned SHA: bare floors (`>=X` with no upper bound)
    and floors on the newest release get a request for the oldest
    API-compatible floor plus an upper bound, and authors are strongly
@@ -144,8 +144,8 @@ the gallery. There is no separate listing to maintain.
    presenting itself as another vendor's client, is not admitted without an
    explicit maintainer ruling; a read-only build is the usual way through.
 12. **Approvals and unattended runs are respected.** A plugin never routes around
-   Hermes's approval system: no auto-approving, no disabling guards, and no
-   spawning Hermes or shell children that inherit YOLO or non-interactive mode
+   VAEL's approval system: no auto-approving, no disabling guards, and no
+   spawning VAEL or shell children that inherit YOLO or non-interactive mode
    to run commands nobody approved. Anything that waits for a person (a prompt,
    an OAuth browser flow) fails cleanly or times out under cron, the messaging
    gateway and other unattended runs instead of hanging the agent.
@@ -158,7 +158,7 @@ the gallery. There is no separate listing to maintain.
 14. **Compatibility metadata is truthful.** `requires_hermes` is a SemVer floor
    (`">=0.21.5"`), never a CalVer date, and never newer than the current release
    (the loader skips the plugin otherwise). `version` matches the pinned code,
-   and Python dependencies resolve under Hermes's core constraints
+   and Python dependencies resolve under VAEL's core constraints
    (`hermes plugins validate --install-deps` is what CI runs).
 15. **No skins or forks of bundled plugins.** A change to a bundled plugin is a
    PR against `hermes-agent`, not a competing listing, and vendor-lookalike skins

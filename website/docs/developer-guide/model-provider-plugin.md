@@ -1,12 +1,12 @@
 ---
 sidebar_position: 10
 title: "Model Provider Plugins"
-description: "How to build a model provider (inference backend) plugin for Hermes Agent"
+description: "How to build a model provider (inference backend) plugin for VAEL Agent"
 ---
 
 # Building a Model Provider Plugin
 
-Model provider plugins declare an inference backend — an OpenAI-compatible endpoint, an Anthropic Messages server, a Codex-style Responses API, or a Bedrock-native surface — that Hermes can route `AIAgent` calls through. Every built-in provider (OpenRouter, Anthropic, GMI, DeepSeek, Nvidia, …) ships as one of these plugins. Third parties can add their own by dropping a directory under `$HERMES_HOME/plugins/model-providers/` with zero changes to the repo.
+Model provider plugins declare an inference backend — an OpenAI-compatible endpoint, an Anthropic Messages server, a Codex-style Responses API, or a Bedrock-native surface — that VAEL can route `AIAgent` calls through. Every built-in provider (OpenRouter, Anthropic, GMI, DeepSeek, Nvidia, …) ships as one of these plugins. Third parties can add their own by dropping a directory under `$HERMES_HOME/plugins/model-providers/` with zero changes to the repo.
 
 :::tip
 Model provider plugins are the third kind of **provider plugin**. The others are [Memory Provider Plugins](./memory-provider-plugin.md) (cross-session knowledge) and [Context Engine Plugins](./context-engine-plugin.md) (context compression strategies). All three follow the same "drop a directory, declare a profile, no repo edits" pattern.
@@ -16,7 +16,7 @@ Model provider plugins are the third kind of **provider plugin**. The others are
 
 `providers/__init__.py._discover_providers()` runs lazily the first time any code calls `get_provider_profile()` or `list_providers()`. Discovery order:
 
-1. **Bundled plugins** — `<repo>/plugins/model-providers/<name>/` — ship with Hermes
+1. **Bundled plugins** — `<repo>/plugins/model-providers/<name>/` — ship with VAEL
 2. **User plugins** — `$HERMES_HOME/plugins/model-providers/<name>/` — drop in a directory; a running process picks it up on its next provider lookup (no restart)
 3. **Installed plugins** — `$HERMES_HOME/plugins/<name>/` (where `hermes plugins install owner/repo` clones) — imported only when `plugin.yaml` declares `kind: model-provider`; every other kind there belongs to the general PluginManager
 4. **Legacy single-file** — `<repo>/providers/<name>.py` — back-compat for out-of-tree editable installs
@@ -117,7 +117,7 @@ Full definition in `providers/base.py`. The most useful ones:
 
 ## Declaring model capabilities
 
-Hermes resolves per-model capabilities (`supports_reasoning`, `supports_vision`,
+VAEL resolves per-model capabilities (`supports_reasoning`, `supports_vision`,
 `supports_tools`, `context_window`) from the models.dev catalog, which does not
 know an out-of-tree provider's models. Declare them once on the profile:
 
@@ -157,7 +157,7 @@ Not covered: the picker's `fast` badge (a model-name heuristic in
 `hermes_cli/models.py::model_supports_fast_mode`), reasoning-effort vocabulary
 (`agent/reasoning_effort.py`), and transport request fields. Declarations do not
 add models to a picker — use `fallback_models` / `fetch_models` for that. The
-registry is discovered once per process: restart Hermes after editing them.
+registry is discovered once per process: restart VAEL after editing them.
 
 ## Overridable hooks
 
@@ -276,7 +276,7 @@ Selecting the row in `hermes model` (and the setup wizard) runs one generic flow
 
 External-process profiles may implement `setup_status(**kwargs)` returning `{available, logged_in, plan, detail, login_command}` and `discover_models(**kwargs)` returning `[{id, label, note}]`. The generic flow gates on `logged_in` (running `login_command` inline on a TTY, printing `detail` otherwise) and, when `discover_models()` returns rows, offers them merged with `fallback_models`; `note` renders as a dim per-row annotation (`· usage credits`) and never hides a model. Keep `fetch_models()` returning the same ids so `/model` and the Desktop picker agree with setup. Both hooks must be cheap and must never perform inference; return `None` to fall back to `fallback_models`.
 
-For interruptible non-HTTP requests, implement a class-declared `cancel(self)` method. Hermes calls it from the interrupting thread after marking the request client unusable. It must return promptly and safely stop its own transport, including cancellation racing process startup; it must not close file descriptors owned by the request thread. The request owner still calls `close()` for cleanup. Clients without this method retain the existing socket-shutdown cancellation path.
+For interruptible non-HTTP requests, implement a class-declared `cancel(self)` method. VAEL calls it from the interrupting thread after marking the request client unusable. It must return promptly and safely stop its own transport, including cancellation racing process startup; it must not close file descriptors owned by the request thread. The request owner still calls `close()` for cleanup. Clients without this method retain the existing socket-shutdown cancellation path.
 
 Declare `model_aliases` (`{"sonnet": "claude-sonnet-5[1m]"}`) for a catalog models.dev does not know: bare `/model <alias>` and `/model <id-prefix>` resolve inside the process provider first, and `validate_requested_model` accepts a declared id without probing `process://`.
 
@@ -320,7 +320,7 @@ register_provider(ProviderProfile(
 ))
 ```
 
-In a fresh Hermes process, `get_provider_profile("gmi").base_url` returns the staging URL. No repo patch, no rebuild. Because user plugins are discovered after bundled ones, the user `register_provider()` call wins.
+In a fresh VAEL process, `get_provider_profile("gmi").base_url` returns the staging URL. No repo patch, no rebuild. Because user plugins are discovered after bundled ones, the user `register_provider()` call wins.
 
 The override also reaches the runtime. Built-in providers have a row in `hermes_cli.auth.PROVIDER_REGISTRY` (the table `resolve_runtime_provider()` reads its endpoint and env vars from); a `$HERMES_HOME` plugin re-registering that name rewrites the row's profile-derived fields, so inference goes to the staging URL, not the bundled one:
 
@@ -334,7 +334,7 @@ Only a **user** plugin (`$HERMES_HOME/plugins/model-providers/` or an installed 
 
 ## api_mode selection
 
-Four built-in values are recognized (`chat_completions`, `codex_responses`, `anthropic_messages`, `bedrock_converse`), plus any mode a plugin registers itself. Hermes picks one based on:
+Four built-in values are recognized (`chat_completions`, `codex_responses`, `anthropic_messages`, `bedrock_converse`), plus any mode a plugin registers itself. VAEL picks one based on:
 
 1. User explicit override (`config.yaml` `model.api_mode` when set)
 2. OpenCode's per-model dispatch (`opencode_model_api_mode` for Zen and Go)
@@ -373,7 +373,7 @@ Every `api_mode` gate (`determine_api_mode`, runtime resolution, agent construct
 | `aws_sdk` | AWS SDK credential chain (IAM role, profile, env) | `bedrock` plugin only |
 | `external_process` | Auth handled by a subprocess the agent spawns (see [External-process providers](#external-process-acp-providers)) | `copilot-acp` plugin, out-of-tree ACP plugins |
 
-Every profile is mirrored into Hermes' auth registry under the `auth_type` it declares (two exclusions: an `api_key` profile with empty `env_vars`, and the aggregator/user-supplied slugs `openrouter`/`custom` plus the bespoke-refresh built-ins `copilot`/`kimi-coding`/`zai`), so `hermes auth`,
+Every profile is mirrored into VAEL's auth registry under the `auth_type` it declares (two exclusions: an `api_key` profile with empty `env_vars`, and the aggregator/user-supplied slugs `openrouter`/`custom` plus the bespoke-refresh built-ins `copilot`/`kimi-coding`/`zai`), so `hermes auth`,
 `--provider <name>` and runtime resolution accept it whatever its shape. What differs is who performs the
 login: `api_key` profiles get the built-in key prompt / env-var resolution; every other `auth_type` is
 **provider-owned** — the plugin ships the two hooks below, and a non-api-key profile without an
@@ -426,19 +426,19 @@ register_provider(ProviderProfile(
 
 | Contract | |
 |---|---|
-| `auth_handler(action, args)` | `args` is the parsed `hermes auth` namespace for CLI actions; the interactive setup picker passes a minimal namespace carrying only `provider`, so read options with `getattr(args, name, None)`. Truthy = handled (Hermes prints nothing more, exit 0); falsy = fall back to the built-in path **for that action**. An exception becomes `SystemExit("<provider> auth handler failed for `&lt;action&gt;`: …")`. |
+| `auth_handler(action, args)` | `args` is the parsed `hermes auth` namespace for CLI actions; the interactive setup picker passes a minimal namespace carrying only `provider`, so read options with `getattr(args, name, None)`. Truthy = handled (VAEL prints nothing more, exit 0); falsy = fall back to the built-in path **for that action**. An exception becomes `SystemExit("<provider> auth handler failed for `&lt;action&gt;`: …")`. |
 | `refresh_credential(entry)` | Receives the `PooledCredential`; returns a mapping of rotated values or `None`. Keys that are `PooledCredential` fields (`access_token`, `refresh_token`, `expires_at_ms`, …) replace the row's fields; every other key (`expires_in`, `token_type`, `scope` — the raw token-endpoint shape) lands in `entry.extra` and round-trips through `auth.json`. Returning `None`/an empty mapping means the plugin could not rotate: the row is benched exactly like a failed refresh request (never reported as refreshed, so a dead bearer is not replayed). Its presence is what makes the provider *refreshable* — `hermes auth refresh <name>` and the main-loop 401 recovery call it through the pool with no core name list involved; the auxiliary client's 401 recovery reaches it only for pooled rows it already treats as recoverable (api-key rows and the built-in OAuth routes). |
-| Refresh failures | Raise `hermes_cli.auth_constants.AuthError(..., relogin_required=True)` (or with `code` `invalid_grant` / `invalid_token` / `refresh_token_reused`) when the grant is dead: the row goes **DEAD**, leaves rotation and Hermes logs a WARNING naming `hermes auth add <name>`. Any other exception (network, 429, 5xx) is transient — the row is benched for one cooldown and retried. |
-| Concurrency | The hook runs under the shared `auth.json` lock. Before calling it the pool re-reads the row; if another Hermes process (gateway + CLI, two profiles) already rotated the pair, that pair is adopted and your hook is **not** called — safe for single-use refresh tokens. After the hook returns, the rotated row is written through to `auth.json`. |
+| Refresh failures | Raise `hermes_cli.auth_constants.AuthError(..., relogin_required=True)` (or with `code` `invalid_grant` / `invalid_token` / `refresh_token_reused`) when the grant is dead: the row goes **DEAD**, leaves rotation and VAEL logs a WARNING naming `hermes auth add <name>`. Any other exception (network, 429, 5xx) is transient — the row is benched for one cooldown and retried. |
+| Concurrency | The hook runs under the shared `auth.json` lock. Before calling it the pool re-reads the row; if another VAEL process (gateway + CLI, two profiles) already rotated the pair, that pair is adopted and your hook is **not** called — safe for single-use refresh tokens. After the hook returns, the rotated row is written through to `auth.json`. |
 | No hooks | `api_key` profiles behave exactly as before. Any other `auth_type` without `auth_handler` fails loud on `hermes auth add`. |
 
 `hermes auth add|status|logout|refresh <provider>` consults the handler **first** — before the built-in
 credential-pool flow. Registering the same name twice is last-writer-wins, so a user plugin can replace a
 bundled provider's flow.
 
-Hermes passes the parsed namespace, not provider-declared flags: ask for provider-specific values
+VAEL passes the parsed namespace, not provider-declared flags: ask for provider-specific values
 interactively (or read your own config/env). Rows the plugin stores in the pool are its own — extra keys
-survive `load → save → load`, and Hermes passes no secrets beyond that pooled row to `refresh_credential`.
+survive `load → save → load`, and VAEL passes no secrets beyond that pooled row to `refresh_credential`.
 
 ### Declarative OAuth (PKCE) for plugins
 
@@ -463,7 +463,7 @@ register_provider(ProviderProfile(
     auth_handler=pkce_auth_handler(cfg), refresh_credential=pkce_refresh_credential(cfg)))
 ```
 
-Hermes then owns the whole lifecycle: `hermes auth add example-pkce [--no-browser]` opens the browser (or
+VAEL then owns the whole lifecycle: `hermes auth add example-pkce [--no-browser]` opens the browser (or
 prints the URL, with the SSH-tunnel hint on a remote box), listens on `http://127.0.0.1:<port>/callback`,
 checks the CSRF `state`, exchanges the code with S256 PKCE and stores the grant as a pooled `oauth`
 credential (`source: manual:loopback_pkce`, `expires_at_ms`, `refresh_token`); `auth status` reports
@@ -597,7 +597,7 @@ skipped by the provider scan — they belong to the `PluginManager`. A broken
 entry point is isolated — it is logged at warning level and skipped, and never
 blocks discovery of the other providers.
 
-See [Building a Hermes Plugin](./plugins/index.md#distribute-via-pip) for the full entry-points setup.
+See [Building a VAEL Plugin](./plugins/index.md#distribute-via-pip) for the full entry-points setup.
 
 ## Related pages
 
@@ -605,4 +605,4 @@ See [Building a Hermes Plugin](./plugins/index.md#distribute-via-pip) for the fu
 - [Adding Providers](./adding-providers.md) — end-to-end checklist for new inference backends (covers both the fast plugin path and the full CLI/auth integration)
 - [Memory Provider Plugins](./memory-provider-plugin.md)
 - [Context Engine Plugins](./context-engine-plugin.md)
-- [Building a Hermes Plugin](./plugins/index.md) — general plugin authoring
+- [Building a VAEL Plugin](./plugins/index.md) — general plugin authoring

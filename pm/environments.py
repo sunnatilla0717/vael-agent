@@ -11,7 +11,7 @@ import json
 import os
 from pathlib import Path
 
-from hermes_constants import get_default_hermes_root, project_venv_dir
+from vael_constants import get_default_hermes_root, project_venv_dir
 
 
 def install_key(project_root: Path) -> str:
@@ -21,7 +21,7 @@ def install_key(project_root: Path) -> str:
 
 def dependency_home_root() -> Path:
     """Scope dependency state like a process launched in the active home."""
-    from hermes_constants import get_default_hermes_root, get_hermes_home_override
+    from vael_constants import get_default_hermes_root, get_hermes_home_override
 
     override = get_hermes_home_override()
     return get_default_hermes_root(home=override) if override else get_default_hermes_root()

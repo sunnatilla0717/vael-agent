@@ -11,7 +11,7 @@ from pathlib import Path
 import pytest
 
 from hermes_cli import process_identity
-from hermes_constants import hermes_home_key
+from vael_constants import hermes_home_key
 
 
 @pytest.fixture
@@ -81,7 +81,7 @@ def running_cli(home: Path, install: Path):
     script = """
 import sys
 from pathlib import Path
-import hermes_constants
+import vael_constants
 # Model two installed runtime roots without copying the source tree.
 hermes_constants.PROJECT_ROOT = Path(sys.argv[1])
 import cli
@@ -129,7 +129,7 @@ def test_cli_entrypoint_registers_and_warns_once_for_live_shared_home(homes, tmp
             assert own[0]["hermes_home"] == hermes_home_key(homes)
             assert shared_profile_warning(project_root=stable)
             # A CLI record must not make a terminal process an update-owned backend.
-            import hermes_constants
+            import vael_constants
             from hermes_cli.update_inventory import UpdatePlan, _collect_ledger_runtimes
 
             with monkeypatch.context() as patcher:

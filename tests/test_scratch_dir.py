@@ -9,7 +9,7 @@ from unittest.mock import patch
 
 import pytest
 
-from hermes_constants import apply_scratch_tmp_env, get_scratch_dir, prune_scratch_dir
+from vael_constants import apply_scratch_tmp_env, get_scratch_dir, prune_scratch_dir
 
 
 def test_scratch_env_follows_home_and_respects_user_tmpdir(tmp_path):
@@ -33,10 +33,10 @@ def test_scratch_env_follows_home_and_respects_user_tmpdir(tmp_path):
 
 
 def test_bootstrap_import_exports_scratch_to_process_and_children(tmp_path):
-    """``import hermes_bootstrap`` alone makes ``tempfile`` (this process AND a child) land in scratch."""
+    """``import vael_bootstrap`` alone makes ``tempfile`` (this process AND a child) land in scratch."""
     env = {k: v for k, v in os.environ.items() if k not in ("TMPDIR", "TMP", "TEMP", "HERMES_SCRATCH_DIR")}
     env["HERMES_HOME"] = str(tmp_path)
-    code = ("import tempfile, os, subprocess, sys; import hermes_bootstrap; "
+    code = ("import tempfile, os, subprocess, sys; import vael_bootstrap; "
             "print(tempfile.gettempdir()); "
             "print(subprocess.run([sys.executable, '-c', 'import tempfile;print(tempfile.gettempdir())'],"
             " capture_output=True, text=True).stdout.strip())")
@@ -168,7 +168,7 @@ class TestScratchDirPermissionPolicy:
         # Podman/containerd/K8s runtimes often don't export HERMES_CONTAINER; the canonical
         # _detect_container breadth (not the narrower legacy signal set) must skip the chmod.
         self._isolate_env(monkeypatch, tmp_path)
-        monkeypatch.setattr("hermes_constants._detect_container", lambda: True)
+        monkeypatch.setattr("vael_constants._detect_container", lambda: True)
         pre = tmp_path / "cache" / "scratch"
         pre.mkdir(parents=True)
         os.chmod(pre, 0o750)
@@ -217,7 +217,7 @@ def test_secure_file_skips_chmod_on_canonical_container_signal(tmp_path, monkeyp
     monkeypatch.setenv("HERMES_HOME", str(tmp_path / "home"))
     for var in ("HERMES_MANAGED", "HERMES_CONTAINER", "HERMES_SKIP_CHMOD"):
         monkeypatch.delenv(var, raising=False)
-    monkeypatch.setattr("hermes_constants._detect_container", lambda: True)
+    monkeypatch.setattr("vael_constants._detect_container", lambda: True)
     f = tmp_path / "config.yaml"
     f.write_text("", encoding="utf-8")
     os.chmod(f, 0o640)

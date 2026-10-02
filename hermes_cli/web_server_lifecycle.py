@@ -184,7 +184,7 @@ def _eager_reconcile_own_session_db() -> None:
     """
     try:
         from hermes_cli.web_server_sessions import _open_session_db_for_profile
-        from hermes_state_registry import release_or_close
+        from vael_state_registry import release_or_close
 
         release_or_close(_open_session_db_for_profile(None, read_only=True))
     except Exception as exc:
@@ -452,7 +452,7 @@ def _report_port_in_use(host: str, port: int) -> None:
     _write_machine_sentinel_line(_PORT_IN_USE_SENTINEL.format(port=port))
     print(
         f"  Port {port} on {host} is already in use — likely another "
-        "'hermes serve' / 'hermes dashboard' backend or the Hermes gateway. "
+        "'vael serve' / 'vael dashboard' backend or the VAEL gateway. "
         "Stop the other process, or pass --port <other> "
         "(--port 0 picks a free ephemeral port).",
         flush=True,

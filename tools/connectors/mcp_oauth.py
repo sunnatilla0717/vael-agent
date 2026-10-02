@@ -89,7 +89,7 @@ class AttemptCanceled(RuntimeError):
 # committed with everything kept. A worker parked inside the token request cannot be interrupted;
 # it is stopped here, at the one point where its result would be adopted.
 _COMMIT_GUARD = threading.Lock()
-# (hermes home, server) -> the newest card attempt. A retry or a new operation replaces an attempt
+# (vael home, server) -> the newest card attempt. A retry or a new operation replaces an attempt
 # whose worker is still waiting on the browser; the older one is canceled so it cannot commit later.
 _ACTIVE: Dict[tuple, Any] = {}
 
@@ -156,7 +156,7 @@ def run_worker(
     so the configuration can reference them before anything is saved. ``reuse_saved`` is the
     card's rule: a server whose saved tokens still work connects with no consent step. The RPC
     session surface keeps it off, because its caller waits for an authorization URL."""
-    from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+    from vael_constants import reset_hermes_home_override, set_hermes_home_override
     try:
         from agent.secret_scope import (
             build_profile_secret_scope, reset_secret_scope, set_secret_scope)
@@ -219,7 +219,7 @@ def _start_loopback_receiver(flow) -> "http.server.HTTPServer":
                 self.send_response(404)
                 self.end_headers()
                 return
-            body = b"<h1>Authorization received</h1><p>You can close this tab and return to Hermes.</p>"
+            body = b"<h1>Authorization received</h1><p>You can close this tab and return to VAEL.</p>"
             status = 200
             try:
                 flow.deliver_callback(**_parse_redirect_query(parsed.query))
@@ -302,7 +302,7 @@ def start(
 
     ``cfg`` is an install's in-memory configuration; without it the saved one is authorized."""
     from hermes_cli.mcp_config import _get_mcp_servers
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
     from tools.mcp_dashboard_oauth import DashboardOAuthFlow
     from tui_gateway import mcp_oauth_sessions
 

@@ -15,7 +15,7 @@ from providers.base import ProviderProfile
 # default_headers so they survive model switches and credential rotation.
 _ATTRIBUTION_HEADERS = {
     "HTTP-Referer": "https://hermes-agent.nousresearch.com",
-    "X-Title": "Hermes Agent",
+    "X-Title": "VAEL Agent",
     "User-Agent": f"HermesAgent/{get_version_info().base_version}",
 }
 

@@ -4,25 +4,25 @@ sidebar_position: 2
 
 # Profiles：运行多个 Agent
 
-在同一台机器上运行多个独立的 Hermes agent——每个 agent 拥有各自的配置、API 密钥、记忆、会话、技能和 gateway 状态。
+在同一台机器上运行多个独立的 VAEL Agent——每个 agent 拥有各自的配置、API 密钥、记忆、会话、技能和 gateway 状态。
 
 ## 什么是 profile？
 
-profile 是一个独立的 Hermes 主目录。每个 profile 拥有自己的目录，其中包含各自的 `config.yaml`、`.env`、`SOUL.md`、记忆、会话、技能、cron 任务和状态数据库。profile 让你可以为不同用途运行独立的 agent——编程助手、个人机器人、研究 agent——而不会混淆 Hermes 状态。
+profile 是一个独立的 VAEL 主目录。每个 profile 拥有自己的目录，其中包含各自的 `config.yaml`、`.env`、`SOUL.md`、记忆、会话、技能、cron 任务和状态数据库。profile 让你可以为不同用途运行独立的 agent——编程助手、个人机器人、研究 agent——而不会混淆 VAEL 状态。
 
 创建 profile 后，它会自动成为独立的命令。创建名为 `coder` 的 profile，你立即就拥有了 `coder chat`、`coder setup`、`coder gateway start` 等命令。
 
 ### Profile、agent 与 bot
 
-这几个术语描述的是 Hermes 的不同部分：
+这几个术语描述的是 VAEL 的不同部分：
 
 - **Profile** 是一个助手的配置和数据的持久化主目录。它在多次对话和重启之间保持同一份状态。
 
-- **Agent** 是使用该配置和状态运行中的 Hermes 助手。"Hermes Agent" 同时也是产品的名称。
+- **Agent** 是使用该配置和状态运行中的 VAEL 助手。"VAEL Agent" 同时也是产品的名称。
 
 - **Bot 模式中的 Bot** 是以具名条目出现在桌面应用 [Bot 模式](./bot-mode)花名册中的 profile，带有头像和一个持久的 Bot Chat。同一个 profile 仍然可以从 CLI 访问。每个 Bot 都是一个 profile，但并非每个 profile 都是 Bot：当 Bot 模式把它的花名册展示信息（标题、头像、分区、隐藏状态）写入该 profile 的元数据并固定其规范 Bot Chat 时，这个 profile 才成为 Bot。一个只在 CLI、Docker 或 gateway 中使用、从未加入花名册的 profile 仍然只是普通 profile。
 
-- **消息平台 bot** 是 Telegram、Discord、Slack 等平台上的一个账号，通过 gateway 连接到 Hermes。它的 [bot token](#不同的-bot-token) 标识的是那个平台账号。
+- **消息平台 bot** 是 Telegram、Discord、Slack 等平台上的一个账号，通过 gateway 连接到 VAEL。它的 [bot token](#不同的-bot-token) 标识的是那个平台账号。
 
 - **子 agent（subagent）** 是由 [`delegate_task`](./features/delegation.md) 为某个任务派生出的子助手，拥有全新的对话。独立的对话不等于独立的 profile。
 
@@ -34,7 +34,7 @@ coder setup                       # 配置 API 密钥和模型
 coder chat                        # 开始对话
 ```
 
-就这些。`coder` 现在是拥有独立配置、记忆和状态的 Hermes profile。
+就这些。`coder` 现在是拥有独立配置、记忆和状态的 VAEL profile。
 
 ## 创建 profile
 
@@ -136,7 +136,7 @@ CLI 始终显示当前活跃的 profile：
 
 profile 常与工作区或沙箱混淆，但它们是不同的概念：
 
-- **profile** 为 Hermes 提供独立的状态目录：`config.yaml`、`.env`、`SOUL.md`、会话、记忆、日志、cron 任务和 gateway 状态。
+- **profile** 为 VAEL 提供独立的状态目录：`config.yaml`、`.env`、`SOUL.md`、会话、记忆、日志、cron 任务和 gateway 状态。
 - **工作区**或**工作目录**是终端命令的起始位置，由 `terminal.cwd` 单独控制。
 - **沙箱**用于限制文件系统访问。profile **不**对 agent 进行沙箱隔离。
 
@@ -150,7 +150,7 @@ terminal:
   cwd: /absolute/path/to/project
 ```
 
-在 local 后端使用 `cwd: "."` 表示"Hermes 启动时所在的目录"，而非"profile 目录"。
+在 local 后端使用 `cwd: "."` 表示"VAEL 启动时所在的目录"，而非"profile 目录"。
 
 另请注意：
 
@@ -265,7 +265,7 @@ eval "$(hermes completion zsh)"
 
 ## 工作原理
 
-profile 使用 `HERMES_HOME` 环境变量。运行 `coder chat` 时，包装脚本在启动 hermes 前将 `HERMES_HOME` 设置为 `~/.hermes/profiles/coder`。由于代码库中 119+ 个文件通过 `get_hermes_home()` 解析路径，Hermes 状态会自动限定在 profile 目录范围内——包括配置、会话、记忆、技能、状态数据库、gateway PID、日志和 cron 任务。
+profile 使用 `HERMES_HOME` 环境变量。运行 `coder chat` 时，包装脚本在启动 hermes 前将 `HERMES_HOME` 设置为 `~/.hermes/profiles/coder`。由于代码库中 119+ 个文件通过 `get_hermes_home()` 解析路径，VAEL 状态会自动限定在 profile 目录范围内——包括配置、会话、记忆、技能、状态数据库、gateway PID、日志和 cron 任务。
 
 这与终端工作目录是分开的。工具执行从 `terminal.cwd` 开始（或在 local 后端使用 `cwd: "."` 时从启动目录开始），而非自动从 `HERMES_HOME` 开始。
 

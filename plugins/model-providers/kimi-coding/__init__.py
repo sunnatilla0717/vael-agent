@@ -11,7 +11,7 @@ from providers.base import OMIT_TEMPERATURE, ProviderProfile
 
 _HEADERS = {
     "HTTP-Referer": "https://hermes-agent.nousresearch.com",
-    "X-Title": "Hermes Agent",
+    "X-Title": "VAEL Agent",
     "User-Agent": f"HermesAgent/{get_version_info().base_version}",
     # Exclude brotli: httpx's brotlicffi backend has a streaming decode bug on
     # Moonshot's content-encoding: br SSE responses (#28043, #48428, #59556).

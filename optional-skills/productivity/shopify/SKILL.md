@@ -19,7 +19,7 @@ required_environment_variables:
     prompt: Shopify API version (default 2026-01)
     help: "Stable quarterly version. Override if you need an older one."
 metadata:
-  hermes:
+  vael:
     tags: [Shopify, E-commerce, Commerce, API, GraphQL]
     related_skills: [airtable, xurl]
     homepage: https://shopify.dev/docs/api/admin-graphql
@@ -138,7 +138,7 @@ mutation($input: ProductCreateInput!) {
     product { id handle }
     userErrors { field message }
   }
-}' '{"input":{"title":"Test Hoodie","status":"DRAFT","vendor":"Hermes","productType":"Apparel","tags":["test"]}}'
+}' '{"input":{"title":"Test Hoodie","status":"DRAFT","vendor":"VAEL","productType":"Apparel","tags":["test"]}}'
 ```
 
 Variants now have their own mutations in recent versions:

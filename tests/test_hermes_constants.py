@@ -7,9 +7,9 @@ from pathlib import Path
 
 import pytest
 
-import hermes_constants
+import vael_constants
 from hermes_platform.host import runtime as host_runtime
-from hermes_constants import (
+from vael_constants import (
     agent_browser_runnable,
     get_default_hermes_root,
     get_hermes_dir,
@@ -231,7 +231,7 @@ class TestResolvePerModelReasoningEffort:
 
     def test_exact_match(self):
         """Exact model string match returns the parsed override."""
-        from hermes_constants import resolve_per_model_reasoning_effort
+        from vael_constants import resolve_per_model_reasoning_effort
         overrides = {"claude-opus-4.5": "xhigh"}
         result = resolve_per_model_reasoning_effort("claude-opus-4.5", overrides)
         assert result == {"enabled": True, "effort": "xhigh"}
@@ -242,7 +242,7 @@ class TestResolvePerModelReasoningEffort:
 
     def test_empty_model_returns_none(self):
         """Empty model string returns None."""
-        from hermes_constants import resolve_per_model_reasoning_effort
+        from vael_constants import resolve_per_model_reasoning_effort
         assert resolve_per_model_reasoning_effort("", {"gpt-5": "low"}) is None
 
     # --- Spelling tolerance layer ---
@@ -258,7 +258,7 @@ class TestResolvePerModelReasoningEffort:
         If both 'claude-opus-4.5' (exact) and 'claude-opus-4-5' (dashes
         variant) are keys, the exact input matches the exact key first.
         """
-        from hermes_constants import resolve_per_model_reasoning_effort
+        from vael_constants import resolve_per_model_reasoning_effort
         overrides = {"claude-opus-4.5": "high", "claude-opus-4-5": "xhigh"}
         result = resolve_per_model_reasoning_effort("claude-opus-4.5", overrides)
         assert result == {"enabled": True, "effort": "high"}
@@ -270,14 +270,14 @@ class TestResolvePerModelReasoningEffort:
         prefix while the documented key spelling keeps ``provider/model``; a key for a different
         model must still miss.
         """
-        from hermes_constants import resolve_per_model_reasoning_effort
+        from vael_constants import resolve_per_model_reasoning_effort
         overrides = {"ollama-local/qwen3.6:27b-q4_k_m": "low"}
         assert resolve_per_model_reasoning_effort("qwen3.6:27b-q4_k_m", overrides) == {"enabled": True, "effort": "low"}
         assert resolve_per_model_reasoning_effort("llama3.2:3b", overrides) is None
 
     def test_direct_match_wins_over_reverse_lookup(self):
         """A direct/variant key match keeps priority over a prefixed reverse match."""
-        from hermes_constants import resolve_per_model_reasoning_effort
+        from vael_constants import resolve_per_model_reasoning_effort
         overrides = {"qwen3.6:27b": "medium", "ollama-local/qwen3.6:27b": "low"}
         assert resolve_per_model_reasoning_effort("qwen3.6:27b", overrides) == {"enabled": True, "effort": "medium"}
 
@@ -301,7 +301,7 @@ class TestResolveReasoningConfig:
         }
 
     def test_per_model_override_wins(self):
-        from hermes_constants import resolve_reasoning_config
+        from vael_constants import resolve_reasoning_config
         cfg = self._cfg(overrides={"claude-opus-4.5": "xhigh"})
         result = resolve_reasoning_config(cfg, "claude-opus-4.5")
         assert result == {"enabled": True, "effort": "xhigh"}
@@ -309,7 +309,7 @@ class TestResolveReasoningConfig:
 
 
     def test_empty_model_derives_from_config_default(self):
-        from hermes_constants import resolve_reasoning_config
+        from vael_constants import resolve_reasoning_config
         cfg = self._cfg(overrides={"gpt-5": "high"}, default_model="gpt-5")
         assert resolve_reasoning_config(cfg) == {"enabled": True, "effort": "high"}
 
@@ -322,21 +322,21 @@ class TestResolveReasoningConfig:
 
     def test_malformed_sections_tolerated(self):
         """Non-dict agent/model sections must not raise."""
-        from hermes_constants import resolve_reasoning_config
+        from vael_constants import resolve_reasoning_config
         assert resolve_reasoning_config({"agent": "oops", "model": 42}) is None
         assert resolve_reasoning_config({"agent": None, "model": None}) is None
         assert resolve_reasoning_config({"agent": {"reasoning_overrides": "bad"}}) is None
 
     def test_invalid_override_value_falls_back_to_global(self):
         """A junk override value for the matching model falls through to global."""
-        from hermes_constants import resolve_reasoning_config
+        from vael_constants import resolve_reasoning_config
         cfg = self._cfg(effort="medium", overrides={"gpt-5": "turbo-max"})
         assert resolve_reasoning_config(cfg, "gpt-5") == {"enabled": True, "effort": "medium"}
 
     def test_dict_form_passes_bespoke_tier_verbatim_globally_and_per_model(self):
         """#93238: providers with custom tiers (fast/thinking) need the dict form to send their
         real level; a bare non-ladder string stays rejected so typos never reach the wire."""
-        from hermes_constants import parse_reasoning_effort, resolve_reasoning_config
+        from vael_constants import parse_reasoning_effort, resolve_reasoning_config
         cfg = self._cfg(effort={"enabled": True, "effort": "thinking"},
                         overrides={"lumo-max": {"enabled": True, "effort": "fast"}})
         assert resolve_reasoning_config(cfg, "gpt-5") == {"enabled": True, "effort": "thinking"}
@@ -345,7 +345,7 @@ class TestResolveReasoningConfig:
 
     def test_dict_form_disabled_or_empty_effort(self):
         """enabled:false disables regardless of level; a dict without a level is 'unset'."""
-        from hermes_constants import parse_reasoning_effort
+        from vael_constants import parse_reasoning_effort
         assert parse_reasoning_effort({"enabled": False, "effort": "low"}) == {"enabled": False}
         assert parse_reasoning_effort({"enabled": True}) is None
         assert parse_reasoning_effort({"effort": 0}) is None
@@ -358,7 +358,7 @@ class TestReasoningOverridesDefaultConfig:
 
     def test_spelling_tolerant_lookup_works_with_user_config(self):
         """resolve_per_model_reasoning_effort works with user-added overrides."""
-        from hermes_constants import resolve_per_model_reasoning_effort
+        from vael_constants import resolve_per_model_reasoning_effort
         # User config with one override, query uses different spelling
         overrides = {
             "anthropic/claude-opus-4.5": "xhigh",  # user wrote with dots
@@ -614,7 +614,7 @@ class TestProjectVenvDirOutOfTree:
 
     @staticmethod
     def _running_from(monkeypatch, checkout, venv):
-        monkeypatch.setattr(hermes_constants, "__file__", str(checkout / "hermes_constants.py"))
+        monkeypatch.setattr(hermes_constants, "__file__", str(checkout / "vael_constants.py"))
         monkeypatch.setattr(sys, "prefix", str(venv))
         monkeypatch.setattr(sys, "base_prefix", str(checkout / "no-such-base"))
 
@@ -691,7 +691,7 @@ class TestResolveConfigDir:
         return tmp_path / "Home"
 
     def test_explicit_config_dir_wins(self, tmp_path, monkeypatch):
-        from hermes_constants import resolve_config_dir
+        from vael_constants import resolve_config_dir
 
         self._clean_env(monkeypatch, tmp_path)
         explicit = tmp_path / "custom-vael"
@@ -699,7 +699,7 @@ class TestResolveConfigDir:
         assert resolve_config_dir() == explicit
 
     def test_vael_dir_wins_over_hermes(self, tmp_path, monkeypatch):
-        from hermes_constants import resolve_config_dir
+        from vael_constants import resolve_config_dir
 
         self._clean_env(monkeypatch, tmp_path)
         base = self._base(tmp_path)
@@ -709,7 +709,7 @@ class TestResolveConfigDir:
         assert resolve_config_dir().name == vael_name
 
     def test_hermes_fallback_when_no_vael(self, tmp_path, monkeypatch, capsys):
-        from hermes_constants import resolve_config_dir
+        from vael_constants import resolve_config_dir
 
         self._clean_env(monkeypatch, tmp_path)
         base = self._base(tmp_path)
@@ -720,7 +720,7 @@ class TestResolveConfigDir:
         assert "deprecated" in capsys.readouterr().err
 
     def test_default_is_vael_when_nothing_exists(self, tmp_path, monkeypatch):
-        from hermes_constants import resolve_config_dir
+        from vael_constants import resolve_config_dir
 
         self._clean_env(monkeypatch, tmp_path)
         vael_name, _hermes_name = self._names(tmp_path)
@@ -728,7 +728,7 @@ class TestResolveConfigDir:
         assert hermes_constants._vael_home_fallback_warned is False
 
     def test_get_hermes_home_explicit_still_respected(self, tmp_path, monkeypatch):
-        from hermes_constants import get_hermes_home
+        from vael_constants import get_hermes_home
 
         self._clean_env(monkeypatch, tmp_path)
         explicit = tmp_path / "legacy-home"
@@ -741,21 +741,21 @@ class TestResolveEnv:
     """R-7: VAEL_* > HERMES_* > default."""
 
     def test_vael_wins_over_hermes(self, monkeypatch):
-        from hermes_constants import resolve_env
+        from vael_constants import resolve_env
 
         monkeypatch.setenv("VAEL_FOO_R7", "vael-val")
         monkeypatch.setenv("HERMES_FOO_R7", "hermes-val")
         assert resolve_env("VAEL_FOO_R7") == "vael-val"
 
     def test_hermes_fallback(self, monkeypatch):
-        from hermes_constants import resolve_env
+        from vael_constants import resolve_env
 
         monkeypatch.delenv("VAEL_FOO_R7", raising=False)
         monkeypatch.setenv("HERMES_FOO_R7", "hermes-val")
         assert resolve_env("VAEL_FOO_R7") == "hermes-val"
 
     def test_default_when_neither(self, monkeypatch):
-        from hermes_constants import resolve_env
+        from vael_constants import resolve_env
 
         monkeypatch.delenv("VAEL_FOO_R7", raising=False)
         monkeypatch.delenv("HERMES_FOO_R7", raising=False)
@@ -767,7 +767,7 @@ class TestMirrorVaelEnv:
     """R-7: import-time VAEL_* -> HERMES_* mirror (legacy readers keep working)."""
 
     def test_mirror_copies_unset_counterpart(self, monkeypatch):
-        from hermes_constants import _mirror_vael_env
+        from vael_constants import _mirror_vael_env
 
         monkeypatch.setattr(hermes_constants, "_VAEL_ENV_MIRRORED", False)
         monkeypatch.setattr(hermes_constants, "_VAEL_ENV_WARNED", True)
@@ -777,7 +777,7 @@ class TestMirrorVaelEnv:
         assert os.environ.get("HERMES_MIRROR_R7") == "v1"
 
     def test_mirror_never_overwrites(self, monkeypatch):
-        from hermes_constants import _mirror_vael_env
+        from vael_constants import _mirror_vael_env
 
         monkeypatch.setattr(hermes_constants, "_VAEL_ENV_MIRRORED", False)
         monkeypatch.setattr(hermes_constants, "_VAEL_ENV_WARNED", True)

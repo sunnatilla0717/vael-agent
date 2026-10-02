@@ -60,7 +60,7 @@ def test_provider_unknown_to_catalog_is_reported_not_installed(home, monkeypatch
 
 def test_startup_recovery_attempts_each_profile_home(tmp_path, monkeypatch):
     """One multiplexed process can start agents for two homes missing the same provider."""
-    from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+    from vael_constants import reset_hermes_home_override, set_hermes_home_override
     from pm import install as pm_install
 
     homes = [tmp_path / "a", tmp_path / "b"]

@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 _DEFAULT_CONTAINER_TAG = "hermes"
 _VALID_SEARCH_MODES = ("hybrid", "memories", "documents")
 _DEFAULT_BASE_URL = "https://api.supermemory.ai"
-_API_KEY_URL = "http://app.supermemory.ai/integrations?connect=hermes"
+_API_KEY_URL = "http://app.supermemory.ai/integrations?connect=vael"
 # Strips injected <supermemory-context> / <supermemory-containers> blocks before capture.
 _INJECTED_BLOCK_RE = re.compile(r"<supermemory-(context|containers)>[\s\S]*?</supermemory-\1>\s*", re.DOTALL)
 _DATA_URI_RE = re.compile(r"data:[^;,\s]+;base64,[A-Za-z0-9+/=]+")  # pasted inline images are useless as memory text
@@ -191,7 +191,7 @@ class _SupermemoryClient:
                                    default_headers={"x-sm-source": "hermes"})
 
     def _merge_metadata(self, metadata: Optional[dict]) -> dict:
-        # sm_source routes Hermes writes into the "Hermes" Space in the Supermemory app so the user
+        # sm_source routes VAEL writes into the "VAEL" Space in the Supermemory app so the user
         # can filter / bulk-manage them per source agent (a routing key for the user, not telemetry).
         merged = {"sm_source": "hermes", **(metadata or {})}
         if (legacy_source := merged.pop("source", None)) and "type" not in merged:
@@ -342,7 +342,7 @@ class SupermemoryMemoryProvider(MemoryProvider):
         return bool(get_secret("SUPERMEMORY_API_KEY", ""))
 
     def get_config_schema(self):
-        # Only the API key is prompted during `hermes memory setup`; other options live in supermemory.json / env.
+        # Only the API key is prompted during `vael memory setup`; other options live in supermemory.json / env.
         return [{"key": "api_key", "description": "Supermemory API key", "secret": True, "required": True, "env_var": "SUPERMEMORY_API_KEY", "url": _API_KEY_URL}]
 
     def save_config(self, values, hermes_home):
@@ -353,7 +353,7 @@ class SupermemoryMemoryProvider(MemoryProvider):
         _save_supermemory_config(sanitized, hermes_home)
 
     def get_status_config(self, provider_config: dict) -> dict:
-        from hermes_constants import get_hermes_home
+        from vael_constants import get_hermes_home
         return {"summary": _format_connection_summary(_probe_supermemory_connection(get_secret("SUPERMEMORY_API_KEY", "") or "", str(get_hermes_home())))}
 
     def post_setup(self, hermes_home: str, config: dict) -> None:
@@ -380,7 +380,7 @@ class SupermemoryMemoryProvider(MemoryProvider):
         print("\n  Start a new session to activate.\n")
 
     def initialize(self, session_id: str, **kwargs) -> None:
-        from hermes_constants import get_hermes_home
+        from vael_constants import get_hermes_home
         self._hermes_home = kwargs.get("hermes_home") or str(get_hermes_home())
         self._session_id, self._turn_count, self._pending_turns = session_id, 0, []
         config = _load_supermemory_config(self._hermes_home)
@@ -431,7 +431,7 @@ class SupermemoryMemoryProvider(MemoryProvider):
                 batch = [t for t in turns if t["session_id"] == sid]
                 now = datetime.now(timezone.utc)
                 content = "\n\n".join(_format_turn(t["user"], t["assistant"]) for t in batch)
-                metadata = {"type": "conversation", "session_id": sid, "timestamp": now.isoformat()}  # no sm_capture_mode: Hermes policy
+                metadata = {"type": "conversation", "session_id": sid, "timestamp": now.isoformat()}  # no sm_capture_mode: VAEL policy
                 result = _quietly(lambda: self._client.add_memory(content, metadata=metadata, entity_context=self._entity_context,
                                                                   custom_id=_capture_custom_id(sid, now)),
                                   "Supermemory capture failed (%s, session=%s, %d turns pending)", mode, sid, len(batch),

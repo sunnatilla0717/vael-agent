@@ -1,4 +1,4 @@
-"""``hermes doctor`` subcommand parser."""
+"""``vael doctor`` subcommand parser."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ def build_doctor_parser(subparsers, *, cmd_doctor: Callable) -> None:
     """Attach the ``doctor`` subcommand to ``subparsers``."""
     doctor_parser = subparsers.add_parser(
         "doctor", help="Check configuration and dependencies",
-        description="Diagnose issues with Hermes Agent setup")
+        description="Diagnose issues with VAEL Agent setup")
     doctor_parser.add_argument(
         "--fix", action="store_true", help="Attempt to fix issues automatically")
     doctor_parser.add_argument(
@@ -20,6 +20,6 @@ def build_doctor_parser(subparsers, *, cmd_doctor: Callable) -> None:
     doctor_parser.add_argument(
         "--ack", metavar="ADVISORY_ID", default=None,
         help="Acknowledge a security advisory by ID and exit. After ack, the "
-            "advisory will no longer trigger startup banners. Run `hermes "
+            "advisory will no longer trigger startup banners. Run `vael "
             "doctor` first to see active advisories and their IDs.")
     doctor_parser.set_defaults(func=cmd_doctor)

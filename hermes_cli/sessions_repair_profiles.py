@@ -1,4 +1,4 @@
-"""``hermes sessions repair-profiles`` — settle crossed-profile durable state across every store.
+"""``vael sessions repair-profiles`` — settle crossed-profile durable state across every store.
 
 The per-profile store model (#88734) and the identity fences that followed are forward-only: they
 put NEW rows in the right place and refuse to widen existing damage, but nothing walks the stores
@@ -85,15 +85,15 @@ class _Session:
         path = store.db_path
         if path not in self._dbs:
             if self.read_only:
-                from hermes_state import SessionDB
+                from vael_state import SessionDB
                 self._dbs[path] = SessionDB(path, read_only=True) if path.exists() else _EMPTY_STORE
             else:
-                from hermes_state_registry import acquire
+                from vael_state_registry import acquire
                 self._dbs[path] = acquire(path)
         return self._dbs[path]
 
     def close(self) -> None:
-        from hermes_state_registry import release_or_close
+        from vael_state_registry import release_or_close
         for db in self._dbs.values():
             if db is _EMPTY_STORE:
                 continue
@@ -223,7 +223,7 @@ class RepairPlan:
             self._add(Finding(
                 "unclaimed_namespace", store.profile, sid, detail,
                 reason=f"no live profile named {key_profile!r}; create it, then rerun, or "
-                       f"`hermes profile migrate-identity {key_profile} <target>`"))
+                       f"`vael profile migrate-identity {key_profile} <target>`"))
             return
         moving.add(sid)
         self._add(Finding(
@@ -262,7 +262,7 @@ class RepairPlan:
                 _fix=lambda s, st=store, r=row: s.db(st).relabel_telegram_topic_rows([r])))
 
     def _scan_routing(self, session: _Session, store: Store) -> None:
-        from hermes_state_profile_repair import session_key_profile
+        from vael_state_profile_repair import session_key_profile
         rows = session.db(store).list_gateway_routing_rows()
         for row in rows:
             key_profile = session_key_profile(row["session_key"])
@@ -325,7 +325,7 @@ class RepairPlan:
                 _fix=lambda s, p=path, k=key, o=owner: _rekey_voice_mode_entry(p, k, o)))
 
     def _scan_sessions_json(self, store: Store) -> None:
-        from hermes_state_profile_repair import session_key_profile
+        from vael_state_profile_repair import session_key_profile
         path = store.home / "sessions" / "sessions.json"
         try:
             data = json.loads(path.read_text(encoding="utf-8-sig"))

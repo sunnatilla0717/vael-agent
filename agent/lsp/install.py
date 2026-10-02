@@ -3,7 +3,7 @@
 Installs go to a Hermes-owned staging dir, ``<HERMES_HOME>/lsp/bin/``, so the
 user's global toolchain stays untouched.  Strategies: ``auto`` (install with
 the best available package manager), ``manual`` / ``off`` (probe only; a
-missing binary skips the server and ``hermes lsp status`` reports it).
+missing binary skips the server and ``vael lsp status`` reports it).
 Installs run synchronously the first time a server is needed, serialized
 per-package; every failure path returns ``None`` so the tool layer falls
 back to its in-process syntax checker.
@@ -19,7 +19,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, Optional
 
 from hermes_cli._subprocess_compat import windows_hide_flags
-from hermes_constants import find_node_executable, with_hermes_node_path
+from vael_constants import find_node_executable, with_hermes_node_path
 
 logger = logging.getLogger("agent.lsp.install")
 
@@ -68,7 +68,7 @@ INSTALL_RECIPES: Dict[str, Dict[str, Any]] = {
     # laravel-lsp ships via composer (`composer global require laravel/lsp`), not npm.
     "laravel-lsp": _manual("laravel-lsp"),
     # PowerShellEditorServices is a release-zip bundle driven by pwsh; we probe
-    # the host so `hermes lsp status` reports its presence.
+    # the host so `vael lsp status` reports its presence.
     "powershell": _manual("pwsh"),
 }
 
@@ -84,7 +84,7 @@ def _is_windows() -> bool:
 
 def hermes_lsp_bin_dir() -> Path:
     """Return the Hermes-owned bin staging dir for LSP servers."""
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
 
     p = get_hermes_home() / "lsp" / "bin"
     p.mkdir(parents=True, exist_ok=True)
@@ -242,7 +242,7 @@ def _install_npm(pkg: str, bin_name: str, extra_pkgs: Optional[list] = None) -> 
     pm = _node_package_manager()
     if pm is None:
         return None
-    # npm is Hermes's own PM-managed copy, never the user's; pnpm/yarn are an explicit user choice.
+    # npm is VAEL's own PM-managed copy, never the user's; pnpm/yarn are an explicit user choice.
     pm_bin = find_node_executable(pm)
     if pm_bin is None and pm == "npm":
         try:
@@ -263,7 +263,7 @@ def _install_npm(pkg: str, bin_name: str, extra_pkgs: Optional[list] = None) -> 
     cmd = [pm_bin, *_NODE_PM_ARGV[pm](str(staging)), *install_targets]
     logger.info("[install] %s %s", pm, " ".join(cmd[1:]))
     from tools.environments.local import hermes_subprocess_env
-    # Package install scripts are third-party code: scrubbed env, never Hermes' credentials.
+    # Package install scripts are third-party code: scrubbed env, never VAEL's credentials.
     if not _run_installer(pm, pkg, cmd, timeout=300, env=with_hermes_node_path(hermes_subprocess_env())):
         return None
     found = _first_existing(staging / "node_modules" / ".bin" / bin_name)
@@ -314,7 +314,7 @@ _INSTALLERS: Dict[str, Callable[[Dict[str, Any], str], Optional[str]]] = {
 
 
 def detect_status(pkg: str) -> str:
-    """Return ``installed``, ``missing``, or ``manual-only`` (for ``hermes lsp status``; spawns nothing)."""
+    """Return ``installed``, ``missing``, or ``manual-only`` (for ``vael lsp status``; spawns nothing)."""
     recipe = INSTALL_RECIPES.get(pkg)
     if _existing_binary(recipe.get("bin", pkg) if recipe else pkg):
         return "installed"

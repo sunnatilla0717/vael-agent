@@ -1,6 +1,6 @@
 ---
 title: "Relay ↔ Connector Contract"
-description: "Wire contract between the Hermes gateway relay adapter and external connectors (experimental)"
+description: "Wire contract between the VAEL gateway relay adapter and external connectors (experimental)"
 ---
 
 # Relay ↔ Connector Contract (v1, EXPERIMENTAL)
@@ -10,7 +10,7 @@ description: "Wire contract between the Hermes gateway relay adapter and externa
 > validated it. Evolution during the experimental phase is **additive-only**,
 > gated by `contract_version`. A breaking change updates both repos in lockstep.
 
-This document is the formal interface between the **Hermes gateway** (Python,
+This document is the formal interface between the **VAEL gateway** (Python,
 `gateway/relay/`) and the **connector** (Node/TypeScript,
 `NousResearch/gateway-gateway`). The connector implementer's first action is to
 read this file.
@@ -425,7 +425,7 @@ The gateway calls the transport with action dicts. Source of truth:
 
 **`metadata.profile` (multiplex round-trip).** Every chat-addressed outbound
 frame's `metadata` carries the tenant discriminators the gateway captured from
-the inbound (`scope_id`, `user_id`) and, on a multiplexed gateway, the Hermes
+the inbound (`scope_id`, `user_id`) and, on a multiplexed gateway, the VAEL
 `profile` the connector routed that chat's inbound to; `follow_up` frames carry
 the profile encoded in their `session_key` namespace. The connector MUST stamp
 the same `profile` on the next `passthrough_forward` / `inbound` for that chat or

@@ -1,4 +1,4 @@
-"""``hermes slack manifest`` — generate the Slack app manifest JSON that registers every gateway
+"""``vael slack manifest`` — generate the Slack app manifest JSON that registers every gateway
 command as a native Slack slash (``/btw``, ``/stop``, ``/model``, …)."""
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ def _build_full_manifest(
     messaging_experience: str | None = None, long_description: str | None = None) -> dict:
     """Build a full Slack manifest: display info + slash list from ``COMMAND_REGISTRY``.
 
-    Other sections (OAuth scopes, socket mode) are sensible Hermes defaults, tweakable in the Slack
+    Other sections (OAuth scopes, socket mode) are sensible VAEL defaults, tweakable in the Slack
     UI after pasting.
     """
     from hermes_cli.commands_platforms import slack_app_manifest
@@ -43,11 +43,11 @@ def _build_full_manifest(
 
     if messaging_experience == "assistant":
         features["assistant_view"] = {
-            "assistant_description": "Chat with Hermes in threads and DMs."}
+            "assistant_description": "Chat with VAEL in threads and DMs."}
         bot_scopes.append("assistant:write")
         bot_events.extend(["assistant_thread_context_changed", "assistant_thread_started"])
     elif messaging_experience == "agent":
-        features["agent_view"] = {"agent_description": "Chat with Hermes in Slack Messages."}
+        features["agent_view"] = {"agent_description": "Chat with VAEL in Slack Messages."}
         bot_scopes.append("assistant:write")
         # Slack includes current viewing context in Agent DM events only after this subscription
         # is enabled; the adapter uses it to preserve the referred channel across the agent turn.
@@ -58,7 +58,7 @@ def _build_full_manifest(
 
     display_information = {
         "name": bot_name[:35],
-        "description": (bot_description or "Your Hermes agent on Slack")[:140],
+        "description": (bot_description or "Your VAEL agent on Slack")[:140],
         "background_color": "#1a1a2e"}
     if long_description is not None:
         display_information["long_description"] = long_description
@@ -79,13 +79,13 @@ def _build_full_manifest(
 def slack_manifest_command(args) -> int:
     """Print or write a Slack app manifest JSON (flags documented in ``hermes_cli/main.py``)."""
     name = getattr(args, "name", None) or "Hermes"
-    description = getattr(args, "description", None) or "Your Hermes agent on Slack"
+    description = getattr(args, "description", None) or "Your VAEL agent on Slack"
     long_description = getattr(args, "long_description", None)
     long_description_file = getattr(args, "long_description_file", None)
     slashes_only = getattr(args, "slashes_only", False)
 
     def fail(msg: str) -> int:
-        print(f"hermes slack manifest: {msg}", file=sys.stderr)
+        print(f"vael slack manifest: {msg}", file=sys.stderr)
         return 2
 
     if slashes_only and (long_description is not None or long_description_file is not None):
@@ -127,7 +127,7 @@ def slack_manifest_command(args) -> int:
         sys.stdout.write(payload)
         return 0
     if isinstance(write_target, bool) and write_target:  # bare --write → default location
-        from hermes_constants import get_hermes_home
+        from vael_constants import get_hermes_home
         target = Path(get_hermes_home()) / "slack-manifest.json"
     else:
         target = Path(write_target).expanduser()
@@ -136,7 +136,7 @@ def slack_manifest_command(args) -> int:
     print(f"Slack manifest written to: {target}", file=sys.stderr)
     print(
         "\nNext steps:\n"
-        "  1. Open https://api.slack.com/apps and pick your Hermes app\n"
+        "  1. Open https://api.slack.com/apps and pick your VAEL app\n"
         "     (or create a new one: Create New App → From an app manifest).\n"
         f"  2. Features → App Manifest → paste the contents of\n"
         f"     {target}\n"
@@ -144,5 +144,5 @@ def slack_manifest_command(args) -> int:
         "     slash commands changed.\n"
         "  4. Make sure Socket Mode is enabled and you have a bot token\n"
         "     (xoxb-...) and app token (xapp-...) configured via\n"
-        "     `hermes setup`.\n", file=sys.stderr)
+        "     `vael setup`.\n", file=sys.stderr)
     return 0

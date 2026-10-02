@@ -1,15 +1,15 @@
 ---
 sidebar_position: 4
 title: "Slack"
-description: "使用 Socket Mode 将 Hermes Agent 设置为 Slack 机器人"
+description: "使用 Socket Mode 将 VAEL Agent 设置为 Slack 机器人"
 ---
 
 # Slack 设置
 
-使用 Socket Mode 将 Hermes Agent 作为机器人连接到 Slack。Socket Mode 使用 WebSocket 而非公开 HTTP 端点，因此你的 Hermes 实例无需公开访问——它可以在防火墙后、笔记本电脑上或私有服务器上正常运行。
+使用 Socket Mode 将 VAEL Agent 作为机器人连接到 Slack。Socket Mode 使用 WebSocket 而非公开 HTTP 端点，因此你的 VAEL 实例无需公开访问——它可以在防火墙后、笔记本电脑上或私有服务器上正常运行。
 
 :::warning 经典 Slack 应用已弃用
-使用 RTM API 的经典 Slack 应用已于 **2025 年 3 月完全弃用**。Hermes 使用带有 Socket Mode 的现代 Bolt SDK。如果你有旧的经典应用，必须按照以下步骤创建新应用。
+使用 RTM API 的经典 Slack 应用已于 **2025 年 3 月完全弃用**。VAEL 使用带有 Socket Mode 的现代 Bolt SDK。如果你有旧的经典应用，必须按照以下步骤创建新应用。
 :::
 
 ## 概述
@@ -25,9 +25,9 @@ description: "使用 Socket Mode 将 Hermes Agent 设置为 Slack 机器人"
 
 ## 第一步：创建 Slack 应用
 
-最快的方式是粘贴 Hermes 为你生成的 manifest（清单文件）。它会一次性声明所有内置斜杠命令（`/btw`、`/stop`、`/model`……）、所有必需的 OAuth 权限范围、所有事件订阅，并启用 Socket Mode。
+最快的方式是粘贴 VAEL 为你生成的 manifest（清单文件）。它会一次性声明所有内置斜杠命令（`/btw`、`/stop`、`/model`……）、所有必需的 OAuth 权限范围、所有事件订阅，并启用 Socket Mode。
 
-### 方式 A：使用 Hermes 生成的 manifest（推荐）
+### 方式 A：使用 VAEL 生成的 manifest（推荐）
 
 1. 生成 manifest：
    ```bash
@@ -44,7 +44,7 @@ description: "使用 Socket Mode 将 Hermes Agent 设置为 Slack 机器人"
 1. 前往 [https://api.slack.com/apps](https://api.slack.com/apps)
 2. 点击 **Create New App**
 3. 选择 **From scratch**
-4. 输入应用名称（例如 "Hermes Agent"）并选择你的工作区
+4. 输入应用名称（例如 "VAEL Agent"）并选择你的工作区
 5. 点击 **Create App**
 
 你将进入应用的 **Basic Information** 页面。继续执行下方第 2–6 步。
@@ -72,7 +72,7 @@ description: "使用 Socket Mode 将 Hermes Agent 设置为 Slack 机器人"
 | `files:write` | 上传文件（图片、音频、文档） |
 
 :::caution 缺少权限范围 = 功能缺失
-没有 `channels:history` 和 `groups:history`，机器人**将无法接收频道消息**——它只能在私信中工作。没有 `files:read`，Hermes 可以聊天，但**无法可靠读取用户上传的附件**。这是最常被遗漏的权限范围。
+没有 `channels:history` 和 `groups:history`，机器人**将无法接收频道消息**——它只能在私信中工作。没有 `files:read`，VAEL 可以聊天，但**无法可靠读取用户上传的附件**。这是最常被遗漏的权限范围。
 :::
 
 **可选权限范围：**
@@ -135,7 +135,7 @@ Socket Mode 让机器人通过 WebSocket 连接，无需公开 URL。
 4. 勾选 **"Allow users to send Slash commands and messages from the messages tab"**
 
 :::danger 没有此步骤，私信将被完全屏蔽
-即使拥有所有正确的权限范围和事件订阅，除非启用 Messages Tab，否则 Slack 不允许用户向机器人发送私信。这是 Slack 平台的要求，而非 Hermes 的配置问题。
+即使拥有所有正确的权限范围和事件订阅，除非启用 Messages Tab，否则 Slack 不允许用户向机器人发送私信。这是 Slack 平台的要求，而非 VAEL 的配置问题。
 :::
 
 ---
@@ -156,7 +156,7 @@ Socket Mode 让机器人通过 WebSocket 连接，无需公开 URL。
 
 ## 第七步：查找用于白名单的用户 ID
 
-Hermes 使用 Slack **Member ID**（而非用户名或显示名称）作为白名单。
+VAEL 使用 Slack **Member ID**（而非用户名或显示名称）作为白名单。
 
 查找 Member ID 的方法：
 
@@ -169,7 +169,7 @@ Member ID 格式类似 `U01ABC2DEF3`。你至少需要自己的 Member ID。
 
 ---
 
-## 第八步：配置 Hermes
+## 第八步：配置 VAEL
 
 将以下内容添加到你的 `~/.hermes/.env` 文件：
 
@@ -214,13 +214,13 @@ sudo hermes gateway install --system   # 仅 Linux：开机启动系统服务
 
 ## 斜杠命令
 
-每个 Hermes 命令（`/btw`、`/stop`、`/new`、`/model`、`/help`……）都是原生 Slack 斜杠命令——与它们在 Telegram 和 Discord 上的工作方式完全相同。在 Slack 中输入 `/`，自动补全选择器会列出每个 Hermes 命令及其描述。
+每个 VAEL 命令（`/btw`、`/stop`、`/new`、`/model`、`/help`……）都是原生 Slack 斜杠命令——与它们在 Telegram 和 Discord 上的工作方式完全相同。在 Slack 中输入 `/`，自动补全选择器会列出每个 VAEL 命令及其描述。
 
-底层实现：Hermes 附带一个生成的 Slack 应用 manifest（见第一步，方式 A），它将 [`COMMAND_REGISTRY`](https://github.com/NousResearch/hermes-agent/blob/main/hermes_cli/commands.py) 中的每个命令声明为斜杠命令。在 Socket Mode 下，无论 manifest 的 `url` 字段如何，Slack 都会通过 WebSocket 路由命令事件。
+底层实现：VAEL 附带一个生成的 Slack 应用 manifest（见第一步，方式 A），它将 [`COMMAND_REGISTRY`](https://github.com/NousResearch/hermes-agent/blob/main/hermes_cli/commands.py) 中的每个命令声明为斜杠命令。在 Socket Mode 下，无论 manifest 的 `url` 字段如何，Slack 都会通过 WebSocket 路由命令事件。
 
 ### 更新后刷新斜杠命令
 
-当 Hermes 添加新命令时（例如执行 `hermes update` 后），重新生成 manifest 并更新你的 Slack 应用：
+当 VAEL 添加新命令时（例如执行 `hermes update` 后），重新生成 manifest 并更新你的 Slack 应用：
 
 ```bash
 hermes slack manifest --write
@@ -228,20 +228,20 @@ hermes slack manifest --write
 
 然后在 Slack 中：
 1. 打开 [https://api.slack.com/apps](https://api.slack.com/apps) →
-   你的 Hermes 应用
+   你的 VAEL 应用
 2. **Features → App Manifest → Edit**
 3. 粘贴 `~/.hermes/slack-manifest.json` 的新内容
 4. **保存**。如果权限范围或斜杠命令有变化，Slack 会提示重新安装应用。
 
 ### 旧版 `/hermes <子命令>` 仍然有效
 
-为了向后兼容旧版 manifest，你仍然可以输入 `/hermes bg run the tests`——Hermes 会以与 `/bg run the tests` 相同的方式路由它。自由形式的问题也有效：`/hermes what's the weather?` 会被当作普通消息处理。
+为了向后兼容旧版 manifest，你仍然可以输入 `/hermes bg run the tests`——VAEL 会以与 `/bg run the tests` 相同的方式路由它。自由形式的问题也有效：`/hermes what's the weather?` 会被当作普通消息处理。
 
 ### 在话题（thread）中使用命令（`!cmd` 前缀）
 
-Slack 本身会阻止在话题回复中使用原生斜杠命令——在话题中尝试 `/queue`，Slack 会回复 *"/queue is not supported in threads. Sorry!"*。没有任何应用端设置可以重新启用它们；Slack 从不将它们传递给 Hermes。
+Slack 本身会阻止在话题回复中使用原生斜杠命令——在话题中尝试 `/queue`，Slack 会回复 *"/queue is not supported in threads. Sorry!"*。没有任何应用端设置可以重新启用它们；Slack 从不将它们传递给 VAEL。
 
-作为解决方案，Hermes 识别前导 `!` 作为在话题（以及任何其他地方）中有效的替代命令前缀。在话题回复中输入 `!queue`、`!stop`、`!model gpt-5.4` 等普通回复——Hermes 会以与斜杠形式完全相同的方式处理，并在同一话题中回复。
+作为解决方案，VAEL 识别前导 `!` 作为在话题（以及任何其他地方）中有效的替代命令前缀。在话题回复中输入 `!queue`、`!stop`、`!model gpt-5.4` 等普通回复——VAEL 会以与斜杠形式完全相同的方式处理，并在同一话题中回复。
 
 只有第一个 token（词元）会与已知命令列表进行匹配，因此像 `!nice work` 这样的随意消息会原样传递给 agent。
 
@@ -259,13 +259,13 @@ hermes slack manifest --slashes-only > /tmp/slashes.json
 
 ## 机器人的响应方式
 
-了解 Hermes 在不同场景下的行为：
+了解 VAEL 在不同场景下的行为：
 
 | 场景 | 行为 |
 |---------|----------|
 | **私信** | 机器人响应每条消息——无需 @ 提及 |
-| **频道** | 机器人**仅在被 @ 提及时响应**（例如 `@Hermes Agent what time is it?`）。在频道中，Hermes 在该消息附带的话题中回复。 |
-| **话题** | 如果你在现有话题中 @ 提及 Hermes，它会在同一话题中回复。一旦机器人在话题中有活跃会话，**该话题中的后续回复无需 @ 提及**——机器人会自然跟进对话。 |
+| **频道** | 机器人**仅在被 @ 提及时响应**（例如 `@Hermes Agent what time is it?`）。在频道中，VAEL 在该消息附带的话题中回复。 |
+| **话题** | 如果你在现有话题中 @ 提及 VAEL，它会在同一话题中回复。一旦机器人在话题中有活跃会话，**该话题中的后续回复无需 @ 提及**——机器人会自然跟进对话。 |
 
 :::tip
 在频道中，始终 @ 提及机器人来开始对话。一旦机器人在话题中活跃，你可以在该话题中回复而无需提及它。话题之外，没有 @ 提及的消息会被忽略，以防止在繁忙频道中产生噪音。
@@ -330,7 +330,7 @@ platforms:
 group_sessions_per_user: true
 ```
 
-为 `true`（默认值）时，共享频道中的每个用户都有自己独立的对话会话。在 `#general` 中与 Hermes 对话的两个人将有各自独立的历史记录和上下文。
+为 `true`（默认值）时，共享频道中的每个用户都有自己独立的对话会话。在 `#general` 中与 VAEL 对话的两个人将有各自独立的历史记录和上下文。
 
 设为 `false` 可启用协作模式，整个频道共享一个对话会话。请注意，这意味着用户共享上下文增长和 token 成本，且一个用户的 `/reset` 会清除所有人的会话。
 
@@ -448,7 +448,7 @@ platforms:
 
 ## 主频道
 
-将 `SLACK_HOME_CHANNEL` 设置为频道 ID，Hermes 将在此频道发送计划消息、定时任务结果和其他主动通知。查找频道 ID 的方法：
+将 `SLACK_HOME_CHANNEL` 设置为频道 ID，VAEL 将在此频道发送计划消息、定时任务结果和其他主动通知。查找频道 ID 的方法：
 
 1. 在 Slack 中右键点击频道名称
 2. 点击 **View channel details**
@@ -464,7 +464,7 @@ SLACK_HOME_CHANNEL=C01234567890
 
 ## 多工作区支持
 
-Hermes 可以使用单个 gateway 实例**同时连接多个 Slack 工作区**。每个工作区使用其自己的机器人用户 ID 独立认证。
+VAEL 可以使用单个 gateway 实例**同时连接多个 Slack 工作区**。每个工作区使用其自己的机器人用户 ID 独立认证。
 
 ### 配置
 
@@ -488,7 +488,7 @@ platforms:
 
 ### OAuth Token 文件
 
-除了环境变量或配置中的 token 外，Hermes 还会从以下位置的 **OAuth token 文件**加载 token：
+除了环境变量或配置中的 token 外，VAEL 还会从以下位置的 **OAuth token 文件**加载 token：
 
 ```
 ~/.hermes/slack_tokens.json
@@ -511,14 +511,14 @@ platforms:
 
 - 列表中的**第一个 token** 是主 token，用于 Socket Mode 连接（AsyncApp）。
 - 每个 token 在启动时通过 `auth.test` 进行认证。gateway 将每个 `team_id` 映射到其自己的 `WebClient` 和 `bot_user_id`。
-- 消息到达时，Hermes 使用正确的工作区特定客户端进行响应。
+- 消息到达时，VAEL 使用正确的工作区特定客户端进行响应。
 - 主 `bot_user_id`（来自第一个 token）用于向后兼容期望单一机器人身份的功能。
 
 ---
 
 ## 语音消息
 
-Hermes 支持 Slack 上的语音功能：
+VAEL 支持 Slack 上的语音功能：
 
 - **传入：** 语音/音频消息使用配置的 STT 提供商自动转录：本地 `faster-whisper`、Groq Whisper（`GROQ_API_KEY`）或 OpenAI Whisper（`VOICE_TOOLS_OPENAI_KEY`）
 - **传出：** TTS 响应以音频文件附件形式发送
@@ -582,7 +582,7 @@ slack:
 | 私信中出现"向此应用发送消息已被关闭" | 在 App Home 设置中启用 **Messages Tab**（见第五步） |
 | "not_authed" 或 "invalid_auth" 错误 | 重新生成 Bot Token 和 App Token，更新 `.env` |
 | 机器人响应但无法在频道中发帖 | 用 `/invite @Hermes Agent` 邀请机器人加入频道 |
-| 机器人可以聊天但无法读取上传的图片/文件 | 添加 `files:read`，然后**重新安装**应用。当 Slack 返回权限范围/认证/权限失败时，Hermes 现在会在聊天中显示附件访问诊断信息。 |
+| 机器人可以聊天但无法读取上传的图片/文件 | 添加 `files:read`，然后**重新安装**应用。当 Slack 返回权限范围/认证/权限失败时，VAEL 现在会在聊天中显示附件访问诊断信息。 |
 | `missing_scope` 错误 | 在 OAuth & Permissions 中添加所需权限范围，然后**重新安装**应用 |
 | Socket 频繁断开 | 检查你的网络；Bolt 会自动重连，但不稳定的连接会导致延迟 |
 | 更改了权限范围/事件但没有任何变化 | 更改任何权限范围或事件订阅后，**必须重新安装**应用到工作区 |
@@ -610,5 +610,5 @@ slack:
 
 - Token 应存储在 `~/.hermes/.env` 中（文件权限 `600`）
 - 定期通过 Slack 应用设置轮换 token
-- 审计谁有权访问你的 Hermes 配置目录
+- 审计谁有权访问你的 VAEL 配置目录
 - Socket Mode 意味着不暴露公开端点——减少一个攻击面

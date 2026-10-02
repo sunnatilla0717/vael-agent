@@ -39,7 +39,7 @@ except ImportError:
 
 def _hermes_home() -> Path:
     try:
-        from hermes_constants import get_hermes_home
+        from vael_constants import get_hermes_home
         return get_hermes_home()
     except ImportError:
         return Path(os.environ.get("HERMES_HOME", Path.home() / ".hermes"))
@@ -78,7 +78,7 @@ def _close_quietly(db, what: str) -> None:
 def _get_session_db():
     """SessionDB instance for reading message transcripts, or None."""
     try:
-        from hermes_state_registry import acquire
+        from vael_state_registry import acquire
         return acquire()
     except Exception as e:
         logger.debug("SessionDB unavailable: %s", e)
@@ -96,7 +96,7 @@ def _load_session_messages(session_id: str):
         return None, f"Failed to read messages: {e}"
     finally:
         try:
-            from hermes_state_registry import release_or_close
+            from vael_state_registry import release_or_close
             release_or_close(db)
         except Exception:
             logger.debug("Failed to close MCP SessionDB", exc_info=True)

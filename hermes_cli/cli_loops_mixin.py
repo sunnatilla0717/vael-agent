@@ -119,7 +119,7 @@ class CLILoopsMixin:
 
     def _cmd_title(self, cmd_original: str):
         from cli import _cprint
-        from hermes_state import format_session_db_unavailable
+        from vael_state import format_session_db_unavailable
         parts = cmd_original.split(maxsplit=1)
         if len(parts) == 1:
             # No argument: show current title and session ID.
@@ -146,7 +146,7 @@ class CLILoopsMixin:
         # long) prints that one reason and stops — never a second, contradictory
         # "empty after cleanup" error (SC-05).
         try:
-            from hermes_state import SessionDB
+            from vael_state import SessionDB
             new_title = SessionDB.sanitize_title(raw_title)
         except ValueError as e:
             _cprint(f"  {e}")
@@ -256,9 +256,9 @@ class CLILoopsMixin:
             self._reload_skills()
 
     def _cmd_plugins(self, cmd_original: str):
-        from hermes_constants import display_hermes_home
+        from vael_constants import display_hermes_home
         try:
-            # Discover from disk (bundled + user) like `hermes plugins list`, so
+            # Discover from disk (bundled + user) like `vael plugins list`, so
             # installed-but-not-enabled plugins show up; the plugin manager only knows
             # *loaded* plugins and made fresh installs look like "nothing installed".
             from hermes_cli.plugins_cmd import (
@@ -268,7 +268,7 @@ class CLILoopsMixin:
             disabled = _get_disabled_set()
 
             # `/plugins` is a quick glance: user plugins only, bundled ones summarized
-            # on one line (full catalog behind `hermes plugins list`).
+            # on one line (full catalog behind `vael plugins list`).
             user_entries = [e for e in entries if e[3] != "bundled"]
             bundled_count = len(entries) - len(user_entries)
             if not user_entries:

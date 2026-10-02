@@ -203,7 +203,7 @@ def has_vertex_credentials() -> bool:
 
 
 def has_explicit_vertex_config() -> bool:
-    """True only when the user deliberately pointed Hermes at Vertex.
+    """True only when the user deliberately pointed VAEL at Vertex.
 
     Stricter than :func:`has_vertex_credentials`: an ambient ``GOOGLE_APPLICATION_CREDENTIALS``
     must NOT gate the model picker open (unknowing spend). Only Hermes-scoped signals count.

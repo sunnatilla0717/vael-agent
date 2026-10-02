@@ -1,4 +1,4 @@
-"""Offline, non-destructive recovery for a damaged Hermes session database.
+"""Offline, non-destructive recovery for a damaged VAEL session database.
 
 The source is never opened by SQLite: it and its WAL/SHM/journal sidecars are copied to a disposable
 work dir first. Canonical rows are copied into a fresh current-schema database; derived FTS tables and
@@ -17,9 +17,9 @@ from pathlib import Path
 from typing import Any, Callable, Iterator, Optional
 
 from hermes_cli.timefmt import EPOCH_MAX, EPOCH_MIN
-from hermes_state import SessionDB
-from hermes_state_common import FTS_STORAGE_VERSION, SCHEMA_VERSION
-from hermes_state_repair import _db_opens_cleanly
+from vael_state import SessionDB
+from vael_state_common import FTS_STORAGE_VERSION, SCHEMA_VERSION
+from vael_state_repair import _db_opens_cleanly
 
 
 ProgressCallback = Callable[[dict[str, Any]], None]
@@ -328,11 +328,11 @@ def _snapshot_and_inspect(
         snapshot_source, copied = _copy_source_bundle(source, Path(temp_dir.name))
         if _source_fingerprint(source) != before:
             raise SessionRecoverySafetyError(
-                "The source database bundle changed while it was being copied. Stop every Hermes process using this "
-                "profile and retry. This includes the interactive `hermes` CLI session this command may have been "
+                "The source database bundle changed while it was being copied. Stop every VAEL process using this "
+                "profile and retry. This includes the interactive `vael` CLI session this command may have been "
                 "launched from: a running parent CLI writes session bookkeeping (compression ticks, context "
-                "tracking) to state.db in the background and counts as a Hermes process even after the gateway is "
-                "stopped. Run the recovery from a fresh shell with no `hermes` session open, or point --source at an "
+                "tracking) to state.db in the background and counts as a VAEL process even after the gateway is "
+                "stopped. Run the recovery from a fresh shell with no `vael` session open, or point --source at an "
                 "immutable snapshot copy of the database."
             )
         conn = _connect(snapshot_source)
@@ -417,7 +417,7 @@ def _salvage_rowid_bounds(source: sqlite3.Connection, table: str) -> dict[str, A
         return result
 
     # An ordered LIMIT 1 walks the table b-tree and dies on a damaged edge leaf, while the
-    # aggregate lets the planner answer from any covering index (every Hermes table has at
+    # aggregate lets the planner answer from any covering index (every VAEL table has at
     # least a PRIMARY KEY autoindex). Ask it before falling back to the synthetic domain:
     # bisecting from INT64_MIN burned the whole query budget on a 4-row table (#98050).
     missing = [edge for edge in ("low", "high") if rows[edge] is None]

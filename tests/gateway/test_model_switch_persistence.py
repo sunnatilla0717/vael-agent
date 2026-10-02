@@ -203,7 +203,7 @@ class TestOneTurnNeverPersisted:
 
     @staticmethod
     def _runner_with_store(tmp_path, monkeypatch):
-        import hermes_yaml as _yaml
+        import vael_yaml as _yaml
 
         import gateway.run as gateway_run
         from gateway.run import GatewayRunner
@@ -233,7 +233,7 @@ class TestOneTurnNeverPersisted:
                 provider_label="OpenRouter",
             ),
         )
-        monkeypatch.setattr("hermes_constants.get_hermes_home", lambda: hermes_home)
+        monkeypatch.setattr("vael_constants.get_hermes_home", lambda: hermes_home)
         monkeypatch.setattr("hermes_cli.config.get_hermes_home", lambda: hermes_home)
 
         runner = object.__new__(GatewayRunner)

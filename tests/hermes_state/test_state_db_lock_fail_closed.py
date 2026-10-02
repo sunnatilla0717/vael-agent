@@ -33,11 +33,11 @@ from pathlib import Path
 
 import pytest
 
-import hermes_state
-import hermes_state_repair
-import hermes_state_common
-from hermes_state import SessionDB
-from hermes_state_repair import repair_state_db_schema
+import vael_state
+import vael_state_repair
+import vael_state_common
+from vael_state import SessionDB
+from vael_state_repair import repair_state_db_schema
 
 
 def _make_unopenable(lock_path: Path) -> None:

@@ -21,12 +21,12 @@ import time
 
 import pytest
 
-import hermes_state
-import hermes_state_holders
-import hermes_state_schema
-from hermes_state import SessionDB
-from hermes_state_common import FTS_REBUILD_DEFERRAL_KEY, FTS_STALE_KEY, LEGACY_FTS_SQL, LEGACY_FTS_TRIGRAM_SQL, SCHEMA_SQL, _FTS_TRIGGERS
-from hermes_state_dbfile import _concrete_state_db_holder_pids, _is_inactive_orphan_desktop_holder
+import vael_state
+import vael_state_holders
+import vael_state_schema
+from vael_state import SessionDB
+from vael_state_common import FTS_REBUILD_DEFERRAL_KEY, FTS_STALE_KEY, LEGACY_FTS_SQL, LEGACY_FTS_TRIGRAM_SQL, SCHEMA_SQL, _FTS_TRIGGERS
+from vael_state_dbfile import _concrete_state_db_holder_pids, _is_inactive_orphan_desktop_holder
 
 
 @pytest.fixture
@@ -348,7 +348,7 @@ class TestRuntimeFtsRebuild:
         # Structural corruption quarantines the handle: the typed error wraps
         # the original (cause preserved, SQLite result code copied) and the
         # sticky flag is set, so later writes fail fast.
-        from hermes_state import StateDbCorruptError
+        from vael_state import StateDbCorruptError
 
         assert isinstance(caught.value, StateDbCorruptError)
         assert caught.value.__cause__ is structural
@@ -764,7 +764,7 @@ class TestRuntimeFtsRebuild:
         monkeypatch.setattr(hermes_state_schema.time, "time", lambda: clock[0])
 
         from hermes_cli.doctor_state import _render_state_db_stats
-        from hermes_state_dbfile import collect_state_db_stats
+        from vael_state_dbfile import collect_state_db_stats
 
         def doctor_blob():
             return " ".join(" ".join(row) for row in _render_state_db_stats(collect_state_db_stats(db_path))).lower()
@@ -964,7 +964,7 @@ class TestPhysicalCorruptionAcceptance:
             # Structural damage quarantines the handle: typed error, sticky
             # flag, later writes fail fast, and close() must not checkpoint
             # the WAL over a damaged page image (the #90950 page-1 clobber).
-            from hermes_state import StateDbCorruptError
+            from vael_state import StateDbCorruptError
 
             assert isinstance(caught.value, StateDbCorruptError)
             assert db._db_corrupt is True

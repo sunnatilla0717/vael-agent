@@ -1,6 +1,6 @@
-"""``hermes import-agent --sync`` — keep previously imported Claude Code / Codex setups current.
+"""``vael import-agent --sync`` — keep previously imported Claude Code / Codex setups current.
 
-Every successful ``hermes import-agent`` run records its source in ``HERMES_HOME/import-sync.json``
+Every successful ``vael import-agent`` run records its source in ``HERMES_HOME/import-sync.json``
 (the sync manifest); ``--sync`` re-imports every registered source whose files changed since the
 last run. Change detection is a content digest over exactly the files the importer reads, so an
 unchanged source is a cheap no-op and credential files (never read by the importer) can never
@@ -128,11 +128,11 @@ def update_sync_manifest(agent: str, source_root: Path, target_root: Path,
 
 
 def sync_imported_agents(args) -> None:
-    """Handle ``hermes import-agent --sync``: re-import every registered source whose digest
+    """Handle ``vael import-agent --sync``: re-import every registered source whose digest
     changed. Prompt-free (cron-friendly); ``--dry-run`` previews without touching the manifest."""
     from hermes_cli.agent_import import AgentImporter, print_import_report
     from hermes_cli.setup import print_error, print_header, print_info, print_success
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
 
     dry_run = bool(getattr(args, "dry_run", False))
     hermes_home = get_hermes_home().resolve()
@@ -140,7 +140,7 @@ def sync_imported_agents(args) -> None:
     if not agents:
         print()
         print_info("No import sources registered yet.")
-        print_info("Run 'hermes import-agent' first — successful imports are "
+        print_info("Run 'vael import-agent' first — successful imports are "
                    "registered for sync automatically.")
         return
 

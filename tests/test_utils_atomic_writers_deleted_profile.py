@@ -19,7 +19,7 @@ from pathlib import Path
 
 import pytest
 
-from hermes_constants import (
+from vael_constants import (
     mark_named_profile_deleted,
     named_profile_home,
     set_hermes_home_override,
@@ -66,7 +66,7 @@ class TestAtomicWritersRefuseDeletedProfileHome:
                     separators=(",", ":"),
                 )
         finally:
-            from hermes_constants import reset_hermes_home_override
+            from vael_constants import reset_hermes_home_override
 
             reset_hermes_home_override(token)
         assert not profile.exists()
@@ -100,7 +100,7 @@ class TestAtomicWritersRefuseDeletedProfileHome:
             ):
                 store.add("memory", "entry")
         finally:
-            from hermes_constants import reset_hermes_home_override
+            from vael_constants import reset_hermes_home_override
 
             reset_hermes_home_override(token)
         assert not profile.exists()

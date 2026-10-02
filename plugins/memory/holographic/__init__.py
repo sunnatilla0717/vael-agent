@@ -137,7 +137,7 @@ class HolographicMemoryProvider(MemoryProvider):
         ]
 
     def initialize(self, session_id: str, **kwargs) -> None:
-        from hermes_constants import get_hermes_home
+        from vael_constants import get_hermes_home
         _hermes_home = str(get_hermes_home())
         db_path = self._config.get("db_path", _hermes_home + "/memory_store.db")
         if isinstance(db_path, str):  # expand $HERMES_HOME so paths resolve to the active profile

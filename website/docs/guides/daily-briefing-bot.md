@@ -19,7 +19,7 @@ This recipe hits web search, summarization, and optional TTS — all bundled in 
 Here's the flow:
 
 1. **8:00 AM** — The cron scheduler triggers your job
-2. **Hermes spins up** a fresh agent session with your prompt
+2. **VAEL spins up** a fresh agent session with your prompt
 3. **Web search** pulls the latest news on your topics
 4. **Summarization** distills it into a clean briefing format
 5. **Delivery** sends the briefing to your Telegram or Discord
@@ -30,7 +30,7 @@ The whole thing runs hands-free. You just read your briefing with your morning c
 
 Before starting, make sure you have:
 
-- **Hermes Agent installed** — see the [Installation guide](../getting-started/installation.md)
+- **VAEL Agent installed** — see the [Installation guide](../getting-started/installation.md)
 - **Gateway running** — the gateway daemon handles cron execution:
   ```bash
   hermes gateway install   # Install as a user service
@@ -60,7 +60,7 @@ Search for the latest news about AI agents and open source LLMs.
 Summarize the top 3 stories in a concise briefing format with links.
 ```
 
-Hermes will search the web, read through results, and produce something like:
+VAEL will search the web, read through results, and produce something like:
 
 ```
 ☀️ Your AI Briefing — March 8, 2026
@@ -94,11 +94,11 @@ Try different prompts until you get output you love. Add instructions like "use 
 
 Now let's schedule this to run automatically every morning. You can do this in two ways.
 
-Before creating cron jobs, ensure Hermes has a default model and provider configured globally. If you want a specific job to use different values, set explicit per-job model/provider overrides when creating it.
+Before creating cron jobs, ensure VAEL has a default model and provider configured globally. If you want a specific job to use different values, set explicit per-job model/provider overrides when creating it.
 
 ### Option A: Natural Language (in chat)
 
-Just tell Hermes what you want:
+Just tell VAEL what you want:
 
 ```
 Every morning at 8am, search the web for the latest news about AI agents
@@ -106,7 +106,7 @@ and open source LLMs. Summarize the top 3 stories in a concise briefing
 with links. Use a friendly, professional tone. Deliver to telegram.
 ```
 
-Hermes will create the cron job for you using the unified `cronjob_manage` tool.
+VAEL will create the cron job for you using the unified `cronjob_manage` tool.
 
 ### Option B: CLI Slash Command
 
@@ -159,7 +159,7 @@ Format as a clean briefing with section headers and emoji. End with today's date
 
 ### Using Delegation for Parallel Research
 
-For faster briefings, tell Hermes to delegate each topic to a sub-agent:
+For faster briefings, tell VAEL to delegate each topic to a sub-agent:
 
 ```
 /cron add "0 8 * * *" "Create a morning briefing by delegating research to sub-agents. Delegate three parallel tasks:
@@ -239,7 +239,7 @@ Or ask conversationally:
 Remove my morning briefing cron job.
 ```
 
-Hermes will use `cronjob(action="list")` to find it and `cronjob(action="remove")` to delete it.
+VAEL will use `cronjob(action="list")` to find it and `cronjob(action="remove")` to delete it.
 
 ### Check Gateway Status
 

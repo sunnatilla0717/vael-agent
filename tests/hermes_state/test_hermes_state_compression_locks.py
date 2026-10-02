@@ -20,8 +20,8 @@ from types import SimpleNamespace
 
 import pytest
 
-import hermes_state
-from hermes_state import SessionDB
+import vael_state
+from vael_state import SessionDB
 
 
 @pytest.fixture

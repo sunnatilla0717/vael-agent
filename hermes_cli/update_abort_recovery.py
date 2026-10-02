@@ -222,7 +222,7 @@ def _recover_gateway_restart_after_abort(
 
 
 def _warn_stale_serve_runtimes(rows) -> None:
-    """Name the serve/dashboard processes still on pre-update code: ``hermes serve`` hosts
+    """Name the serve/dashboard processes still on pre-update code: ``vael serve`` hosts
     ``tui_gateway.server``, and an un-restarted unit keeps the pre-pull ``sys.modules`` graph so
     every chat turn fails with an ``ImportError`` no gateway row explains."""
     if not rows:
@@ -234,7 +234,7 @@ def _warn_stale_serve_runtimes(rows) -> None:
         print(
             f"      pid {row.get('pid')} — {row.get('kind')}"
             f" (profile {row.get('profile') or 'default'}, {row.get('supervisor') or 'unknown'})")
-    print("    Ask their owner to relaunch `hermes serve` / `hermes dashboard`, or reconnect Desktop for an SSH backend.")
+    print("    Ask their owner to relaunch `vael serve` / `vael dashboard`, or reconnect Desktop for an SSH backend.")
     if sys.platform == "linux" and any(row.get("supervisor") == "systemd" for row in rows):
         print("    For unit-managed backends: `systemctl --user restart hermes-serve.service`.")
     if sys.platform == "darwin" and any(row.get("supervisor") == "launchd" for row in rows):

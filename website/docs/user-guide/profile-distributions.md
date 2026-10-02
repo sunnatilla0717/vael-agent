@@ -4,13 +4,13 @@ sidebar_position: 3
 
 # Profile Distributions: Share a Whole Agent
 
-A **profile distribution** packages a complete Hermes agent — personality, skills, cron jobs, MCP connections, config — as a git repository. Anyone with access to the repo can install the whole agent with one command, update it in place, and keep their own memories, sessions, and API keys untouched.
+A **profile distribution** packages a complete VAEL Agent — personality, skills, cron jobs, MCP connections, config — as a git repository. Anyone with access to the repo can install the whole agent with one command, update it in place, and keep their own memories, sessions, and API keys untouched.
 
 If a [profile](./profiles.md) is a local agent, a distribution is that agent made shareable.
 
 ## Two ways to share a profile
 
-Hermes has two sharing paths, and they answer different questions. Distributions are the durable one; export files are the quick one.
+VAEL has two sharing paths, and they answer different questions. Distributions are the durable one; export files are the quick one.
 
 | | **Distribution** (git repo) | **Export file** (`.tar.gz`) |
 |---|---|---|
@@ -30,7 +30,7 @@ The two aren't exclusive. Plenty of authors dogfood a profile, `/export` it to a
 
 ## What this means
 
-Before distributions, sharing a Hermes agent meant sending someone:
+Before distributions, sharing a VAEL Agent meant sending someone:
 
 1. Your SOUL.md
 2. A list of skills to install
@@ -72,7 +72,7 @@ We considered tarballs, HTTP archives, a custom format. None of them beat git:
 - **Private repos work for free.** SSH keys, `git credential` helpers, GitHub CLI stored credentials — whatever auth your terminal is already set up for applies transparently.
 - **Reproducibility is a commit SHA.** The same thing pip and npm record.
 
-The tradeoff: recipients need git installed. On any machine running Hermes in 2026, that's already true.
+The tradeoff: recipients need git installed. On any machine running VAEL in 2026, that's already true.
 
 ## When should you use a distribution?
 
@@ -91,7 +91,7 @@ Not a fit:
 - **You want to share memories / sessions / conversation history.** Those are user data, not distribution content. Never shipped. (Export files are different here — read [what an export contains](#what-an-export-file-contains) before sending one.)
 
 :::caution
-**Hermes does not control git.** The file exclusions described on this page are applied by the **installer** when someone runs `hermes profile install` or `hermes profile update`. They are **not** applied when you run `git add` or `git commit`.
+**VAEL does not control git.** The file exclusions described on this page are applied by the **installer** when someone runs `hermes profile install` or `hermes profile update`. They are **not** applied when you run `git add` or `git commit`.
 :::
 
 ## The lifecycle: author to installer to update
@@ -212,7 +212,7 @@ skills/.*
 
 This mirrors the [hard-excluded paths](#whats-not-in-a-distribution-ever) that the installer strips on its end. Anything else you want to keep out of the repo (scratch files, large assets, local-only skills) should also go in here.
 
-For cron, commit only `cron/jobs.json`. Hermes treats every other entry under `cron/` as runtime state (locks, ledgers, output, suggestions, and future scheduler sidecars) and never installs or replaces it from a distribution. Root-level hidden entries under `skills/` are likewise local Hermes bookkeeping; hidden files inside an authored skill directory remain part of that skill.
+For cron, commit only `cron/jobs.json`. VAEL treats every other entry under `cron/` as runtime state (locks, ledgers, output, suggestions, and future scheduler sidecars) and never installs or replaces it from a distribution. Root-level hidden entries under `skills/` are likewise local VAEL bookkeeping; hidden files inside an authored skill directory remain part of that skill.
 
 ### Step 4 — Push to a git repo
 
@@ -508,7 +508,7 @@ Tweet the install command. People who try it send you issues and PRs. If someone
 
 ### Product: ship an opinionated agent
 
-You built Hermes-on-top — maybe a compliance-monitoring harness, a customer-support stack, a domain-specific research platform. You want to distribute it as a product.
+You built VAEL-on-top — maybe a compliance-monitoring harness, a customer-support stack, a domain-specific research platform. You want to distribute it as a product.
 
 ```yaml
 # distribution.yaml
@@ -636,11 +636,11 @@ In the CLI, TUI, or desktop chat:
 /export research-bot -o ~/Desktop/research-bot.tar.gz
 ```
 
-Without `-o`, the CLI and TUI place the archive in Hermes's managed
-`profile-exports/` directory under the default Hermes home, not in the current
+Without `-o`, the CLI and TUI place the archive in VAEL's managed
+`profile-exports/` directory under the default VAEL home, not in the current
 working directory. This keeps routine exports out of source checkouts and
 prevents a generated profile snapshot from being mistaken for a repository
-source file. If the Hermes home itself lives inside a Git checkout (some
+source file. If the VAEL home itself lives inside a Git checkout (some
 Docker/custom deployments), the archive goes to `~/.hermes-profile-exports/`
 or, failing that, a per-user directory under the OS temp dir — never into
 the checkout. If no safe automatic location exists at all (every candidate
@@ -688,7 +688,7 @@ You cannot import as `default` — that name is the built-in root profile (`~/.h
 
 Always excluded, both profiles types: `auth.json` and `.env`. Your API keys never leave the machine.
 
-**The default profile** (`~/.hermes`) is exported through an allow-list — only known Hermes artifacts, so an unrelated file sitting in your home directory can't get swept in:
+**The default profile** (`~/.hermes`) is exported through an allow-list — only known VAEL artifacts, so an unrelated file sitting in your home directory can't get swept in:
 
 `config.yaml`, `SOUL.md`, `MEMORY.md`, `USER.md`, `todo.json`, `system_prompt.md`, `AGENTS.md`, `CLAUDE.md`, `.cursorrules`, `skills/`, `plugins/`, `cron/`, `scripts/`, `sessions/`, `memories/`, `knowledge/`, `preferences/`, and `desktop.json` when the desktop staged one.
 
@@ -759,6 +759,6 @@ The short version:
 - [Profile Commands reference](../reference/profile-commands.md) — every flag, every option
 - [`hermes profile export` / `import`](../reference/profile-commands.md#hermes-profile-export) — the CLI form of [export files](#export-and-import-a-profile-file)
 - [Slash Commands reference](../reference/slash-commands.md) — `/export`, `/import`, and every other in-chat command
-- [Using SOUL with Hermes](../guides/use-soul-with-hermes.md) — authoring personalities
+- [Using SOUL with VAEL](../guides/use-soul-with-vael.md) — authoring personalities
 - [Personality & SOUL](./features/personality.md) — how SOUL fits into the agent
 - [Skills catalog](../reference/skills-catalog.md) — skills you can bundle

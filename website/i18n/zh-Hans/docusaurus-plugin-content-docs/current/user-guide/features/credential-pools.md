@@ -7,7 +7,7 @@ sidebar_position: 9
 
 # 凭证池
 
-凭证池允许你为同一提供商注册多个 API 密钥或 OAuth 令牌。当某个密钥触达速率限制或计费配额时，Hermes 会自动轮换到下一个健康密钥——在不切换提供商的情况下保持会话持续运行。
+凭证池允许你为同一提供商注册多个 API 密钥或 OAuth 令牌。当某个密钥触达速率限制或计费配额时，VAEL 会自动轮换到下一个健康密钥——在不切换提供商的情况下保持会话持续运行。
 
 这与[备用提供商](./fallback-providers.md)不同，后者会切换到*另一个*提供商。凭证池是同一提供商内的轮换；备用提供商是跨提供商的故障转移。池会优先尝试——如果池中所有密钥都耗尽，*才会*激活备用提供商。
 
@@ -34,7 +34,7 @@ Your request
 
 ## 快速开始
 
-如果你已在 `.env` 中设置了 API 密钥，Hermes 会自动将其识别为单密钥池。要充分利用池化功能，请添加更多密钥：
+如果你已在 `.env` 中设置了 API 密钥，VAEL 会自动将其识别为单密钥池。要充分利用池化功能，请添加更多密钥：
 
 ```bash
 # Add a second OpenRouter key
@@ -171,14 +171,14 @@ hermes auth add Together.ai --api-key sk-together-second-key
 
 ## 自动发现
 
-Hermes 在启动时自动从多个来源发现凭证并初始化池：
+VAEL 在启动时自动从多个来源发现凭证并初始化池：
 
 | 来源 | 示例 | 自动初始化？ |
 |--------|---------|-------------|
 | 环境变量 | `OPENROUTER_API_KEY`、`ANTHROPIC_API_KEY` | 是 |
 | OAuth 令牌（auth.json） | Codex device code、Nous device code | 是 |
 | Claude Code 凭证 | `~/.claude/.credentials.json` | 是（Anthropic） |
-| Hermes PKCE OAuth | `~/.hermes/auth.json` | 是（Anthropic） |
+| VAEL PKCE OAuth | `~/.hermes/auth.json` | 是（Anthropic） |
 | 自定义端点配置 | `config.yaml` 中的 `model.api_key` | 是（自定义端点） |
 | 手动条目 | 通过 `hermes auth add` 添加 | 持久化至 auth.json |
 

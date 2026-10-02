@@ -110,7 +110,7 @@ class _FakeSessionDB:
 def test_desktop_session_search_merges_id_matches_before_content_matches(monkeypatch):
     _FakeSessionDB.opened_read_only = None
     _FakeSessionDB.requested_fields = None
-    monkeypatch.setattr("hermes_state.SessionDB", _FakeSessionDB)
+    monkeypatch.setattr("vael_state.SessionDB", _FakeSessionDB)
 
     response = asyncio.run(_rt_sessions.search_sessions(q="20260603", limit=2))
 
@@ -193,7 +193,7 @@ def test_desktop_session_search_attaches_profile_to_rich_results(monkeypatch):
                 "archived": False,
             }
 
-    monkeypatch.setattr("hermes_state.SessionDB", _RichFakeSessionDB)
+    monkeypatch.setattr("vael_state.SessionDB", _RichFakeSessionDB)
     monkeypatch.setattr("hermes_cli.profiles.profile_exists", lambda name: True)
     response = asyncio.run(_rt_sessions.search_sessions(q="20260603", limit=1, profile="personal"))
     assert response["results"][0]["profile"] == "personal"
@@ -245,14 +245,14 @@ class _DeepLineageSessionDB(_FakeSessionDB):
         # starts far from the tip. Resolving from the MATCHED id keeps the
         # remaining distance under the cap; the raised bound lets even a
         # root-started walk terminate at the live tip (#125041).
-        from hermes_state_compression import _CHAIN_CAP
+        from vael_state_compression import _CHAIN_CAP
 
         idx = int(session_id[1:])
         return f"s{min(idx + _CHAIN_CAP, self.DEPTH - 1):03d}"
 
 
 def test_deep_lineage_search_resolves_tip_from_matched_id(monkeypatch):
-    monkeypatch.setattr("hermes_state.SessionDB", _DeepLineageSessionDB)
+    monkeypatch.setattr("vael_state.SessionDB", _DeepLineageSessionDB)
 
     response = asyncio.run(_rt_sessions.search_sessions(q="content", limit=2))
 

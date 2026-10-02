@@ -7,7 +7,7 @@ Two additive capabilities, both designed so a failure inside them can never
 break an update (every public entry point is exception-swallowing):
 
 1. **Update receipt** — a machine-readable JSON record of what one
-   ``hermes update`` run discovered, did, skipped (and why), written to
+   ``vael update`` run discovered, did, skipped (and why), written to
    ``<HERMES_HOME>/logs/update_receipts/``. Silent-failure classes this
    makes visible: #88848 (helper died after "success" printed), #74973
    (restart silently skipped), #85753 (restart phase never ran), #81193
@@ -47,7 +47,7 @@ _RECEIPT_KEEP = 20  # keep the last N receipts per profile home
 COMMAND_BOUNDARY_STOP_REASON = "completed at command boundary"
 
 # Receipt state is per-CONTEXT, not a module global: a nested
-# ``hermes update`` receipt (or one in another thread) must never clobber
+# ``vael update`` receipt (or one in another thread) must never clobber
 # the outer one, and the boundary finalize must see exactly its own
 # process's receipt. Same pattern as pm.receipt's ContextVars — no
 # manager object.
@@ -113,7 +113,7 @@ def _launcher_correlation_id() -> Optional[str]:
 
 
 class UpdateReceipt:
-    """Collects the observable facts of one ``hermes update`` run."""
+    """Collects the observable facts of one ``vael update`` run."""
 
     def __init__(self) -> None:
         self.data: dict[str, Any] = {
@@ -169,7 +169,7 @@ class UpdateReceipt:
             persisted["skipped"] = _str_records(
                 fresh_recovery.get("skipped", []), ("profile", "kind", "supervisor", "reason")
             )
-            # ``hermes serve`` hosts tui_gateway and is not a gateway profile, so neither the
+            # ``vael serve`` hosts tui_gateway and is not a gateway profile, so neither the
             # per-profile buckets above nor the fleet-version matrix can describe it. Persist its
             # unit outcomes and any process that survived on the pre-update generation, or the
             # receipt keeps claiming a clean recovery the operator's box contradicts.
@@ -193,7 +193,7 @@ def _receipt_dir() -> Path:
     # ``hermes_constants`` (stdlib-only), never ``hermes_cli.config``: the receipt must be
     # writable from the refused/failed paths where config loading itself may be what broke
     # (#112465, #112558).
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
 
     return get_hermes_home() / "logs" / "update_receipts"
 
@@ -398,8 +398,8 @@ def _publish_shared_metrics(data: dict[str, Any]) -> None:
         if data.get("pid") == os.getpid() and not (pre.get("sha") and pre.get("sha") == post.get("sha")):
             # This interpreter began the run before the checkout swap: importing now would load
             # pulled code into it. Park the bounded fields (stdlib + loaded modules only); the next
-            # Hermes start records them.
-            from hermes_constants import get_hermes_home
+            # VAEL start records them.
+            from vael_constants import get_hermes_home
             from hermes_cli.runtime_state import _atomic_bytes
 
             pending = get_hermes_home() / "telemetry" / "shared_metrics" / "pending_updates"  # = PENDING_DIRNAME
@@ -420,7 +420,7 @@ def _publish_shared_metrics(data: dict[str, Any]) -> None:
 def finalize_pending_update_receipt(exit_code: Optional[int] = None, stop_reason: str = "") -> Optional[Path]:
     """Command-boundary safety net: persist a still-open receipt, if any. Never raises.
 
-    ``hermes update`` has many early ``sys.exit`` paths (preflight refusals, venv-holder refusal,
+    ``vael update`` has many early ``sys.exit`` paths (preflight refusals, venv-holder refusal,
     fetch failure) predating the inner finalize calls; finalizing here means refused/failed runs —
     where a receipt matters most — leave a record. Exit 0/None → ``success``, exit 2 → ``refused``
     (preflight convention), else → ``failed``.
@@ -453,8 +453,8 @@ def settle_latest_receipt_fleet(fleet: list[dict[str, Any]], *, discharges) -> b
     """Record on ``latest.json`` that the fleet it still reports as owed now serves the checkout.
 
     A failed receipt whose plan rows cannot be matched to a live gateway (unknown identity,
-    pre-pull SHAs) keeps ``hermes update`` exiting 1 and every CLI start warning about mixed
-    modules, long after the operator's ``hermes gateway restart`` fixed the fleet (#117051). The
+    pre-pull SHAs) keeps ``vael update`` exiting 1 and every CLI start warning about mixed
+    modules, long after the operator's ``vael gateway restart`` fixed the fleet (#117051). The
     caller has just verified every live row is current at the checkout SHA; persisting that
     matrix as the receipt's post-restart ``fleet`` (and un-flagging ``gateway_restart``) is what
     lets the stale-runtime readers see the recovery. ``discharges(settled_receipt)`` decides on
@@ -534,7 +534,7 @@ _CODE_ROOT_MAX_DEPTH = 8
 
 
 def _code_root_for_path(raw: Any) -> Optional[Path]:
-    """Return the Hermes checkout containing an absolute process path."""
+    """Return the VAEL checkout containing an absolute process path."""
     if not isinstance(raw, str) or not raw:
         return None
     with suppress(Exception):
@@ -739,7 +739,7 @@ _FLEET_ROW_UNKNOWN = "  ? {profile} (pid {pid}) — version unknown (gateway pre
 # so the copy does not claim one.
 _FLEET_ROW_IDENTITY_PENDING = (
     "  ? {profile} (pid {pid}) — new pid since the update, code identity not published yet"
-    " — re-check with `hermes gateway status`"
+    " — re-check with `vael gateway status`"
 )
 
 
@@ -776,7 +776,7 @@ def print_fleet_version_matrix(fleet: list[dict[str, Any]]) -> bool:
     if RESTART_PENDING_STATE in states:
         print()
         print("  ℹ A restart-pending gateway has not yet been verified on the new code;")
-        print("    check after this update exits with `hermes gateway status`.")
+        print("    check after this update exits with `vael gateway status`.")
     stale_or_down = sum(1 for entry in fleet if entry.get("state") in ("stale", "down"))
     if stale_or_down:
         print()
@@ -790,6 +790,6 @@ def print_fleet_version_matrix(fleet: list[dict[str, Any]]) -> bool:
         print()
         print(
             f"✗ Update not complete: {stale_or_down} gateway(s) still running the old code (or stopped).")
-        print("  Run `hermes gateway restart` (or `hermes -p <profile> gateway restart` for a named")
-        print("  profile), then `hermes gateway status` to confirm.")
+        print("  Run `vael gateway restart` (or `vael -p <profile> gateway restart` for a named")
+        print("  profile), then `vael gateway status` to confirm.")
     return stale_or_down > 0

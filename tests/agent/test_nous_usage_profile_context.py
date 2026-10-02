@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 
 from agent import account_usage, billing_usage
-from hermes_constants import (
+from vael_constants import (
     get_hermes_home,
     reset_hermes_home_override,
     set_hermes_home_override,

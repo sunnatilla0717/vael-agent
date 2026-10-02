@@ -6,7 +6,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from hermes_constants import PARTIAL_STREAM_STUB_ID
+from vael_constants import PARTIAL_STREAM_STUB_ID
 from run_agent import AIAgent
 
 

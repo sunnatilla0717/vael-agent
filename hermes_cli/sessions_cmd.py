@@ -1,4 +1,4 @@
-"""``hermes sessions`` command.
+"""``vael sessions`` command.
 
 ``cmd_sessions`` routes ``args.sessions_action`` through ``_PRE_DB_HANDLERS`` (repair / recover /
 import — must run without opening ``SessionDB()``, which a malformed schema prevents) and
@@ -16,7 +16,7 @@ from pathlib import Path
 
 from hermes_cli.cli_output import print_truncated
 from hermes_cli.sessions_cmd_browse import _relative_time, _session_browse_picker
-from hermes_state_errors import SessionActiveWriteGuardError
+from vael_state_errors import SessionActiveWriteGuardError
 
 
 def get_hermes_home():
@@ -47,7 +47,7 @@ def _confirm_prompt(prompt: str) -> bool:
 
 
 def _not_found(session_id) -> int:
-    print(f"No session '{session_id}'. Run: hermes sessions list to find the id.")
+    print(f"No session '{session_id}'. Run: vael sessions list to find the id.")
     return 1
 
 
@@ -100,8 +100,8 @@ def _write_output(output, text, summary) -> None:
 # -- handlers that must run BEFORE SessionDB() is opened ----------------------
 
 def _cmd_repair(args):
-    from hermes_state import DEFAULT_DB_PATH as db_path, SessionDB
-    from hermes_state_repair import _db_opens_cleanly, repair_state_db_schema
+    from vael_state import DEFAULT_DB_PATH as db_path, SessionDB
+    from vael_state_repair import _db_opens_cleanly, repair_state_db_schema
     if not db_path.exists():
         print(f"No session database at {db_path} (nothing to repair).")
         return
@@ -133,11 +133,11 @@ def _cmd_repair(args):
     print(
         "  Keep state.db and the backup; do not delete them.\n"
         "\n  Next step — offline recovery (never modifies the source):\n"
-        f"    hermes sessions recover --source {source_hint} \\\n"
+        f"    vael sessions recover --source {source_hint} \\\n"
         "        --inspect-only\n"
         "  If that reports the data is recoverable, rebuild it into\n"
         "  a NEW database (the active one is left untouched):\n"
-        f"    hermes sessions recover --source {source_hint} \\\n"
+        f"    vael sessions recover --source {source_hint} \\\n"
         "        --output recovered-state.db"
     )
 
@@ -263,7 +263,7 @@ def _default_exclude(args):
 
 
 def _cmd_list(db, args):
-    from hermes_state_sessions import workspace_key as _ws_key
+    from vael_state_sessions import workspace_key as _ws_key
     # LIMIT lives in the query, so probe one row past the cap: it is the only way to know the
     # page was cut without a second COUNT query (``--limit 0`` is ``LIMIT 0``: no rows, no probe).
     limit = args.limit
@@ -661,9 +661,9 @@ def _note_pinned_skipped(db, filters, action):
     suffix = "" if skipped == 1 else "s"
     if action == "prune":
         verb = "deleted"
-        optin = "Pass --include-pinned to delete them anyway, or unpin first with `hermes sessions unpin <id>`."
+        optin = "Pass --include-pinned to delete them anyway, or unpin first with `vael sessions unpin <id>`."
     else:
-        verb, optin = "archived", "Unpin first with `hermes sessions unpin <id>` to include them."
+        verb, optin = "archived", "Unpin first with `vael sessions unpin <id>` to include them."
     print(f"Note: {skipped} pinned session{suffix} also match these filters but will NOT be {verb} "
           f"(pin is a keep flag). {optin}")
 
@@ -703,7 +703,7 @@ def _cmd_prune_or_archive(db, args, action):
     skipped_open = db.count_open_prune_matches(**filters) if prune else 0
     if skipped_open:
         print(f"Note: {skipped_open} open session{'' if skipped_open == 1 else 's'} also match these filters but "
-              "will be skipped because prune only deletes ended sessions. Use `hermes sessions delete <id>` "
+              "will be skipped because prune only deletes ended sessions. Use `vael sessions delete <id>` "
               "to remove one explicitly.")
     if not candidates:
         print(f"No sessions match ({describe_filters(filters)}).")
@@ -787,7 +787,7 @@ def _cmd_pinned(db, args):
         print(json.dumps([{"id": s["id"], **{k: s.get(k) for k in keys}} for s in pinned_rows], indent=2))
         return
     if not pinned_rows:
-        print("No pinned sessions. Pin one with: hermes sessions pin <session_id>")
+        print("No pinned sessions. Pin one with: vael sessions pin <session_id>")
         return
     print(f"{'Title':<32} {'Last Active':<13} {'Src':<9} {'ID'}\n" + "─" * 100)
     for s in pinned_rows:
@@ -953,7 +953,7 @@ def _cmd_optimize_storage(db, args):
     print("\n✓ Search index optimized.")
     _print_size_change(db, before_mb, prefix="  ")
     if result.get("vacuumed") is False:
-        print("  (VACUUM was skipped or failed — run `hermes sessions optimize` later to reclaim freed space.)")
+        print("  (VACUUM was skipped or failed — run `vael sessions optimize` later to reclaim freed space.)")
 
 
 def _cmd_repair_routing(db, args):
@@ -1183,7 +1183,7 @@ def _print_empty_store(action: str, args) -> None:
     if action == "stats":
         print("Total sessions: 0\nTotal messages: 0")
     elif action == "pinned":
-        print("[]" if getattr(args, "json", False) else "No pinned sessions. Pin one with: hermes sessions pin <session_id>")
+        print("[]" if getattr(args, "json", False) else "No pinned sessions. Pin one with: vael sessions pin <session_id>")
     else:
         print("No sessions found.")
 
@@ -1199,7 +1199,7 @@ def cmd_sessions(args, sessions_parser=None):
     if pre is not None:
         return pre(args)
     observational = action in _OBSERVATIONAL_DB_ACTIONS
-    from hermes_state import SessionDB, _default_db_path
+    from vael_state import SessionDB, _default_db_path
     try:
         db = SessionDB(read_only=observational)
     except Exception as e:
@@ -1207,7 +1207,7 @@ def cmd_sessions(args, sessions_parser=None):
         if observational and not _default_db_path().exists():
             return _print_empty_store(action, args)
         print("Could not open your session history database. "
-              "Run: hermes sessions repair to fix it (a backup is made first).")
+              "Run: vael sessions repair to fix it (a backup is made first).")
         print(f"Details: {e}")
         return 1
     try:
@@ -1216,7 +1216,7 @@ def cmd_sessions(args, sessions_parser=None):
             sessions_parser.print_help()
             return
         if action in _HELD_STORE_ACTIONS and not getattr(args, "dry_run", False) and not getattr(args, "force", False):
-            from hermes_state_holders import held_store_refusal
+            from vael_state_holders import held_store_refusal
             # Same resolver the SessionDB above opened, so the scan never depends on the db object.
             refusal = held_store_refusal(_default_db_path(), command=action)
             if refusal:
@@ -1225,12 +1225,12 @@ def cmd_sessions(args, sessions_parser=None):
         try:
             return handler(db, args)
         except sqlite3.OperationalError as e:
-            from hermes_state_repair import _schema_not_built
+            from vael_state_repair import _schema_not_built
 
             if not observational or not _schema_not_built(e):
                 raise
             # A read-only opener skips schema migration, so a store from an older release can lack a column.
-            print(f"Error: session database needs migration — run any writing hermes command first ({e})")
+            print(f"Error: session database needs migration — run any writing vael command first ({e})")
             return 1
     finally:
         db.close()

@@ -12,7 +12,7 @@ description: "A recurring prompt that re-enters your current session whenever it
 /heartbeat every 10m Check the deployment and report meaningful changes
 ```
 
-Inspired by Prime-Agent's `/heartbeat`. The Hermes adaptation keeps the strict message-flow invariants: the heartbeat is injected only between turns (never mid-run), as a plain user-role message.
+Inspired by Prime-Agent's `/heartbeat`. The VAEL adaptation keeps the strict message-flow invariants: the heartbeat is injected only between turns (never mid-run), as a plain user-role message.
 
 ## Heartbeat vs cron: which one do I want?
 

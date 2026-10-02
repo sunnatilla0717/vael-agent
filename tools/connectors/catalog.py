@@ -161,7 +161,7 @@ class _Runner:
         if target.kind == "plugin":
             entry = self.installer.plugin_entry(target.name)
             if entry is None:
-                raise LookupError(f"'{target.name}' is not in the Hermes plugin catalog")
+                raise LookupError(f"'{target.name}' is not in the VAEL plugin catalog")
             self.facts[target.name] = entry
             target.extra = _plugin_row(entry)
             target.required_env = [{"name": name, "required": False, "secret": True, "default": ""}
@@ -275,7 +275,7 @@ def target_declared_env(fact: Any) -> List[str]:
 
 
 def _plugin_row(entry: Any) -> Dict[str, Any]:
-    requirements = [f"Hermes {entry.requires_hermes}"] if entry.requires_hermes else []
+    requirements = [f"VAEL {entry.requires_hermes}"] if entry.requires_hermes else []
     requirements += [f"{name} environment variable" for name in entry.capabilities.requires_env]
     from hermes_cli.plugin_catalog_presence import presence
 

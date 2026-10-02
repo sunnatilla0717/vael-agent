@@ -1217,9 +1217,10 @@ class TestCuaDriverSessionReconnect:
         class FakeProc:
             returncode = 0
             stderr = ""
-            # Daemon returns a path, not inline base64.
-            stdout = ('{"element_count": 7, "tree_markdown": "- [0] AXButton",'
-                      ' "screenshot_file_path": "%s"}' % str(shot))
+            # Daemon returns a path, not inline base64. json.dumps (not %-interpolation)
+            # keeps a Windows path's backslashes valid JSON escape-wise.
+            stdout = json.dumps({"element_count": 7, "tree_markdown": "- [0] AXButton",
+                                 "screenshot_file_path": str(shot)})
 
         import subprocess as _sp
         orig_run = _sp.run
@@ -1470,6 +1471,12 @@ class TestCuaEnvironmentScrubbing:
                 "HOME": "/home/user",                  # safe
                 "SAFE_VAR": "allowed",                 # safe
             }
+            if os.name == "nt":
+                # The scrub resolves the profile home per call and surfaces a home-resolution
+                # failure on purpose (no fail-open secret list). Windows reads LOCALAPPDATA /
+                # USERPROFILE for that — HOME alone leaves Path.home() with nothing.
+                test_env["USERPROFILE"] = "C:\\Users\\test"
+                test_env["LOCALAPPDATA"] = "C:\\Users\\test\\AppData\\Local"
 
             def capture_env(**kwargs):
                 captured_env.update(kwargs.get("env", {}))

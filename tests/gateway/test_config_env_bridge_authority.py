@@ -36,7 +36,7 @@ def _run_gateway_import(
         import os, sys
         sys.path.insert(0, {str(PROJECT_ROOT)!r})
         if {str(routed_home or "")!r}:
-            from hermes_constants import set_hermes_home_override
+            from vael_constants import set_hermes_home_override
             set_hermes_home_override({str(routed_home or "")!r})
 
         try:
@@ -106,7 +106,7 @@ def _run_gateway_import(
 
 def _write_config(home: Path, agent_cfg: dict | None = None, display_cfg: dict | None = None,
                   timezone: str | None = None, gateway_cfg: dict | None = None) -> None:
-    import hermes_yaml as yaml
+    import vael_yaml as yaml
     cfg: dict = {}
     if agent_cfg:
         cfg["agent"] = agent_cfg

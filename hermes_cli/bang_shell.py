@@ -33,7 +33,7 @@ def parse_bang_command(text: str) -> str:
     """The shell command inside a bang submission (``""`` when bare).
 
     ``!  ls -la`` -> ``ls -la``; ``!!`` -> ``!`` — a literal second bang belongs to the user's shell
-    (history expansion), not to Hermes.
+    (history expansion), not to VAEL.
     """
     return text.strip()[1:].strip() if is_bang_command(text) else ""
 
@@ -130,7 +130,7 @@ def run_bang_command(command: str, *, cwd: Optional[str] = None, timeout: int = 
         emit(f"!: command timed out after {timeout}s")
         return 124
     except KeyboardInterrupt:
-        # Ctrl+C interrupts the command, not the Hermes session.
+        # Ctrl+C interrupts the command, not the VAEL session.
         proc.kill()
         emit("!: interrupted")
         return 130

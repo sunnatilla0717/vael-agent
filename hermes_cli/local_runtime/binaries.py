@@ -39,7 +39,7 @@ class Engine:
 
 def runtimes_root() -> Path:
     """Machine-scoped presets and server state. Binaries belong to PM's store."""
-    from hermes_constants import get_default_hermes_root
+    from vael_constants import get_default_hermes_root
 
     return get_default_hermes_root() / "runtimes" / "llamacpp"
 
@@ -127,7 +127,7 @@ def installed_engine(backend: str = "auto", *, allow_outdated: bool = True) -> E
     return engine
 
 
-# Before PM owned binaries, Hermes installed each engine to runtimes/llamacpp/b<tag>/<backend>/
+# Before PM owned binaries, VAEL installed each engine to runtimes/llamacpp/b<tag>/<backend>/
 # and wrote a manifest.json with the archive digests and the llama-server --version it saw.
 _SHA256 = re.compile(r"[0-9a-f]{64}")
 _ADOPTION_LOCK = threading.Lock()

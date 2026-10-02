@@ -1,7 +1,7 @@
 """User-facing copy for dashboard chat (``/api/pty``) start failures.
 
 ``pty_ws`` writes one red line into the terminal and closes with 1011 when the
-``hermes --tui`` child cannot be spawned. The exception text alone is either
+``vael --tui`` child cannot be spawned. The exception text alone is either
 raw errno noise (``[Errno 2] No such file or directory: 'node'``), a bare exit
 code (``SystemExit(1)`` after ``_make_tui_argv`` already printed to the server
 log), or empty (``RegistryFull``). Turn each into what happened + what to do.
@@ -14,7 +14,7 @@ from fastapi import HTTPException
 from hermes_cli.pty_session import RegistryFull
 
 CHAT_NEEDS_NODE = (
-    "Chat could not start: Hermes needs Node.js to run the terminal chat. "
+    "Chat could not start: VAEL needs Node.js to run the terminal chat. "
     "Install Node 18+ (for example from nodejs.org) and reopen this tab."
 )
 CHAT_TOO_MANY_TERMINALS = (
@@ -22,7 +22,7 @@ CHAT_TOO_MANY_TERMINALS = (
     "Close one and click Start new session."
 )
 CHAT_PROFILE_UNKNOWN = "Chat could not start: {detail} Pick another profile from the switcher and reopen this tab."
-CHAT_START_FAILED = "Chat could not start: {detail} Check the server log (`hermes dashboard` terminal) and click Start new session."
+CHAT_START_FAILED = "Chat could not start: {detail} Check the server log (`vael dashboard` terminal) and click Start new session."
 
 
 def _node_missing(exc: BaseException) -> bool:

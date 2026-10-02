@@ -4,7 +4,7 @@ import logging
 from pathlib import Path, PurePosixPath
 from typing import Dict, List, Optional, Tuple, Union
 
-from agent.skill_utils import is_excluded_skill_path
+from agent.skill_utils import is_excluded_skill_path, skill_metadata_block
 from tools.skills_hub_github import GitHubAuth, GitHubSource, _skip_bundle_file, _tree_members
 from tools.skills_hub_models import (
     SkillBundle, SkillMeta, SkillSource, _hermes_tags, _matches_query, _memo_json, _parse_frontmatter, hub,
@@ -44,7 +44,7 @@ class OptionalSkillSource(SkillSource):
     _parse_frontmatter = staticmethod(_parse_frontmatter)
 
     def __init__(self, auth: Optional[GitHubAuth] = None):
-        from hermes_constants import get_optional_skills_dir
+        from vael_constants import get_optional_skills_dir
 
         self._optional_dir = get_optional_skills_dir(Path(__file__).parent.parent / "optional-skills")
         self._auth = auth
@@ -155,7 +155,7 @@ class OptionalSkillSource(SkillSource):
 
     def _fetch_from_live_repo(self, rel: str) -> Optional[SkillBundle]:
         """Fetch an optional skill straight from the live default branch. Local installs lag
-        ``main``; rather than demanding ``hermes update`` first, resolve against the live repo.
+        ``main``; rather than demanding ``vael update`` first, resolve against the live repo.
         ``rel`` is ``category/skill`` (used verbatim) or a bare skill name (located via the repo tree)."""
         parts = _clean_rel_parts(rel.strip("/"))
         if parts is None:
@@ -217,16 +217,16 @@ class OptionalSkillSource(SkillSource):
         return self._remote_dirs
 
     def _upstream_pointer_from_content(self, content: Union[str, bytes]) -> Optional[Dict[str, str]]:
-        """Parse ``metadata.hermes.upstream: {repo: owner/name, path: ...}`` out of SKILL.md content
-        (a catalog stub); None for vendored skills."""
+        """Parse ``metadata.vael.upstream: {repo: owner/name, path: ...}`` (legacy
+        ``metadata.hermes`` accepted) out of SKILL.md content (a catalog stub);
+        None for vendored skills."""
         if isinstance(content, bytes):
             try:
                 content = content.decode("utf-8")
             except UnicodeDecodeError:
                 return None
-        meta_block = _parse_frontmatter(content).get("metadata")
-        hermes_meta = meta_block.get("hermes") if isinstance(meta_block, dict) else None
-        upstream = hermes_meta.get("upstream") if isinstance(hermes_meta, dict) else None
+        hermes_meta = skill_metadata_block(_parse_frontmatter(content))
+        upstream = hermes_meta.get("upstream")
         if not isinstance(upstream, dict):
             return None
         repo = str(upstream.get("repo", "")).strip().strip("/")
@@ -280,7 +280,7 @@ class OptionalSkillSource(SkillSource):
 
 
 class HermesIndexSource(SkillSource):
-    """Skill source backed by the centralized Hermes Skills Index: a JSON catalog on the docs site,
+    """Skill source backed by the centralized VAEL Skills Index: a JSON catalog on the docs site,
     rebuilt daily by CI, with metadata + resolved GitHub paths for every skill — search and path
     discovery cost zero GitHub API calls. When unavailable every method returns empty/None so
     downstream sources take over transparently."""

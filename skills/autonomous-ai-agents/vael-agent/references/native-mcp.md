@@ -214,7 +214,7 @@ Common causes:
 If the MCP dependencies are damaged, rebuild the recorded environment through PM:
 
 ```bash
-hermes pm repair
+vael pm repair
 ```
 
 ### Tools not appearing

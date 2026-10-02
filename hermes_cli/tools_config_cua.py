@@ -120,7 +120,7 @@ def install_cua_driver(upgrade: bool = False, show_installer_progress: bool = Tr
                          "    Fix or unset the override before running computer-use install.")
     else:
         if show_installer_progress:
-            _print_info("    Preparing the pinned cua-driver with Hermes PM...")
+            _print_info("    Preparing the pinned cua-driver with VAEL PM...")
         try:
             ensure("cua-driver", explicit=True)
         except Exception as exc:
@@ -133,7 +133,7 @@ def install_cua_driver(upgrade: bool = False, show_installer_progress: bool = Tr
     contract = _cua_driver_contract_status(binary)
     if not contract.get("ready"):
         hint = ("    Update the binary selected by HERMES_CUA_DRIVER_CMD, or unset the override."
-                if override else "    Run: hermes computer-use doctor")
+                if override else "    Run: vael computer-use doctor")
         return _fail("    cua-driver runtime contract is unusable: "
                      f"{contract.get('reason') or 'unknown error'}.", hint)
     if sys.platform == "win32" and not _repair_cua_driver_autostart_windows(
@@ -267,4 +267,4 @@ def _print_cua_platform_notes(is_windows: bool, is_linux: bool, *, fresh_install
                     else "    Grant macOS permissions if not done yet:")
         _print_info("      System Settings > Privacy & Security > Accessibility")
         _print_info("      System Settings > Privacy & Security > Screen Recording")
-        _print_info("    Allow CuaDriver.app; run `hermes computer-use permissions grant` for guidance.")
+        _print_info("    Allow CuaDriver.app; run `vael computer-use permissions grant` for guidance.")

@@ -1,4 +1,4 @@
-"""Efficiency shared metrics: what one user turn costs, what users throw away, and where Hermes
+"""Efficiency shared metrics: what one user turn costs, what users throw away, and where VAEL
 spends tokens it did not have to (spilled tool output, idle tool schemas, prompt-cache breaks).
 
 Per-turn state lives on the relay runtime's task/session objects (see ``TurnCost`` and
@@ -43,7 +43,7 @@ _SPENT_TURNS_KEPT = 64
 _PENDING_OUTPUTS_ATTR = "_shared_metrics_tool_outputs"
 _PENDING_OUTPUTS_MAX = 256
 # The one notice tools/tool_output_truncate.py writes when terminal, execute_code or MCP output was
-# cut down inside the tool, before Hermes ever saw the full text.
+# cut down inside the tool, before VAEL ever saw the full text.
 _TOOL_TRUNCATION_NOTICE = re.compile(r"\[[A-Z_ ]{1,32} TRUNCATED - [\d,]{1,20} chars omitted out of ([\d,]{1,20}) total\]")
 _NOTICE_MIN_CHARS = 1_000
 
@@ -211,8 +211,8 @@ class SessionEfficiency:
     def observe_cache(
         self, route: dict[str, str], usage: Any, started_ns: int, ended_ns: int, *, expected: bool,
     ) -> str | None:
-        """A cold primary read after a warm one on the same route is a break Hermes did not announce
-        (``expected``: Hermes already counted the cause); a gap past the cache TTL is plain expiry."""
+        """A cold primary read after a warm one on the same route is a break VAEL did not announce
+        (``expected``: VAEL already counted the cause); a gap past the cache TTL is plain expiry."""
         read = _int(usage.get("cache_read_tokens")) if isinstance(usage, dict) else None
         if read is None:
             return None
@@ -331,7 +331,7 @@ def _tool_names(tools: Iterable[Any]) -> Iterable[str]:
 
 
 def record_cache_break(agent: Any, cause: str) -> None:
-    """Hermes itself invalidated the conversation's cached prefix (compression, a rebuilt prompt)."""
+    """VAEL itself invalidated the conversation's cached prefix (compression, a rebuilt prompt)."""
     try:
         if cause not in contract.CACHE_BREAK_CAUSES or getattr(agent, "_persist_disabled", False):
             return

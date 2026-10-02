@@ -323,7 +323,7 @@ class TestAllowPrivateUrlsConfig:
         self, tmp_path, profile_order
     ):
         """The browser's independent guard must follow the active profile."""
-        from hermes_constants import (
+        from vael_constants import (
             reset_hermes_home_override,
             set_hermes_home_override,
         )

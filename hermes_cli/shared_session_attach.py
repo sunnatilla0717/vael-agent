@@ -12,7 +12,7 @@ from urllib.parse import urlencode, urlsplit
 
 import httpx
 
-from hermes_constants import get_hermes_home
+from vael_constants import get_hermes_home
 from hermes_cli.active_sessions import active_session_registry_snapshot, session_owner_details
 
 
@@ -46,9 +46,9 @@ def discover_attach_url(session_id: str, *, registry_home: str | Path | None = N
     owner = owners[0]
     endpoint = (owner.get("metadata") or {}).get("shared_runtime_url")
     if not isinstance(endpoint, str) or not endpoint:
-        raise ValueError("This chat is open in another Hermes window/terminal, and attaching "
+        raise ValueError("This chat is open in another VAEL window/terminal, and attaching "
                          "this terminal to it is not available in this build. Close the chat "
-                         "there and run hermes --resume " + session_id + " here to take it over.\n"
+                         "there and run vael --resume " + session_id + " here to take it over.\n"
                          + session_owner_details(session_id, owner))
     origin = _local_origin(endpoint, "http")
     parts = urlsplit(endpoint)
@@ -70,9 +70,9 @@ def discover_attach_url(session_id: str, *, registry_home: str | Path | None = N
                 reply = json.loads(body)
     except (httpx.HTTPError, json.JSONDecodeError) as exc:
         # Never include a remote body or authenticated URL in diagnostics.
-        raise ValueError("This chat is open in another Hermes window/terminal, and attaching "
+        raise ValueError("This chat is open in another VAEL window/terminal, and attaching "
                          "this terminal to it just failed. Use the chat where it is open, or "
-                         "close it there and run hermes --resume " + session_id + " here.\n"
+                         "close it there and run vael --resume " + session_id + " here.\n"
                          + session_owner_details(session_id, owner)) from exc
     if not isinstance(reply, dict) or any(reply.get(key) != value for key, value in {
         "session_id": session_id, "lease_id": owner["lease_id"], "profile_home": str(home),

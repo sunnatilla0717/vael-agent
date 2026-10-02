@@ -9,7 +9,7 @@ import os
 from pathlib import Path
 
 from tui_gateway import server
-import hermes_state_registry as registry
+import vael_state_registry as registry
 
 
 original_target = server._config_model_target

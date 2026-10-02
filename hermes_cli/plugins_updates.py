@@ -69,7 +69,7 @@ class CheckResult:
 
 def _read_manifest_field(plugin_dir: Path, key: str) -> Optional[str]:
     """One field from the installed plugin.yaml (claims, not provenance)."""
-    import hermes_yaml as yaml
+    import vael_yaml as yaml
 
     manifest = plugin_dir / "plugin.yaml"
     if not manifest.is_file():
@@ -99,7 +99,7 @@ def check_local_provenance(prov: Provenance) -> CheckResult:
         )
         return result
     if prov.klass is ProvenanceClass.SELF_CLONED:
-        result.reason = "self-cloned; run `hermes plugins adopt` first"
+        result.reason = "self-cloned; run `vael plugins adopt` first"
         return result
 
     row = prov.row or {}
@@ -117,13 +117,13 @@ def check_local_provenance(prov: Provenance) -> CheckResult:
         # threat class as a swap; never adopt silently
         result.needs_fixing = (
             f"manifest declares update_url {claimed!r} but no url was saved "
-            "at install; run `hermes plugins trust-update-url` after review"
+            "at install; run `vael plugins trust-update-url` after review"
         )
         return result
     if saved is not None and claimed != saved:
         result.needs_fixing = (
             f"update_url mismatch: saved {saved!r}, manifest declares "
-            f"{claimed!r}; run `hermes plugins trust-update-url` after review"
+            f"{claimed!r}; run `vael plugins trust-update-url` after review"
         )
         return result
 
@@ -237,7 +237,7 @@ def check_provenanced(
 def parse_feed_yml(text: str) -> dict:
     """The electron-updater-derived feed shape: version, released,
     min_hermes, artifacts{git,bundle,bundle_sha256}, notes_url."""
-    import hermes_yaml as yaml
+    import vael_yaml as yaml
 
     try:
         data = yaml.safe_load(text)
@@ -362,7 +362,7 @@ def https_update_url(url: object) -> str:
 def default_fetch(url: str) -> str:
     """The real feed fetcher: url -> text (raises on failure).
 
-    ONE implementation shared by the manual ``hermes plugins
+    ONE implementation shared by the manual ``vael plugins
     check-updates`` and the cadence tick — callers never re-derive it.
     """
     import urllib.request

@@ -1,4 +1,4 @@
-"""IRC Platform Adapter for Hermes Agent — stdlib asyncio only, zero external dependencies.
+"""IRC Platform Adapter for VAEL Agent — stdlib asyncio only, zero external dependencies.
 
 config.yaml ``gateway.platforms.irc.extra`` keys: server, port (6697), nickname (hermes-bot), channel,
 use_tls (true), server_password, nickserv_password, allowed_users ([] = allow all), max_message_length (450).
@@ -338,7 +338,7 @@ def validate_config(config) -> bool:
 
 
 def interactive_setup() -> None:
-    """`hermes gateway setup` flow (lazy hermes_cli imports keep the plugin importable outside the CLI)."""
+    """`vael gateway setup` flow (lazy hermes_cli imports keep the plugin importable outside the CLI)."""
     from hermes_cli.setup import (
         prompt, prompt_yes_no, save_env_value, get_env_value, print_header, print_info, print_warning, print_success)
     from hermes_cli.setup_platforms import declines_reconfigure
@@ -358,7 +358,7 @@ def interactive_setup() -> None:
     existing_server = get_env_value("IRC_SERVER")
     if declines_reconfigure("IRC", "Reconfigure IRC?", "IRC_SERVER"):
         return
-    info("Connect Hermes to an IRC network. Uses Python stdlib — no extra packages needed.",
+    info("Connect VAEL to an IRC network. Uses Python stdlib — no extra packages needed.",
          "   Works with Libera.Chat, OFTC, your own ZNC/InspIRCd, etc.")
     print()
     if not _required("IRC server hostname (e.g. irc.libera.chat)", "IRC_SERVER", existing_server or "", "Server"):
@@ -375,7 +375,7 @@ def interactive_setup() -> None:
     elif get_env_value("IRC_PORT"):
         save_env_value("IRC_PORT", "")  # user cleared the prompt; drop the override
     for label, env, what in (("Bot nickname (e.g. hermes-bot)", "IRC_NICKNAME", "Nickname"),
-                             ("Channel to join (e.g. #hermes — comma-separate for multiple)", "IRC_CHANNEL", "Channel")):
+                             ("Channel to join (e.g. #vael — comma-separate for multiple)", "IRC_CHANNEL", "Channel")):
         if not _required(label, env, get_env_value(env) or "", what):
             return
     print()
@@ -406,7 +406,7 @@ def interactive_setup() -> None:
             print_info("No nicks allowed — the bot will ignore all messages until you add nicks.")
     print()
     print_success("IRC configuration saved to ~/.hermes/.env")
-    print_info("Restart the gateway for changes to take effect: hermes gateway restart")
+    print_info("Restart the gateway for changes to take effect: vael gateway restart")
 
 
 def is_connected(config) -> bool:
@@ -583,7 +583,7 @@ async def _standalone_send(pconfig, chat_id: str, message: str, *, thread_id: Op
 
 
 def register(ctx):
-    """Plugin entry point: called by the Hermes plugin system."""
+    """Plugin entry point: called by the VAEL plugin system."""
     ctx.register_platform(
         name="irc",
         label="IRC",

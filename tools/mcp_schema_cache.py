@@ -1,5 +1,5 @@
 """Persistent MCP tool-schema cache for lazy server startup: per-server tool manifests on
-disk so Hermes can register MCP tools into the agent snapshot without spawning the stdio
+disk so VAEL can register MCP tools into the agent snapshot without spawning the stdio
 child at idle dashboard startup. Entries are keyed by server name + a fingerprint of the
 connection config (command/args/url/tools filters)."""
 
@@ -20,7 +20,7 @@ _cache_lock = threading.Lock()
 
 
 def _cache_path() -> Path:
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
     return get_hermes_home() / "cache" / _CACHE_FILENAME
 
 

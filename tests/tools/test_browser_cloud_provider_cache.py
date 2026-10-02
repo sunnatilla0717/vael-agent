@@ -27,7 +27,7 @@ def _reset_resolver_state(monkeypatch):
 
 class TestCloudProviderCachePolicy:
     def test_cache_is_isolated_by_hermes_home(self, tmp_path, monkeypatch):
-        from hermes_constants import (
+        from vael_constants import (
             get_hermes_home,
             reset_hermes_home_override,
             set_hermes_home_override,
@@ -69,7 +69,7 @@ class TestCloudProviderCachePolicy:
     ):
         from agent.browser_provider import BrowserProvider
         import agent.browser_registry as browser_registry
-        from hermes_constants import (
+        from vael_constants import (
             reset_hermes_home_override,
             set_hermes_home_override,
         )
@@ -126,7 +126,7 @@ class TestCloudProviderCachePolicy:
 
         from agent.browser_provider import BrowserProvider
         import agent.browser_registry as browser_registry
-        from hermes_constants import (
+        from vael_constants import (
             reset_hermes_home_override,
             set_hermes_home_override,
         )

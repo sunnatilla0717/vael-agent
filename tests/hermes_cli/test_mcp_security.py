@@ -130,7 +130,7 @@ def test_explicit_registration_skips_dangerous_entry_before_connect(monkeypatch)
 
 
 def test_migration_disables_existing_dangerous_entry(tmp_path):
-    import hermes_yaml as yaml
+    import vael_yaml as yaml
 
     from hermes_cli.config import load_config, migrate_config
 
@@ -153,7 +153,7 @@ def test_profile_mcp_write_skips_dangerous_entry(tmp_path):
     from hermes_cli.config import load_config
     from hermes_cli.web_models import MCPServerCreate
     from hermes_cli.web_server_profiles import _write_profile_mcp_servers
-    from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+    from vael_constants import reset_hermes_home_override, set_hermes_home_override
 
     profile_dir = tmp_path / "profile"
     profile_dir.mkdir()

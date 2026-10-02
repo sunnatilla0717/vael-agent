@@ -54,7 +54,7 @@ def tmp_cache_dir(tmp_path):
     def _fake_get(*_args, **_kw):
         return cache_dir
 
-    with patch("hermes_constants.get_hermes_dir", _fake_get):
+    with patch("vael_constants.get_hermes_dir", _fake_get):
         yield cache_dir
 
 

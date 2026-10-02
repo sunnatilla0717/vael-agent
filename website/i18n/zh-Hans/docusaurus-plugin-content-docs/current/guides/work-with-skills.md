@@ -1,12 +1,12 @@
 ---
 sidebar_position: 12
 title: "使用 Skills"
-description: "查找、安装、使用和创建 skills——按需加载的知识文档，用于教会 Hermes 新的工作流程"
+description: "查找、安装、使用和创建 skills——按需加载的知识文档，用于教会 VAEL 新的工作流程"
 ---
 
 # 使用 Skills
 
-Skills（技能）是按需加载的知识文档，用于教会 Hermes 如何处理特定任务——从生成 ASCII 艺术到管理 GitHub PR。本指南介绍日常使用方法。
+Skills（技能）是按需加载的知识文档，用于教会 VAEL 如何处理特定任务——从生成 ASCII 艺术到管理 GitHub PR。本指南介绍日常使用方法。
 
 完整技术参考请见 [Skills 系统](../user-guide/features/skills.md)。
 
@@ -14,7 +14,7 @@ Skills（技能）是按需加载的知识文档，用于教会 Hermes 如何处
 
 ## 查找 Skills
 
-每个 Hermes 安装都内置了捆绑的 skills。查看可用列表：
+每个 VAEL 安装都内置了捆绑的 skills。查看可用列表：
 
 ```bash
 # 在任意聊天会话中：
@@ -70,7 +70,7 @@ excalidraw        Create hand-drawn style diagrams using Excalidraw...
 /excalidraw
 ```
 
-你也可以通过自然对话触发 skills——告诉 Hermes 使用某个特定 skill，它会通过 `skill_view` 工具加载。
+你也可以通过自然对话触发 skills——告诉 VAEL 使用某个特定 skill，它会通过 `skill_view` 工具加载。
 
 ### 渐进式加载
 
@@ -86,7 +86,7 @@ Skills 采用 token 高效的加载模式，agent 不会一次性加载所有内
 
 ## 从 Hub 安装
 
-官方可选 skills 随 Hermes 一起发布，但默认未激活，需显式安装：
+官方可选 skills 随 VAEL 一起发布，但默认未激活，需显式安装：
 
 ```bash
 # 安装官方可选 skill
@@ -135,7 +135,7 @@ skill_view("writing-plans")
 
 插件 skills **不会**列在系统 prompt 中，也不出现在 `skills_list` 中。它们是按需加载的——当你知道某个插件提供了某个 skill 时，显式加载它。加载后，agent 会看到一个横幅，列出同一插件的其他 skills。
 
-关于如何在自己的插件中捆绑 skills，请参见 [构建 Hermes 插件 → 捆绑 skills](../developer-guide/plugins/index.md#bundle-skills)。
+关于如何在自己的插件中捆绑 skills，请参见 [构建 VAEL 插件 → 捆绑 skills](../developer-guide/plugins/index.md#bundle-skills)。
 
 ---
 
@@ -153,7 +153,7 @@ metadata:
         url: "https://developers.google.com/tenor/guides/quickstart"
 ```
 
-当带有配置的 skill 首次加载时，Hermes 会提示你输入相应值，并将其存储在 `config.yaml` 的 `skills.config.*` 下。
+当带有配置的 skill 首次加载时，VAEL 会提示你输入相应值，并将其存储在 `config.yaml` 的 `skills.config.*` 下。
 
 通过 CLI 管理 skill 配置：
 
@@ -241,7 +241,7 @@ hermes chat -q "/my-skill help me with the thing"
 Skill 会自动出现——无需注册。放入 `~/.hermes/skills/` 即可立即生效。
 
 :::info
-Agent 也可以使用 `skill_manage` 自行创建和更新 skills。解决复杂问题后，Hermes 可能会主动提议将该方法保存为 skill，以便下次使用。
+Agent 也可以使用 `skill_manage` 自行创建和更新 skills。解决复杂问题后，VAEL 可能会主动提议将该方法保存为 skill，以便下次使用。
 :::
 
 ---
@@ -279,11 +279,11 @@ hermes skills
 
 **保持 skills 聚焦。** 试图涵盖"所有 DevOps"的 skill 会过于冗长且模糊。专注于"将 Python 应用部署到 Fly.io"的 skill 才足够具体，真正有用。
 
-**让 agent 创建 skills。** 完成复杂的多步骤任务后，Hermes 通常会主动提议将该方法保存为 skill。接受它——这些由 agent 编写的 skills 会捕捉到完整的工作流程，包括过程中发现的各种坑。
+**让 agent 创建 skills。** 完成复杂的多步骤任务后，VAEL 通常会主动提议将该方法保存为 skill。接受它——这些由 agent 编写的 skills 会捕捉到完整的工作流程，包括过程中发现的各种坑。
 
 **使用分类目录。** 将 skills 整理到子目录中（`~/.hermes/skills/devops/`、`~/.hermes/skills/research/` 等），保持列表整洁，并帮助 agent 更快找到相关 skills。
 
-**及时更新过时的 skills。** 如果使用某个 skill 时遇到它未覆盖的问题，告诉 Hermes 用你学到的内容更新该 skill。不维护的 skills 会成为负担。
+**及时更新过时的 skills。** 如果使用某个 skill 时遇到它未覆盖的问题，告诉 VAEL 用你学到的内容更新该 skill。不维护的 skills 会成为负担。
 
 ---
 

@@ -9,7 +9,7 @@ import time
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
-from hermes_constants import hermes_home_key
+from vael_constants import hermes_home_key
 from tools.connectors.contract import Actor, SettleReason, TargetState
 from tools.connectors.gateway.config import operation_session_key
 from tools.connectors.operation import ConnectionOperation, DetachedOperation, IllegalTransition, Target
@@ -117,7 +117,7 @@ class _CatalogBackend:
 
     def installs_with_oauth(self, name: str) -> bool:
         """A catalog entry whose own OAuth the card must run. Provider-mediated OAuth is not one:
-        its token comes from ``hermes auth <provider>``, so the plain probe covers it."""
+        its token comes from ``vael auth <provider>``, so the plain probe covers it."""
         auth = _catalog_entry(name).auth
         return auth.type == "oauth" and not auth.provider
 
@@ -629,7 +629,7 @@ def _install_now(runner: _Runner, operation: ConnectionOperation, target: Target
         _fail(operation, target, _detail(exc, runner, target))
         return
     if missing:
-        from hermes_constants import display_hermes_home
+        from vael_constants import display_hermes_home
 
         _fail(operation, target, f"set {', '.join(missing)} in the environment or "
                                  f"{display_hermes_home()}/.env, then install again")

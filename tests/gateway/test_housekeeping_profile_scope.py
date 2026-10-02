@@ -57,7 +57,7 @@ def two_homes(tmp_path, monkeypatch):
     # hermes_state is already imported, and that pin WINS over ``get_hermes_home()`` inside
     # ``_default_db_path()`` — exactly the per-profile resolution these tests exist to prove.
     # Restore the import-time sentinel so an argless ``acquire()`` resolves through the scope.
-    import hermes_state
+    import vael_state
     monkeypatch.setattr(hermes_state, "DEFAULT_DB_PATH", hermes_state._IMPORT_DEFAULT_DB_PATH)
     # Disabling the hermetic pin is only safe while the sentinel still resolves INSIDE the sandbox:
     # a resolution that escaped to the real home would have these tests writing the live store.
@@ -72,7 +72,7 @@ def _record_credential_chores(monkeypatch):
     import tools.skills_sync_client as ssc
     import tools.skills_sync_client_org as sso
     from hermes_cli.auth_nous import _nous_inference_env_override
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
 
     seen: dict = {"sync": [], "org": [], "curator": []}
 
@@ -94,7 +94,7 @@ def test_multiplexed_sync_ticks_run_once_per_profile_in_its_own_scope(two_homes,
     A's tick reads A's override, B's reads B's (B never sees A's), and no fail-closed credential
     read fires the ``no profile secret scope`` warning. The ambient home is untouched afterwards."""
     from agent.secret_scope import set_multiplex_active
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
 
     a, b = two_homes
     seen = _record_credential_chores(monkeypatch)
@@ -119,7 +119,7 @@ def test_multiplexed_auto_archive_tick_sweeps_every_served_profile_store(two_hom
     every profile it owns, so a served secondary would have had no archiver at all.
     """
     from agent.secret_scope import set_multiplex_active
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     a, b = two_homes
     swept: list = []
@@ -147,7 +147,7 @@ def test_multiplexed_maintenance_tick_prunes_every_served_profile_store(two_home
     Real stores, real config files: nothing here is patched.
     """
     from agent.secret_scope import set_multiplex_active
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     homes = two_homes
     for home in homes:
@@ -186,10 +186,10 @@ def test_a_failing_profile_does_not_strand_the_profiles_after_it(two_homes, monk
     running) ended the per-profile loop before B, on every tick. Serve defers each served
     profile's sweep to this loop, so B had no archiver at all.
     """
-    import hermes_state_registry as registry
+    import vael_state_registry as registry
     from agent.secret_scope import set_multiplex_active
-    from hermes_constants import get_hermes_home
-    from hermes_state import SessionDB
+    from vael_constants import get_hermes_home
+    from vael_state import SessionDB
 
     a, b = two_homes
     swept: list = []
@@ -225,7 +225,7 @@ def test_profile_scope_setup_failure_restores_the_callers_home(two_homes, monkey
     resolving ``get_hermes_home()`` to the failed profile for every later unscoped read.
     """
     from agent.secret_scope import current_secret_scope
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
 
     a, b = two_homes
     scope_before = current_secret_scope()
@@ -250,7 +250,7 @@ def test_prune_unlinks_transcripts_under_the_configured_sessions_dir(two_homes, 
     override left every pruned session's ``.json``/``.jsonl``/``request_dump_*`` orphaned forever.
     """
     from agent.secret_scope import set_multiplex_active
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     a, b = two_homes
     override = tmp_path / "custom-transcripts"

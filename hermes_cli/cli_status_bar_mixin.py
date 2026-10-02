@@ -661,7 +661,7 @@ class CLIStatusBarMixin:
         self._pet_kitty_image_id = 0
 
     def _pet_resolve_config(self) -> None:
-        """(Re)resolve the active pet from config so ``/pet`` / ``hermes pets`` changes apply
+        """(Re)resolve the active pet from config so ``/pet`` / ``vael pets`` changes apply
         without a restart (mirrors the TUI's steady poll). Fail-open: any problem disables."""
         try:
             from agent.pet import constants, store

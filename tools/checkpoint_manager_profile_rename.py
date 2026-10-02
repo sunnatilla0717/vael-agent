@@ -36,7 +36,7 @@ def _rebase_ledger_paths(ledger: Dict, old_workdir: Path, new_workdir: Path) -> 
 def _rekey_project(store: Path, meta: Dict, old_workdir: Path, new_workdir: Path) -> None:
     """Install the project under its new hash, then drop the old identity.
 
-    A retry (``hermes profile migrate-identity``) after a mid-way failure finds the new identity
+    A retry (``vael profile migrate-identity``) after a mid-way failure finds the new identity
     already populated, possibly with checkpoints taken under the new name since. Those must win:
     the new ref is only created when absent, and only when the surviving old tip is one of its
     ancestors do we drop the old identity and fold the old ledger under the new one. A new ref

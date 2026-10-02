@@ -8,7 +8,7 @@ description: "完全跳过 LLM 的经典看门狗 cron 任务——脚本按计�
 
 有时你已经清楚地知道要发送什么消息。你不需要 agent 来推理——你只需要一个脚本按计时器运行，并将其输出（如有）发送到 Telegram / Discord / Slack / Signal。
 
-Hermes 将此称为**无 agent 模式**。这是去掉 LLM 的 cron 系统。
+VAEL 将此称为**无 agent 模式**。这是去掉 LLM 的 cron 系统。
 
 <!-- ascii-guard-ignore -->
 ```
@@ -45,13 +45,13 @@ Hermes 将此称为**无 agent 模式**。这是去掉 LLM 的 cron 系统。
 
 ## 通过聊天创建
 
-无 agent 模式的真正优势在于：agent 本身可以为你设置看门狗——无需编辑器、无需 shell、无需记忆 CLI 参数。你描述需求，Hermes 编写脚本、安排计划，并告知你何时触发。
+无 agent 模式的真正优势在于：agent 本身可以为你设置看门狗——无需编辑器、无需 shell、无需记忆 CLI 参数。你描述需求，VAEL 编写脚本、安排计划，并告知你何时触发。
 
 ### 示例对话
 
 > **你：** 每 5 分钟检查一次，如果内存超过 85% 就在 telegram 通知我
 >
-> **Hermes：** *（写入 `~/.hermes/scripts/memory-watchdog.sh`，然后以 `no_agent=true` 调用 `cronjob(...)`）*
+> **VAEL：** *（写入 `~/.hermes/scripts/memory-watchdog.sh`，然后以 `no_agent=true` 调用 `cronjob(...)`）*
 >
 > 已设置。每 5 分钟运行一次，仅在内存超过 85% 时告警 Telegram。脚本：`memory-watchdog.sh`。任务 ID：`abc123`。
 
@@ -85,7 +85,7 @@ cronjob(
 
 ### agent 为你决定的内容
 
-当你的请求类似"当 X 时告警我"或"每 N 分钟检查 Y，如果 Z 则通知我"，Hermes 的 `cronjob` 工具描述会指示它在消息内容完全由脚本决定时使用 `no_agent=True`。当请求需要推理时（*"总结新 issue"*、*"挑选最有趣的头条"*、*"起草一条友好提醒"*），则回退到普通的 LLM 驱动路径。
+当你的请求类似"当 X 时告警我"或"每 N 分钟检查 Y，如果 Z 则通知我"，VAEL 的 `cronjob` 工具描述会指示它在消息内容完全由脚本决定时使用 `no_agent=True`。当请求需要推理时（*"总结新 issue"*、*"挑选最有趣的头条"*、*"起草一条友好提醒"*），则回退到普通的 LLM 驱动路径。
 
 你不必自己指定 `--no-agent`。只需描述你想要的行为即可。
 
@@ -95,13 +95,13 @@ agent 可以用与创建任务相同的方式暂停、恢复、编辑和删除�
 
 > **你：** 今晚先停掉内存看门狗
 >
-> **Hermes：** *（调用 `cronjob(action='pause', job_id='abc123')`）*
+> **VAEL：** *（调用 `cronjob(action='pause', job_id='abc123')`）*
 >
 > 已暂停。说"重新开启"或执行 `hermes cron resume abc123` 可恢复。
 
 > **你：** 改成每 15 分钟一次
 >
-> **Hermes：** *（调用 `cronjob(action='update', job_id='abc123', schedule='every 15m')`）*
+> **VAEL：** *（调用 `cronjob(action='update', job_id='abc123', schedule='every 15m')`）*
 
 完整生命周期（创建 / 列出 / 更新 / 暂停 / 恢复 / 立即运行 / 删除）均可由 agent 操作，无需你学习任何 CLI 命令。
 
@@ -164,7 +164,7 @@ hermes cron run <job_id>    # 触发一次以测试
 
 ### 使用你自己的 Python 环境
 
-默认情况下，Python cron 脚本运行在 Hermes 自身的 Python 环境中，该环境只包含 Hermes 自身的依赖——因此如果你的脚本 `import openpyxl`、数据库驱动或任何其他你安装的包，会因 `ModuleNotFoundError` 而失败。
+默认情况下，Python cron 脚本运行在 VAEL 自身的 Python 环境中，该环境只包含 VAEL 自身的依赖——因此如果你的脚本 `import openpyxl`、数据库驱动或任何其他你安装的包，会因 `ModuleNotFoundError` 而失败。
 
 你可以通过 `--interpreter` 让任务指向一个**用户自管的 venv**：
 
@@ -185,7 +185,7 @@ hermes cron create "0 8 * * *" \
 
 规则：
 
-- 该 venv 是**用户自管**的。Hermes 不会创建、冻结、恢复或向其中安装包——它只是调用你指定的路径。
+- 该 venv 是**用户自管**的。VAEL 不会创建、冻结、恢复或向其中安装包——它只是调用你指定的路径。
 - 路径必须是**绝对路径或以 `~` 开头**（例如 `~/venvs/reporting/bin/python3`）。像 `python3` 这样的裸名会被拒绝，因为它们在 `PATH` 变化时并不稳定。
 - 必须是 **Python 可执行文件**（`python`、`python3`、`python3.12` 等），符号链接的目标同样要求如此——`/bin/bash` 或其他解释器会被拒绝。
 - 仅对 **Python 脚本**生效。`.sh` / `.bash` 始终用 bash 运行，不受影响。
@@ -264,11 +264,11 @@ hermes cron create "*/15 * * * *" \
 
 | 方式 | 运行内容 | 适用场景 |
 |----------|-----------|-------------|
-| `cronjob --no-agent`（本页） | 你的脚本，由 Hermes 调度 | 不需要推理的周期性看门狗 / 告警 / 指标 |
+| `cronjob --no-agent`（本页） | 你的脚本，由 VAEL 调度 | 不需要推理的周期性看门狗 / 告警 / 指标 |
 | `cronjob`（默认，LLM） | 带可选预检脚本的 agent | 消息内容需要对数据进行推理时 |
-| OS cron + `curl` 到 [webhook 订阅](../user-guide/messaging/webhooks.md) | 你的脚本，由 OS 调度 | 当 Hermes 本身可能不健康时（即被监控对象） |
+| OS cron + `curl` 到 [webhook 订阅](../user-guide/messaging/webhooks.md) | 你的脚本，由 OS 调度 | 当 VAEL 本身可能不健康时（即被监控对象） |
 
-对于必须在 **gateway 宕机时也能触发**的关键系统健康看门狗，请使用 OS 级 cron 配合 `curl` 调用 Hermes webhook 订阅（或任何外部告警端点）——这些作为独立 OS 进程运行，不依赖 Hermes 是否在线。当被监控对象是外部系统时，in-gateway 调度器才是正确选择。
+对于必须在 **gateway 宕机时也能触发**的关键系统健康看门狗，请使用 OS 级 cron 配合 `curl` 调用 VAEL webhook 订阅（或任何外部告警端点）——这些作为独立 OS 进程运行，不依赖 VAEL 是否在线。当被监控对象是外部系统时，in-gateway 调度器才是正确选择。
 
 ## 相关文档
 

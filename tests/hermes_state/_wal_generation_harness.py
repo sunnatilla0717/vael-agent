@@ -18,9 +18,9 @@ from pathlib import Path
 
 import pytest
 
-import hermes_state
-import hermes_state_wal
-from hermes_state import SessionDB
+import vael_state
+import vael_state_wal
+from vael_state import SessionDB
 
 
 def pin_wal(monkeypatch) -> None:
@@ -120,11 +120,11 @@ _GATEWAY_CHILD = textwrap.dedent(
     repo, hermes_home, db_path = sys.argv[1], sys.argv[2], sys.argv[3]
     sys.path.insert(0, repo)
     os.environ["HERMES_HOME"] = hermes_home
-    import hermes_state_wal
+    import vael_state_wal
     if hermes_state_wal.is_sqlite_wal_reset_vulnerable():
         hermes_state_wal.is_sqlite_wal_reset_vulnerable = lambda version_info=None: False
     hermes_state_wal.resolve_journal_mode = lambda: "wal"
-    from hermes_state import DeletedWalGenerationError, SessionDB
+    from vael_state import DeletedWalGenerationError, SessionDB
 
     def emit(**e):
         sys.stdout.write(json.dumps(e) + "\\n"); sys.stdout.flush()

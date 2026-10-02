@@ -37,13 +37,13 @@ def _record_bytecode_fingerprint() -> None:
 def _sweep_stale_bytecode_if_checkout_changed() -> None:
     """Clear ``__pycache__`` at launch when the checkout fingerprint changed since the last sweep.
 
-    Update-time clears can't close the stale-bytecode class: ``hermes update`` runs
+    Update-time clears can't close the stale-bytecode class: ``vael update`` runs
     the PRE-pull updater code and manual pulls never run it. Cheap file reads, no
     git subprocess. Never raises.
 
     The stale-bytecode bug class (issues #6207, #60242; Dhruv's WhatsApp ``cannot import name
     'parse_model_flags_detailed'`` report) has one shared shape: the checkout's ``.py`` files change (git
-    pull inside ``hermes update``, a manual ``git pull``, a ZIP update, a file-sync restore) while
+    pull inside ``vael update``, a manual ``git pull``, a ZIP update, a file-sync restore) while
     ``__pycache__`` retains bytecode from the previous revision, and a later process trusts the stale
     ``.pyc`` instead of the fresh source.
     """

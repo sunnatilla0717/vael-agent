@@ -18,7 +18,7 @@ enforce the contract without reconstructing (or silently truncating) it.
 
 `managed_uv._reload_hermes_constants` is the scar proving the failure
 mode is real: a live updater hit ``cannot import name 'venv_python_path'
-from 'hermes_constants'`` while the NEW file on disk plainly held it.
+from 'vael_constants'`` while the NEW file on disk plainly held it.
 
 If this test fails you have two honest options:
 * restore the name (a stub with the old signature is fine), or

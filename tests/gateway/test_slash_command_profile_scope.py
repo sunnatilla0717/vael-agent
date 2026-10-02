@@ -61,9 +61,9 @@ async def test_insights_opens_session_db_under_the_routed_home(
     runner, profile_home, monkeypatch
 ):
     import agent.insights as insights_mod
-    import hermes_state
+    import vael_state
     from gateway.run import _profile_runtime_scope
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
 
     seen: dict = {}
 

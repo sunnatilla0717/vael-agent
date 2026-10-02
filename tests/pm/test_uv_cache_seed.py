@@ -10,7 +10,7 @@ import shutil
 
 import pytest
 
-from hermes_constants import get_default_hermes_root
+from vael_constants import get_default_hermes_root
 from pm import packages
 from pm import paths
 

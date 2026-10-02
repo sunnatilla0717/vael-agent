@@ -357,7 +357,7 @@ def _load_prefill_messages() -> list:
     ``agent.*``). Desktop/TUI agents never run the CLI bootstrap, so without this the setting was
     ignored there (#60456). Relative paths resolve against the active profile home, per call."""
     from hermes_cli.cli_config_load import _load_prefill_messages as _load, _resolve_prefill_messages_file
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
     return _load(_resolve_prefill_messages_file(_load_cfg()), get_hermes_home())
 
 
@@ -434,7 +434,7 @@ def _side_agent_session_db(parent_db):
     if parent_db is None or path is None:
         yield parent_db
         return
-    from hermes_state_registry import acquire, release_or_close
+    from vael_state_registry import acquire, release_or_close
     db = acquire(path)
     try:
         yield db

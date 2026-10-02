@@ -104,7 +104,7 @@ def coerce_privacy_filter(value: Any) -> str:
 
 def _clean_reasoning_effort(value: Any) -> str | None:
     """Canonical per-slot reasoning effort, or None when unset/invalid."""
-    from hermes_constants import parse_reasoning_effort
+    from vael_constants import parse_reasoning_effort
     parsed = None if value is None or value is True else parse_reasoning_effort(value)
     if parsed is None:
         return None
@@ -287,7 +287,7 @@ def resolve_moa_preset(config: Any, name: str | None = None) -> dict[str, Any]:
         available = ", ".join(cfg["presets"]) or "(none)"
         raise MoAPresetNotFoundError(
             f"MoA preset '{preset_name}' was not found. Available presets: "
-            f"{available}. Run `hermes moa list`.")
+            f"{available}. Run `vael moa list`.")
     return deepcopy(preset)
 
 

@@ -122,7 +122,7 @@ def test_an_unbuildable_target_environment_is_refused_and_no_turn_is_spawned(fle
 def test_the_child_env_is_built_for_the_target_even_while_a_sibling_home_override_is_active(fleet, monkeypatch):
     """Under multiplexing the tick runs with the JOB's profile as the home override; the strip must
     still be resolved against the delivery target, not against whichever home is ambient."""
-    from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+    from vael_constants import reset_hermes_home_override, set_hermes_home_override
 
     root, beta = fleet
     gamma = root / "profiles" / "gamma"

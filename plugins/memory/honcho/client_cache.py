@@ -50,7 +50,7 @@ def _fingerprint_basis(block: dict, key_fn) -> str:
 def _credential_fingerprint(config: HonchoClientConfig | None) -> str:
     """Stable identity for the credential a client will be built with, or ''. Must NOT change
     on in-place access-token rotation, but must change on account switch so
-    'hermes honcho setup' yields a NEW cache identity."""
+    'vael honcho setup' yields a NEW cache identity."""
     from plugins.memory.honcho.client import _host_block
 
     try:

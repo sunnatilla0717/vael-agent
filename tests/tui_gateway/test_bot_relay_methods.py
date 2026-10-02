@@ -255,7 +255,7 @@ def _lease_open_bot_chat(home, *, live_session_id="live-in-other-process"):
     """A Bot Chat leased by a mailbox-capable live owner in the target's home (real state.db row,
     real lease) — what a Desktop-opened Bot Chat looks like from the relay handler's side."""
     from hermes_cli.active_sessions import try_acquire_active_session
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     ops_home = home / "profiles" / "ops"
     db = SessionDB(db_path=ops_home / "state.db")

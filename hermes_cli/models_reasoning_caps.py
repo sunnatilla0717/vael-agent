@@ -63,7 +63,7 @@ def parse_openrouter_reasoning_capabilities(item: Any) -> Optional[dict[str, Any
 # ── Disk mirror ────────────────────────────────────────────────────────
 #
 # In-process caches are always cold in a short-lived process, and every consumer is on a hot path
-# that must never block on HTTP — so without a disk copy, `hermes -p`, a cron job, or a freshly
+# that must never block on HTTP — so without a disk copy, `vael -p`, a cron job, or a freshly
 # booted gateway answers "capability unknown" for its whole first turn. One file holds every
 # catalog keyed by URL: OpenRouter and the Portal list different models, and a staging Portal must
 # not answer for production.
@@ -71,7 +71,7 @@ _REASONING_CAPS_DISK_TTL_SECONDS = 24 * 3600
 
 
 def _reasoning_caps_disk_path() -> Path:
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
     return get_hermes_home() / "cache" / "reasoning_caps.json"
 
 

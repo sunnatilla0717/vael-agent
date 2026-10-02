@@ -15,8 +15,8 @@ import sqlite3
 
 import pytest
 
-from hermes_state import SessionDB
-from hermes_state_dbfile import collect_state_db_stats, count_db_holders
+from vael_state import SessionDB
+from vael_state_dbfile import collect_state_db_stats, count_db_holders
 
 
 @pytest.fixture()

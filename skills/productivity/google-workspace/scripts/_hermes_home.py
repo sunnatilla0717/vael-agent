@@ -1,6 +1,6 @@
 """Resolve HERMES_HOME for standalone skill scripts.
 
-Skill scripts may run outside the Hermes process (e.g. system Python,
+Skill scripts may run outside the VAEL process (e.g. system Python,
 nix env, CI) where ``hermes_constants`` is not importable.  This module
 provides the same ``get_hermes_home()`` and ``display_hermes_home()``
 contracts as ``hermes_constants`` without requiring it on ``sys.path``.
@@ -20,12 +20,12 @@ import os
 from pathlib import Path
 
 try:
-    from hermes_constants import display_hermes_home as display_hermes_home
-    from hermes_constants import get_hermes_home as get_hermes_home
+    from vael_constants import display_hermes_home as display_hermes_home
+    from vael_constants import get_hermes_home as get_hermes_home
 except (ModuleNotFoundError, ImportError):
 
     def get_hermes_home() -> Path:
-        """Return the Hermes home directory (default: ~/.hermes).
+        """Return the VAEL home directory (default: ~/.hermes).
 
         Mirrors ``hermes_constants.get_hermes_home()``."""
         val = os.environ.get("HERMES_HOME", "").strip()

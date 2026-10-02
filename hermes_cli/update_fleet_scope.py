@@ -1,10 +1,10 @@
-"""Home scoping for ``hermes update``'s fleet restart (#93349).
+"""Home scoping for ``vael update``'s fleet restart (#93349).
 
 The restart phase enumerates ``hermes-gateway*``/``hermes-serve*`` units, ``ai.hermes.gateway*``
 LaunchAgents and every ``gateway run`` process on the host. Those are HOST-wide namespaces: a
-second Hermes install (another ``HERMES_HOME`` root under the same account, its own checkout and
+second VAEL install (another ``HERMES_HOME`` root under the same account, its own checkout and
 venv) shares them, and the update used to restart that install's gateway too — including the
-account's real ``hermes-gateway.service`` when a scratch home ran ``hermes update``.
+account's real ``hermes-gateway.service`` when a scratch home ran ``vael update``.
 
 The fleet an update owns is the set of homes its plan inventories: the updating root plus every
 ``<root>/profiles/<name>``. Ownership is judged from what a runtime actually runs on — the live
@@ -32,7 +32,7 @@ def update_scope_homes() -> set[Path]:
     """Resolved homes the running update owns: the invoking home, the install root and its profiles."""
     homes: set[Path] = set()
     with suppress(Exception):
-        from hermes_constants import get_hermes_home
+        from vael_constants import get_hermes_home
         if (home := _resolved(get_hermes_home())) is not None:
             homes.add(home)
     with suppress(Exception):
@@ -157,5 +157,5 @@ def launchd_label_foreign_home(label: str, scope: set[Path] | None = None) -> st
 def describe_skipped_runtime(kind: str, name: str, home: str | None) -> str:
     """One notice line for a runtime the update leaves alone (foreign home or unreadable ownership)."""
     if home is None:
-        return f"  ↷ {name}: {kind} whose Hermes home could not be read — left alone (not restarted)"
-    return f"  ↷ {name}: {kind} of another Hermes home ({home}) — left alone (not restarted)"
+        return f"  ↷ {name}: {kind} whose VAEL home could not be read — left alone (not restarted)"
+    return f"  ↷ {name}: {kind} of another VAEL home ({home}) — left alone (not restarted)"

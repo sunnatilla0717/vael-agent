@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import pytest
 
-from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+from vael_constants import reset_hermes_home_override, set_hermes_home_override
 from plugins.plugin_storage import plugin_data_dir, plugin_db
 
 
@@ -42,7 +42,7 @@ def test_hostile_names_are_rejected(hermes_home, bad):
 def test_plugin_db_journal_mode_is_the_shared_fallback_verdict(hermes_home):
     """Plugin DBs take the journal mode the core WAL helper decides for this SQLite build and
     filesystem (WAL normally; DELETE on WAL-reset-bug builds or network FS) — never a raw PRAGMA."""
-    from hermes_state_wal import is_sqlite_wal_reset_vulnerable
+    from vael_state_wal import is_sqlite_wal_reset_vulnerable
 
     conn = plugin_db("board")
     try:

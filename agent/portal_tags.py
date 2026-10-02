@@ -1,6 +1,6 @@
 """Centralized Nous Portal request tags.
 
-Every Hermes request to the Nous Portal (main loop, auxiliary client, fallback
+Every VAEL request to the Nous Portal (main loop, auxiliary client, fallback
 paths) must carry the same product-attribution tags, sent in OpenAI-compatible
 ``extra_body['tags']``: ``["product=hermes-agent", "client=hermes-client-v<base_version>"]``.
 The value comes from the canonical runtime identity's base version so build

@@ -28,8 +28,8 @@ from pathlib import Path
 
 import pytest
 
-import hermes_state
-import hermes_state_guard
+import vael_state
+import vael_state_guard
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -39,7 +39,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 _CHILD_PROBE = """
 import sys
 sys.path.insert(0, {repo!r})
-import hermes_state
+import vael_state
 
 root = hermes_state._real_platform_state_root()
 if root is None:

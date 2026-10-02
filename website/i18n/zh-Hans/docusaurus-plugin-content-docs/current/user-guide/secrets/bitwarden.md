@@ -5,9 +5,9 @@
 ## 工作原理
 
 1. 在 Bitwarden Secrets Manager 中创建一个**机器账户**，授予其对某个项目的读取权限，并生成一个**访问令牌**。
-2. Hermes 将该单一令牌以 `BWS_ACCESS_TOKEN` 的形式存储在 `~/.hermes/.env` 中。
-3. 每次 `hermes`（或 gateway，或 cron 任务）启动时，在加载 `~/.hermes/.env` 之后，Hermes 会调用 `bws secret list <project_id>` 并将返回的密钥写入 `os.environ`。
-4. 默认情况下，Hermes **覆盖**环境中已有的值，因此 Bitwarden 是唯一可信来源——在 Web 应用中轮换一次密钥，每个 Hermes 进程在下次启动时即可获取最新值。如果希望 `.env` 优先，可在配置中将 `override_existing: false`。
+2. VAEL 将该单一令牌以 `BWS_ACCESS_TOKEN` 的形式存储在 `~/.hermes/.env` 中。
+3. 每次 `hermes`（或 gateway，或 cron 任务）启动时，在加载 `~/.hermes/.env` 之后，VAEL 会调用 `bws secret list <project_id>` 并将返回的密钥写入 `os.environ`。
+4. 默认情况下，VAEL **覆盖**环境中已有的值，因此 Bitwarden 是唯一可信来源——在 Web 应用中轮换一次密钥，每个 VAEL 进程在下次启动时即可获取最新值。如果希望 `.env` 优先，可在配置中将 `override_existing: false`。
 
 `bws` 二进制文件在首次使用时会自动下载到 `~/.hermes/bin/`，无需 `apt`、`brew` 或 `sudo`。
 
@@ -24,9 +24,9 @@ Bitwarden Secrets Manager 专为非交互式工作负载设计：机器账户不
 在 [Bitwarden Web 应用](https://vault.bitwarden.com)（欧盟账户请使用 [vault.bitwarden.eu](https://vault.bitwarden.eu)）中：
 
 1. 通过产品切换器切换到 **Secrets Manager**。
-2. 创建或选择一个**项目**（例如"Hermes keys"）。
+2. 创建或选择一个**项目**（例如"VAEL keys"）。
 3. 将提供商密钥添加为 secret。secret 的**名称**将成为环境变量名——使用 `OPENROUTER_API_KEY`、`ANTHROPIC_API_KEY` 等。
-4. **Machine accounts → New machine account → My Hermes machine** → **Projects** 标签页 → 授予对你的项目的 Read 权限。
+4. **Machine accounts → New machine account → My VAEL machine** → **Projects** 标签页 → 授予对你的项目的 Read 权限。
 5. **Access tokens** 标签页 → **Create access token** → 选择**永不**过期（或指定日期）→ 复制令牌（以 `0.` 开头）。Bitwarden 无法再次检索该令牌——请妥善保存副本。
 
 Secrets Manager 包含在 Bitwarden 免费套餐中（有使用限制）；无需付费计划即可试用。
@@ -114,7 +114,7 @@ secrets:
 
 ## 故障模式
 
-Bitwarden 永远不会阻塞 Hermes 启动。如果出现任何问题，stderr 会显示一行警告，Hermes 继续使用 `.env` 中已有的凭据：
+Bitwarden 永远不会阻塞 VAEL 启动。如果出现任何问题，stderr 会显示一行警告，VAEL 继续使用 `.env` 中已有的凭据：
 
 | 现象 | 原因 | 修复方法 |
 |---|---|---|
@@ -130,9 +130,9 @@ Bitwarden 永远不会阻塞 Hermes 启动。如果出现任何问题，stderr �
 ## 安全说明
 
 - 引导令牌（`BWS_ACCESS_TOKEN`）本身是敏感信息——任何持有它的人都可以读取机器账户有权访问的所有 secret。请与其他 API 密钥同等对待。
-- 即使 `override_existing: true`，Hermes 也会拒绝让 Bitwarden 覆盖引导令牌本身。如果你将 `BWS_ACCESS_TOKEN` 作为 secret 存储在项目中，应用时会静默跳过。
+- 即使 `override_existing: true`，VAEL 也会拒绝让 Bitwarden 覆盖引导令牌本身。如果你将 `BWS_ACCESS_TOKEN` 作为 secret 存储在项目中，应用时会静默跳过。
 - `bws` 二进制文件的下载会与同一 GitHub release 中发布的 SHA-256 校验和进行验证。不匹配时将中止安装。
-- 固定版本（撰写本文时为 `bws v2.0.0`）通过向本仓库提交 PR 的方式更新——Hermes 不会将 `bws` 自动升级到"最新版本"，因为上游 release 的结构可能发生变化。
+- 固定版本（撰写本文时为 `bws v2.0.0`）通过向本仓库提交 PR 的方式更新——VAEL 不会将 `bws` 自动升级到"最新版本"，因为上游 release 的结构可能发生变化。
 
 ## 不适用场景
 
@@ -140,4 +140,4 @@ Bitwarden 永远不会阻塞 Hermes 启动。如果出现任何问题，stderr �
 - **无法访问 `api.bitwarden.com` 的隔离环境**。
 - **CI/CD** 场景，已有现成的 secret 注入机制（GitHub Actions secrets、Vault 等）——选择一种方式，不要两者并用。
 
-适合使用此功能的场景：多机器集群、共享开发机、gateway VPS，或任何需要跨多个 Hermes 安装进行集中轮换和吊销管理的场景。
+适合使用此功能的场景：多机器集群、共享开发机、gateway VPS，或任何需要跨多个 VAEL 安装进行集中轮换和吊销管理的场景。

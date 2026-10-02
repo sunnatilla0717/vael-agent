@@ -1,7 +1,7 @@
 import time
 
-import hermes_state
-from hermes_state import SessionDB
+import vael_state
+from vael_state import SessionDB
 
 
 def test_export_candidates_via_prune_filters_ended_old_sessions(tmp_path, monkeypatch):

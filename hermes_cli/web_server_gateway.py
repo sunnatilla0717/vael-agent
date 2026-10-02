@@ -322,8 +322,8 @@ def _named_profile_from_action(subcommand: List[str]) -> Optional[str]:
 def _is_host_gateway_spawn(subcommand: List[str]) -> bool:
     """True when *subcommand* starts the host multiplexer, not a named profile's own gateway.
 
-    ``hermes gateway restart`` and ``hermes -p default gateway restart`` are the host.
-    ``hermes -p coder gateway stop`` is not.
+    ``vael gateway restart`` and ``vael -p default gateway restart`` are the host.
+    ``vael -p coder gateway stop`` is not.
     """
     profile = _named_profile_from_action(subcommand)
     if profile not in (None, "default"):
@@ -340,15 +340,15 @@ def _is_host_gateway_spawn(subcommand: List[str]) -> bool:
 def _profile_action_environment(
     subcommand: List[str], env_overrides: Optional[Dict[str, str]] = None,
 ) -> Dict[str, str]:
-    """Environment for a detached ``hermes <subcommand>`` action.
+    """Environment for a detached ``vael <subcommand>`` action.
 
     The dashboard loads its own profile's ``.env`` into process-global ``os.environ``. Copying
-    that mapping verbatim into ``hermes -p <other> ...`` lets the named child see the dashboard
+    that mapping verbatim into ``vael -p <other> ...`` lets the named child see the dashboard
     profile's platform credentials and ports *before* its own dotenv loads (``load_hermes_dotenv``
     does not override keys already present): a supposedly A2A-only profile then claims the default
     Discord token and binds the default API/BlueBubbles ports.
 
-    Named-profile actions therefore start from Hermes' standard scrubbed subprocess env, then drop
+    Named-profile actions therefore start from VAEL's standard scrubbed subprocess env, then drop
     the profile-managed keys plus every key declared by the dashboard/default profile dotenv files
     and their hydrated secret sources, and pin ``HERMES_HOME`` to the target profile. The child's
     normal startup then loads that profile's own ``.env``. A host-gateway verb (bare ``gateway``
@@ -367,7 +367,7 @@ def _profile_action_environment(
             _PROFILE_MANAGED_ENV_KEYS, _env_keys_defined_in_dotenv, get_secret_source_values,
         )
         from hermes_cli.web_server_profiles import _resolve_profile_dir
-        from hermes_constants import apply_subprocess_home_env, get_default_hermes_root
+        from vael_constants import apply_subprocess_home_env, get_default_hermes_root
         from tools.environments.local import build_subprocess_env, strip_launch_profile_env
 
         target_home = _resolve_profile_dir(profile)
@@ -420,7 +420,7 @@ def _action_targets_system_gateway(subcommand: List[str]) -> bool:
     Scope is decided by the CLI's own picker (``_select_systemd_scope``) evaluated for the profile
     the action addresses, not by "a system unit exists": a host carrying both units resolves to the
     user unit, which the dashboard user operates unelevated. Same root/sudo posture as the
-    ``hermes update`` fleet restart (``update_cmd_fleet._needs_sudo`` / ``_sudo_noninteractive_ok``).
+    ``vael update`` fleet restart (``update_cmd_fleet._needs_sudo`` / ``_sudo_noninteractive_ok``).
     """
     from hermes_cli.update_cmd_fleet import _needs_sudo
 
@@ -434,7 +434,7 @@ def _action_targets_system_gateway(subcommand: List[str]) -> bool:
         return False
 
     from hermes_cli.gateway import _select_systemd_scope
-    from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+    from vael_constants import reset_hermes_home_override, set_hermes_home_override
 
     profile = _named_profile_from_action(subcommand)
     if profile is None:
@@ -453,7 +453,7 @@ def _action_targets_system_gateway(subcommand: List[str]) -> bool:
 def _spawn_hermes_action(
     subcommand: List[str], name: str, *, env_overrides: Optional[Dict[str, str]] = None
 ) -> subprocess.Popen:
-    """Spawn ``hermes <subcommand>`` detached (via ``hermes_cli.main``) and record the handle."""
+    """Spawn ``vael <subcommand>`` detached (via ``hermes_cli.main``) and record the handle."""
     from hermes_cli.web_server import PROJECT_ROOT
     _ACTION_LOG_DIR.mkdir(parents=True, exist_ok=True)
     log_file = open(_ACTION_LOG_DIR / _ACTION_LOG_FILES[name], "ab", buffering=0)
@@ -468,7 +468,7 @@ def _spawn_hermes_action(
         # HERMES_HOME past sudo's env_reset and reads SUDO_USER for the service identity.
         # ``-n`` never prompts (stdin is DEVNULL anyway); without a passwordless path the
         # REQUEST fails instead of reporting a started action whose child refuses. Same
-        # two-step gate as the ``hermes update`` fleet restart: a refused blanket probe falls
+        # two-step gate as the ``vael update`` fleet restart: a refused blanket probe falls
         # back to ``sudo -l`` on the exact argv, so a command-scoped NOPASSWD entry qualifies.
         from hermes_cli.update_cmd_fleet import _sudo_noninteractive_ok
 
@@ -476,7 +476,7 @@ def _spawn_hermes_action(
             message = (
                 f"{name} targets the system-scope gateway service, which requires root, and "
                 "passwordless sudo is unavailable for the dashboard user. Run "
-                f"'sudo hermes {' '.join(subcommand)}' on the host, or grant that user NOPASSWD sudo."
+                f"'sudo vael {' '.join(subcommand)}' on the host, or grant that user NOPASSWD sudo."
             )
             log_file.write(f"{message}\n".encode())
             log_file.close()
@@ -504,7 +504,7 @@ def _spawn_hermes_action(
 
 def _own_profile_selector(profile: Optional[str]) -> Optional[str]:
     """The profile a lifecycle verb addresses: the explicit selector, else the process's own
-    profile (a pooled Desktop ``hermes --profile X serve`` answers ``/api/gateway/*`` without
+    profile (a pooled Desktop ``vael --profile X serve`` answers ``/api/gateway/*`` without
     ``?profile=``; an unscoped verb there is about X). The default home resolves to the literal
     ``"default"`` selector, never to a bare argv: a selector-less child re-reads the sticky
     ``active_profile`` and would act on another profile's gateway (and skips the named-target
@@ -512,12 +512,12 @@ def _own_profile_selector(profile: Optional[str]) -> Optional[str]:
     requested = (profile or "").strip()
     if requested:
         return requested
-    from hermes_constants import get_process_hermes_home, profile_name_for_home
+    from vael_constants import get_process_hermes_home, profile_name_for_home
     return profile_name_for_home(get_process_hermes_home()) or None
 
 
 def _gateway_subcommand(profile: Optional[str], verb: str) -> List[str]:
-    """``hermes [-p X] gateway <verb>`` argv for a dashboard lifecycle action. A profile served by the
+    """``vael [-p X] gateway <verb>`` argv for a dashboard lifecycle action. A profile served by the
     live default multiplexer has no gateway of its own: ``restart`` targets the multiplexer (the process
     that actually serves X — a ``-p X gateway restart`` child only exits 78 into the action log while the
     UI reports "restarted"); ``start``/``stop`` are refused by the caller (``multiplexed_profile_refusal``).
@@ -561,7 +561,7 @@ def multiplexed_profile_refusal(profile: Optional[str], verb: str) -> Optional[s
     """Refusal text for ``gateway start``/``stop`` on a named profile with no gateway of its own (a
     ``--force``-started separate one is managed normally), else None. A profile the live host
     multiplexer serves is parked by ``stop`` and a parked one is unparked by ``start`` (the spawned
-    ``hermes -p X gateway <verb>`` runs ``gateway_profile_lifecycle``), so neither is refused;
+    ``vael -p X gateway <verb>`` runs ``gateway_profile_lifecycle``), so neither is refused;
     ``start`` on an unparked named profile is — one host gateway serves every profile, so a new
     per-profile gateway is never the answer (the CLI twin ``_named_profile_refused_under_multiplexer``
     exits 78 into an action log nobody reads while the UI shows the verb as done)."""
@@ -597,9 +597,9 @@ def multiplexed_profile_refusal(profile: Optional[str], verb: str) -> Optional[s
     if _installed_services(profile_dir):
         return None  # a --force-installed fleet member is not NEW; its own service is started normally
     return (f"Profile '{requested}' does not get a gateway of its own: one host gateway serves every "
-            f"profile. Install or start it from the default profile (hermes gateway install), or fold an "
-            f"existing per-profile fleet with `hermes gateway migrate --multiplex`; "
-            f"`hermes -p {requested} gateway install --force` starts a separate one anyway.")
+            f"profile. Install or start it from the default profile (vael gateway install), or fold an "
+            f"existing per-profile fleet with `vael gateway migrate --multiplex`; "
+            f"`vael -p {requested} gateway install --force` starts a separate one anyway.")
 
 
 def _restart_gateway_after(profile: Optional[str], *, what: str, label: str) -> dict[str, Any]:

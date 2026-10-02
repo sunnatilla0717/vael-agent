@@ -1,8 +1,8 @@
-"""Invariant tests for the plain-language startup messages of the ``hermes`` CLI.
+"""Invariant tests for the plain-language startup messages of the ``vael`` CLI.
 
 Contracts (not snapshots): a mistyped subcommand names the typo, offers the closest
-match and ``hermes --help`` without dumping the 70-entry choice list; a rejected
-profile name explains the rule; missing optional dependencies point at ``hermes update``.
+match and ``vael --help`` without dumping the 70-entry choice list; a rejected
+profile name explains the rule; missing optional dependencies point at ``vael update``.
 """
 
 import io
@@ -28,15 +28,15 @@ def _parse_error(argv: list[str]) -> str:
 
 def test_unknown_subcommand_names_typo_suggests_closest_and_hides_choice_list():
     text = _parse_error(["sesions"])
-    assert "'sesions' is not a `hermes` command" in text
+    assert "'sesions' is not a `vael` command" in text
     assert "Did you mean: sessions" in text
-    assert "hermes --help" in text
+    assert "vael --help" in text
     assert "choose from" not in text
     assert "invalid choice" not in text
 
 def test_nested_group_typo_names_the_group_and_suggests():
     text = _parse_error(["gateway", "stat"])
-    assert "'stat' is not a `hermes gateway` command" in text
+    assert "'stat' is not a `vael gateway` command" in text
     assert "Did you mean:" in text and "status" in text
 
 def test_invalid_profile_flag_value_explains_rule_and_exits(monkeypatch):

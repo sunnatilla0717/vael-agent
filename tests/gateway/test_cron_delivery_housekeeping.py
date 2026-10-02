@@ -174,11 +174,11 @@ def test_primary_drain_delivers_credentialless_satellite_queue_row_through_prima
     import threading
     from unittest.mock import patch
 
-    import hermes_yaml as yaml
+    import vael_yaml as yaml
 
     from cron import delivery_queue
     from gateway.config import Platform
-    from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+    from vael_constants import reset_hermes_home_override, set_hermes_home_override
 
     root = tmp_path / "root"
     satellite_home = root / "profiles" / "satellite"
@@ -190,7 +190,7 @@ def test_primary_drain_delivers_credentialless_satellite_queue_row_through_prima
     # The satellite names its home channel but holds no token: block present, ``enabled`` False.
     (satellite_home / "config.yaml").write_text(
         yaml.safe_dump({"platforms": {"discord": {"home_channel": "C1"}}}), encoding="utf-8")
-    monkeypatch.setattr("hermes_constants.get_default_hermes_root", lambda: root)
+    monkeypatch.setattr("vael_constants.get_default_hermes_root", lambda: root)
     monkeypatch.delenv("DISCORD_BOT_TOKEN", raising=False)
 
     sent, standalone = [], []

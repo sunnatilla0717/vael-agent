@@ -1,6 +1,6 @@
 """Serve-start bootstrap for the Nous free tier: the ONE place a free-tier identity is created.
 
-Every Hermes process that may need the free tier runs this once at boot (``hermes serve`` on a
+Every VAEL process that may need the free tier runs this once at boot (``vael serve`` on a
 daemon thread beside the other background boots; the CLI first-run guard synchronously). It
 inventories credentials cheap-first, creates the identity only when the launch gate is open
 (:func:`hermes_cli.anon_auth.guest_enabled`), resolves which provider carries inference, records
@@ -95,14 +95,14 @@ def reconcile_record() -> Optional[SetupRecord]:
     and its retries mint. A record that already says ``True`` is never re-probed, so the answer
     only moves false -> true here. Every write path that assigns the main model (the Models page,
     a picker key save) calls this for the immediate broadcast; ``setup.status`` calls it for
-    writes this process never saw (``hermes setup`` / ``hermes model`` from a shell, a hand edit).
+    writes this process never saw (``vael setup`` / ``vael model`` from a shell, a hand edit).
     The record is the LAUNCH profile's: a call scoped to another profile's home (a dashboard
     write with ``?profile=B``) leaves it alone, or B's providers would open the launch gate."""
     global _record
     record = _record
     if record is None or record.provider_configured:
         return record
-    from hermes_constants import get_process_hermes_home, hermes_home_key
+    from vael_constants import get_process_hermes_home, hermes_home_key
     if hermes_home_key() != hermes_home_key(get_process_hermes_home()) or _inventory_stamp == _config_stamp():
         return record
     if not _inventory_other_providers():
@@ -290,7 +290,7 @@ def _broadcast(record: SetupRecord) -> None:
 
 
 def start_background_bootstrap() -> threading.Thread:
-    """``hermes serve`` entry: run on a daemon thread so a slow portal never delays the socket."""
+    """``vael serve`` entry: run on a daemon thread so a slow portal never delays the socket."""
     thread = threading.Thread(target=_bootstrap_then_retry, daemon=True, name="free-tier-bootstrap")
     thread.start()
     return thread

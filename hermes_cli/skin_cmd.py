@@ -1,4 +1,4 @@
-"""``hermes skin`` — list, switch, and tweak skins from the CLI.
+"""``vael skin`` — list, switch, and tweak skins from the CLI.
 
 ``set`` is the load-bearing verb: it changes ONE color of the ACTIVE skin **in place**, so tweaking
 (say) the tool marker never disturbs the rest of the look — background included. Editing the file
@@ -12,7 +12,7 @@ import re
 import sys
 from pathlib import Path
 
-from hermes_constants import display_hermes_home, get_hermes_home
+from vael_constants import display_hermes_home, get_hermes_home
 
 _HEX_RE = re.compile(r"^#[0-9a-fA-F]{6}$")
 
@@ -34,7 +34,7 @@ def _use(name: str) -> None:
 
 
 def _skin_set(key: str, value: str, skin: str | None) -> int:
-    import hermes_yaml as yaml
+    import vael_yaml as yaml
     if not _HEX_RE.match(value):
         print(f"✗ {value!r} is not a #rrggbb hex color", file=sys.stderr)
         return 1
@@ -80,7 +80,7 @@ def _skin_list() -> int:
 
 
 def skin_command(args) -> None:
-    """Dispatch ``hermes skin <verb>``."""
+    """Dispatch ``vael skin <verb>``."""
     verb = getattr(args, "skin_command", None)
     if verb == "set":
         sys.exit(_skin_set(args.key, args.value, getattr(args, "skin", None)))

@@ -14,7 +14,7 @@ import pytest
 
 from agent.message_sanitization import normalize_finish_reason
 from agent.transports.chat_completions import ChatCompletionsTransport
-from hermes_constants import PARTIAL_STREAM_STUB_ID
+from vael_constants import PARTIAL_STREAM_STUB_ID
 
 
 @pytest.mark.parametrize(

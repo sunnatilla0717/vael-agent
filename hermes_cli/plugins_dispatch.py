@@ -96,7 +96,7 @@ def format_system_prompt_sections(sections: list) -> str:
     return f"{PLUGIN_SECTIONS_START}\n" + "\n\n".join(blocks) + f"\n{PLUGIN_SECTIONS_END}"
 
 
-# Reserved event namespace prefix — only core may publish ``hermes:<event>``.
+# Reserved event namespace prefix — only core may publish ``vael:<event>``.
 HERMES_EVENT_NAMESPACE = "hermes"
 # Event recursion depth cap (subscribers may emit); over-deep emits are dropped with a warning.
 _EVENT_EMIT_DEPTH_CAP = 8

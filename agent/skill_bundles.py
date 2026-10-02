@@ -13,9 +13,9 @@ import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-import hermes_yaml as yaml
+import vael_yaml as yaml
 
-from hermes_constants import get_hermes_home
+from vael_constants import get_hermes_home
 from agent.skill_commands import command_snapshot, diff_command_snapshots, resolve_slash_key, slugify_skill_name as _slugify
 
 logger = logging.getLogger(__name__)
@@ -160,7 +160,7 @@ def build_bundle_invocation_message(
     return ("\n\n".join([header, *skill_blocks]), loaded_names, missing)
 
 
-# File-level CRUD — used by `hermes bundles`.
+# File-level CRUD — used by `vael bundles`.
 
 
 def bundle_path_for(name: str) -> Path:

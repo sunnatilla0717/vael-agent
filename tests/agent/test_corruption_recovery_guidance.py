@@ -104,8 +104,8 @@ def test_corrupt_guidance_pins_the_failing_profile(tmp_path, monkeypatch):
     import asyncio
 
     import gateway.run as gateway_run
-    from hermes_state import _default_db_path
-    from hermes_state_repair import _persistent_repair_exhausted_error
+    from vael_state import _default_db_path
+    from vael_state_repair import _persistent_repair_exhausted_error
     from run_agent import AIAgent
 
     root = tmp_path / "hermes"

@@ -6,7 +6,7 @@ author: Teknium (teknium1), Hermes Agent
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
-  hermes:
+  vael:
     tags: [RSS, Atom, Feeds, Monitoring, Research, Blogs, Releases]
     related_skills: [reddit-reading, competitor-news-monitor, grounded-citations, youtube-content, blogwatcher]
 ---

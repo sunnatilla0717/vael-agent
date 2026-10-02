@@ -42,7 +42,7 @@ _ACTIVE_THRESHOLDS = (
     (360 * _MINUTE_MS, "2h_to_6h"),
 )
 _SWITCH_THRESHOLDS = ((2, "1"), (4, "2_to_3"), (11, "4_to_10"), (31, "11_to_30"))
-# Task entrypoints that are a person using Hermes. Unattended cron runs (counted by hermes.cron.run),
+# Task entrypoints that are a person using VAEL. Unattended cron runs (counted by hermes.cron.run),
 # delegated children, background review forks, batch and API/python embedding are not engagement.
 _ENGAGED_ENTRYPOINTS = frozenset({"gateway_message", "interactive"})
 _INTERACTION_METRICS = frozenset({contract.TASK_STARTED_METRIC, contract.TASK_FINISHED_METRIC})
@@ -119,7 +119,7 @@ def _now_ms() -> int:
 
 
 def _root_home(profile_home: Path) -> Path:
-    from hermes_constants import get_default_hermes_root
+    from vael_constants import get_default_hermes_root
 
     try:
         return get_default_hermes_root(home=profile_home).resolve()
@@ -133,7 +133,7 @@ def _profile_hash(profile_home: Path) -> str:
 
 def _collects(home: Path) -> bool:
     """The root profile's own collection consent (read-only; never touches its runtime)."""
-    from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+    from vael_constants import reset_hermes_home_override, set_hermes_home_override
 
     token = set_hermes_home_override(str(home))
     try:

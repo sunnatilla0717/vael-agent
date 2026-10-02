@@ -104,7 +104,7 @@ def _manifest_is_mode_independent(path: str) -> bool:
     mode. Unreadable / unparseable -> False (forwarding one would turn a working session into a hard startup
     failure; bounded forwards unconditionally anyway)."""
     try:
-        import hermes_yaml as yaml
+        import vael_yaml as yaml
 
         with open(path, "r", encoding="utf-8-sig") as handle:
             parsed = yaml.safe_load(handle)
@@ -142,8 +142,14 @@ def cua_driver_child_env(base_env: Optional[Dict[str, str]] = None) -> Dict[str,
     env = dict(os.environ if base_env is None else base_env)
     # A running Bot Desktop for this profile owns the agent's screen: DISPLAY/XAUTHORITY/DBUS point there so
     # cua-driver never acts on a seat the human is sitting at (#90374 class) and headless hosts get a display.
-    from tools.bot_desktop.runtime import desktop_env as _bot_desktop_env
-    env = _bot_desktop_env(env)
+    # Best-effort: the injection must never be the reason a driver spawn fails. Loading the runtime can itself
+    # raise under a stripped environment (its import resolves a home-dir cache path), and then the right move is
+    # the base env — the host's own seat — not a dead computer_use tool.
+    try:
+        from tools.bot_desktop.runtime import desktop_env as _bot_desktop_env
+        env = _bot_desktop_env(env)
+    except Exception as e:
+        logger.warning("Bot Desktop screen routing unavailable (%s); spawning cua-driver with the base env", e)
     if _cua_telemetry_disabled():
         env[_CUA_TELEMETRY_ENV_VAR] = "0"
     if sys.platform == "linux" and env.get("WAYLAND_DISPLAY") and bool(_computer_use_cfg().get("native_wayland", False)):
@@ -156,7 +162,14 @@ def sandbox_mcp_invocation() -> Optional[Tuple[Tuple[str, List[str]], Dict[str, 
     gateway-hosted desktop, where the local driver is used. Placement is the authority: a ``terminal``
     placement gets its screen started here and a ``refused`` one raises — the host driver is never the
     fallback for a sandbox whose screen is down."""
-    from tools.bot_desktop import placement, runtime as _bd_runtime
+    try:
+        from tools.bot_desktop import placement, runtime as _bd_runtime
+    except Exception as e:
+        # The runtime owns placement; if it cannot even be imported there is no sandbox to route into (a stripped
+        # service env without a resolvable home dir is enough), so degrade to the local driver — the same answer a
+        # gateway placement gives — instead of failing the whole spawn. A *refused* placement still raises below.
+        logger.warning("Bot Desktop placement unavailable (%s); using the local cua-driver", e)
+        return None
     if _bd_runtime.tool_placement() == placement.GATEWAY:
         return None
     published = _bd_runtime.published_env()
@@ -378,6 +391,28 @@ class CuaDriverBackend(_CaptureMixin, _InputMixin, ComputerUseBackend):
             ("creates_new_application_instance", creates_new_application_instance or None)) if v}}
         out = self._session.call_tool("launch_app", args)
         return out["structuredContent"] or {"data": out["data"]}
+
+    def screen_info(self) -> Dict[str, Any]:
+        """Display geometry (``displays`` / ``screen``) plus ``cursor`` position, for multi-monitor coordinate math.
+
+        Each key is filled only when the connected driver advertises that read tool in ``tools/list``; a driver
+        advertising none raises ``NotImplementedError`` so the tool layer can report ``unsupported`` instead of
+        guessing. A failing read fails only its own key. These are stateless reads, so they are called without the
+        session property (cua-driver's transport marks them replay-safe: see ``_TRANSPORT_REPLAY_SAFE_TOOLS``).
+        """
+        out: Dict[str, Any] = {}
+        for key, tool in (("displays", "get_displays"), ("screen", "get_screen_size"),
+                          ("cursor", "get_cursor_position")):
+            if self._session.capabilities_discovered and not self._session._has_tool(tool):
+                continue  # older driver: omit the key rather than fail the whole call
+            try:
+                result = self._session.call_tool(tool, {})
+                out[key] = result.get("structuredContent") or result.get("data")
+            except Exception as e:
+                out.setdefault("errors", {})[tool] = str(e)
+        if not out:
+            raise NotImplementedError("the connected cua-driver does not advertise display geometry tools")
+        return out
 
     def bring_to_front(self, *, pid: int, window_id: Optional[int] = None) -> ActionResult:
         """Activate a window so subsequent foreground-dispatched input lands on it."""

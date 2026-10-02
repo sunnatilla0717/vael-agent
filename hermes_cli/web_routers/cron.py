@@ -24,8 +24,8 @@ from hermes_cli.web_server_cron import (
 )
 from hermes_cli.web_models import AutomationBlueprintInstantiate, CronJobCreate, CronJobUpdate
 from hermes_cli.web_routers._common import log as _log
-from hermes_time import get_timezone as _get_timezone
-from hermes_constants import (
+from vael_time import get_timezone as _get_timezone
+from vael_constants import (
     get_hermes_home as _get_hermes_home,
     reset_hermes_home_override as _reset_hermes_home_override,
     set_hermes_home_override as _set_hermes_home_override,

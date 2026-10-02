@@ -10,7 +10,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-import hermes_yaml as yaml
+import vael_yaml as yaml
 
 
 class TestAtomicRoundtripYamlSave:

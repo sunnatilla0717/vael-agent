@@ -1,25 +1,25 @@
 ---
 sidebar_position: 1
 title: "快速入门"
-description: "与 Hermes Agent 的第一次对话——从安装到开始聊天，5 分钟内完成"
+description: "与 VAEL Agent 的第一次对话——从安装到开始聊天，5 分钟内完成"
 ---
 
 # 快速入门
 
 本页的 Python 依赖命令使用 [PM 准备的源码环境](../reference/package-management.md#developer-workflow)。
-依赖变更后，请重新激活该 checkout 并重启 Hermes。
+依赖变更后，请重新激活该 checkout 并重启 VAEL。
 
-本指南带你从零开始搭建一个能够应对实际使用的 Hermes 环境。完成安装、选择 provider（服务提供商）、验证对话正常运行，并了解出现问题时的处理方法。
+本指南带你从零开始搭建一个能够应对实际使用的 VAEL 环境。完成安装、选择 provider（服务提供商）、验证对话正常运行，并了解出现问题时的处理方法。
 
 ## 更喜欢看视频？
 
-**Onchain AI Garage** 制作了一套涵盖安装、配置和基本命令的 Masterclass 演示视频——如果你更习惯跟着视频操作，这是本页的绝佳补充。更多内容请查看完整的 [Hermes Agent 教程与使用案例](https://www.youtube.com/channel/UCqB1bhMwGsW-yefBxYwFCCg) 播放列表。
+**Onchain AI Garage** 制作了一套涵盖安装、配置和基本命令的 Masterclass 演示视频——如果你更习惯跟着视频操作，这是本页的绝佳补充。更多内容请查看完整的 [VAEL Agent 教程与使用案例](https://www.youtube.com/channel/UCqB1bhMwGsW-yefBxYwFCCg) 播放列表。
 
 <div style={{position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', maxWidth: '100%', marginBottom: '1.5rem'}}>
   <iframe
     style={{position: 'absolute', top: 0, left: 0, width: '100%', height: '100%'}}
     src="https://www.youtube-nocookie.com/embed/R3YOGfTBcQg"
-    title="Hermes Agent Masterclass: Installation, Setup, Basic Commands"
+    title="VAEL Agent Masterclass: Installation, Setup, Basic Commands"
     frameBorder="0"
     allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
     allowFullScreen
@@ -30,7 +30,7 @@ description: "与 Hermes Agent 的第一次对话——从安装到开始聊天�
 
 - 全新用户，想以最短路径完成可用配置
 - 正在切换 provider，不想因配置错误浪费时间
-- 为团队、机器人或长期运行的工作流配置 Hermes
+- 为团队、机器人或长期运行的工作流配置 VAEL
 - 厌倦了"安装成功但什么都做不了"的情况
 
 ## 最快路径
@@ -39,23 +39,23 @@ description: "与 Hermes Agent 的第一次对话——从安装到开始聊天�
 
 | 目标 | 先做这步 | 再做这步 |
 |---|---|---|
-| 只想让 Hermes 在本机跑起来 | `hermes setup` | 运行一次真实对话并验证有响应 |
+| 只想让 VAEL 在本机跑起来 | `hermes setup` | 运行一次真实对话并验证有响应 |
 | 已知道要用哪个 provider | `hermes model` | 保存配置，然后开始聊天 |
 | 想搭建机器人或长期运行的服务 | CLI 正常后运行 `hermes gateway setup` | 接入 Telegram、Discord、Slack 或其他平台 |
 | 想使用本地或自托管模型 | `hermes model` → 自定义 endpoint | 验证 endpoint、模型名称和上下文长度 |
 | 想要多 provider 故障转移 | 先运行 `hermes model` | 基础对话正常后再添加路由和故障转移 |
 
-**经验法则：** 如果 Hermes 无法完成一次正常对话，暂时不要添加更多功能。先让一次完整对话跑通，再逐步叠加 gateway、cron、skills、语音或路由。
+**经验法则：** 如果 VAEL 无法完成一次正常对话，暂时不要添加更多功能。先让一次完整对话跑通，再逐步叠加 gateway、cron、skills、语音或路由。
 
 ---
 
-## 1. 安装 Hermes Agent
+## 1. 安装 VAEL Agent
 
-### 在 macOS 或 Windows 上使用 Hermes Desktop 安装器（推荐）
+### 在 macOS 或 Windows 上使用 VAEL Desktop 安装器（推荐）
 
-如需同时安装命令行与桌面应用，请从我们的官网[下载 Hermes Desktop 安装器](https://hermes-agent.nousresearch.com/)并运行。
+如需同时安装命令行与桌面应用，请从我们的官网[下载 VAEL Desktop 安装器](https://hermes-agent.nousresearch.com/)并运行。
 
-### 不使用 Hermes Desktop：
+### 不使用 VAEL Desktop：
 
 仅安装命令行版本（跟踪 main 分支）：
 
@@ -128,7 +128,7 @@ hermes setup --portal
 对于大多数初次使用的用户：选择一个 provider，接受默认值（除非你明确知道为何要修改）。完整的 provider 目录及环境变量和配置步骤请参阅 [Providers](../integrations/providers.md) 页面。
 
 :::caution 最低上下文要求：64K token
-Hermes Agent 要求模型至少具备 **64,000 个 token** 的上下文窗口。上下文窗口较小的模型无法为多步骤工具调用工作流维持足够的工作内存，启动时将被拒绝。大多数托管模型（Claude、GPT、Gemini、Qwen、DeepSeek）均轻松满足此要求。如果你运行本地模型，请将其上下文大小设置为至少 64K（例如 llama.cpp 使用 `--ctx-size 65536`，Ollama 使用 `-c 65536`）。
+VAEL Agent 要求模型至少具备 **64,000 个 token** 的上下文窗口。上下文窗口较小的模型无法为多步骤工具调用工作流维持足够的工作内存，启动时将被拒绝。大多数托管模型（Claude、GPT、Gemini、Qwen、DeepSeek）均轻松满足此要求。如果你运行本地模型，请将其上下文大小设置为至少 64K（例如 llama.cpp 使用 `--ctx-size 65536`，Ollama 使用 `-c 65536`）。
 :::
 
 :::tip
@@ -137,7 +137,7 @@ Hermes Agent 要求模型至少具备 **64,000 个 token** 的上下文窗口。
 
 ### 配置的存储方式
 
-Hermes 将密钥与普通配置分开存储：
+VAEL 将密钥与普通配置分开存储：
 
 - **密钥和 token** → `~/.hermes/.env`
 - **非密钥配置** → `~/.hermes/config.yaml`
@@ -160,7 +160,7 @@ hermes --tui      # 现代 TUI（推荐）
 你会看到一个欢迎横幅，显示你的模型、可用工具和 skills。使用一个具体且易于验证的 prompt（提示词）：
 
 :::tip 选择你的界面
-Hermes 提供两种终端界面：经典的 `prompt_toolkit` CLI，以及更新的 [TUI](../user-guide/tui.md)（支持模态覆盖层、鼠标选择和非阻塞输入）。两者共享相同的会话、斜杠命令和配置——分别用 `hermes` 和 `hermes --tui` 试试看。
+VAEL 提供两种终端界面：经典的 `prompt_toolkit` CLI，以及更新的 [TUI](../user-guide/tui.md)（支持模态覆盖层、鼠标选择和非阻塞输入）。两者共享相同的会话、斜杠命令和配置——分别用 `hermes` 和 `hermes --tui` 试试看。
 :::
 
 ```
@@ -178,7 +178,7 @@ Help me set up a clean GitHub PR workflow for this codebase.
 **成功的标志：**
 
 - 横幅显示你选择的模型/provider
-- Hermes 无错误地回复
+- VAEL 无错误地回复
 - 需要时能够使用工具（终端、文件读取、网页搜索）
 - 对话可以正常进行超过一轮
 
@@ -305,7 +305,7 @@ hermes acp
 
 | 现象 | 可能原因 | 解决方法 |
 |---|---|---|
-| Hermes 启动但回复为空或异常 | Provider 认证或模型选择有误 | 重新运行 `hermes model`，确认 provider、模型和认证信息 |
+| VAEL 启动但回复为空或异常 | Provider 认证或模型选择有误 | 重新运行 `hermes model`，确认 provider、模型和认证信息 |
 | 自定义 endpoint "可用"但返回乱码 | base URL、模型名称有误，或实际上不兼容 OpenAI | 先用独立客户端验证该 endpoint |
 | Gateway 启动但无法收到消息 | Bot token、白名单或平台配置不完整 | 重新运行 `hermes gateway setup` 并检查 `hermes gateway status` |
 | `hermes --continue` 找不到旧会话 | 切换了 profile 或会话从未保存 | 检查 `hermes sessions list`，确认你在正确的 profile 下 |

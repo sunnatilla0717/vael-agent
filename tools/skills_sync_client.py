@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Skill Sync client -- the low-level sync layer (push objects + CAS a ref, pull the owner's
 HEAD, three-way merge on a 409). Driven by the debounced ``skill_manage`` push hook, the curator
-tick ``maybe_pull_skills`` and ``hermes sync``. Lives under tools/ so it never imports the CLI at
+tick ``maybe_pull_skills`` and ``vael sync``. Lives under tools/ so it never imports the CLI at
 module load; ``skills_sync_client_wire`` / ``skills_sync_client_org`` are re-exported here.
 ACCESS GATE (pre-launch): INERT unless the user is a Nous admin per the ``tool_gateway_admin``
 JWT claim (NAS's misleading name for the global portal-admin permission; replace before shipping).
@@ -57,7 +57,7 @@ def resolve_identity() -> Dict[str, Any]:
             "nous_admin": claims.get(NOUS_ADMIN_CLAIM) is True, "claims": claims}
 
 
-# Configuration -- env-first so Hermes Cloud can enable sync via environment alone. Every knob:
+# Configuration -- env-first so VAEL Cloud can enable sync via environment alone. Every knob:
 # HERMES_SYNC_<KEY> env -> config.yaml ``sync.<key>`` -> default (base_url = the sync plane, NOT
 # the inference URL; enabled; default_opt_in; org_auto_propose).
 DEFAULT_SYNC_BASE_URL = "https://gateway-gateway.nousresearch.com"
@@ -108,20 +108,20 @@ def sync_feature_enabled() -> bool:
 
 
 def sync_org_auto_propose() -> bool:
-    """False (default): edits to an org skill stay LOCAL until ``hermes sync propose``. True: every
+    """False (default): edits to an org skill stay LOCAL until ``vael sync propose``. True: every
     edit is proposed right away (an admin still approves unless the editor is one)."""
     return _sync_config_bool("HERMES_SYNC_ORG_AUTO_PROPOSE", "org_auto_propose", default=False)
 
 
 def sync_default_opt_in() -> bool:
-    """False (default): opt-IN -- a skill syncs only after ``hermes sync enable`` or a plane manifest
-    opting it in. True: opt-OUT -- every eligible skill syncs unless disabled (Hermes Cloud default)."""
+    """False (default): opt-IN -- a skill syncs only after ``vael sync enable`` or a plane manifest
+    opting it in. True: opt-OUT -- every eligible skill syncs unless disabled (VAEL Cloud default)."""
     return _sync_config_bool("HERMES_SYNC_DEFAULT_OPT_IN", "default_opt_in", default=False)
 
 
 # Local skill eligibility + the personal opt-in flag
 def _skills_dir() -> Path:
-    from hermes_constants import get_hermes_home
+    from vael_constants import get_hermes_home
     return get_hermes_home() / "skills"
 
 
@@ -221,7 +221,7 @@ def _default_device_label() -> str:
 
 def stable_device_id() -> str:
     """Per-device label at ~/.hermes/skills/.sync_device_id. An existing file always wins; else seeded
-    from HERMES_SYNC_DEVICE_NAME (first use only, for Hermes Cloud) or a friendly default, then persisted."""
+    from HERMES_SYNC_DEVICE_NAME (first use only, for VAEL Cloud) or a friendly default, then persisted."""
     with suppress(OSError):
         val = _device_id_path().read_text(encoding="utf-8-sig").strip()
         if val:
@@ -333,7 +333,7 @@ _NO_BASE_URL = {"ok": False, "reason": "no sync base url configured", "noop": Tr
 
 
 def push_skills(client: Optional[SyncClient] = None, *, skill_names: Optional[List[str]] = None,
-                identity: Optional[Dict[str, Any]] = None, message: str = "hermes skill sync") -> Dict[str, Any]:
+                identity: Optional[Dict[str, Any]] = None, message: str = "vael skill sync") -> Dict[str, Any]:
     """Push opted-in skills to ``refs/user/<owner>/HEAD`` (upload objects, CAS HEAD). 409 with an actual
     head -> three-way merge + one retry; 409 on a NON-EXISTENT ref (stale local head) -> CAS as a create."""
     identity, client = _personal_client(identity, client)
@@ -394,7 +394,7 @@ def _resolve_push_conflict(client: SyncClient, identity: Dict[str, Any], actual_
             client.cas_ref(conflict_ref, None, our_commit)
         return {"ok": False, "conflict": True, "conflict_ref": conflict_ref, "overlapping_skills": sorted(overlaps),
                 "actual_head": actual_head, "message": (f"{len(overlaps)} skill(s) changed on both sides; wrote "
-                                                        f"{conflict_ref}. Resolve out-of-band (hermes sync / NAS UI).")}
+                                                        f"{conflict_ref}. Resolve out-of-band (vael sync / NAS UI).")}
     # Merge commit (parents: actual, ours); re-add our objects so the merge push is self-contained.
     merge_objects = ObjectSet()
     merge_objects.objects |= objects.objects
@@ -459,7 +459,7 @@ def _gate_and_swallow(op: str, run: Callable[[Dict[str, Any]], Optional[Dict[str
         return None
 
 
-def maybe_push_skills(*, message: str = "hermes skill sync") -> Optional[Dict[str, Any]]:
+def maybe_push_skills(*, message: str = "vael skill sync") -> Optional[Dict[str, Any]]:
     """Best-effort push (debounced skill_manage hook). Never raises."""
     return _gate_and_swallow("maybe_push_skills", lambda identity: push_skills(
         identity=identity, message=message) if list_synced_skill_names() else None)
@@ -471,7 +471,7 @@ def maybe_pull_skills() -> Optional[Dict[str, Any]]:
 
 
 def sync_status() -> Dict[str, Any]:
-    """Snapshot for ``hermes sync status``; never raises. ``org_available`` False = not in a shared org."""
+    """Snapshot for ``vael sync status``; never raises. ``org_available`` False = not in a shared org."""
     status: Dict[str, Any] = {"nous_admin": False, "logged_in": False, "feature_enabled": sync_feature_enabled(),
                               "default_opt_in": sync_default_opt_in(), "base_url": resolve_sync_base_url(),
                               "opted_in_skills": [], "local_head": None, "owner": None, "org_available": False,

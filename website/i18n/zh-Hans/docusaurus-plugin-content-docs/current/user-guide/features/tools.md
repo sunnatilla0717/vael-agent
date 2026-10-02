@@ -1,19 +1,19 @@
 ---
 sidebar_position: 1
 title: "工具与工具集"
-description: "Hermes Agent 工具概览——可用工具、工具集工作方式及终端后端"
+description: "VAEL Agent 工具概览——可用工具、工具集工作方式及终端后端"
 ---
 
 # 工具与工具集
 
 本页的 Python 依赖命令使用 [PM 准备的源码环境](../../reference/package-management.md#developer-workflow)。
-依赖变更后，请重新激活该 checkout 并重启 Hermes。
+依赖变更后，请重新激活该 checkout 并重启 VAEL。
 
 工具是扩展 Agent 能力的函数。它们被组织为逻辑上的**工具集**，可按平台启用或禁用。
 
 ## 可用工具
 
-Hermes 内置了丰富的工具注册表，涵盖网页搜索、浏览器自动化、终端执行、文件编辑、记忆、委托、RL 训练、消息投递、Home Assistant 等功能。
+VAEL 内置了丰富的工具注册表，涵盖网页搜索、浏览器自动化、终端执行、文件编辑、记忆、委托、RL 训练、消息投递、Home Assistant 等功能。
 
 :::note
 **Honcho 跨会话记忆**作为记忆提供者插件（`plugins/memory/honcho/`）提供，而非内置工具集。安装方式请参阅 [Plugins](./plugins.md)。
@@ -88,9 +88,9 @@ terminal:
   docker_image: python:3.11-slim
 ```
 
-**单个持久容器，在整个进程生命周期内共享。** Hermes 在首次使用时启动一个长期运行的容器（`docker run -d ... sleep 2h`），并通过 `docker exec` 将所有终端、文件及 `execute_code` 调用路由到同一容器中。工作目录变更、已安装的包、环境调整以及写入 `/workspace` 的文件，在同一 Hermes 进程的整个生命周期内，跨 `/new`、`/reset` 和 `delegate_task` 子 Agent 均会保留。容器在关闭时停止并删除。
+**单个持久容器，在整个进程生命周期内共享。** VAEL 在首次使用时启动一个长期运行的容器（`docker run -d ... sleep 2h`），并通过 `docker exec` 将所有终端、文件及 `execute_code` 调用路由到同一容器中。工作目录变更、已安装的包、环境调整以及写入 `/workspace` 的文件，在同一 VAEL 进程的整个生命周期内，跨 `/new`、`/reset` 和 `delegate_task` 子 Agent 均会保留。容器在关闭时停止并删除。
 
-这意味着 Docker 后端的行为类似持久化沙箱虚拟机，而非每次命令都使用全新容器。如果你执行过一次 `pip install foo`，该包在本次会话的剩余时间内均可用。如果你执行了 `cd /workspace/project`，后续的 `ls` 调用将看到该目录。完整的生命周期详情及控制 `/workspace` 和 `/root` 是否跨 Hermes 重启保留的 `container_persistent` 标志，请参阅 [配置 → Docker 后端](../configuration.md#docker-backend)。
+这意味着 Docker 后端的行为类似持久化沙箱虚拟机，而非每次命令都使用全新容器。如果你执行过一次 `pip install foo`，该包在本次会话的剩余时间内均可用。如果你执行了 `cd /workspace/project`，后续的 `ls` 调用将看到该目录。完整的生命周期详情及控制 `/workspace` 和 `/root` 是否跨 VAEL 重启保留的 `container_persistent` 标志，请参阅 [配置 → Docker 后端](../configuration.md#docker-backend)。
 
 ### SSH 后端
 
@@ -134,9 +134,9 @@ hermes config set terminal.backend vercel_sandbox
 hermes config set terminal.vercel_runtime node24
 ```
 
-需同时配置 `VERCEL_TOKEN`、`VERCEL_PROJECT_ID` 和 `VERCEL_TEAM_ID` 三个凭据。此访问令牌配置方式是在 Render、Railway、Docker 及类似平台上进行部署和正常长期运行 Hermes 进程的推荐路径。支持的运行时为 `node24`、`node22` 和 `python3.13`；Hermes 默认使用 `/vercel/sandbox` 作为远程工作区根目录。
+需同时配置 `VERCEL_TOKEN`、`VERCEL_PROJECT_ID` 和 `VERCEL_TEAM_ID` 三个凭据。此访问令牌配置方式是在 Render、Railway、Docker 及类似平台上进行部署和正常长期运行 VAEL 进程的推荐路径。支持的运行时为 `node24`、`node22` 和 `python3.13`；VAEL 默认使用 `/vercel/sandbox` 作为远程工作区根目录。
 
-对于本地一次性开发，Hermes 也接受短期 Vercel OIDC token：
+对于本地一次性开发，VAEL 也接受短期 Vercel OIDC token：
 
 ```bash
 VERCEL_OIDC_TOKEN="$(vc project token <project-name>)" hermes chat
@@ -148,9 +148,9 @@ VERCEL_OIDC_TOKEN="$(vc project token <project-name>)" hermes chat
 VERCEL_OIDC_TOKEN="$(vc project token)" hermes chat
 ```
 
-启用 `container_persistent: true` 后，Hermes 使用 Vercel 快照在同一任务的沙箱重建时保留文件系统状态，其中可包含沙箱内 Hermes 同步的凭据、技能和缓存文件。快照不保留活跃进程、PID 空间或相同的活跃沙箱标识。
+启用 `container_persistent: true` 后，VAEL 使用 Vercel 快照在同一任务的沙箱重建时保留文件系统状态，其中可包含沙箱内 VAEL 同步的凭据、技能和缓存文件。快照不保留活跃进程、PID 空间或相同的活跃沙箱标识。
 
-后台终端命令使用 Hermes 通用的非本地进程流程：在沙箱存活期间，spawn、poll、wait、log 和 kill 均通过标准 process 工具运行，但 Hermes 不提供清理或重启后的原生 Vercel 后台进程恢复能力。
+后台终端命令使用 VAEL 通用的非本地进程流程：在沙箱存活期间，spawn、poll、wait、log 和 kill 均通过标准 process 工具运行，但 VAEL 不提供清理或重启后的原生 Vercel 后台进程恢复能力。
 
 `container_disk` 保持未设置或使用共享默认值 `51200`；Vercel Sandbox 不支持自定义磁盘大小，设置后将导致诊断/后端创建失败。
 
@@ -204,7 +204,7 @@ PTY 模式（`pty=true`）可启用 Codex 和 Claude Code 等交互式 CLI 工�
 ## 已完成后台进程的结果
 
 后台命令完成后，其退出状态和捕获的输出会保留在当前配置档案中。
-无头父进程退出或 Hermes 重启后，请恢复启动该命令的会话（或其上下文压缩后的
+无头父进程退出或 VAEL 重启后，请恢复启动该命令的会话（或其上下文压缩后的
 延续会话），再使用原始 `session_id` 调用 `process(action="log")` 读取输出、
 调用 `process(action="poll")` 查看退出状态。即使知道完整进程标识，其他会话
 或未绑定所属会话的请求也不能读取保留的结果。`process(action="list")`

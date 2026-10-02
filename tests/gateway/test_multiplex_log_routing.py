@@ -13,7 +13,7 @@ from pathlib import Path
 
 import pytest
 
-import hermes_logging
+import vael_logging
 from gateway import run
 
 
@@ -27,7 +27,7 @@ def clean_logging():
 
 
 def _emit_under(home: Path, name: str, level: int, msg: str) -> None:
-    from hermes_constants import reset_hermes_home_override, set_hermes_home_override
+    from vael_constants import reset_hermes_home_override, set_hermes_home_override
 
     token = set_hermes_home_override(home)
     try:

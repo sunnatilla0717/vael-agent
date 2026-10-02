@@ -2,6 +2,8 @@ name: VAEL Brand Guards
 
 # PR-1 rebrand enforcement: LICENSE intact, attribution present, no
 # whole-word "Hermes" in rebranded user-facing strings, identity says VAEL.
+# W-phase additions cover the docs site: marketing surface, docs prose
+# (outside code fences), generator output, renamed routes and brand assets.
 # Dependency-free (system python3 only) so it runs on every PR.
 
 on:
@@ -22,6 +24,7 @@ jobs:
       # Standalone mode (no pytest needed): the file runs its checks in __main__.
       # Under a full `pytest` run the same test_* functions are discovered
       # normally (root conftest is bypassed here on purpose).
+      # Covers the repo surfaces and website/ (docs prose, generators, routes).
       - name: Run VAEL brand guards
         run: python3 tests/branding/test_vael_brand.py
 

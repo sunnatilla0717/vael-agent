@@ -92,7 +92,7 @@ class TestGatewayRunnerRegistration:
             "dotenv",
             "hermes_cli.env_loader",
             "hermes_cli.config",
-            "hermes_constants",
+            "vael_constants",
         ]
         _orig = {}
         for mod in stubs:

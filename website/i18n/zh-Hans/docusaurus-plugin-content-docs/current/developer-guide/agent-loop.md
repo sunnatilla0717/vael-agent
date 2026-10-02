@@ -40,7 +40,7 @@ result = agent.run_conversation(
 
 ## API 模式
 
-Hermes 支持三种 API 执行模式，通过 provider 选择、显式参数和 base URL 启发式规则来确定：
+VAEL 支持三种 API 执行模式，通过 provider 选择、显式参数和 base URL 启发式规则来确定：
 
 | API 模式 | 用途 | 客户端类型 |
 |----------|------|-----------|
