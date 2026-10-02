@@ -371,7 +371,8 @@ const classicPalette = (colors: Record<string, string>) => skinToDesktopTheme({ 
 /**
  * Classic Hermes — the CLI's stock `default` skin (gold on navy), offered as a
  * Desktop pick under its OWN id. Never `default`: stock config ships
- * `display.skin: default`, and Desktop reads that as "no pick" (→ nous), so a
+ * `display.skin: default`, and Desktop reads that as "no pick"
+ * (→ DEFAULT_SKIN_NAME, currently VAEL), so a
  * user only ever gets Classic by choosing it (#76579). Both palettes go through
  * the converter a backend skin takes, so each mode paints what the CLI paints
  * in a dark or light terminal.
@@ -441,7 +442,23 @@ export const slateTheme: DesktopTheme = {
   }
 }
 
+/**
+ * VAEL — the CyberAI desktop identity (Claude-orange). First-party palette
+ * from the shared table; this is the default skin for new installs.
+ */
+export const vaelTheme: DesktopTheme = {
+  name: 'vael',
+  label: 'VAEL',
+  description: 'Warm paper and charcoal with Claude-orange accents',
+  ...THEME_PRESET_PALETTES.vael,
+  typography: {
+    fontSans: SYSTEM_SANS,
+    fontMono: SYSTEM_MONO
+  }
+}
+
 export const BUILTIN_THEMES: Record<string, DesktopTheme> = {
+  vael: vaelTheme,
   nous: nousTheme,
   github: githubTheme,
   catppuccin: catppuccinTheme,
@@ -459,7 +476,7 @@ export const BUILTIN_THEMES: Record<string, DesktopTheme> = {
 export const BUILTIN_THEME_LIST = Object.values(BUILTIN_THEMES)
 
 /** Skin used when nothing is persisted or the persisted name is retired. */
-export const DEFAULT_SKIN_NAME = 'nous'
+export const DEFAULT_SKIN_NAME = 'vael'
 
 /** Names that no longer resolve to a skin of their own. A stored pick of one
  *  falls back to DEFAULT_SKIN_NAME, and a cached backend theme under one is

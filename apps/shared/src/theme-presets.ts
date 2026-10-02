@@ -410,6 +410,67 @@ export const THEME_PRESET_PALETTES = {
       userBubbleBorder: '#3A63BD'
     }
   },
+  // VAEL — first-party CyberAI identity (Claude-orange). Hand-tuned, do not
+  // re-derive from any marketplace theme. Light is warm paper, dark is warm
+  // charcoal; primary #D97757, accent #CC785C on both sides.
+  vael: {
+    colors: {
+      background: '#FBF7F1',
+      foreground: '#1F1B16',
+      card: '#FFFFFF',
+      cardForeground: '#1F1B16',
+      muted: '#F3ECE1',
+      mutedForeground: '#6B6156',
+      popover: '#FFFFFF',
+      popoverForeground: '#1F1B16',
+      primary: '#D97757',
+      primaryForeground: '#FFFFFF',
+      secondary: '#F5E3D3',
+      secondaryForeground: '#1F1B16',
+      accent: '#CC785C',
+      accentForeground: '#FFFFFF',
+      border: '#E5D9C8',
+      input: '#FFFFFF',
+      ring: '#D97757',
+      midground: '#D97757',
+      midgroundForeground: '#FFFFFF',
+      composerRing: '#D97757',
+      destructive: '#C0392B',
+      destructiveForeground: '#FFFFFF',
+      sidebarBackground: '#F6F0E6',
+      sidebarBorder: '#E5D9C8',
+      userBubble: '#F9E8D9',
+      userBubbleBorder: '#E5C9AC'
+    },
+    darkColors: {
+      background: '#191410',
+      foreground: '#F5EDE3',
+      card: '#211B15',
+      cardForeground: '#F5EDE3',
+      muted: '#2A231B',
+      mutedForeground: '#B8A894',
+      popover: '#211B15',
+      popoverForeground: '#F5EDE3',
+      primary: '#D97757',
+      primaryForeground: '#201510',
+      secondary: '#2E2620',
+      secondaryForeground: '#F5EDE3',
+      accent: '#CC785C',
+      accentForeground: '#1F1B16',
+      border: '#3A3129',
+      input: '#211B15',
+      ring: '#D97757',
+      midground: '#D97757',
+      midgroundForeground: '#FFFFFF',
+      composerRing: '#D97757',
+      destructive: '#E06C5B',
+      destructiveForeground: '#191410',
+      sidebarBackground: '#14100C',
+      sidebarBorder: '#3A3129',
+      userBubble: '#2C2318',
+      userBubbleBorder: '#4A3A2A'
+    }
+  },
   midnight: {
     colors: {
       background: '#08081c',

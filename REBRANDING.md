@@ -99,7 +99,12 @@ faraz qilingan — ikkalasi ham upstream da **yo'q**. To'g'ri reja:
   (generator verified output format). Ataylab qoldirildi: service nomlari
   (`hermes-gateway`), path lar (`~/.hermes`), toolset patternlar,
   `source` taglar, CLI referrer/User-Agent lar, repo URL lar.
-- [ ] PR-3 (R-6): Claude-orange (`#D97757`/`#CC785C`) + CyberAI UI style.
+- [x] PR-3 (R-6): Claude-orange (`#D97757`/`#CC785C`) + CyberAI UI style —
+  `vael` palette in the shared table (both surfaces follow), desktop
+  `vaelTheme` + `DEFAULT_SKIN_NAME='vael'`, dashboard `defaultTheme` →
+  shared projection, `docs/design-system.md`, brand-test snapshot.
+  Upstream presets untouched. Full `vitest` not run locally (no
+  node_modules in this clone) — CI lanes cover it.
 - [ ] R-7: docs + `migrate-hermes-to-vael.sh` + `~/.hermes` fallback.
 - [ ] R-5-bridge/R-8/R-9: bridge kontrakt (CyberAI repo), branding testlari,
   CI guardlar (qisman PR-1 da bor).

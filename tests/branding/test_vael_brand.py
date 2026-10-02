@@ -106,6 +106,18 @@ def test_skill_rename_pr2():
     assert out.strip() == "", out[:500]
 
 
+def test_vael_theme_pr3():
+    shared = _read("apps/shared/src/theme-presets.ts")
+    assert "'#D97757'" in shared or '"#D97757"' in shared
+    assert "vael:" in shared or "'vael':" in shared or "vael: {" in shared
+    desktop = _read("apps/desktop/src/themes/presets.ts")
+    assert "DEFAULT_SKIN_NAME = 'vael'" in desktop
+    assert "vaelTheme" in desktop
+    web = _read("web/src/themes/presets.ts")
+    assert "THEME_PRESET_PALETTES.vael" in web
+    assert "Hermes Teal" not in web
+
+
 def test_desktop_display_branding():
     identity = _read("apps/desktop/product-identity.cjs")
     assert "display: 'VAEL'" in identity
