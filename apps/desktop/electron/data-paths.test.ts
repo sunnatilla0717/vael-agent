@@ -4,7 +4,14 @@ import path from 'node:path'
 
 import { afterEach, test, vi } from 'vitest'
 
-import { platformDefaultHermesHome, resolveDesktopHermesHome, resolveDesktopUserData } from './data-paths'
+import {
+  mirrorVaelEnv,
+  platformDefaultHermesHome,
+  platformDefaultVaelHome,
+  resolveConfigDir,
+  resolveDesktopHermesHome,
+  resolveDesktopUserData
+} from './data-paths'
 import { controlSocketPath } from './ssh-connection'
 
 afterEach((): void => {
@@ -31,9 +38,12 @@ test('default data roots append the suffix literally on each platform', (): void
 
       assert.equal(platformDefaultHermesHome(home, env, platform), base + suffix)
       assert.equal(resolveDesktopUserData(userData, env), userData + suffix)
+      // R-7: fresh installs default to the VAEL home, not the Hermes one.
+      const vaelBase: string = platform === 'win32' ? paths.join(local, 'vael') : paths.join(home, '.vael')
+      assert.equal(platformDefaultVaelHome(home, env, platform), vaelBase + suffix)
       assert.equal(
         resolveDesktopHermesHome({ home, env, platform, directoryExists: (): boolean => false }),
-        base + suffix
+        vaelBase + suffix
       )
     }
   }
@@ -55,7 +65,8 @@ test('explicit homes and userData retain precedence, and suffixed Windows homes 
 
   const windowsHome: string = 'C:\\Users\\test'
   const windowsEnv: NodeJS.ProcessEnv = { HERMES_DATA_DIR_SUFFIX: 'magic-test' }
-  const expected: string = path.win32.join(windowsHome, 'AppData', 'Local', 'hermesmagic-test')
+  // R-7: everything-exists stub → VAEL default wins (still never legacy state).
+  const expected: string = path.win32.join(windowsHome, 'AppData', 'Local', 'vaelmagic-test')
 
   assert.equal(
     resolveDesktopHermesHome({
@@ -75,4 +86,86 @@ test('explicit homes and userData retain precedence, and suffixed Windows homes 
     }),
     'C:\\custom'
   )
+})
+
+test('R-7: VAEL_CONFIG_DIR wins; vael dir wins; hermes fallback warns; default is vael', (): void => {
+  const home: string = '/home/test'
+  const vaelHome: string = '/home/test/.vael'
+  const hermesHome: string = '/home/test/.hermes'
+  const exists = (present: string[]): ((dir: string) => boolean) => (dir: string): boolean =>
+    present.includes(dir)
+
+  // 1. Explicit VAEL_CONFIG_DIR (no warning expected).
+  let warned: string[] = []
+  assert.equal(
+    resolveDesktopHermesHome({
+      home,
+      env: { VAEL_CONFIG_DIR: '/explicit/vael' },
+      platform: 'linux',
+      directoryExists: exists([]),
+      onFallback: (reason: string): void => {
+        warned.push(reason)
+      }
+    }),
+    '/explicit/vael'
+  )
+  assert.deepEqual(warned, [])
+
+  // 2. ~/.vael wins over ~/.hermes.
+  assert.equal(
+    resolveConfigDir({ home, env: {}, platform: 'linux', directoryExists: exists([vaelHome, hermesHome]) }),
+    vaelHome
+  )
+
+  // 3. ~/.hermes fallback + single warning.
+  warned = []
+  assert.equal(
+    resolveConfigDir({
+      home,
+      env: {},
+      platform: 'linux',
+      directoryExists: exists([hermesHome]),
+      onFallback: (reason: string): void => {
+        warned.push(reason)
+      }
+    }),
+    hermesHome
+  )
+  assert.deepEqual(warned, ['hermes-dir'])
+
+  // 4. Neither exists → vael default, no warning.
+  warned = []
+  assert.equal(
+    resolveConfigDir({ home, env: {}, platform: 'linux', directoryExists: exists([]) }),
+    vaelHome
+  )
+  assert.deepEqual(warned, [])
+
+  // Explicit HERMES_HOME still respected (compat, no warning from the resolver).
+  warned = []
+  assert.equal(
+    resolveDesktopHermesHome({
+      home,
+      env: { HERMES_HOME: '/legacy/home' },
+      platform: 'linux',
+      directoryExists: exists([]),
+      onFallback: (reason: string): void => {
+        warned.push(reason)
+      }
+    }),
+    '/legacy/home'
+  )
+  assert.deepEqual(warned, [])
+})
+
+test('R-7: mirrorVaelEnv copies VAEL_* onto unset HERMES_* only (pure, no mutation)', (): void => {
+  const input = { VAEL_FOO_R7: 'v1', HERMES_BAR_R7: 'keep', VAEL_EMPTY_R7: '   ' }
+  const out = mirrorVaelEnv(input as NodeJS.ProcessEnv)
+  assert.equal(out.HERMES_FOO_R7, 'v1')
+  assert.equal(out.HERMES_BAR_R7, 'keep')
+  assert.equal('HERMES_EMPTY_R7' in out, false)
+  assert.equal('HERMES_FOO_R7' in input, false)
+  // HERMES_* never overwritten.
+  const both = mirrorVaelEnv({ VAEL_X_R7: 'new', HERMES_X_R7: 'old' } as NodeJS.ProcessEnv)
+  assert.equal(both.HERMES_X_R7, 'old')
 })

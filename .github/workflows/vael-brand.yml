@@ -46,3 +46,67 @@ jobs:
       - name: Rebrand-sensitive suites (themes + product-identity)
         working-directory: apps/desktop
         run: npx vitest run src/themes electron/product-identity.test.ts
+
+  # R-7: backward-compatible config migration. Dependency-free (system
+  # python3 + POSIX sh only). Fails if the resolver/alias layer regresses.
+  vael-r7-migration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: R-7 presence checks
+        run: |
+          test -f scripts/migrate-hermes-to-vael.sh || { echo "missing migrate .sh"; exit 1; }
+          test -f scripts/migrate-hermes-to-vael.ps1 || { echo "missing migrate .ps1"; exit 1; }
+          test -f docs/migrating-from-hermes.md || { echo "missing migration guide"; exit 1; }
+          grep -q "def resolve_config_dir" hermes_constants.py || { echo "missing resolve_config_dir"; exit 1; }
+          grep -q "def resolve_env" hermes_constants.py || { echo "missing resolve_env"; exit 1; }
+          grep -q "_mirror_vael_env" hermes_constants.py || { echo "missing env mirror"; exit 1; }
+          grep -q "resolveConfigDir" apps/desktop/electron/data-paths.mjs || { echo "missing TS resolver"; exit 1; }
+          grep -q "mirrorVaelEnv" apps/desktop/electron/data-paths.mjs || { echo "missing TS mirror"; exit 1; }
+          echo "R-7 presence: OK"
+
+      - name: R-7 resolver smoke test (stdlib only, temp dirs)
+        run: |
+          python3 - <<'EOF'
+          import os, sys, tempfile
+          from pathlib import Path
+          sys.path.insert(0, ".")
+          import hermes_constants as H
+          tmp = Path(tempfile.mkdtemp(prefix="vael-r7-"))
+          home = tmp / "home"
+          (home / ".hermes").mkdir(parents=True)
+          os.environ["HOME"] = str(home)
+          if "VAEL_CONFIG_DIR" in os.environ:
+              del os.environ["VAEL_CONFIG_DIR"]
+          if "HERMES_HOME" in os.environ:
+              del os.environ["HERMES_HOME"]
+          got = H.resolve_config_dir()
+          assert got == home / ".hermes", got  # posix CI runner
+          assert H.resolve_env("VAEL_SMOKE_R7", "dflt") == "dflt"
+          os.environ["HERMES_SMOKE_R7"] = "legacy"
+          assert H.resolve_env("VAEL_SMOKE_R7") == "legacy"
+          os.environ["VAEL_SMOKE_R7"] = "new"
+          assert H.resolve_env("VAEL_SMOKE_R7") == "new"
+          print("R-7 smoke: OK")
+          EOF
+
+      - name: R-7 migration script (dry-run + copy, temp HOME)
+        run: |
+          export HOME="$(mktemp -d)/home"
+          mkdir -p "$HOME/.hermes/sub"
+          echo data > "$HOME/.hermes/a.md"
+          sh scripts/migrate-hermes-to-vael.sh --dry-run
+          sh scripts/migrate-hermes-to-vael.sh --non-interactive
+          test -f "$HOME/.vael/a.md" || { echo "copy failed"; exit 1; }
+          test -f "$HOME/.hermes/a.md" || { echo "source deleted (forbidden)"; exit 1; }
+          echo "R-7 migrate: OK"
+
+      - name: R-7 path centralization audit
+        run: |
+          # `.vael` literals may only live in the resolver layer, migration
+          # scripts/docs, and tests — never scattered across features.
+          bad=$(git grep -l -e '\.vael' -- '*.py' '*.ts' '*.mjs' | grep -v -e '^tests/' -e '^docs/' -e '^scripts/migrate' -e '^website/' -e '^locales/' -e 'hermes_constants.py' -e 'data-paths' -e 'theme-presets' -e 'presets.ts' -e 'product-identity' -e 'prompt_builder.py' -e 'skill_utils.py' -e 'skills_config.py' -e 'App.tsx' -e 'index.html' -e 'plugin.yaml' -e 'cli.py' -e 'main.py' -e 'test_store_traversal' -e 'test_vael_brand' -e 'test_hermes_constants' || true)
+          if [ -n "$bad" ]; then echo "scattered .vael literals:"; echo "$bad"; exit 1; fi
+          echo "R-7 audit: OK"

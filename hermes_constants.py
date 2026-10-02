@@ -58,6 +58,61 @@ def _get_platform_default_hermes_home() -> Path:
     return Path.home() / (".hermes" + suffix)
 
 
+def _get_platform_default_vael_home() -> Path:
+    """VAEL default home (same suffix mechanism as the Hermes default)."""
+    suffix = os.environ.get("HERMES_DATA_DIR_SUFFIX", "")
+    if sys.platform == "win32":
+        local_appdata = os.environ.get("LOCALAPPDATA", "").strip()
+        base = Path(local_appdata) if local_appdata else Path.home() / "AppData" / "Local"
+        return base / ("vael" + suffix)
+    return Path.home() / (".vael" + suffix)
+
+
+_vael_home_fallback_warned: bool = False
+
+
+def _warn_vael_fallback_once(kind: str) -> None:
+    """Warn once per process when a deprecated Hermes location/name is used."""
+    global _vael_home_fallback_warned
+    if _vael_home_fallback_warned:
+        return
+    _vael_home_fallback_warned = True
+    with contextlib.suppress(Exception):
+        sys.stderr.write(
+            f"[VAEL] Using deprecated {kind}. "
+            "See docs/migrating-from-hermes.md (run scripts/migrate-hermes-to-vael).\n"
+        )
+        sys.stderr.flush()
+
+
+def resolve_config_dir() -> Path:
+    """Canonical config-dir resolution (VAEL rebrand, R-7).
+
+    Precedence (no data is ever moved or deleted here):
+    1. ``VAEL_CONFIG_DIR`` env var (explicit, no warning).
+    2. ``~/.vael`` (``%LOCALAPPDATA%/vael`` on Windows) when it exists.
+    3. ``~/.hermes`` fallback when it exists (one deprecation warning).
+    4. Otherwise the VAEL default (created on first write by the caller).
+    """
+    explicit = os.environ.get("VAEL_CONFIG_DIR", "").strip()
+    if explicit:
+        return _expand_hermes_home(explicit)
+    vael_default = _get_platform_default_vael_home()
+    try:
+        if vael_default.is_dir():
+            return vael_default
+    except OSError:
+        pass
+    hermes_default = _get_platform_default_hermes_home()
+    try:
+        if hermes_default.is_dir():
+            _warn_vael_fallback_once("~/.hermes config directory")
+            return hermes_default
+    except OSError:
+        pass
+    return vael_default
+
+
 def sudo_invoker_default_home() -> Path | None:
     """The invoking user's native ``~/.hermes`` when this process is root under ``sudo``, else None.
 
@@ -166,7 +221,9 @@ def get_process_hermes_home() -> Path:
     :func:`get_routing_process_hermes_home` instead (#119242).
     """
     val = os.environ.get("HERMES_HOME", "").strip()
-    return _expand_hermes_home(val) if val else _get_platform_default_hermes_home()
+    # R-7: explicit HERMES_HOME keeps working (compat); the *default* branch
+    # is VAEL-aware (~/.vael → ~/.hermes fallback → ~/.vael).
+    return _expand_hermes_home(val) if val else resolve_config_dir()
 
 
 # Host-pinned identity of the profile this process serves as its own (None: follow HERMES_HOME).
@@ -1409,3 +1466,74 @@ def normalize_scope(scope: str | Path | None) -> str | None:
     """
     return hermes_home_key(scope) if scope is not None else None
 
+# --- VAEL rebrand: env alias mirror (R-7) -------------------------------------
+# Generic rule, zero call-site changes (upstream-mergeable): for every
+# ``VAEL_<SUFFIX>`` present in the environment, mirror it into
+# ``HERMES_<SUFFIX>`` when the latter is unset/empty, so all existing
+# ``os.environ.get("HERMES_*")`` reads keep working. Precedence is always
+# VAEL_* > HERMES_*. Runs once at import (this module is imported
+# practically first everywhere); tests using ``patch.dict(os.environ)``
+# are unaffected because the mirror only ADDS keys for VAEL_* names that
+# already exist in the real environment.
+_VAEL_ENV_MIRRORED: bool = False
+_VAEL_ENV_WARNED: bool = False
+
+
+def _mirror_vael_env() -> None:
+    """Mirror VAEL_* env vars onto unset HERMES_* counterparts (import-time)."""
+    global _VAEL_ENV_MIRRORED, _VAEL_ENV_WARNED
+    if _VAEL_ENV_MIRRORED:
+        return
+    _VAEL_ENV_MIRRORED = True
+    try:
+        items = list(os.environ.items())
+    except Exception:
+        return
+    for key, value in items:
+        if not key.startswith("VAEL_") or not value.strip():
+            continue
+        counterpart = "HERMES_" + key[len("VAEL_"):]
+        try:
+            if not os.environ.get(counterpart, "").strip():
+                os.environ[counterpart] = value
+        except Exception:
+            continue
+    if _VAEL_ENV_WARNED:
+        return
+    _VAEL_ENV_WARNED = True
+    legacy_only: list[str] = []
+    for key in sorted(os.environ.keys()):
+        if key.startswith("HERMES_") and not os.environ.get("VAEL_" + key[len("HERMES_"):], ""):
+            legacy_only.append(key)
+            if len(legacy_only) >= 5:
+                break
+    if legacy_only:
+        with contextlib.suppress(Exception):
+            extra = "" if len(legacy_only) < 5 else " (and more)"
+            sys.stderr.write(
+                "[VAEL] Using deprecated "
+                + ", ".join(legacy_only)
+                + extra
+                + ". See docs/migrating-from-hermes.md.\n"
+            )
+            sys.stderr.flush()
+
+
+def resolve_env(vael_name: str, default: str = "") -> str:
+    """Read ``VAEL_*`` with ``HERMES_*`` fallback (explicit call sites).
+
+    Use for NEW VAEL config/env code instead of ``os.environ.get`` directly.
+    The import-time mirror already covers legacy readers; this helper is for
+    code that wants the VAEL name to be the documented one.
+    """
+    direct = os.environ.get(vael_name, "")
+    if direct.strip():
+        return direct
+    if vael_name.startswith("VAEL_"):
+        legacy = os.environ.get("HERMES_" + vael_name[len("VAEL_"):], "")
+        if legacy.strip():
+            return legacy
+    return default
+
+
+_mirror_vael_env()

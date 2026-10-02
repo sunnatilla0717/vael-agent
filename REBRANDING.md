@@ -105,6 +105,13 @@ faraz qilingan — ikkalasi ham upstream da **yo'q**. To'g'ri reja:
   shared projection, `docs/design-system.md`, brand-test snapshot.
   Upstream presets untouched. Full `vitest` not run locally (no
   node_modules in this clone) — CI lanes cover it.
-- [ ] R-7: docs + `migrate-hermes-to-vael.sh` + `~/.hermes` fallback.
+- [x] R-7: `resolve_config_dir()` (`~/.vael` → `~/.hermes` fallback →
+  `~/.vael` default) + generic `VAEL_*`→`HERMES_*` import-time mirror +
+  `resolve_env()` + TS twins (`resolveConfigDir`, `mirrorVaelEnv` in
+  `data-paths.mjs`) + `migrate-hermes-to-vael.{sh,ps1}` (copy-only,
+  idempotent) + `docs/migrating-from-hermes.md`. Call-site rewiring
+  ataylab yo'q (50+ var, minglab ishlatish — merge saqlanadi); `HERMES_HOME`
+  explicit va barcha default matematika (`get_default_hermes_root`,
+  suffix, sudo) o'zgarishsiz.
 - [ ] R-5-bridge/R-8/R-9: bridge kontrakt (CyberAI repo), branding testlari,
   CI guardlar (qisman PR-1 da bor).

@@ -90,14 +90,15 @@ class TestGetHermesHome:
 
     @pytest.mark.platforms("windows")
     def test_windows_fallback_uses_localappdata(self, tmp_path, monkeypatch):
-        """When HERMES_HOME is unset on Windows, use %LOCALAPPDATA%\\hermes."""
+        """R-7: fresh installs default to %LOCALAPPDATA%\\vael (no dirs exist)."""
         local_appdata = tmp_path / "LocalAppData"
         monkeypatch.delenv("HERMES_HOME", raising=False)
+        monkeypatch.delenv("VAEL_CONFIG_DIR", raising=False)
         monkeypatch.setenv("LOCALAPPDATA", str(local_appdata))
         monkeypatch.setattr(Path, "home", lambda: tmp_path / "Home")
         monkeypatch.setattr(hermes_constants, "_profile_fallback_warned", False)
 
-        assert get_hermes_home() == local_appdata / "hermes"
+        assert get_hermes_home() == local_appdata / "vael"
 
 
 class TestGetProcessHermesHome:
@@ -664,3 +665,123 @@ class TestProjectVenvDirOutOfTree:
         assert hermes_constants.project_venv_dir(other) is None
         (checkout / ".venv").mkdir()
         assert hermes_constants.project_venv_dir(checkout) == checkout / ".venv"
+
+
+class TestResolveConfigDir:
+    """R-7: VAEL config-dir precedence — vael > hermes fallback > vael default."""
+
+    def _clean_env(self, monkeypatch, tmp_path):
+        monkeypatch.delenv("VAEL_CONFIG_DIR", raising=False)
+        monkeypatch.delenv("HERMES_HOME", raising=False)
+        monkeypatch.delenv("HERMES_DATA_DIR_SUFFIX", raising=False)
+        monkeypatch.setattr(Path, "home", lambda: tmp_path / "Home")
+        if sys.platform == "win32":
+            monkeypatch.setenv("LOCALAPPDATA", str(tmp_path / "LocalAppData"))
+        monkeypatch.setattr(hermes_constants, "_vael_home_fallback_warned", False)
+
+    def _names(self, tmp_path):
+        # Platform default dir names (mirrors the resolver, no production import).
+        if sys.platform == "win32":
+            return "vael", "hermes"
+        return ".vael", ".hermes"
+
+    def _base(self, tmp_path):
+        if sys.platform == "win32":
+            return tmp_path / "LocalAppData"
+        return tmp_path / "Home"
+
+    def test_explicit_config_dir_wins(self, tmp_path, monkeypatch):
+        from hermes_constants import resolve_config_dir
+
+        self._clean_env(monkeypatch, tmp_path)
+        explicit = tmp_path / "custom-vael"
+        monkeypatch.setenv("VAEL_CONFIG_DIR", str(explicit))
+        assert resolve_config_dir() == explicit
+
+    def test_vael_dir_wins_over_hermes(self, tmp_path, monkeypatch):
+        from hermes_constants import resolve_config_dir
+
+        self._clean_env(monkeypatch, tmp_path)
+        base = self._base(tmp_path)
+        vael_name, hermes_name = self._names(tmp_path)
+        (base / vael_name).mkdir(parents=True)
+        (base / hermes_name).mkdir(parents=True)
+        assert resolve_config_dir().name == vael_name
+
+    def test_hermes_fallback_when_no_vael(self, tmp_path, monkeypatch, capsys):
+        from hermes_constants import resolve_config_dir
+
+        self._clean_env(monkeypatch, tmp_path)
+        base = self._base(tmp_path)
+        vael_name, hermes_name = self._names(tmp_path)
+        (base / hermes_name).mkdir(parents=True)
+        assert resolve_config_dir().name == hermes_name
+        assert hermes_constants._vael_home_fallback_warned is True
+        assert "deprecated" in capsys.readouterr().err
+
+    def test_default_is_vael_when_nothing_exists(self, tmp_path, monkeypatch):
+        from hermes_constants import resolve_config_dir
+
+        self._clean_env(monkeypatch, tmp_path)
+        vael_name, _hermes_name = self._names(tmp_path)
+        assert resolve_config_dir().name == vael_name
+        assert hermes_constants._vael_home_fallback_warned is False
+
+    def test_get_hermes_home_explicit_still_respected(self, tmp_path, monkeypatch):
+        from hermes_constants import get_hermes_home
+
+        self._clean_env(monkeypatch, tmp_path)
+        explicit = tmp_path / "legacy-home"
+        explicit.mkdir()
+        monkeypatch.setenv("HERMES_HOME", str(explicit))
+        assert get_hermes_home() == explicit
+
+
+class TestResolveEnv:
+    """R-7: VAEL_* > HERMES_* > default."""
+
+    def test_vael_wins_over_hermes(self, monkeypatch):
+        from hermes_constants import resolve_env
+
+        monkeypatch.setenv("VAEL_FOO_R7", "vael-val")
+        monkeypatch.setenv("HERMES_FOO_R7", "hermes-val")
+        assert resolve_env("VAEL_FOO_R7") == "vael-val"
+
+    def test_hermes_fallback(self, monkeypatch):
+        from hermes_constants import resolve_env
+
+        monkeypatch.delenv("VAEL_FOO_R7", raising=False)
+        monkeypatch.setenv("HERMES_FOO_R7", "hermes-val")
+        assert resolve_env("VAEL_FOO_R7") == "hermes-val"
+
+    def test_default_when_neither(self, monkeypatch):
+        from hermes_constants import resolve_env
+
+        monkeypatch.delenv("VAEL_FOO_R7", raising=False)
+        monkeypatch.delenv("HERMES_FOO_R7", raising=False)
+        assert resolve_env("VAEL_FOO_R7", "dflt") == "dflt"
+        assert resolve_env("VAEL_FOO_R7") == ""
+
+
+class TestMirrorVaelEnv:
+    """R-7: import-time VAEL_* -> HERMES_* mirror (legacy readers keep working)."""
+
+    def test_mirror_copies_unset_counterpart(self, monkeypatch):
+        from hermes_constants import _mirror_vael_env
+
+        monkeypatch.setattr(hermes_constants, "_VAEL_ENV_MIRRORED", False)
+        monkeypatch.setattr(hermes_constants, "_VAEL_ENV_WARNED", True)
+        monkeypatch.setenv("VAEL_MIRROR_R7", "v1")
+        monkeypatch.delenv("HERMES_MIRROR_R7", raising=False)
+        _mirror_vael_env()
+        assert os.environ.get("HERMES_MIRROR_R7") == "v1"
+
+    def test_mirror_never_overwrites(self, monkeypatch):
+        from hermes_constants import _mirror_vael_env
+
+        monkeypatch.setattr(hermes_constants, "_VAEL_ENV_MIRRORED", False)
+        monkeypatch.setattr(hermes_constants, "_VAEL_ENV_WARNED", True)
+        monkeypatch.setenv("VAEL_MIRROR_R7B", "v1")
+        monkeypatch.setenv("HERMES_MIRROR_R7B", "keep")
+        _mirror_vael_env()
+        assert os.environ.get("HERMES_MIRROR_R7B") == "keep"
