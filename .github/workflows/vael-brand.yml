@@ -24,3 +24,25 @@ jobs:
       # normally (root conftest is bypassed here on purpose).
       - name: Run VAEL brand guards
         run: python3 tests/branding/test_vael_brand.py
+
+  # RF finding: CI was green while 6 desktop tests asserted pre-rebrand
+  # literals ('nous' default, 'Hermes' display names). The full desktop suite
+  # takes 60+ min, so this fast lane runs exactly the rebrand-sensitive
+  # suites (~2 min) on every PR. Existing jobs untouched.
+  brand-regression-fast:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 26
+          cache: npm
+
+      - name: Install JS dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Rebrand-sensitive suites (themes + product-identity)
+        working-directory: apps/desktop
+        run: npx vitest run src/themes electron/product-identity.test.ts
