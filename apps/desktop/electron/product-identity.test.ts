@@ -118,9 +118,11 @@ test('nonstable runtime pins userData before the app name can change', async ():
 })
 
 test.each([
-  [undefined, 'Hermes', 'hermes', 'latest', 'canary'],
-  ['bundled', 'Hermes Agent', 'hermes', 'latest', 'canary'],
-  ['light', 'Hermes Light', 'hermes-light', 'light', 'light-canary']
+  // VAEL rebrand (PR-1..3): display names are VAEL; cli/channels (artifact
+  // identity) intentionally still say hermes (see product-identity.cjs).
+  [undefined, 'VAEL', 'hermes', 'latest', 'canary'],
+  ['bundled', 'VAEL Agent', 'hermes', 'latest', 'canary'],
+  ['light', 'VAEL Light', 'hermes-light', 'light', 'light-canary']
 ] as const)(
   '%s separates stable, canary and independent commits',
   async (

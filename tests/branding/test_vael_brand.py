@@ -123,6 +123,9 @@ def test_desktop_display_branding():
     assert "display: 'VAEL'" in identity
     # Artifact names stay stable for builds and upstream merges.
     assert "kebab: 'hermes'" in identity
+    # Variants must stay distinguishable at OS level (markers invariant).
+    assert "display: 'VAEL Agent'" in identity
+    assert "display: 'VAEL Light'" in identity
 
 
 if __name__ == "__main__":

@@ -71,18 +71,20 @@ describe('Classic Hermes is an explicit Desktop pick, never inferred from stock 
   it.each([
     ['display.skin: default', stockDefaultSkin],
     ['display.skin unset', null]
-  ])('a stock user (%s) with no Desktop pick paints Nous on boot, connect and relaunch', async (_label, local) => {
+  ])('a stock user (%s) with no Desktop pick paints VAEL on boot, connect and relaunch', async (_label, local) => {
+    // VAEL rebrand (PR-3): DEFAULT_SKIN_NAME is 'vael', not 'nous'.
+    // Explicit 'nous' picks below still resolve to the Nous theme (kept).
     let run = await launch(local)
-    expect(run.bootPaint).toBe('nous')
+    expect(run.bootPaint).toBe('vael')
     run.connect()
     run.connect() // reconnect re-seed
-    expect(run.api.theme?.themeName).toBe('nous')
-    expect(paintedSkin()).toBe('nous')
+    expect(run.api.theme?.themeName).toBe('vael')
+    expect(paintedSkin()).toBe('vael')
 
     run = await launch(local)
-    expect(run.bootPaint).toBe('nous')
+    expect(run.bootPaint).toBe('vael')
     run.connect()
-    expect(paintedSkin()).toBe('nous')
+    expect(paintedSkin()).toBe('vael')
   })
 
   it('a Classic pick paints gold/navy (dark mode) and survives connect, reconnect and relaunch; a later Nous pick sticks', async () => {

@@ -18,7 +18,9 @@ const variants = {
     pascal: 'HermesLight'
   },
   bundled: {
-    display: 'VAEL',
+    // Full variant ('VAEL') dan farqlanishi shart — aks holda OS da ikki
+    // o'rnatma bir xil ko'rinadi (markers test shu invariantni qo'riqlaydi).
+    display: 'VAEL Agent',
     kebab: 'hermes-bundled',
     pascal: 'HermesBundled'
   }
