@@ -21,7 +21,7 @@ description: "将编码任务委托给 OpenCode CLI（功能开发、PR 审查�
 | 许可证 | MIT |
 | 平台 | linux, macos, windows |
 | 标签 | `Coding-Agent`, `OpenCode`, `Autonomous`, `Refactoring`, `Code-Review` |
-| 相关 skill | [`claude-code`](/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code), [`codex`](/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex), [`hermes-agent`](/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent) |
+| 相关 skill | [`claude-code`](/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code), [`codex`](/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex), [`vael-agent`](/user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-vael-agent) |
 
 ## 参考：完整 SKILL.md
 

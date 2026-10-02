@@ -1,35 +1,17 @@
 ---
-title: "Inspecting Hermes Desktop Dom — Read the live Hermes desktop DOM/CSS over CDP"
-sidebar_label: "Inspecting Hermes Desktop Dom"
-description: "Read the live Hermes desktop DOM/CSS over CDP"
+name: inspecting-vael-desktop-dom
+description: "Read the live VAEL desktop DOM/CSS over CDP."
+version: 1.0.0
+author: VAEL
+license: MIT
+platforms: [linux, macos, windows]
+metadata:
+  hermes:
+    tags: [desktop, electron, cdp, dom, ui-verification, self-inspection]
+    related_skills: [node-inspect-debugger, systematic-debugging, dogfood]
 ---
 
-{/* This page is auto-generated from the skill's SKILL.md by website/scripts/generate-skill-docs.py. Edit the source SKILL.md, not this page. */}
-
-# Inspecting Hermes Desktop Dom
-
-Read the live Hermes desktop DOM/CSS over CDP.
-
-## Skill metadata
-
-| | |
-|---|---|
-| Source | Bundled (installed by default) |
-| Path | `skills/software-development/inspecting-hermes-desktop-dom` |
-| Version | `1.0.0` |
-| Author | Hermes Agent |
-| License | MIT |
-| Platforms | linux, macos, windows |
-| Tags | `desktop`, `electron`, `cdp`, `dom`, `ui-verification`, `self-inspection` |
-| Related skills | [`node-inspect-debugger`](../../bundled/software-development/software-development-node-inspect-debugger.md), [`systematic-debugging`](../../bundled/software-development/software-development-systematic-debugging.md), [`dogfood`](../../bundled/software-development/software-development-dogfood.md) |
-
-## Reference: full SKILL.md
-
-:::info
-The following is the complete skill definition that Hermes loads when this skill is triggered. This is what the agent sees as instructions when the skill is active.
-:::
-
-# Inspecting the live Hermes desktop DOM
+# Inspecting the live VAEL desktop DOM
 
 ## Overview
 

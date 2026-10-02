@@ -68,6 +68,44 @@ def test_web_dashboard_branding():
     assert "Hermes" not in html
 
 
+def test_skill_rename_pr2():
+    import subprocess
+
+    renames = {
+        "skills/autonomous-ai-agents/vael-agent/SKILL.md": "name: vael-agent",
+        "skills/software-development/vael-skill-authoring/SKILL.md": (
+            "name: vael-agent-skill-authoring"
+        ),
+        "skills/software-development/inspecting-vael-desktop-dom/SKILL.md": (
+            "name: inspecting-vael-desktop-dom"
+        ),
+        "optional-skills/devops/vael-s6-container-supervision/SKILL.md": (
+            "name: vael-s6-container-supervision"
+        ),
+    }
+    for rel, name_line in renames.items():
+        assert (ROOT / rel).is_file(), rel
+        assert name_line in _read(rel), rel
+    for old in (
+        "skills/autonomous-ai-agents/hermes-agent",
+        "skills/software-development/hermes-agent-skill-authoring",
+        "skills/software-development/inspecting-hermes-desktop-dom",
+        "optional-skills/devops/hermes-s6-container-supervision",
+    ):
+        assert not (ROOT / old).exists(), old
+    assert 'frozenset({"vael-agent"})' in _read("agent/skill_utils.py")
+    assert "skill_view(name='vael-agent')" in _read("agent/prompt_builder.py")
+    try:
+        out = subprocess.check_output(
+            ["git", "grep", "-n", "related_skills.*hermes-agent", "--", "skills", "optional-skills"],
+            cwd=ROOT,
+            text=True,
+        )
+    except subprocess.CalledProcessError:
+        out = ""  # no matches — the desired state
+    assert out.strip() == "", out[:500]
+
+
 def test_desktop_display_branding():
     identity = _read("apps/desktop/product-identity.cjs")
     assert "display: 'VAEL'" in identity

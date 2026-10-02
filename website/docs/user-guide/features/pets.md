@@ -231,6 +231,6 @@ Common gotchas:
 
 ## See also
 
-- The [`hermes-agent` skill](../skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent.md)
+- The [`hermes-agent` skill](../skills/bundled/autonomous-ai-agents/autonomous-ai-agents-vael-agent.md)
   lets the agent install and switch pets for you on request (see its
   `references/petdex.md`).

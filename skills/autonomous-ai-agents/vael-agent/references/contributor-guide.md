@@ -5,7 +5,7 @@ For occasional contributors and PR authors. Full developer docs: https://hermes-
 ### Project Layout
 
 ```
-hermes-agent/
+vael-agent/
 ├── run_agent.py          # AIAgent — core conversation loop
 ├── model_tools.py        # Tool discovery and dispatch
 ├── toolsets.py           # Toolset definitions
@@ -105,7 +105,7 @@ scripts/run_tests.sh -v --tb=long             # pass-through pytest flags
 - **Windows:** run the same wrapper through Git Bash. See `references/windows-quirks.md`.
 - After editing `pyproject.toml`, run `hermes pm lock`, re-source `./activate`, and
   commit `pyproject.toml` with `uv.lock`.
-  Do not mutate Hermes environments with raw pip or uv commands.
+  Do not mutate VAEL environments with raw pip or uv commands.
 
 Host-specific tests run on the real host. Use one `@pytest.mark.platforms(...)`
 marker per test, such as `@pytest.mark.platforms("windows", arch="arm64")`.

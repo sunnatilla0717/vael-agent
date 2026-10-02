@@ -21,7 +21,7 @@ Manual OAuth for remote MCP servers on headless gateways.
 | License | MIT |
 | Platforms | linux, macos |
 | Tags | `MCP`, `OAuth`, `PKCE`, `Remote-Deployment` |
-| Related skills | [`hermes-agent`](../../bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent.md), [`mcporter`](../../optional/mcp/mcp-mcporter.md), [`fastmcp`](../../optional/mcp/mcp-fastmcp.md) |
+| Related skills | [`vael-agent`](../../bundled/autonomous-ai-agents/autonomous-ai-agents-vael-agent.md), [`mcporter`](../../optional/mcp/mcp-mcporter.md), [`fastmcp`](../../optional/mcp/mcp-fastmcp.md) |
 
 ## Reference: full SKILL.md
 

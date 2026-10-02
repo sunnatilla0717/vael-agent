@@ -8,7 +8,7 @@ platforms: [linux, macos, windows]
 metadata:
   hermes:
     tags: [Multi-Agent, Git, Merge-Conflict, Kanban, Arbitration]
-    related_skills: [hermes-agent]
+    related_skills: [vael-agent]
 ---
 
 # Agent Merge-Conflict Arbiter

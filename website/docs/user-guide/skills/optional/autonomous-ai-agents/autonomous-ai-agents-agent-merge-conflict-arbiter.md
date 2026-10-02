@@ -21,7 +21,7 @@ Neutral arbiter for merge conflicts between two agents.
 | License | MIT |
 | Platforms | linux, macos, windows |
 | Tags | `Multi-Agent`, `Git`, `Merge-Conflict`, `Kanban`, `Arbitration` |
-| Related skills | [`hermes-agent`](../../bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent.md) |
+| Related skills | [`vael-agent`](../../bundled/autonomous-ai-agents/autonomous-ai-agents-vael-agent.md) |
 
 ## Reference: full SKILL.md
 

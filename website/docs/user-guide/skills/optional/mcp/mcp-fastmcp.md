@@ -21,7 +21,7 @@ Build, test, and deploy Python MCP servers.
 | License | MIT |
 | Platforms | linux, macos, windows |
 | Tags | `MCP`, `FastMCP`, `Python`, `Tools`, `Resources`, `Prompts`, `Deployment` |
-| Related skills | [`hermes-agent`](../../bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent.md), [`mcporter`](../../optional/mcp/mcp-mcporter.md) |
+| Related skills | [`vael-agent`](../../bundled/autonomous-ai-agents/autonomous-ai-agents-vael-agent.md), [`mcporter`](../../optional/mcp/mcp-mcporter.md) |
 
 ## Reference: full SKILL.md
 

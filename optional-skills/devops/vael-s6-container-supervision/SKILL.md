@@ -1,50 +1,32 @@
 ---
-title: "Hermes S6 Container Supervision — Modify or debug s6 services in the Hermes Docker image"
-sidebar_label: "Hermes S6 Container Supervision"
-description: "Modify or debug s6 services in the Hermes Docker image"
+name: vael-s6-container-supervision
+description: Modify or debug s6 services in the VAEL Docker image.
+version: 1.0.0
+author: VAEL
+license: MIT
+platforms: [linux]
+environments: [s6]
+metadata:
+  hermes:
+    tags: [docker, s6, supervision, gateway, profiles]
+    related_skills: [vael-agent]
 ---
 
-{/* This page is auto-generated from the skill's SKILL.md by website/scripts/generate-skill-docs.py. Edit the source SKILL.md, not this page. */}
-
-# Hermes S6 Container Supervision
-
-Modify or debug s6 services in the Hermes Docker image.
-
-## Skill metadata
-
-| | |
-|---|---|
-| Source | Optional — install with `hermes skills install official/devops/hermes-s6-container-supervision` |
-| Path | `optional-skills/devops/hermes-s6-container-supervision` |
-| Version | `1.0.0` |
-| Author | Hermes Agent |
-| License | MIT |
-| Platforms | linux |
-| Tags | `docker`, `s6`, `supervision`, `gateway`, `profiles` |
-| Related skills | [`hermes-agent`](../../bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent.md) |
-
-## Reference: full SKILL.md
-
-:::info
-The following is the complete skill definition that Hermes loads when this skill is triggered. This is what the agent sees as instructions when the skill is active.
-:::
-
-# Hermes s6-overlay Container Supervision
+# VAEL s6-overlay Container Supervision
 
 ## When to use this skill
 
 Load this skill when you're working on:
-- Adding or removing a static service in the Hermes Docker image (something that should be supervised at every container start, like the dashboard)
+- Adding or removing a static service in the VAEL Docker image (something that should be supervised at every container start, like the dashboard)
 - Diagnosing why a per-profile gateway isn't starting, restarting, or surviving `docker restart`
 - Understanding why the container's CMD is `/opt/hermes/docker/main-wrapper.sh` and how leading-dash args reach the user's program
 - Modifying `cont-init.d` boot scripts (UID remap, volume seeding, profile reconciliation)
 - Changing the rendered run-script for per-profile gateways (Phase 4)
 
-If you're just running the Hermes Agent and want to use Docker, see `website/docs/user-guide/docker.md` instead.
+If you're just running the VAEL Agent and want to use Docker, see `website/docs/user-guide/docker.md` instead.
 
 ## Architecture at a glance
 
-<!-- ascii-guard-ignore -->
 ```
 /init                                  ← PID 1 (s6-overlay v3.2.3.0)
 ├── cont-init.d                        ← oneshot setup, runs as root
@@ -76,7 +58,6 @@ If you're just running the Hermes Agent and want to use Docker, see `website/doc
     └── routes user args: bare exec | hermes subcommand | hermes (no args)
         — exec'd by /init with stdin/stdout/stderr inherited (TTY for --tui)
 ```
-<!-- ascii-guard-ignore-end -->
 
 ## Key files
 
@@ -155,8 +136,8 @@ Edit `S6ServiceManager._render_run_script` in `hermes_cli/service_manager.py`. T
 ### Run the docker test harness
 
 ```sh
-docker build -t hermes-agent-harness:latest .
-HERMES_TEST_IMAGE=hermes-agent-harness:latest scripts/run_tests.sh tests/docker/ -v
+docker build -t vael-agent-harness:latest .
+HERMES_TEST_IMAGE=vael-agent-harness:latest scripts/run_tests.sh tests/docker/ -v
 # Expect 19 passed, 0 xfailed against the s6 image
 ```
 
@@ -194,5 +175,5 @@ Check whether something is invoking `s6-svscanctl -t` or `/run/s6/basedir/bin/ha
 
 ## Related skills
 
-- `hermes-agent-dev`: General hermes-agent codebase navigation
-- `hermes-tool-quirks`: Specific Hermes-tool workarounds (sed/grep/etc.) — load when debugging the s6 stack's interaction with hermes built-in tools.
+- `vael-agent-dev`: General vael-agent codebase navigation
+- `hermes-tool-quirks`: Specific VAEL-tool workarounds (sed/grep/etc.) — load when debugging the s6 stack's interaction with hermes built-in tools.

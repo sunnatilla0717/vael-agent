@@ -21,7 +21,7 @@ Delegate coding to OpenAI Codex CLI (features, PRs).
 | License | MIT |
 | Platforms | linux, macos, windows |
 | Tags | `Coding-Agent`, `Codex`, `OpenAI`, `Code-Review`, `Refactoring` |
-| Related skills | [`claude-code`](../../bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code.md), [`hermes-agent`](../../bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent.md) |
+| Related skills | [`claude-code`](../../bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code.md), [`vael-agent`](../../bundled/autonomous-ai-agents/autonomous-ai-agents-vael-agent.md) |
 
 ## Reference: full SKILL.md
 

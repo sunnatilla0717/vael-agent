@@ -8,7 +8,7 @@ Two operator/agent-facing name lookups must stay inside the thing they name:
   after real staged writes: the fake model calls the ``memory`` and ``skill_manage`` tools with
   ``memory.write_approval`` / ``skills.write_approval`` on, so the store directories exist exactly as
   they do for a user.
-* ``skill_manage delete`` (#120528) must refuse a pinned skill and the essential ``hermes-agent`` skill
+* ``skill_manage delete`` (#120528) must refuse a pinned skill and the essential ``vael-agent`` skill
   whatever spelling names it: bare (``my-skill``) or categorized (``research/my-skill``). The pin is set
   with the real ``hermes curator pin`` CLI; the deletes are real tool calls in real agent turns on the
   same backend (``hermes chat -q`` does not offer ``skill_manage``: one-shot runs hide it).
@@ -51,7 +51,7 @@ TRAVERSALS: dict[str, tuple[str, str]] = {
 }
 DELETES: dict[str, tuple[str, str]] = {  # scenario -> (name given to skill_manage, skill dir under skills/)
     "pinned_by_category": ("research/my-skill", "research/my-skill"),
-    "essential_by_category": ("autonomous-ai-agents/hermes-agent", "autonomous-ai-agents/hermes-agent"),
+    "essential_by_category": ("autonomous-ai-agents/vael-agent", "autonomous-ai-agents/vael-agent"),
 }
 
 
@@ -209,7 +209,7 @@ class DeleteRun:
 # Executed in this order, one agent turn each, so a later delete can never mask an earlier outcome.
 _DELETE_STEPS: tuple[tuple[str, str, str], ...] = (
     ("control_pinned_bare", "my-skill", "research/my-skill"),
-    ("control_essential_bare", "hermes-agent", "autonomous-ai-agents/hermes-agent"),
+    ("control_essential_bare", "vael-agent", "autonomous-ai-agents/vael-agent"),
     *((n, name, rel) for n, (name, rel) in DELETES.items()),
     ("control_unpinned_category", "research/free-skill", "research/free-skill"),
     # bare-name discovery works, so a refused bare pinned/essential delete is the guard, not "not found"
@@ -222,7 +222,7 @@ def deletes(tmp_path_factory: pytest.TempPathFactory) -> Iterator[DeleteRun]:
     root = tmp_path_factory.mktemp("deletes")
     home = root / "home"
     skills = home / ".hermes" / "skills"
-    for rel in ("research/my-skill", "research/free-skill", "research/spare-skill", "autonomous-ai-agents/hermes-agent"):
+    for rel in ("research/my-skill", "research/free-skill", "research/spare-skill", "autonomous-ai-agents/vael-agent"):
         (skills / rel).mkdir(parents=True)
         (skills / rel / "SKILL.md").write_text(_skill_md(rel.rsplit("/", 1)[1]), encoding="utf-8")
     key = H.canary("sk-delete")

@@ -9,7 +9,7 @@ metadata:
   hermes:
     tags: [orchestration, fan-out, subagents, delegation, verification, migration, audit, research, campaign]
     category: autonomous-ai-agents
-    related_skills: [hermes-agent, simplify-code]
+    related_skills: [vael-agent, simplify-code]
 when_to_use:
   - A task is too big for one context window AND you can describe the split (per-file, per-endpoint, per-source, per-record)
   - You want orchestration codified as a re-runnable script plus a shared brief, not improvised turn by turn
@@ -34,7 +34,7 @@ make `delegate_task` durable across restarts; that is the kanban swarm's job.
 Reach for it when the unit of work is clear (a file, an endpoint, a record) and
 there are more units than one context can hold. Skip it for under ~10 units or
 for serial chains. For a refactor or fix campaign on hermes-agent itself, load
-`hermes-agent` (the dev workflow) alongside; this skill owns the fan-out shape.
+`vael-agent` (the dev workflow) alongside; this skill owns the fan-out shape.
 
 ## Prerequisites
 
