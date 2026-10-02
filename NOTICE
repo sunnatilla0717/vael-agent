@@ -1,0 +1,13 @@
+VAEL — Third-Party Notices
+
+VAEL is based on Hermes Agent by Nous Research, licensed under the MIT
+License (Copyright (c) 2025 Nous Research). The full license text is in
+the LICENSE file of this repository, which is unchanged from upstream.
+
+Upstream project: https://github.com/NousResearch/hermes-agent
+Upstream documentation: https://hermes-agent.nousresearch.com/docs
+
+Only the surface layer (branding, UI strings, adapter messages) has been
+renamed from Hermes to VAEL. Core agent logic, memory system, skill engine,
+and security model are unchanged from upstream. See REBRANDING.md for the
+full scope, exclusions, and upstream merge strategy.
