@@ -163,7 +163,7 @@ gateway:
     header: "**Hibakeresési jelentés feltöltve:**"
     auto_delete: "⏱ A beillesztések 6 óra múlva automatikusan törlődnek."
     full_logs_hint: "Teljes naplók feltöltéséhez használd a `hermes debug share` parancsot a CLI-ből."
-    share_hint: "Oszd meg ezeket a hivatkozásokat a Hermes csapattal támogatásért."
+    share_hint: "Oszd meg ezeket a hivatkozásokat a VAEL csapattal támogatásért."
     report_label: "Jelentés"
   deny:
     stale: "❌ Parancs elutasítva (a jóváhagyás elavult)."
@@ -206,7 +206,7 @@ gateway:
     set: "⊙ Cél beállítva ({budget} körös keret): {goal}\nDolgozni fogok rajta, amíg a cél el nem készül, te nem szünetelteted/törlöd, vagy a keret ki nem merül.\nVezérlés: /goal status · /goal pause · /goal resume · /goal clear"
     gate_add_admin_only: "⛔ A /goal gate add parancshoz kifejezetten beállított átjáró-admin kell (allow_admin_from a DM-ekhez, group_allow_admin_from a csoportokhoz)."
   help:
-    header: "📖 **Hermes parancsok**\n"
+    header: "📖 **VAEL parancsok**\n"
     skill_header: "\n⚡ **Készségparancsok** ({count} aktív):"
     more_use_commands: "\n... és még {count}. Használd a `/commands` parancsot a teljes, lapozható listához."
   insights:
@@ -332,7 +332,7 @@ gateway:
     db_unavailable: "A munkamenet-adatbázis nem érhető el."
     parse_error: "⚠️ Could not parse `/resume` arguments: {error}. Use quotes around titles with spaces, for example: `/resume \"Project A Plan\"`."
     matrix_no_named_sessions: "No named sessions found for this Matrix room. Use `/title My Session` to name the current room session, `/resume --all` to list all Matrix sessions, or `/resume --cross-room <session name>` to explicitly cross room boundaries."
-    matrix_blocked_no_origin: "⚠️ A Matrix /resume blokkolva: ennek a nevesített munkamenetnek nincs rögzített forrásszobája, ezért a Hermes alapból nem folytatja az aktuális szobában. Ha szándékosan akarsz szobahatárt átlépni, használd: `/resume --cross-room {name}`."
+    matrix_blocked_no_origin: "⚠️ A Matrix /resume blokkolva: ennek a nevesített munkamenetnek nincs rögzített forrásszobája, ezért a VAEL alapból nem folytatja az aktuális szobában. Ha szándékosan akarsz szobahatárt átlépni, használd: `/resume --cross-room {name}`."
     matrix_blocked_other_room: "⚠️ A Matrix /resume blokkolva: az a munkamenet egy másik Matrix-szobához tartozik ({room}). Ha szándékosan itt akarod folytatni, használd: `/resume --cross-room {name}`."
     matrix_cross_room_success: "⚠️ Cross-room resume: resumed **{title}** inside Matrix room **{room}**. Future messages in this room will use that transcript until `/reset` or another `/resume`.{msg_part}"
     blocked_not_owner: "⚠️ A /resume blokkolva: a '**{name}**' munkamenet másik felhasználóhoz vagy csevegéshez tartozik. Csak ebből a csevegésből származó munkameneteket folytathatsz."
@@ -425,7 +425,7 @@ gateway:
     source_line: "Forrás: {source}; a kategóriánkénti számok helyi becslések."
     hint_all: "A /context all parancs skillenkénti és eszközkészletenkénti költségeket is mutat."
   status:
-    header: "📊 **Hermes Gateway állapot**"
+    header: "📊 **VAEL Gateway állapot**"
     matrix_scope_header: "**Matrix-hatókör:**"
     matrix_scope_room: "  szoba: {room}"
     matrix_scope_room_id: "  room_id: {room_id}"
@@ -469,24 +469,24 @@ gateway:
     topics_user_disallowed: "A Telegram topicok engedélyezve vannak, de a felhasználók nem hozhatnak létre topicokat.\n\nNyisd meg a @BotFather → válaszd ki a botod → Bot Settings → Threads Settings menüt, majd kapcsold ki a 'Disallow users to create new threads' opciót.\n\nEzután küldd újra a /topic parancsot."
     enable_failed: "Nem sikerült engedélyezni a Telegram topic módot: {error}"
     bound_status: "Ez a topic ehhez van kapcsolva:\nMunkamenet: {label}\nID: {session_id}\n\nHasználd a /new parancsot, hogy lecseréld ezt a topicot új munkamenetre.\nPárhuzamos munkához nyisd meg az All Messagest, és küldj oda egy üzenetet egy másik topic létrehozásához."
-    thread_ready: "A többmunkamenetes Telegram topicok engedélyezve vannak.\n\nEz a topic független Hermes-munkamenetként szolgál. Használd a /new parancsot, hogy lecseréld a topic jelenlegi munkamenetét. Párhuzamos munkához nyisd meg az All Messagest, és küldj oda egy üzenetet egy másik topic létrehozásához."
+    thread_ready: "A többmunkamenetes Telegram topicok engedélyezve vannak.\n\nEz a topic független VAEL-munkamenetként szolgál. Használd a /new parancsot, hogy lecseréld a topic jelenlegi munkamenetét. Párhuzamos munkához nyisd meg az All Messagest, és küldj oda egy üzenetet egy másik topic létrehozásához."
     untitled_session: "Cím nélküli munkamenet"
     restore_step_1: "1. Hozz létre vagy nyiss meg egy topicot. Újat úgy hozhatsz létre, hogy megnyitod az All Messages részt, és küldesz oda egy tetszőleges üzenetet."
     restore_step_2: "2. Küldd el a /topic <session-id> parancsot abban a topicban."
-    default_title: "Hermes Chat"
-    root_lobby: "Ez a fő csevegés a rendszerparancsoknak van fenntartva.\n\nÚj Hermes-csevegéshez nyisd meg az All Messages topicot a bot felületének tetején, és küldj oda egy tetszőleges üzenetet. A Telegram új topicot hoz létre az üzenethez; minden topic önálló Hermes-munkamenetként működik."
-    root_new: "Új párhuzamos Hermes-csevegéshez nyisd meg az All Messages topicot a bot felületének tetején, és küldj oda egy tetszőleges üzenetet. A Telegram új topicot hoz létre hozzá.\n\nMinden topic önálló Hermes-munkamenet. A /new parancsot csak akkor használd egy meglévő topicban, ha le akarod cserélni annak a topicnak a jelenlegi munkamenetét."
-    new_header: "Új Hermes-munkamenet indult ebben a topicban.\n\nTipp: párhuzamos munkához nyisd meg az All Messages részt, és küldj oda egy üzenetet — így külön topic jön létre, nem kell itt a /new. A /new az aktuális topichoz kötött munkamenetet cseréli le."
-    help: "/topic — többmunkamenetes DM-mód bekapcsolása (egy bot, sok párhuzamos csevegés)\n\nHasználat:\n  /topic             Topicmód bekapcsolása, vagy az állapot megjelenítése, ha már be van kapcsolva\n  /topic help        Ennek az üzenetnek a megjelenítése\n  /topic off         Topicmód kikapcsolása és a topic-hozzárendelések törlése\n  /topic <id>        Topicon belül: korábbi munkamenet visszaállítása azonosító alapján\n\nHogyan működik:\n1. Futtasd egyszer a /topic parancsot ebben a DM-ben — a Hermes ellenőrzi,\n   hogy a BotFather Threads Settings be van-e kapcsolva, és bekapcsolja a többmunkamenetes módot.\n2. Koppints az All Messages részre a bot tetején, és küldj egy tetszőleges üzenetet.\n   A Telegram új topicot hoz létre az üzenethez; minden topic\n   önálló Hermes-munkamenet (friss előzmények, friss kontextus).\n3. A gyökér DM rendszerelőtérré válik — oda küldd a /topic, /status,\n   /help, /usage parancsokat. A normál promptok topicba valók.\n4. A /new egy topicon belül csak annak a topicnak a munkamenetét állítja alaphelyzetbe.\n5. A /topic <id> egy topicon belül egy régi munkamenetet állít vissza oda."
+    default_title: "VAEL Chat"
+    root_lobby: "Ez a fő csevegés a rendszerparancsoknak van fenntartva.\n\nÚj VAEL-csevegéshez nyisd meg az All Messages topicot a bot felületének tetején, és küldj oda egy tetszőleges üzenetet. A Telegram új topicot hoz létre az üzenethez; minden topic önálló VAEL-munkamenetként működik."
+    root_new: "Új párhuzamos VAEL-csevegéshez nyisd meg az All Messages topicot a bot felületének tetején, és küldj oda egy tetszőleges üzenetet. A Telegram új topicot hoz létre hozzá.\n\nMinden topic önálló VAEL-munkamenet. A /new parancsot csak akkor használd egy meglévő topicban, ha le akarod cserélni annak a topicnak a jelenlegi munkamenetét."
+    new_header: "Új VAEL-munkamenet indult ebben a topicban.\n\nTipp: párhuzamos munkához nyisd meg az All Messages részt, és küldj oda egy üzenetet — így külön topic jön létre, nem kell itt a /new. A /new az aktuális topichoz kötött munkamenetet cseréli le."
+    help: "/topic — többmunkamenetes DM-mód bekapcsolása (egy bot, sok párhuzamos csevegés)\n\nHasználat:\n  /topic             Topicmód bekapcsolása, vagy az állapot megjelenítése, ha már be van kapcsolva\n  /topic help        Ennek az üzenetnek a megjelenítése\n  /topic off         Topicmód kikapcsolása és a topic-hozzárendelések törlése\n  /topic <id>        Topicon belül: korábbi munkamenet visszaállítása azonosító alapján\n\nHogyan működik:\n1. Futtasd egyszer a /topic parancsot ebben a DM-ben — a VAEL ellenőrzi,\n   hogy a BotFather Threads Settings be van-e kapcsolva, és bekapcsolja a többmunkamenetes módot.\n2. Koppints az All Messages részre a bot tetején, és küldj egy tetszőleges üzenetet.\n   A Telegram új topicot hoz létre az üzenethez; minden topic\n   önálló VAEL-munkamenet (friss előzmények, friss kontextus).\n3. A gyökér DM rendszerelőtérré válik — oda küldd a /topic, /status,\n   /help, /usage parancsokat. A normál promptok topicba valók.\n4. A /new egy topicon belül csak annak a topicnak a munkamenetét állítja alaphelyzetbe.\n5. A /topic <id> egy topicon belül egy régi munkamenetet állít vissza oda."
     system_topic_name: "Rendszer"
-    system_topic_intro: "Rendszertopic a Hermes-parancsokhoz és az állapothoz."
+    system_topic_intro: "Rendszertopic a VAEL-parancsokhoz és az állapothoz."
     setup_image_caption: "BotFather → Bot Settings → Threads Settings"
     no_chat_id: "A csevegésazonosító nem állapítható meg."
     mode_not_enabled: "A többmunkamenetes topicmód jelenleg nincs bekapcsolva ebben a csevegésben."
     disable_failed: "A topicmód kikapcsolása nem sikerült: {error}"
-    mode_disabled: "A többmunkamenetes topicmód mostantól KI van kapcsolva ebben a csevegésben.\n\nA meglévő Telegram-topicok nem tűnnek el — csak nem számítanak többé önálló munkamenetnek. A gyökér DM újra normál Hermes-csevegésként működik. Később a /topic paranccsal kapcsolhatod vissza."
+    mode_disabled: "A többmunkamenetes topicmód mostantól KI van kapcsolva ebben a csevegésben.\n\nA meglévő Telegram-topicok nem tűnnek el — csak nem számítanak többé önálló munkamenetnek. A gyökér DM újra normál VAEL-csevegésként működik. Később a /topic paranccsal kapcsolhatod vissza."
     status_enabled: "A Telegram többmunkamenetes topicok be vannak kapcsolva."
-    status_how_to: "Új Hermes-csevegéshez nyisd meg az All Messages részt a bot felületének tetején, és küldj oda egy tetszőleges üzenetet. A Telegram új topicot hoz létre hozzá."
+    status_how_to: "Új VAEL-csevegéshez nyisd meg az All Messages részt a bot felületének tetején, és küldj oda egy tetszőleges üzenetet. A Telegram új topicot hoz létre hozzá."
     previous_unlinked: "Korábbi, nem hozzárendelt munkamenetek:"
     restore_one: "Visszaállításhoz:"
     restore_example: "Példa: küldd el a /topic {session_id} parancsot egy topicban."
@@ -497,7 +497,7 @@ gateway:
     not_your_session: "Az a munkamenet nem ehhez a Telegram-felhasználóhoz tartozik."
     already_linked: "Az a munkamenet már egy másik Telegram-topichoz van rendelve."
     restored: "Munkamenet visszaállítva: {title}"
-    restored_last_message: "\n\nUtolsó Hermes-üzenet:\n{text}"
+    restored_last_message: "\n\nUtolsó VAEL-üzenet:\n{text}"
   undo:
     nothing: "Nincs mit visszavonni."
     removed: "↩️ {turns} fordulat visszavonva ({count} üzenet).\nBiztonsági mentés ide: \"{preview}\"\nMásold/szerkeszd a fenti szöveget, és küldd el, hogy innen újra kérdezz."
@@ -505,19 +505,19 @@ gateway:
   update:
     platform_not_messaging: "✗ A /update csak üzenetküldő platformokról érhető el. Futtasd a `hermes update` parancsot a terminálból."
     not_git_repo: "✗ Nem git-tárhely — frissítés nem lehetséges."
-    hermes_cmd_not_found: "✗ Nem sikerült megtalálni a `hermes` parancsot. A Hermes fut, de a frissítőparancs nem találta a futtatható fájlt a PATH-on vagy a jelenlegi Python interpreteren keresztül. Próbáld futtatni a `hermes update` parancsot manuálisan a terminálban."
+    hermes_cmd_not_found: "✗ Nem sikerült megtalálni a `hermes` parancsot. A VAEL fut, de a frissítőparancs nem találta a futtatható fájlt a PATH-on vagy a jelenlegi Python interpreteren keresztül. Próbáld futtatni a `hermes update` parancsot manuálisan a terminálban."
     start_failed: "✗ Nem sikerült elindítani a frissítést: {error}"
-    starting: "☤ Hermes frissítés indítása… A folyamatot itt fogom közvetíteni."
+    starting: "☤ VAEL frissítés indítása… A folyamatot itt fogom közvetíteni."
     reply_failed: "✗ Nem sikerült elküldeni a választ a frissítési folyamatnak: {error}"
     reply_sent: "✓ `{label}` elküldve a frissítési folyamatnak."
-    failed_notice: "❌ A Hermes frissítése nem sikerült; továbbra is az előző verzió fut. Futtasd a `hermes update` parancsot a gazdagépen a teljes hibaüzenetért, vagy próbáld újra később a /update parancsot."
+    failed_notice: "❌ A VAEL frissítése nem sikerült; továbbra is az előző verzió fut. Futtasd a `hermes update` parancsot a gazdagépen a teljes hibaüzenetért, vagy próbáld újra később a /update parancsot."
     prompt_default: " (alapértelmezett: {default})"
     prompt: "☤ **A frissítéshez a válaszod kell:**\n\n{prompt}{default_hint}\n\nVálaszolj: `{prefix}approve` (igen) vagy `{prefix}deny` (nem), vagy írd be közvetlenül a válaszodat."
-    finished: "✅ A Hermes frissítése befejeződött."
-    timed_out: "❌ A Hermes frissítése 30 perc után időtúllépéssel leállt."
-    finished_success: "✅ A Hermes frissítése sikeresen befejeződött."
+    finished: "✅ A VAEL frissítése befejeződött."
+    timed_out: "❌ A VAEL frissítése 30 perc után időtúllépéssel leállt."
+    finished_success: "✅ A VAEL frissítése sikeresen befejeződött."
     last_lines: "{msg}\n\nUtolsó sorok:\n```\n{tail}\n```"
-    managed_action: "a Hermes Agent frissítése"
+    managed_action: "a VAEL Agent frissítése"
     not_applicable: "✗ A `hermes update` nem alkalmazható erre a telepítésre ({method}).\nFrissítés így: {command}"
   usage:
     rate_limits: "⏱️ **Sebességkorlátok:** {state}"
@@ -604,7 +604,7 @@ gateway:
     none_value: "nincs"
     unknown_value: "ismeretlen"
   exec_approval:
-    header: "A Hermes olyan parancsot futtatna, amihez a jóváhagyásod kell"
+    header: "A VAEL olyan parancsot futtatna, amihez a jóváhagyásod kell"
     reason_label: "Miért lett megjelölve"
     default_reason: "veszélyes parancs"
     smart_deny_line: "Okos ELUTASÍTÁS: a tulajdonosi felülbírálás csak erre az egy műveletre vonatkozik."
@@ -644,7 +644,7 @@ gateway:
     turn_error_detailed: "Sajnálom, hibába ütköztem ({error_type}).\n{error_detail}\nPróbáld újra, vagy kezdj új munkamenetet a /reset paranccsal."
     turn_error: "Sajnálom, hibába ütköztem."
     context_injection_refused: "A kontextusbeszúrás elutasítva."
-    no_home_channel: "📬 Nincs beállítva home csatorna a(z) {platform} platformhoz. A home csatornába kézbesíti a Hermes a cronfeladatok eredményeit és a platformok közötti üzeneteket.\n\nÍrd be: {sethome_cmd}, hogy ez a csevegés legyen a home csatornád, vagy hagyd figyelmen kívül."
+    no_home_channel: "📬 Nincs beállítva home csatorna a(z) {platform} platformhoz. A home csatornába kézbesíti a VAEL a cronfeladatok eredményeit és a platformok közötti üzeneteket.\n\nÍrd be: {sethome_cmd}, hogy ez a csevegés legyen a home csatornád, vagy hagyd figyelmen kívül."
   unauthorized:
     action_notice: "Ez a bot privát, és te nem szerepelsz az engedélyezett listáján. Ha a tiéd, futtasd a gazdagépen: `hermes pairing approve {platform} <request-id>` (az azonosítót a `hermes pairing list` mutatja)."
     admin_only_can_run: "Ezeket futtathatod: "
@@ -672,7 +672,7 @@ gateway:
     bad_request: "⚠️ Az AI-modellszolgáltatás visszautasította ezt a kérést. Fogalmazd át az üzenetet, vagy válts modellt a /model paranccsal."
     connection_interrupted: "⚠️ Az AI-modellszolgáltatással a kapcsolat megszakadt a kérés közben — ez általában átmeneti. Próbáld újra a /retry paranccsal; ha ismétlődik, futtasd a `hermes doctor` parancsot a gépen."
     unreachable: "⚠️ Az AI-modellszolgáltatás jelenleg nem érhető el — a beállított modellvégpont nem fut, vagy nem elérhető. Várj egy kicsit, és használd a /retry parancsot; ha nem oldódik meg, futtasd a `hermes doctor` parancsot a gépen."
-    connection_unknown: "⚠️ A Hermes nem érte el az AI-modellszolgáltatást (az SDK nem adott további részletet). Próbáld újra a /retry paranccsal; ha nem oldódik meg, futtasd a `hermes doctor` parancsot a gépen."
+    connection_unknown: "⚠️ A VAEL nem érte el az AI-modellszolgáltatást (az SDK nem adott további részletet). Próbáld újra a /retry paranccsal; ha nem oldódik meg, futtasd a `hermes doctor` parancsot a gépen."
     context_overflow: "⚠️ Ez a beszélgetés túl hosszú lett ahhoz, hogy egyben elolvassam. Rövidítsd le az előzményeket a /compress paranccsal, vagy kezdj új beszélgetést a /new paranccsal."
     usage_limit_resets: "⏱️ Elérted az AI-modellszolgáltatás használati keretét; {window} múlva áll vissza. Utána használd a /retry parancsot, vagy válts modellt a /model paranccsal."
     provider_kept_failing: "⚠️ Az AI-modellszolgáltatás folyamatosan hibázott. Próbáld újra a /retry paranccsal, vagy válts modellt a /model paranccsal. A részletek az átjáró naplójában vannak (`hermes logs`)."
@@ -738,20 +738,20 @@ gateway:
     draining_maintenance: "⏳ Ez az ügynök egy karbantartási művelet miatt éppen leürül, és most nem fogad új köröket. Hamarosan visszatér — küldd el újra kis idő múlva."
     another_turn_running: "⏳ Ezen a munkameneten még fut egy másik kör. Az átirat védelmében ez az üzenet nem lett feldolgozva. Várd meg az aktív kör végét, majd küldd el újra."
     behavior_queue_short: "sorba áll a következő körre"
-    behavior_queue_long: "Amíg a Hermes foglalt, az üzenetek a következő körre kerülnek sorba."
+    behavior_queue_long: "Amíg a VAEL foglalt, az üzenetek a következő körre kerülnek sorba."
     behavior_steer_short: "beirányít a futó feladatba (a következő eszközhívás után)"
     behavior_steer_long: "Az üzenetek a futó feladatba kerülnek beirányításra (a következő eszközhívás után)."
     behavior_interrupt_short: "megszakítja a futó feladatot"
-    behavior_interrupt_long: "Amíg a Hermes foglalt, az üzenetek megszakítják a futó feladatot."
+    behavior_interrupt_long: "Amíg a VAEL foglalt, az üzenetek megszakítják a futó feladatot."
     status: "**Foglalt beviteli mód: `{mode}`\nÜzenetek foglalt állapotban: _{behavior}_\nMódosítás: `/busy queue`, `/busy steer` vagy `/busy interrupt`."
     unknown_mode: "Ismeretlen mód: `{arg}`. Használd a `/busy queue`, `/busy steer` vagy `/busy interrupt` parancsot."
     save_failed: "A foglalt beviteli módot nem sikerült a konfigurációba menteni. A mód nem változott."
     set: "Foglalt beviteli mód beállítva: **`{mode}`** (mentve).\n_{behavior}_"
   pause:
     resumed: "▶️ Folytatás — újra fogadjuk az új munkát."
-    not_paused: "A Hermes nem volt szüneteltetve."
+    not_paused: "A VAEL nem volt szüneteltetve."
     reason_suffix: " (ok: {reason})"
-    already_paused: "⏸️ A Hermes már szünetel{suffix}. Folytatás: `/pause off`."
+    already_paused: "⏸️ A VAEL már szünetel{suffix}. Folytatás: `/pause off`."
     paused: "⏸️ Szüneteltetve{suffix}. Az új cron-/kanban-/átjárómunka várakozik; a folyamatban lévő munka rendesen befejeződik. Folytatás: `/pause off`."
   queue:
     usage: "Használat: /queue <prompt>"
@@ -838,7 +838,7 @@ gateway:
     task_status_complete: "kész"
     task_status_error: "hiba"
     task_line: "- {title} - {status}"
-    task_card_title: "A Hermes dolgozik"
+    task_card_title: "A VAEL dolgozik"
   pairing:
     validity_hour: "{hours} óra"
     validity_hours: "{hours} óra"
@@ -847,14 +847,14 @@ gateway:
   shutdown:
     action_shutting_down: "leáll"
     action_restarting: "újraindul"
-    cron_interrupted: "⚠️ A(z) '{job}' ütemezett feladat megszakadt, mert a Hermes {action}; ebben a futásban nincs eredmény. Ütemezés szerint újra lefut, vagy futtasd most a `hermes cron run {job}` paranccsal, amint a Hermes visszatért."
-    notice_shutdown: "⚠️ A Hermes leáll — a jelenlegi feladatod megszakad. Amikor újra elérhető, küldj egy tetszőleges üzenetet, és megpróbálom onnan folytatni, ahol abbahagytuk."
-    notice_restart: "⚠️ A Hermes újraindul — a jelenlegi feladatod megszakad. Az újraindítás után küldj egy tetszőleges üzenetet, és megpróbálom onnan folytatni, ahol abbahagytad."
+    cron_interrupted: "⚠️ A(z) '{job}' ütemezett feladat megszakadt, mert a VAEL {action}; ebben a futásban nincs eredmény. Ütemezés szerint újra lefut, vagy futtasd most a `hermes cron run {job}` paranccsal, amint a VAEL visszatért."
+    notice_shutdown: "⚠️ A VAEL leáll — a jelenlegi feladatod megszakad. Amikor újra elérhető, küldj egy tetszőleges üzenetet, és megpróbálom onnan folytatni, ahol abbahagytuk."
+    notice_restart: "⚠️ A VAEL újraindul — a jelenlegi feladatod megszakad. Az újraindítás után küldj egy tetszőleges üzenetet, és megpróbálom onnan folytatni, ahol abbahagytad."
   startup:
-    handoff_thread_title: "Hermes — {title}"
+    handoff_thread_title: "VAEL — {title}"
     restarted: "♻ Az átjáró sikeresen újraindult. A munkameneted folytatódik."
     free_tier_line: "Inferencia: Nous ingyenes szint (nous/welcome). Többért jelentkezz be: /login"
-    online: "♻️ Az átjáró elérhető — a Hermes visszatért, és készen áll."
+    online: "♻️ Az átjáró elérhető — a VAEL visszatért, és készen áll."
     db_corrupt: "⚠️ A munkamenet-adatbázis sérülését észleltük. Az üzenetek mentése sikertelen lehet. Helyreállítási lehetőségek:\n1. Futtasd: `hermes {profile_arg}doctor --fix`\n2. Állítsd le az átjárót, majd állítsd helyre így:\n   hermes {profile_arg}sessions recover --source {db_path} --inspect-only\n   (ha helyreállíthatónak jelzi) hermes {profile_arg}sessions recover --source {db_path} --output recovered-state.db\n   — a helyreállítás először pillanatképet készít a sérült fájlról; NE futtasd a `sqlite3 ... \".recover\"` parancsot az élő state.db fájlon, egy sebezhető sqlite3 CLI tovább rongálhatja\n3. Állítsd vissza egy biztonsági mentésből innen: {backups_dir}/\nA `hermes {profile_arg}doctor` parancs tisztított diagnosztikát ad."
     db_fts_corrupt: "⚠️ A munkamenet-adatbázis a keresőindexre (FTS5) korlátozódó sérülési hibát jelzett; az üzenettáblák nem sérültek. A javításig az üzenetek mentése sikertelen lehet: futtasd a `hermes {profile_arg}doctor --fix` parancsot, majd indítsd újra az átjárót. Ne futtass helyreállító eszközöket, és ne állíts vissza biztonsági mentést, hacsak a `hermes {profile_arg}doctor` nem igazol sérülést."
     db_then_restart: "{action} Ezután: `hermes {profile_arg}gateway restart`."
@@ -1003,7 +1003,7 @@ platform:
       [A válasz streamelés után átalakítva]
   discord:
     approval:
-      question: "Szeretnéd, hogy a Hermes lefuttassa ezt a parancsot?"
+      question: "Szeretnéd, hogy a VAEL lefuttassa ezt a parancsot?"
       requested_command_label: "Kért parancs:"
       confirm_title: "Megerősítés"
       already_resolved: "Ez a jóváhagyás már eldőlt~"
@@ -1023,7 +1023,7 @@ platform:
       resolved_cancel: "Megszakítva"
     prompt:
       truncated_marker: "... [csonkolva]"
-      clarify_title: "A Hermes a válaszodra vár"
+      clarify_title: "A VAEL a válaszodra vár"
       clarify_hint_buttons: "Válassz lentről, vagy kattints az ✏️ Egyéb gombra saját válaszhoz."
       clarify_hint_text: "Válaszolj ebben a csatornában."
       default_hint: " (alapértelmezett: {default})"
@@ -1066,7 +1066,7 @@ platform:
         description: "Új beszélgetés indítása"
         followup: "Új beszélgetés indítva~"
       reset:
-        description: "Hermes-munkameneted visszaállítása"
+        description: "VAEL-munkameneted visszaállítása"
         followup: "Munkamenet visszaállítva~"
       model:
         description: "Modell megjelenítése vagy váltása"
@@ -1091,7 +1091,7 @@ platform:
         description: "Munkamenet állapotának mutatása"
         followup: "Állapot elküldve~"
       stop:
-        description: "A futó Hermes-ügynök leállítása"
+        description: "A futó VAEL-ügynök leállítása"
         followup: "Leállítás kérve~"
       steer:
         description: "Üzenet beszúrása a következő eszközhívás után (megszakítás nélkül)"
@@ -1127,7 +1127,7 @@ platform:
       update:
         followup: "Frissítés elindítva~"
       restart:
-        description: "A Hermes-átjáró kíméletes újraindítása"
+        description: "A VAEL-átjáró kíméletes újraindítása"
         followup: "Újraindítás kérve~"
       approve:
         arg_scope: "Opcionális: 'all', 'session', 'always', 'all session', 'all always'"
@@ -1135,7 +1135,7 @@ platform:
         description: "Függőben lévő veszélyes parancs elutasítása"
         arg_scope: "Opcionális: 'all' az összes függő parancs elutasításához"
       thread:
-        description: "Új szál létrehozása és Hermes-munkamenet indítása benne"
+        description: "Új szál létrehozása és VAEL-munkamenet indítása benne"
         arg_name: "Szál neve"
         arg_message: "Opcionális első üzenet a Hermesnek a szálban"
         arg_auto_archive: "Automatikus archiválás percben (60, 1440, 4320, 10080)"
@@ -1160,7 +1160,7 @@ platform:
         arg_question: "A megszakítás nélkül megválaszolandó mellékkérdés"
         followup: "Mellékkérdés elküldve~"
       skill:
-        description: "Hermes-skill futtatása"
+        description: "VAEL-skill futtatása"
         arg_name: "Melyik skill fusson"
         arg_args: "Opcionális argumentumok a skillnek"
         unknown: "Ismeretlen skill: `{name}`. Kezdj el gépelni az automatikus kiegészítéshez."
@@ -1180,10 +1180,10 @@ platform:
     security:
       unauthorized_slash_alert: "⚠️ Jogosulatlan Discord slash-parancs kísérlet\nFelhasználó: {user_name} ({user_id})\nCsatorna: {chan_id} (szerver: {guild_id})\nParancs: {command_text}\nOk: {reason}"
     thread:
-      seed_message: "🧵 A Hermes által létrehozott szál: **{name}**"
-      default_name: "Hermes"
-      handoff_seed: "🧵 Hermes-átadás: **{name}**"
-      auto_create_failed: "⚠️ A Hermes nem tudott Discord-szálat létrehozni ehhez az üzenethez, ezért a kérés nem lett feldolgozva. Próbáld újra."
+      seed_message: "🧵 A VAEL által létrehozott szál: **{name}**"
+      default_name: "VAEL"
+      handoff_seed: "🧵 VAEL-átadás: **{name}**"
+      auto_create_failed: "⚠️ A VAEL nem tudott Discord-szálat létrehozni ehhez az üzenethez, ezért a kérés nem lett feldolgozva. Próbáld újra."
       auto_create_failed_generic: "A kérés nem lett feldolgozva. Próbáld újra."
     media:
       upload_too_large: "⚠️ Nem sikerült csatolni: `{filename}` — {size_mb} MB meghaladja a Discord {limit_mb} MB-os feltöltési limitjét ebben a csatornában. Tömörítsd a fájlt, vagy ossz meg egy linket helyette."
@@ -1330,15 +1330,15 @@ platform:
       thinking: "gondolkodik..."
       still_working: "még dolgozik… ({elapsed})"
     task_card:
-      title: "Hermes dolgozik"
+      title: "VAEL dolgozik"
     slash:
       reply_truncated: "\n\n_[A válasz csonkolva: még {count} rész túllépte a Slack ideiglenes válaszainak korlátját.]_"
       running: "`/{command}` futtatása…"
     handoff:
-      seed: ":thread: Hermes átadás — *{name}*"
+      seed: ":thread: VAEL átadás — *{name}*"
   matrix:
     handoff:
-      default_name: "Hermes-munkamenet"
+      default_name: "VAEL-munkamenet"
     media:
       image_download_failed: "Nem sikerült letölteni és feltölteni a képet a Matrixba. A forrás URL-t nem mutatom, mert privát tokeneket tartalmazhat."
     approval:
@@ -1396,7 +1396,7 @@ platform:
       header: "Kérdés"
       question: "❓ {question}"
     typing:
-      thinking: "Hermes gondolkodik…"
+      thinking: "VAEL gondolkodik…"
       interrupted: "(megszakítva)"
       no_reply: "(nincs válasz)"
     attachment_fallback:
@@ -1457,16 +1457,16 @@ platform:
       size_downgraded: "{label} mérete ({size_mb} MB) meghaladja a {cap} korlátot; fájlként küldtem el helyette."
   email:
     image_line: "Kép: {url}"
-    standalone_subject: "Hermes Agent"
+    standalone_subject: "VAEL Agent"
   dingtalk:
     emotion:
       thinking: "🤔Gondolkodom"
       done: "🥳Kész"
   irc:
-    quit_message: "Hermes Agent leáll"
+    quit_message: "VAEL Agent leáll"
     standalone_quit: "kézbesítve"
   homeassistant:
-    notification_title: "Hermes Agent"
+    notification_title: "VAEL Agent"
   relay:
     confirm_approve_once: "Jóváhagyás egyszer"
     confirm_always_approve: "Mindig jóváhagy"
@@ -1487,7 +1487,7 @@ slash:
   sethome:
     description: "Ez a csevegés legyen az otthoni csatorna"
   update:
-    description: "Hermes Agent frissítése a legújabb verzióra"
+    description: "VAEL Agent frissítése a legújabb verzióra"
   category:
     session: "Munkamenet"
     configuration: "Konfiguráció"
@@ -1539,7 +1539,7 @@ slash:
   rollback:
     description: "Fájlrendszer-ellenőrzőpontok listázása vagy visszaállítása (a kézi szerkesztéseid megmaradnak; a --all felülírja)"
   snapshot:
-    description: "Állapot-pillanatképek készítése vagy visszaállítása a Hermes konfigurációról/állapotról"
+    description: "Állapot-pillanatképek készítése vagy visszaállítása a VAEL konfigurációról/állapotról"
   export:
     description: "Profil (konfiguráció, skillek, téma) exportálása megosztható archívumba"
   import:
@@ -1561,7 +1561,7 @@ slash:
   steer:
     description: "Üzenet beszúrása a következő eszközhívás után, megszakítás nélkül"
   goal:
-    description: "Állandó cél beállítása, amin a Hermes körökön át dolgozik, amíg el nem éri"
+    description: "Állandó cél beállítása, amin a VAEL körökön át dolgozik, amíg el nem éri"
   heartbeat:
     description: "Ismétlődő prompt beállítása, ami tétlenség esetén újra belép a munkamenetbe"
   refine:
@@ -1625,9 +1625,9 @@ slash:
   voice:
     description: "Hangmód be-/kikapcsolása"
   wake:
-    description: "A 'Hey Hermes' ébresztőszó-figyelő be-/kikapcsolása"
+    description: "A 'Hey VAEL' ébresztőszó-figyelő be-/kikapcsolása"
   busy:
-    description: "Az üzenetek viselkedésének beállítása, amíg a Hermes dolgozik"
+    description: "Az üzenetek viselkedésének beállítása, amíg a VAEL dolgozik"
   tools:
     description: "Eszközök kezelése: /tools [list|disable|enable] [name...]"
   toolsets:
@@ -1693,7 +1693,7 @@ slash:
   image:
     description: "Helyi képfájl csatolása a következő promptodhoz"
   version:
-    description: "A Hermes Agent verziójának megjelenítése"
+    description: "A VAEL Agent verziójának megjelenítése"
   debug:
     description: "Hibakeresési jelentés (rendszerinfó + naplók) feltöltése és megosztható linkek kérése"
   quit:
@@ -1751,8 +1751,8 @@ cli:
     no_saved_card_add_funds_hint: "Nincs mentett kártya — az „Egyszeri feltöltés” végigvezet a hozzáadásán."
     actions_require_admin: "A számlázási műveletekhez szervezeti admin/tulajdonos kell."
     remote_spending_off_for_org: "A távoli költés ki van kapcsolva ennél a szervezetnél."
-    killswitch_reason_overview: "Egy számlázási admin bekapcsolhatja a portál Hermes Agent oldalán, hogy itt is tölthess fel."
-    killswitch_reason_buy: "Egy számlázási admin bekapcsolhatja a portál Hermes Agent oldalán a feltöltés előtt."
+    killswitch_reason_overview: "Egy számlázási admin bekapcsolhatja a portál VAEL Agent oldalán, hogy itt is tölthess fel."
+    killswitch_reason_buy: "Egy számlázási admin bekapcsolhatja a portál VAEL Agent oldalán a feltöltés előtt."
     add_funds_now_hint: "Egyszeri feltöltés — egyetlen terhelés, ma kerül az egyenlegedre."
     refill_when_low_amounts: "Feltöltés alacsony egyenlegnél — automatikusan {reload_to} összeget terhel, amikor az egyenleged {threshold} alá esik."
     refill_when_low_generic: "Feltöltés alacsony egyenlegnél — automatikusan terheli a kártyádat, amikor az egyenleged a megadott összeg alá esik."
@@ -1808,7 +1808,7 @@ cli:
     charge_failed_card_declined: "🔴 A kártyádat elutasították. Próbálj másik kártyát a portálon."
     charge_failed_generic: "🔴 A terhelés nem ment át ({reason})."
     charge_error_no_payment_method: "💳 Nincs mentett kártya — tölts fel és kezeld a számlázást a portálon."
-    charge_error_remote_spending_disabled: "A távoli költés ki van kapcsolva ennél a fióknál — egy számlázási admin bekapcsolhatja a portál Hermes Agent oldalán."
+    charge_error_remote_spending_disabled: "A távoli költés ki van kapcsolva ennél a fióknál — egy számlázási admin bekapcsolhatja a portál VAEL Agent oldalán."
     charge_error_role_required: "A feltöltéshez szervezeti admin/tulajdonos kell. Kérj meg egy admint, vagy kezeld a portálon."
     charge_error_idempotency_conflict: "🔴 Ezt a terhelési kulcsot már használták más összeggel. Indíts új feltöltést."
     revoked_by_admin: "Egy admin leállította ennek a terminálnak a költését."
@@ -1825,7 +1825,7 @@ cli:
     charge_stepup_noninteractive: "Futtasd a `hermes portal` parancsot, engedélyezd a Távoli költést, majd próbáld újra."
     charge_stepup_declined: "Nem történt terhelés. Futtasd a /topup parancsot, amikor engedélyezni akarod a Távoli költést."
     charge_stepup_not_granted: "Nem sikerült engedélyezni a Távoli költést — szervezeti adminnak vagy tulajdonosnak kell jóváhagynia. A kártyádat nem terheltük meg."
-    allowed_but_org_off: "A Távoli költés engedélyezett ennél a terminálnál, de a szervezetnél még ki van kapcsolva. Egy számlázási admin bekapcsolhatja a portál Hermes Agent oldalán, utána futtasd újra a /topup parancsot."
+    allowed_but_org_off: "A Távoli költés engedélyezett ennél a terminálnál, de a szervezetnél még ki van kapcsolva. Egy számlázási admin bekapcsolhatja a portál VAEL Agent oldalán, utána futtasd újra a /topup parancsot."
     allowed_no_card: "Távoli költés engedélyezve — de még nincs mentett kártya."
     topup_on_portal_to_continue: "A folytatáshoz tölts fel és kezeld a számlázást a portálon."
     allowed_run_topup: "Távoli költés engedélyezve. Futtasd a /topup parancsot a folytatáshoz."
@@ -1981,7 +1981,7 @@ cli:
     usage_switch_provider: "szolgáltató váltása"
     usage_refresh: "élő modellisták újratöltése"
     choice_switch_anyway: "Váltás mindenképp"
-    desc_switch_anyway: "Ennek a modellnek a használata a jelenlegi Hermes-munkamenetben."
+    desc_switch_anyway: "Ennek a modellnek a használata a jelenlegi VAEL-munkamenetben."
     choice_cancel: "Mégse"
     desc_keep_current_model: "A jelenlegi modell megtartása."
     switch_cancelled: "Modellváltás megszakítva."
@@ -2129,7 +2129,7 @@ cli:
     images_attached_one: "📎 {count} kép csatolva"
     images_attached_other: "📎 {count} kép csatolva"
     command_interrupted: "Parancs megszakítva."
-    welcome: "Üdv a Hermes Agentben! Írd be az üzenetedet, vagy a /help paranccsal nézd meg a parancsokat."
+    welcome: "Üdv a VAEL Agentben! Írd be az üzenetedet, vagy a /help paranccsal nézd meg a parancsokat."
     activated_skills_label: "Aktivált skillek:"
     redaction_disabled_title: "⚠  A titkok kitakarása KI VAN KAPCSOLVA"
     redaction_disabled_body: "(HERMES_REDACT_SECRETS={value}). Az API-kulcsok és tokenek szó szerint megjelenhetnek a chatkimenetben, a munkamenet-JSON-okban és a naplókban. A visszakapcsoláshoz állítsd be a config.yaml fájlban: {setting}."
@@ -2209,7 +2209,7 @@ cli:
   render:
     response_transformed: "[A válasz a streamelés után átalakult]"
     banner_tagline: "{name} - AI-ügynök keretrendszer"
-    banner_version: "Hermes Agent v{version} ({date})"
+    banner_version: "VAEL Agent v{version} ({date})"
   subagents:
     cannot_steer_process: "Háttérfolyamatok nem irányíthatók; állítsd le őket, vagy olvasd el a naplót."
     count_live: "{count} élő"
@@ -2489,7 +2489,7 @@ cli:
     yolo_bypass_suffix: " (YOLO-megkerülés aktív)"
     ctx_left_prefix: "{percent}% szabad · "
     ctx_tokens_used: "{left}{used} / {max} token felhasználva"
-    status_title: "Hermes CLI állapot"
+    status_title: "VAEL CLI állapot"
     label_reasoning: "Gondolkodás"
     label_approvals: "Jóváhagyások"
     label_context: "Kontextus"
@@ -2632,9 +2632,9 @@ cli:
       short_queue: "sorba állítás a következő körre"
       short_steer: "beirányítás a futó körbe (a következő eszközhívás után)"
       short_interrupt: "a futó kör azonnali átirányítása"
-      long_queue: "Az Enter sorba állítja a további bevitelt, amíg Hermes elfoglalt."
+      long_queue: "Az Enter sorba állítja a további bevitelt, amíg VAEL elfoglalt."
       long_steer: "Az Enter beirányítja az üzenetedet a futó körbe (a következő eszközhívás után)."
-      long_interrupt: "Az Enter átirányítja a futó kört, amíg Hermes elfoglalt; a /stop továbbra is megszakítja."
+      long_interrupt: "Az Enter átirányítja a futó kört, amíg VAEL elfoglalt; a /stop továbbra is megszakítja."
       usage: "Használat: /busy [queue|steer|interrupt|status]"
       status: "Elfoglalt beviteli mód: {mode}"
       enter_while_busy: "Enter elfoglalt állapotban: {behavior}"
@@ -2706,7 +2706,7 @@ cli:
       stat_hint: "összegzéshez futtasd: /diff --stat"
       stat_hint_session: "összegzéshez futtasd: /diff session --stat"
       not_enabled: "Az ellenőrzőpontok nincsenek bekapcsolva, így nincs munkamenet-alapállapot.\nBekapcsolás: hermes --checkpoints\nVagy a config.yaml-ban: checkpoints: { enabled: true }\n(A sima /diff így is működik — közvetlenül a gitet használja.)"
-      no_session_changes: "Nincs változás — Hermes még nem szerkesztett itt fájlt."
+      no_session_changes: "Nincs változás — VAEL még nem szerkesztett itt fájlt."
     rollback:
       not_enabled: "Az ellenőrzőpontok nincsenek bekapcsolva.\nBekapcsolás: hermes --checkpoints\nVagy a config.yaml-ban: checkpoints: { enabled: true }"
       none_here_showing_all: "Nincs ellenőrzőpont itt: {cwd} — az összes könyvtár látható."
@@ -3029,7 +3029,7 @@ cli:
       prompt_required: "Használat: /heartbeat every <interval> <prompt> — a prompt megadása kötelező."
       invalid_label: "Érvénytelen szívverés"
       set: "♥ Szívverés beállítva ({interval} időközzel): {prompt}"
-      set_note: "Normál körként fut le, amikor a munkamenet tétlen és letelt az időköz. Kezelés: /heartbeat pause | resume | clear; csak addig él, amíg ez a Hermes folyamat fut — tartós ütemezéshez használd a `hermes cron` parancsot."
+      set_note: "Normál körként fut le, amikor a munkamenet tétlen és letelt az időköz. Kezelés: /heartbeat pause | resume | clear; csak addig él, amíg ez a VAEL folyamat fut — tartós ütemezéshez használd a `hermes cron` parancsot."
     refine:
       nothing_yet: "Még nincs mit finomítani — küldj először egy üzenetet."
       empty: "Még nincs mit finomítani — a beszélgetés üres."
@@ -3083,12 +3083,12 @@ cli:
       usage: "/timestamps [on|off|status]"
       label: "Üzenet-időbélyegek"
     update:
-      managed_action: "a Hermes Agent frissítése"
+      managed_action: "a VAEL Agent frissítése"
       choice_update: "Frissítés most"
-      choice_update_desc: "kilépés a jelenlegi munkamenetből és a Hermes Agent frissítése"
+      choice_update_desc: "kilépés a jelenlegi munkamenetből és a VAEL Agent frissítése"
       choice_cancel: "Mégse"
       choice_cancel_desc: "a jelenlegi munkamenet megtartása"
-      title: "☤  Hermes Agent frissítése"
+      title: "☤  VAEL Agent frissítése"
       detail: "Ez kilép a jelenlegi munkamenetből, és lefuttatja a `hermes update` parancsot."
       cancelled: "🟡 /update megszakítva."
       launching: "☤ Frissítés indítása..."
@@ -3108,7 +3108,7 @@ cli:
     fix_lm_studio: "LM Studio megoldás: állítsd be a kontextushosszt a modell beállításaiban → töltsd újra a modellt"
     fix_local_server: "Megoldás: indítsd a szervert legalább {tokens_k}K kontextussal (llama.cpp: -c {tokens}), vagy állítsd a model.ollama_num_ctx értékét a config.yaml fájlban a ténylegesen kiszolgált ablakra"
     fix_config: "Megoldás: állítsd be a model.context_length értékét a config.yaml fájlban, vagy növeld a szerver kontextusbeállítását"
-    hermes_models_not_agentic: "⚠  A Nous Research Hermes 3 és 4 modellek NEM ügynökmodellek, és nem a Hermes Agenthez készültek."
+    hermes_models_not_agentic: "⚠  A Nous Research VAEL 3 és 4 modellek NEM ügynökmodellek, és nem a VAEL Agenthez készültek."
     hermes_models_lack_tools: "Hiányzik belőlük az ügynökmunkához szükséges eszközhívás. Használj inkább ügynökképes modellt (Claude, GPT, Gemini, DeepSeek stb.)."
     hermes_models_switch_hint: "Váltás: /model sonnet  vagy  /model gpt5"
     project_skills_loaded: "◆ {count} projektskill betöltve ebből a repóból"
@@ -3158,9 +3158,9 @@ cli:
     the_provider: "a szolgáltató"
     the_current_model: "a jelenlegi modell"
     with_details: "{lead}\nRészletek: {details}"
-    agent_init_failed: "A Hermes nem tudta felépíteni a modellkapcsolatot: {error}. Az üzeneted nem ment el. Ellenőrizd a beállítást a `hermes doctor` paranccsal, vagy válassz másik szolgáltatót a /model paranccsal."
+    agent_init_failed: "A VAEL nem tudta felépíteni a modellkapcsolatot: {error}. Az üzeneted nem ment el. Ellenőrizd a beállítást a `hermes doctor` paranccsal, vagy válassz másik szolgáltatót a /model paranccsal."
   gateway:
-    starting: "Hermes átjáró indítása (üzenetküldő platformok)..."
+    starting: "VAEL átjáró indítása (üzenetküldő platformok)..."
   gateway_status:
     header: "(✿◠‿◠) Átjáró állapota"
     platform_config_header: "Üzenetküldő platformok konfigurációja:"
@@ -3475,15 +3475,15 @@ explainer:
   persistence:
     compression: "a kör leállt, mert egy másik folyamat éppen tömörítette ezt a munkamenetet. Az üzeneted valószínűleg már mentve van — kérlek, küldd el újra, amint a tömörítés befejeződött."
     compression_closed: "a kör leállt, mert a kontextustömörítés lecserélte ezt a munkamenetet, és az élő folytatását nem lehetett átvenni. A tároló maga rendben van — frissítsd a klienst (vagy kezdj új kört), hogy felvegye az új munkamenet-azonosítót, majd küldd el újra az üzenetedet."
-    turn_lease: "a kör leállt, mert egy másik Hermes-folyamat átvette ezt a munkamenetet. A válaszod nem lett mentve — várd meg, amíg a másik folyamat befejezi, majd küldd el újra az üzenetedet."
-    session_row_missing: "ezt a munkamenetet a tárolóból törölték, miközben a csevegés még nyitva volt, és a Hermes nem tudta újra létrehozni, így ez az üzenet nem lett mentve. Küldd el újra az üzenetedet; ha továbbra sem sikerül, futtasd a `hermes {profile_arg}doctor` parancsot."
-    locked: "a kör leállt, mert a munkamenet-tároló foglalt volt (egy másik Hermes-folyamat írt az állapot-adatbázisba). Az üzeneted valószínűleg már mentve van — kérlek, küldd el újra egy pillanat múlva."
-    replaced: "a munkamenet-adatbázis fájlját lecserélték, miközben a Hermes futott, így ez az üzenet nem lett mentve (egy másolat itt található: {home}/sessions/). Állítsd le a Hermest (`hermes {profile_arg}gateway stop`), futtasd a `hermes {profile_arg}doctor` parancsot — de NE a `hermes {profile_arg}doctor --fix` parancsot, mert az a rossz fájlt javítaná helyben —, majd indítsd újra, és küldd el még egyszer az üzenetedet. A haladó helyreállítási lépéseket a napló tartalmazza."
-    deleted_wal: "egy másik Hermes-folyamat még a munkamenet-adatbázis írásnaplójának (WAL) egy régi példányát tartja fogva, ezért a Hermes a fájl védelmében leállította az írást, és ez az üzenet nem lett mentve (egy másolat itt található: {home}/sessions/). Semmi nem veszett el. Lépj ki minden Hermes-folyamatból ezen a profilon (Desktop app, `hermes {profile_arg}gateway stop`, dashboard, cron), futtasd a `hermes {profile_arg}doctor` parancsot — ez megnevezi a naplót még fogva tartó folyamatokat —, majd indítsd újra a Hermest, és küldd el még egyszer az üzenetedet. Amíg futnak, ne futtasd a `doctor --fix` parancsot, és ne törölj state.db fájlokat. Útmutató: {recovery_docs}"
+    turn_lease: "a kör leállt, mert egy másik VAEL-folyamat átvette ezt a munkamenetet. A válaszod nem lett mentve — várd meg, amíg a másik folyamat befejezi, majd küldd el újra az üzenetedet."
+    session_row_missing: "ezt a munkamenetet a tárolóból törölték, miközben a csevegés még nyitva volt, és a VAEL nem tudta újra létrehozni, így ez az üzenet nem lett mentve. Küldd el újra az üzenetedet; ha továbbra sem sikerül, futtasd a `hermes {profile_arg}doctor` parancsot."
+    locked: "a kör leállt, mert a munkamenet-tároló foglalt volt (egy másik VAEL-folyamat írt az állapot-adatbázisba). Az üzeneted valószínűleg már mentve van — kérlek, küldd el újra egy pillanat múlva."
+    replaced: "a munkamenet-adatbázis fájlját lecserélték, miközben a VAEL futott, így ez az üzenet nem lett mentve (egy másolat itt található: {home}/sessions/). Állítsd le a Hermest (`hermes {profile_arg}gateway stop`), futtasd a `hermes {profile_arg}doctor` parancsot — de NE a `hermes {profile_arg}doctor --fix` parancsot, mert az a rossz fájlt javítaná helyben —, majd indítsd újra, és küldd el még egyszer az üzenetedet. A haladó helyreállítási lépéseket a napló tartalmazza."
+    deleted_wal: "egy másik VAEL-folyamat még a munkamenet-adatbázis írásnaplójának (WAL) egy régi példányát tartja fogva, ezért a VAEL a fájl védelmében leállította az írást, és ez az üzenet nem lett mentve (egy másolat itt található: {home}/sessions/). Semmi nem veszett el. Lépj ki minden VAEL-folyamatból ezen a profilon (Desktop app, `hermes {profile_arg}gateway stop`, dashboard, cron), futtasd a `hermes {profile_arg}doctor` parancsot — ez megnevezi a naplót még fogva tartó folyamatokat —, majd indítsd újra a Hermest, és küldd el még egyszer az üzenetedet. Amíg futnak, ne futtasd a `doctor --fix` parancsot, és ne törölj state.db fájlokat. Útmutató: {recovery_docs}"
     corrupt: "a kör leállt, mert az állapot-adatbázis szerkezeti sérülést jelzett (az átirat újraindításkor elveszett volna). A lemezhely felszabadítása nem segít. Helyreállítási lehetőségek:\n1. Futtasd a `hermes {profile_arg}doctor --fix` parancsot\n2. Állítsd le az átjárót, majd állítsd helyre így:\n   hermes {profile_arg}sessions recover --source {db_path} --inspect-only\n   (ha helyreállíthatónak jelzi) hermes {profile_arg}sessions recover --source {db_path} --output recovered-state.db\n   — a helyreállítás először pillanatképet készít a sérült fájlról; NE futtass `sqlite3 ... \".recover\"` parancsot az élő state.db fájlon, egy sebezhető sqlite3 CLI tovább ronthatja\n3. Állítsd vissza egy biztonsági mentésből innen: {backups_dir}/\nEzután küldd el újra az üzenetedet."
     fts_index: "a kör leállt, mert a munkamenet-keresési index (FTS5) sérült, és nem lehetett leválasztani, így ez az üzenet nem lett mentve. Az üzenettároló maga nem sérült: ne futtass helyreállító eszközöket, és ne állíts vissza biztonsági mentést. Futtasd a `hermes {profile_arg}doctor --fix` parancsot (vagy indítsd újra a Hermest, ami megnyitáskor megjavítja az indexet), majd küldd el újra az üzenetedet."
-    disk: "A Hermes nem tudta lemezre menteni ezt a beszélgetést, ezért inkább leállt, mint hogy elvesszenek az üzeneteid. A lemez valószínűleg megtelt: szabadíts fel helyet (vagy javítsd a {home}/state.db jogosultságait), majd küldd el újra az üzenetedet."
-    default: "A Hermes nem tudta menteni ezt a beszélgetést, ezért inkább leállt, mint hogy elvesszenek az üzeneteid. Lehetséges okok: megtelt a meghajtó, vagy egy másik Hermes-folyamat tartja fogva az adatbázist. Zárd be a többi Hermes-ablakot, futtasd a `hermes {profile_arg}doctor` parancsot a tároló ellenőrzéséhez, majd küldd el újra az üzenetedet."
+    disk: "A VAEL nem tudta lemezre menteni ezt a beszélgetést, ezért inkább leállt, mint hogy elvesszenek az üzeneteid. A lemez valószínűleg megtelt: szabadíts fel helyet (vagy javítsd a {home}/state.db jogosultságait), majd küldd el újra az üzenetedet."
+    default: "A VAEL nem tudta menteni ezt a beszélgetést, ezért inkább leállt, mint hogy elvesszenek az üzeneteid. Lehetséges okok: megtelt a meghajtó, vagy egy másik VAEL-folyamat tartja fogva az adatbázist. Zárd be a többi VAEL-ablakot, futtasd a `hermes {profile_arg}doctor` parancsot a tároló ellenőrzéséhez, majd küldd el újra az üzenetedet."
   file_mutation:
     header: "⚠️ Fájlmódosítás-ellenőrző: {count} fájlszerkesztés SIKERTELEN volt ebben a körben, bármit is sugall a fenti szöveg. Futtasd a `git status` vagy a `read_file` parancsot, hogy lásd, mi került be valójában."
     entry: "  • `{path}` — [{tool}] {preview}"
@@ -3567,7 +3567,7 @@ tips:
   t073: "A hermes auth add több API-kulcsot is felvehet a hitelesítőadat-készlet rotálásához."
   t074: "A hermes completion bash >> ~/.bashrc bekapcsolja a Tab-kiegészítést minden parancshoz és profilhoz."
   t075: "A hermes logs -f valós időben követi az agent.log fájlt. A --level WARNING --since 1h szűri a kimenetet."
-  t076: "A hermes backup zip biztonsági mentést készít a teljes Hermes saját mappádról."
+  t076: "A hermes backup zip biztonsági mentést készít a teljes VAEL saját mappádról."
   t077: "A hermes profile create coder elkülönített profilt hoz létre, amely saját parancsként is elérhető."
   t078: "A hermes profile create work --clone átmásolja a jelenlegi konfigurációdat és kulcsaidat egy új profilba."
   t079: "A hermes update automatikusan szinkronizálja az új beépített skilleket MINDEN profilba."
@@ -3598,7 +3598,7 @@ tips:
   t104: "A config.yaml gyorsparancsai azonnal futtatnak shell-parancsokat, nulla tokenhasználattal."
   t105: "Egyedi személyiségeket a config.yaml agent.personalities szekciójában definiálhatsz."
   t106: "A provider_routing szabályozza az OpenRouter-szolgáltatók sorrendjét, engedélyezését és tiltását."
-  t107: "Az execute_code Python-szkripteket futtat, amelyek programozottan hívják a Hermes-eszközöket — az eredmények nem terhelik a kontextust."
+  t107: "Az execute_code Python-szkripteket futtat, amelyek programozottan hívják a VAEL-eszközöket — az eredmények nem terhelik a kontextust."
   t108: "A delegate_task alapértelmezés szerint legfeljebb 10 párhuzamos alügynököt indít (delegation.max_concurrent_children), elkülönített kontextussal a párhuzamos munkához."
   t109: "A web_extract PDF-URL-ekkel is működik — adj meg bármilyen PDF-linket, és markdownná alakítja."
   t110: "A search_files ripgrep-alapú és gyorsabb a grepnél — használd a terminálos grep helyett."
@@ -3624,7 +3624,7 @@ tips:
   t130: "Ha két profil véletlenül ugyanazt a bot-tokent használja, a második átjáró egyértelmű hibaüzenettel le lesz tiltva."
   t131: "A munkamenetek az első váltás után automatikusan beszédes címet kapnak — nem kell kézzel elnevezni őket."
   t132: "A munkamenetcímek követik a leszármazást: \"my project\" → \"my project #2\" → \"my project #3\"."
-  t133: "Kilépéskor a Hermes kiírja a folytatáshoz szükséges parancsot a munkamenet-azonosítóval és a statisztikákkal."
+  t133: "Kilépéskor a VAEL kiírja a folytatáshoz szükséges parancsot a munkamenet-azonosítóval és a statisztikákkal."
   t134: "A hermes sessions export backup.jsonl minden munkamenetet exportál biztonsági mentéshez vagy elemzéshez."
   t135: "A hermes -r SESSION_ID bármelyik korábbi munkamenetet folytatja az azonosítója alapján."
   t136: "A memória befagyasztott pillanatkép — a változások csak a következő munkamenet indításakor jelennek meg a rendszerpromptban."
@@ -3648,7 +3648,7 @@ tips:
   t154: "A /voice on bekapcsolja a hangmódot a CLI-ben. A Ctrl+B a push-to-talk felvételt kapcsolja be és ki."
   t155: "A streamelt TTS mondatonként játssza le a szöveget, ahogy elkészül – nem kell a teljes válaszra várnod."
   t156: "A Telegram, Discord, WhatsApp és Slack hangüzenetei automatikusan átiratra kerülnek."
-  t157: "A Hermes 21 üzenetküldő platformon fut: Telegram, Discord, Slack, WhatsApp, Signal, Matrix, IRC, Microsoft Teams, e-mail és még több."
+  t157: "A VAEL 21 üzenetküldő platformon fut: Telegram, Discord, Slack, WhatsApp, Signal, Matrix, IRC, Microsoft Teams, e-mail és még több."
   t158: "A hermes gateway install rendszerszolgáltatásként állítja be az átjárót, amely indításkor automatikusan elindul."
   t159: "A DingTalk Stream módot használ – nincs szükség webhookra vagy nyilvános URL-re."
   t160: "A BlueBubbles helyi macOS szerveren keresztül hozza el az iMessage-et a Hermesbe."
@@ -3668,7 +3668,7 @@ tips:
   t174: "A kontextus automatikusan tömörítődik a küszöb elérésekor – a memóriák mentésre, az előzmények összegzésre kerülnek."
   t175: "Az állapotsor sárgára, majd narancsra, végül vörösre vált, ahogy a kontextus megtelik."
   t176: "A SOUL.md az ügynök elsődleges identitásfájlja – szabd testre, hogy alakítsd a viselkedését."
-  t177: "A Hermes a .hermes.md, AGENTS.md, CLAUDE.md vagy .cursorrules fájlból tölti be a projekt kontextusát (az első találatból)."
+  t177: "A VAEL a .hermes.md, AGENTS.md, CLAUDE.md vagy .cursorrules fájlból tölti be a projekt kontextusát (az első találatból)."
   t178: "Az almappák AGENTS.md fájljait az ügynök fokozatosan fedezi fel, ahogy a mappákba lép."
   t179: "A kontextusfájlok mérete legfeljebb 20 000 karakter, intelligens eleje/vége csonkolással."
   t180: "Öt böngészőszolgáltató: helyi Chromium, Browserbase, Browser Use, Camofox és Firecrawl."
@@ -3710,11 +3710,11 @@ tips:
   t216: "A cron feladatokhoz Python szkript is csatolható (--script), amelynek kimenete kontextusként kerül a promptba."
   t217: "A cron szkriptek a ~/.hermes/scripts/ mappában élnek, és az ügynök előtt futnak – ideális adatgyűjtő folyamatokhoz."
   t218: "A config.yaml prefill_messages_file beállítása few-shot példákat injektál minden API-hívásba, az előzményekbe mentés nélkül."
-  t219: "A SOUL.md teljesen felülírja az ügynök alapértelmezett identitását – írd át, hogy a Hermes igazán a tiéd legyen."
+  t219: "A SOUL.md teljesen felülírja az ügynök alapértelmezett identitását – írd át, hogy a VAEL igazán a tiéd legyen."
   t220: "A SOUL.md első futáskor automatikusan alapértelmezett személyiséggel töltődik fel. Szerkeszd a testreszabáshoz."
   t221: "A /compress <focus topic> az összegzési keret 60–70%-át a témádra fordítja, a többit pedig erősen megvágja."
   t222: "A második és további tömörítéskor a tömörítő az előző összegzést frissíti, nem kezdi elölről."
-  t223: "Az átjáró munkamenet-visszaállítása előtt a Hermes a fontos tényeket a háttérben automatikusan a memóriába menti."
+  t223: "Az átjáró munkamenet-visszaállítása előtt a VAEL a fontos tényeket a háttérben automatikusan a memóriába menti."
   t224: "A config.yaml network.force_ipv4: true beállítása megszünteti a lefagyást hibás IPv6-ú szervereken – a socketet patcheli."
   t225: "A terminal eszköz magyarázatot fűz a gyakori kilépési kódokhoz: a grep 1-es kódja = 'Nincs találat (nem hiba)'."
   t226: "A sikertelen előtérbeli terminálparancsok legfeljebb 3-szor újrapróbálkoznak exponenciális várakozással (2s, 4s, 8s)."
@@ -3736,7 +3736,7 @@ tips:
   t242: "Bármely weboldal közzétehet skilleket a /.well-known/skills/index.json címen – a skill hub automatikusan felfedezi őket."
   t243: "A skill auditnapló a ~/.hermes/skills/.hub/audit.log fájlban minden telepítést és eltávolítást rögzít."
   t244: "Az elavult git worktree-k indításkor automatikusan törlődnek: a tiszta, teljesen beolvasztott fák kikerülnek; a piszkos vagy fel nem töltött munka mindig megmarad."
-  t245: "A profilok a HERMES_HOME útján határolják a Hermes állapotát; a gazdagép eszközfolyamatai megtartják a valódi HOME-ot, hacsak a terminal.home_mode nem profile."
+  t245: "A profilok a HERMES_HOME útján határolják a VAEL állapotát; a gazdagép eszközfolyamatai megtartják a valódi HOME-ot, hacsak a terminal.home_mode nem profile."
   t246: "A HERMES_HOME_MODE környezeti változó (oktális, pl. 0701) egyedi mappajogosultságot állít be a webszerver bejárásához."
   t247: "Konténer mód: helyezz egy .container-mode fájlt a HERMES_HOME-ba, és a gazda CLI automatikusan a konténerbe lép át."
   t248: "A Ctrl+C 5 prioritási szinttel bír: felvétel megszakítása → bekérések megszakítása → választó bezárása → ügynök megszakítása → kilépés."
@@ -3761,7 +3761,7 @@ tips:
   t267: "A profilnevek nem ütközhetnek meglévő PATH binárisokkal – a 'hermes profile create ls' parancsot a rendszer elutasítaná."
   t268: "A hermes profile create backup --clone-all mindent átmásol (konfiguráció, kulcsok, SOUL.md, memóriák, skillek, munkamenetek)."
   t269: "A hangfelvétel gombja a config.yaml voice.record_key beállításával módosítható – nem csak Ctrl+B lehet."
-  t270: "A .cursorrules és a .cursor/rules/*.mdc fájlokat a Hermes automatikusan felismeri és projektkontextusként betölti."
+  t270: "A .cursorrules és a .cursor/rules/*.mdc fájlokat a VAEL automatikusan felismeri és projektkontextusként betölti."
   t271: "A kontextusfájlokban 10+ prompt-injekciós mintát szűrünk — láthatatlan Unicode, 'ignore instructions', adatszivárogtatási kísérletek."
   t272: "A GPT-5 és a Codex az üzenetformátumban 'system' helyett 'developer' szerepet használ."
   t273: "Feladatonkénti kiegészítő felülírások: auxiliary.vision.provider, auxiliary.compression.model stb. a config.yaml-ban."
@@ -3776,13 +3776,13 @@ tips:
   t282: "A megbízható tárolókból (NousResearch) származó skillek 'trusted' biztonsági szintet kapnak; a közösségi skilleket extra vizsgálat várja."
   t283: "A ~/.hermes/skills/.hub/quarantine/ alatti skill-karantén a biztonsági felülvizsgálatra váró skilleket tárolja."
   t284: "A /steer <prompt> a következő eszközhívás után beszúr egy megjegyzést — így menet közben terelheted az irányt megszakítás nélkül."
-  t285: "A /goal <text> állandó Ralph-loop célt állít be — a Hermes körről körre automatikusan folytatja, amíg egy bíráló késznek nem ítéli."
-  t286: "A /snapshot create [label] teljes állapot-pillanatképet ment a Hermes konfigurációjáról; a /snapshot restore <id> később visszaállítja."
+  t285: "A /goal <text> állandó Ralph-loop célt állít be — a VAEL körről körre automatikusan folytatja, amíg egy bíráló késznek nem ítéli."
+  t286: "A /snapshot create [label] teljes állapot-pillanatképet ment a VAEL konfigurációjáról; a /snapshot restore <id> később visszaállítja."
   t287: "A /copy [N] a vágólapra másolja az asszisztens utolsó válaszát, számmal pedig a hátulról N-ediket."
   t288: "A /redraw teljes UI-újrarajzolást kényszerít ki — javítja a tmux-átméretezés vagy az egérkijelölés utáni terminálhibákat."
   t289: "A /agents (alias: /tasks) megmutatja az aktív ügynököket és a futó háttérfeladatokat az aktuális munkamenetben."
   t290: "A /footer ki-be kapcsolja az átjáró láblécét a végső válaszokon, amely a modellt, a kontextus %-ot és a munkakönyvtárat mutatja."
-  t291: "A /busy queue|steer|interrupt szabályozza, mit tesz az Enter, amíg a Hermes dolgozik."
+  t291: "A /busy queue|steer|interrupt szabályozza, mit tesz az Enter, amíg a VAEL dolgozik."
   t292: "A /topic Telegram-privátban bekapcsolja a felhasználó által kezelt többmunkamenetes topic módot — a /topic <id> helyben visszaállít korábbi munkameneteket."
   t293: "A /approve session|always a választott bizalmi hatókörrel futtatja a függőben lévő veszélyes parancsot; a /deny elutasítja."
   t294: "A /restart az aktív futások lezárása után kíméletesen újraindítja az átjárót, majd értesíti a kérőt, amikor újra elérhető."
@@ -3807,7 +3807,7 @@ tips:
   t313: "A Ctrl+G vagy a Ctrl+X Ctrl+E a TUI-ban megnyitja a beviteli puffert az $EDITOR-ban hosszú, többsoros promptokhoz."
   t314: "A TUI a LaTeX-et soron belül rendereli — az $E=mc^2$ Unicode-matekként jelenik meg nyers TeX helyett."
   t315: "A hermes dashboard helyi webes felületet indít a 127.0.0.1:9119 címen — egyetlen bájt sem hagyja el a localhostot."
-  t316: "A hermes dashboard a teljes Hermes TUI-t beágyazza a böngésződbe xterm.js és WebSocket PTY segítségével."
+  t316: "A hermes dashboard a teljes VAEL TUI-t beágyazza a böngésződbe xterm.js és WebSocket PTY segítségével."
   t317: "Tegyél egy YAML-t a ~/.hermes/dashboard-themes/ mappába két palettaszínnel, és az egész dashboard új külsőt kap."
   t318: "A dashboard-pluginok bemásolással telepíthetők: manifest.json + JS-csomag a ~/.hermes/dashboard-plugins/ alatt — npm build nem kell."
   t319: "A layoutVariant: cockpit egy dashboard-témában 260 px-es bal oldali sávot ad, amelyet a pluginok a sidebar sloton át tölthetnek fel."
@@ -3845,7 +3845,7 @@ tips:
   t351: "A hermes chat --source tool megjelöli a programozott chateket, hogy ne zsúfolják tele a hermes sessions list kimenetét."
   t352: "A hermes dump --show-keys kitakart API-kulcs-ujjlenyomatokat is tartalmaz a mélyebb támogatási hibakereséshez."
   t353: "A hermes sessions rename <ID> \"új cím\" bármely korábbi munkamenetet átnevez; a hermes sessions delete <ID> töröl egyet."
-  t354: "A hermes import teljes Hermes biztonsági mentést (zip) állít vissza; a JSON/JSONL munkamenet-exportok a dashboard Sessions oldalán importálhatók."
+  t354: "A hermes import teljes VAEL biztonsági mentést (zip) állít vissza; a JSON/JSONL munkamenet-exportok a dashboard Sessions oldalán importálhatók."
   t355: "A hermes fallback interaktívan kezeli a fallback_model láncot — nem kell kézzel szerkeszteni a config.yaml-t."
   t356: "A hermes pairing lecseréli a DM-párosítási tokent — a csere utáni első üzenetküldő kapja meg a hozzáférést a bothoz."
   t357: "A hermes setup egyetlen interaktív folyamatban végigvezeti az új felhasználókat a szolgáltató, a kulcsok és a platformok bekötésén."
@@ -3866,7 +3866,7 @@ tips:
   t372: "Az image_gen.model a config.yaml-ban választja ki a FAL-modellt: flux-2/klein, gpt-image-2, nano-banana-pro és mások."
   t373: "Az image_gen.provider egy pluginon (OpenAI Images, Codex, FAL) át irányítja a képgenerálást az alapértelmezett helyett."
   t374: "Az AUXILIARY_VISION_BASE_URL + AUXILIARY_VISION_API_KEY bármely OpenAI-kompatibilis végpontra irányítja a képelemzést."
-  t375: "A security.tirith_fail_open: false hatására a Hermes blokkolja a parancsokat, ha maga a tirith-ellenőrző hibázik."
+  t375: "A security.tirith_fail_open: false hatására a VAEL blokkolja a parancsokat, ha maga a tirith-ellenőrző hibázik."
   t376: "A TIRITH_FAIL_OPEN környezeti változó felülírja a tirith_fail_open konfigurációt — gyors kapcsoló a config.yaml szerkesztése nélkül."
   t377: "A --source tool chatek alapból nem szerepelnek a hermes sessions list kimenetében — add meg a --source kapcsolót kifejezetten, hogy lásd őket."
   t378: "A munkamenet-azonosítók időbélyeggel kezdődnek (20250305_091523_abcd), így ls-ben és jq-ban természetesen rendeződnek."

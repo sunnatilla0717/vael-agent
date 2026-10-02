@@ -160,7 +160,7 @@ gateway:
     header: "**디버그 보고서가 업로드되었습니다:**"
     auto_delete: "⏱ 페이스트는 6시간 후 자동 삭제됩니다."
     full_logs_hint: "전체 로그 업로드는 CLI에서 `hermes debug share`를 사용하세요."
-    share_hint: "지원을 받으려면 이 링크를 Hermes 팀과 공유하세요."
+    share_hint: "지원을 받으려면 이 링크를 VAEL 팀과 공유하세요."
     report_label: "리포트"
   deny:
     stale: "❌ 명령이 거부되었습니다 (승인이 만료됨)."
@@ -203,7 +203,7 @@ gateway:
     set: "⊙ 목표 설정됨 ({budget}회 예산): {goal}\n목표가 완료되거나, 일시정지/삭제하거나, 예산이 소진될 때까지 계속 작업하겠습니다.\n제어: /goal status · /goal pause · /goal resume · /goal clear"
     gate_add_admin_only: "⛔ /goal gate add는 명시적으로 설정된 게이트웨이 관리자가 필요해요(DM은 allow_admin_from, 그룹은 group_allow_admin_from)."
   help:
-    header: "📖 **Hermes 명령**\n"
+    header: "📖 **VAEL 명령**\n"
     skill_header: "\n⚡ **스킬 명령** ({count}개 활성):"
     more_use_commands: "\n... 외 {count}개 더. 전체 목록은 `/commands`로 확인하세요."
   insights:
@@ -422,7 +422,7 @@ gateway:
     source_line: "출처: {source}. 카테고리별 수치는 로컬 추정치예요."
     hint_all: "스킬별·도구 세트별 비용은 /context all로 볼 수 있어요."
   status:
-    header: "📊 **Hermes 게이트웨이 상태**"
+    header: "📊 **VAEL 게이트웨이 상태**"
     matrix_scope_header: "**Matrix 범위:**"
     matrix_scope_room: "  room: {room}"
     matrix_scope_room_id: "  room_id: {room_id}"
@@ -466,24 +466,24 @@ gateway:
     topics_user_disallowed: "Telegram 토픽이 활성화되어 있지만, 사용자가 토픽을 만들 수 없습니다.\n\n@BotFather → 봇 선택 → Bot Settings → Threads Settings를 열고 'Disallow users to create new threads'를 끄세요.\n\n그런 다음 다시 /topic을 보내세요."
     enable_failed: "Telegram 토픽 모드 활성화에 실패했습니다: {error}"
     bound_status: "이 토픽은 다음에 연결되어 있습니다:\n세션: {label}\nID: {session_id}\n\n이 토픽을 새 세션으로 교체하려면 /new를 사용하세요.\n병렬 작업을 위해서는 All Messages를 열고 메시지를 보내 다른 토픽을 만드세요."
-    thread_ready: "Telegram 다중 세션 토픽이 활성화되었습니다.\n\n이 토픽은 독립된 Hermes 세션으로 사용됩니다. 이 토픽의 현재 세션을 교체하려면 /new를 사용하세요. 병렬 작업을 위해서는 All Messages를 열고 메시지를 보내 다른 토픽을 만드세요."
+    thread_ready: "Telegram 다중 세션 토픽이 활성화되었습니다.\n\n이 토픽은 독립된 VAEL 세션으로 사용됩니다. 이 토픽의 현재 세션을 교체하려면 /new를 사용하세요. 병렬 작업을 위해서는 All Messages를 열고 메시지를 보내 다른 토픽을 만드세요."
     untitled_session: "제목 없는 세션"
     restore_step_1: "1. 토픽을 만들거나 여세요. 새로 만들려면 All Messages를 열고 그곳에 아무 메시지나 보내세요."
     restore_step_2: "2. 그 토픽 안에서 /topic <session-id>를 보내세요."
-    default_title: "Hermes 채팅"
-    root_lobby: "이 메인 채팅은 시스템 명령 전용이에요.\n\n새 Hermes 채팅을 시작하려면 이 봇 화면 상단의 All Messages 토픽을 열고 그곳에 아무 메시지나 보내세요. Telegram이 그 메시지로 새 토픽을 만들고, 각 토픽은 독립된 Hermes 세션으로 동작해요."
-    root_new: "새 Hermes 채팅을 병렬로 시작하려면 이 봇 화면 상단의 All Messages 토픽을 열고 그곳에 아무 메시지나 보내세요. Telegram이 새 토픽을 만들어 줘요.\n\n각 토픽은 독립된 Hermes 세션이에요. 기존 토픽의 현재 세션을 교체하고 싶을 때만 그 토픽 안에서 /new를 사용하세요."
-    new_header: "이 토픽에서 새 Hermes 세션을 시작했어요.\n\n팁: 병렬 작업을 하려면 여기서 /new를 쓰는 대신 All Messages를 열고 메시지를 보내 별도 토픽을 만드세요. /new는 현재 토픽에 연결된 세션을 교체해요."
-    help: "/topic — 다중 세션 DM 모드 켜기(봇 하나로 여러 채팅을 병렬로)\n\n사용법:\n  /topic             토픽 모드를 켜거나, 이미 켜져 있으면 상태 표시\n  /topic help        이 메시지 표시\n  /topic off         토픽 모드를 끄고 토픽 연결 지우기\n  /topic <id>        토픽 안에서: ID로 이전 세션 복원\n\n동작 방식:\n1. 이 DM에서 /topic을 한 번 실행하세요 — Hermes가 BotFather의 Threads\n   Settings가 켜져 있는지 확인하고 다중 세션 모드를 켜요.\n2. 봇 상단의 All Messages를 누르고 아무 메시지나 보내세요.\n   Telegram이 그 메시지로 새 토픽을 만들고, 각 토픽은\n   독립된 Hermes 세션이 돼요(새 기록, 새 컨텍스트).\n3. 루트 DM은 시스템 로비가 돼요 — /topic, /status,\n   /help, /usage는 거기서 보내세요. 일반 프롬프트는 토픽에서 보내요.\n4. 토픽 안에서 /new를 쓰면 그 토픽의 세션만 초기화돼요.\n5. 토픽 안에서 /topic <id>를 쓰면 이전 세션을 그 토픽으로 복원해요."
+    default_title: "VAEL 채팅"
+    root_lobby: "이 메인 채팅은 시스템 명령 전용이에요.\n\n새 VAEL 채팅을 시작하려면 이 봇 화면 상단의 All Messages 토픽을 열고 그곳에 아무 메시지나 보내세요. Telegram이 그 메시지로 새 토픽을 만들고, 각 토픽은 독립된 VAEL 세션으로 동작해요."
+    root_new: "새 VAEL 채팅을 병렬로 시작하려면 이 봇 화면 상단의 All Messages 토픽을 열고 그곳에 아무 메시지나 보내세요. Telegram이 새 토픽을 만들어 줘요.\n\n각 토픽은 독립된 VAEL 세션이에요. 기존 토픽의 현재 세션을 교체하고 싶을 때만 그 토픽 안에서 /new를 사용하세요."
+    new_header: "이 토픽에서 새 VAEL 세션을 시작했어요.\n\n팁: 병렬 작업을 하려면 여기서 /new를 쓰는 대신 All Messages를 열고 메시지를 보내 별도 토픽을 만드세요. /new는 현재 토픽에 연결된 세션을 교체해요."
+    help: "/topic — 다중 세션 DM 모드 켜기(봇 하나로 여러 채팅을 병렬로)\n\n사용법:\n  /topic             토픽 모드를 켜거나, 이미 켜져 있으면 상태 표시\n  /topic help        이 메시지 표시\n  /topic off         토픽 모드를 끄고 토픽 연결 지우기\n  /topic <id>        토픽 안에서: ID로 이전 세션 복원\n\n동작 방식:\n1. 이 DM에서 /topic을 한 번 실행하세요 — Hermes가 BotFather의 Threads\n   Settings가 켜져 있는지 확인하고 다중 세션 모드를 켜요.\n2. 봇 상단의 All Messages를 누르고 아무 메시지나 보내세요.\n   Telegram이 그 메시지로 새 토픽을 만들고, 각 토픽은\n   독립된 VAEL 세션이 돼요(새 기록, 새 컨텍스트).\n3. 루트 DM은 시스템 로비가 돼요 — /topic, /status,\n   /help, /usage는 거기서 보내세요. 일반 프롬프트는 토픽에서 보내요.\n4. 토픽 안에서 /new를 쓰면 그 토픽의 세션만 초기화돼요.\n5. 토픽 안에서 /topic <id>를 쓰면 이전 세션을 그 토픽으로 복원해요."
     system_topic_name: "시스템"
-    system_topic_intro: "Hermes 명령과 상태를 위한 시스템 토픽이에요."
+    system_topic_intro: "VAEL 명령과 상태를 위한 시스템 토픽이에요."
     setup_image_caption: "BotFather → Bot Settings → Threads Settings"
     no_chat_id: "채팅 ID를 확인할 수 없어요."
     mode_not_enabled: "이 채팅에는 다중 세션 토픽 모드가 아직 켜져 있지 않아요."
     disable_failed: "토픽 모드를 끄지 못했어요: {error}"
-    mode_disabled: "이 채팅의 다중 세션 토픽 모드가 이제 꺼졌어요.\n\nTelegram의 기존 토픽은 삭제되지 않고, 더 이상 독립 세션으로 구분되지 않을 뿐이에요. 루트 DM은 다시 일반 Hermes 채팅으로 동작해요. 나중에 다시 켜려면 /topic을 실행하세요."
+    mode_disabled: "이 채팅의 다중 세션 토픽 모드가 이제 꺼졌어요.\n\nTelegram의 기존 토픽은 삭제되지 않고, 더 이상 독립 세션으로 구분되지 않을 뿐이에요. 루트 DM은 다시 일반 VAEL 채팅으로 동작해요. 나중에 다시 켜려면 /topic을 실행하세요."
     status_enabled: "Telegram 다중 세션 토픽이 켜져 있어요."
-    status_how_to: "새 Hermes 채팅을 시작하려면 이 봇 화면 상단의 All Messages를 열고 그곳에 아무 메시지나 보내세요. Telegram이 새 토픽을 만들어 줘요."
+    status_how_to: "새 VAEL 채팅을 시작하려면 이 봇 화면 상단의 All Messages를 열고 그곳에 아무 메시지나 보내세요. Telegram이 새 토픽을 만들어 줘요."
     previous_unlinked: "이전에 연결 해제된 세션:"
     restore_one: "복원하려면:"
     restore_example: "예시: 토픽 안에서 /topic {session_id}를 보내세요."
@@ -494,7 +494,7 @@ gateway:
     not_your_session: "그 세션은 이 Telegram 사용자의 세션이 아니에요."
     already_linked: "그 세션은 이미 다른 Telegram 토픽에 연결되어 있어요."
     restored: "세션을 복원했어요: {title}"
-    restored_last_message: "\n\n마지막 Hermes 메시지:\n{text}"
+    restored_last_message: "\n\n마지막 VAEL 메시지:\n{text}"
   undo:
     nothing: "되돌릴 내용이 없습니다."
     removed: "↩️ {turns}개 턴을 되돌렸습니다 (메시지 {count}개).\n백업 위치: \"{preview}\"\n위 텍스트를 복사/편집한 후 보내면 여기서 다시 프롬프트할 수 있습니다."
@@ -504,17 +504,17 @@ gateway:
     not_git_repo: "✗ git 저장소가 아닙니다 — 업데이트할 수 없습니다."
     hermes_cmd_not_found: "✗ `hermes` 명령을 찾을 수 없습니다. Hermes는 실행 중이지만 PATH나 현재 Python 인터프리터를 통해 실행 파일을 찾을 수 없습니다. 터미널에서 `hermes update`를 직접 실행해 보세요."
     start_failed: "✗ 업데이트 시작 실패: {error}"
-    starting: "☤ Hermes 업데이트를 시작합니다… 진행 상황을 여기에 스트리밍하겠습니다."
+    starting: "☤ VAEL 업데이트를 시작합니다… 진행 상황을 여기에 스트리밍하겠습니다."
     reply_failed: "✗ 업데이트 프로세스에 응답을 보내지 못했어요: {error}"
     reply_sent: "✓ 업데이트 프로세스에 `{label}`을(를) 보냈어요."
-    failed_notice: "❌ Hermes 업데이트에 실패했어요. 이전 버전이 계속 실행 중이에요. 전체 오류를 보려면 호스트에서 `hermes update`를 실행하거나, 나중에 /update를 다시 시도하세요."
+    failed_notice: "❌ VAEL 업데이트에 실패했어요. 이전 버전이 계속 실행 중이에요. 전체 오류를 보려면 호스트에서 `hermes update`를 실행하거나, 나중에 /update를 다시 시도하세요."
     prompt_default: " (기본값: {default})"
     prompt: "☤ **업데이트에 입력이 필요해요:**\n\n{prompt}{default_hint}\n\n`{prefix}approve`(예) 또는 `{prefix}deny`(아니요)로 답하거나, 답을 직접 입력하세요."
-    finished: "✅ Hermes 업데이트가 끝났어요."
-    timed_out: "❌ Hermes 업데이트가 30분이 지나 시간 초과됐어요."
-    finished_success: "✅ Hermes 업데이트가 성공적으로 끝났어요."
+    finished: "✅ VAEL 업데이트가 끝났어요."
+    timed_out: "❌ VAEL 업데이트가 30분이 지나 시간 초과됐어요."
+    finished_success: "✅ VAEL 업데이트가 성공적으로 끝났어요."
     last_lines: "{msg}\n\n마지막 줄:\n```\n{tail}\n```"
-    managed_action: "Hermes Agent 업데이트"
+    managed_action: "VAEL Agent 업데이트"
     not_applicable: "✗ `hermes update`는 이 설치 방식({method})에는 적용되지 않아요.\n업데이트 방법: {command}"
   usage:
     rate_limits: "⏱️ **요청 제한:** {state}"
@@ -839,7 +839,7 @@ gateway:
     notice_shutdown: "⚠️ Hermes가 종료 중이에요 — 현재 작업이 중단돼요. 다시 온라인이 되면 아무 메시지나 보내 주세요. 중단된 곳부터 이어서 진행해 볼게요."
     notice_restart: "⚠️ Hermes가 재시작 중이에요 — 현재 작업이 중단돼요. 재시작 후 아무 메시지나 보내 주시면 중단된 곳부터 이어서 진행해 볼게요."
   startup:
-    handoff_thread_title: "Hermes — {title}"
+    handoff_thread_title: "VAEL — {title}"
     restarted: "♻ 게이트웨이가 성공적으로 재시작되었어요. 세션은 계속 이어져요."
     free_tier_line: "추론: Nous 무료 등급 (nous/welcome). 더 많이 사용하려면 로그인하세요: /login"
     online: "♻️ 게이트웨이 온라인 — Hermes가 돌아왔고 준비되었어요."
@@ -1049,7 +1049,7 @@ platform:
         description: "새 대화 시작"
         followup: "새 대화를 시작했어요~"
       reset:
-        description: "Hermes 세션 초기화"
+        description: "VAEL 세션 초기화"
         followup: "세션을 초기화했어요~"
       model:
         description: "모델 보기 또는 변경"
@@ -1071,10 +1071,10 @@ platform:
       undo:
         description: "마지막 대화 주고받기 제거"
       status:
-        description: "Hermes 세션 상태 보기"
+        description: "VAEL 세션 상태 보기"
         followup: "상태를 보냈어요~"
       stop:
-        description: "실행 중인 Hermes 에이전트 중지"
+        description: "실행 중인 VAEL 에이전트 중지"
         followup: "중지를 요청했어요~"
       steer:
         description: "다음 도구 호출 후 메시지 삽입 (중단 없음)"
@@ -1110,7 +1110,7 @@ platform:
       update:
         followup: "업데이트를 시작했어요~"
       restart:
-        description: "Hermes 게이트웨이 정상 재시작"
+        description: "VAEL 게이트웨이 정상 재시작"
         followup: "재시작을 요청했어요~"
       approve:
         arg_scope: "선택 사항: 'all', 'session', 'always', 'all session', 'all always'"
@@ -1118,7 +1118,7 @@ platform:
         description: "대기 중인 위험 명령 거부"
         arg_scope: "선택 사항: 'all'을 지정하면 대기 중인 모든 명령을 거부해요"
       thread:
-        description: "새 스레드를 만들고 그 안에서 Hermes 세션 시작"
+        description: "새 스레드를 만들고 그 안에서 VAEL 세션 시작"
         arg_name: "스레드 이름"
         arg_message: "선택 사항: 스레드에서 Hermes에게 보낼 첫 메시지"
         arg_auto_archive: "자동 보관 시간(분) (60, 1440, 4320, 10080)"
@@ -1143,7 +1143,7 @@ platform:
         arg_question: "중단 없이 답변받을 부수적인 질문"
         followup: "부수 질문을 보냈어요~"
       skill:
-        description: "Hermes 스킬 실행"
+        description: "VAEL 스킬 실행"
         arg_name: "실행할 스킬"
         arg_args: "스킬에 전달할 선택적 인수"
         unknown: "알 수 없는 스킬: `{name}`. 입력을 시작하면 자동 완성 제안이 표시돼요."
@@ -1164,8 +1164,8 @@ platform:
       unauthorized_slash_alert: "⚠️ 권한 없는 Discord 슬래시 명령 시도\n사용자: {user_name} ({user_id})\n채널: {chan_id} (길드 {guild_id})\n명령: {command_text}\n사유: {reason}"
     thread:
       seed_message: "🧵 Hermes가 만든 스레드: **{name}**"
-      default_name: "Hermes"
-      handoff_seed: "🧵 Hermes 인계: **{name}**"
+      default_name: "VAEL"
+      handoff_seed: "🧵 VAEL 인계: **{name}**"
       auto_create_failed: "⚠️ Hermes가 이 메시지에 대한 Discord 스레드를 만들 수 없어서 요청이 처리되지 않았어요. 다시 시도해 주세요."
       auto_create_failed_generic: "요청이 처리되지 않았어요. 다시 시도해 주세요."
     media:
@@ -1318,10 +1318,10 @@ platform:
       reply_truncated: "\n\n_[답변 잘림: {count}개 부분이 Slack의 임시 답변 한도를 초과했어요.]_"
       running: "`/{command}` 실행 중…"
     handoff:
-      seed: ":thread: Hermes 인계 — *{name}*"
+      seed: ":thread: VAEL 인계 — *{name}*"
   matrix:
     handoff:
-      default_name: "Hermes 세션"
+      default_name: "VAEL 세션"
     media:
       image_download_failed: "이미지를 내려받아 Matrix에 업로드하지 못했어요. 원본 URL에 비공개 토큰이 포함될 수 있어 표시하지 않았어요."
     approval:
@@ -1440,16 +1440,16 @@ platform:
       size_downgraded: "{label} 크기 {size_mb}MB가 {cap} 한도를 넘어 대신 파일로 보냈어요."
   email:
     image_line: "이미지: {url}"
-    standalone_subject: "Hermes Agent"
+    standalone_subject: "VAEL Agent"
   dingtalk:
     emotion:
       thinking: "🤔생각 중"
       done: "🥳완료"
   irc:
-    quit_message: "Hermes Agent를 종료하는 중"
+    quit_message: "VAEL Agent를 종료하는 중"
     standalone_quit: "전송됨"
   homeassistant:
-    notification_title: "Hermes Agent"
+    notification_title: "VAEL Agent"
   relay:
     confirm_approve_once: "한 번 승인"
     confirm_always_approve: "항상 승인"
@@ -1470,7 +1470,7 @@ slash:
   sethome:
     description: "이 채팅을 홈 채널로 설정"
   update:
-    description: "Hermes Agent를 최신 버전으로 업데이트"
+    description: "VAEL Agent를 최신 버전으로 업데이트"
   category:
     session: "세션"
     configuration: "설정"
@@ -1522,7 +1522,7 @@ slash:
   rollback:
     description: "파일 시스템 체크포인트 목록 또는 복원 (직접 편집한 내용은 유지; --all로 덮어쓰기)"
   snapshot:
-    description: "Hermes 설정/상태의 스냅샷 생성 또는 복원"
+    description: "VAEL 설정/상태의 스냅샷 생성 또는 복원"
   export:
     description: "프로필(설정, 스킬, 테마)을 공유 가능한 아카이브로 내보내기"
   import:
@@ -1608,7 +1608,7 @@ slash:
   voice:
     description: "음성 모드 전환"
   wake:
-    description: "'Hey Hermes' 웨이크 워드 감지 전환"
+    description: "'Hey VAEL' 웨이크 워드 감지 전환"
   busy:
     description: "Hermes가 작업 중일 때 메시지 처리 방식 제어"
   tools:
@@ -1676,7 +1676,7 @@ slash:
   image:
     description: "다음 프롬프트에 로컬 이미지 파일 첨부"
   version:
-    description: "Hermes Agent 버전 표시"
+    description: "VAEL Agent 버전 표시"
   debug:
     description: "디버그 보고서(시스템 정보 + 로그) 업로드 및 공유 링크 받기"
   quit:
@@ -1734,8 +1734,8 @@ cli:
     no_saved_card_add_funds_hint: "저장된 카드가 없어요 — “금액 추가”에서 카드 등록을 안내해 드려요."
     actions_require_admin: "결제 작업은 조직 관리자/소유자만 할 수 있어요."
     remote_spending_off_for_org: "이 조직에서는 원격 지출이 꺼져 있어요."
-    killswitch_reason_overview: "결제 관리자가 포털의 Hermes Agent 페이지에서 켜면 여기서 금액을 추가할 수 있어요."
-    killswitch_reason_buy: "금액을 추가하려면 먼저 결제 관리자가 포털의 Hermes Agent 페이지에서 켜야 해요."
+    killswitch_reason_overview: "결제 관리자가 포털의 VAEL Agent 페이지에서 켜면 여기서 금액을 추가할 수 있어요."
+    killswitch_reason_buy: "금액을 추가하려면 먼저 결제 관리자가 포털의 VAEL Agent 페이지에서 켜야 해요."
     add_funds_now_hint: "지금 금액 추가 — 한 번 결제되어 오늘 잔액에 반영돼요."
     refill_when_low_amounts: "잔액 부족 시 충전 — 잔액이 {threshold} 미만으로 떨어지면 {reload_to}이(가) 자동으로 결제돼요."
     refill_when_low_generic: "잔액 부족 시 충전 — 잔액이 설정한 금액 미만으로 떨어지면 카드에서 자동으로 결제돼요."
@@ -1791,7 +1791,7 @@ cli:
     charge_failed_card_declined: "🔴 카드 결제가 거부되었어요. 포털에서 다른 카드를 사용해 보세요."
     charge_failed_generic: "🔴 결제가 처리되지 않았어요 ({reason})."
     charge_error_no_payment_method: "💳 등록된 카드가 없어요 — 포털에서 충전하고 결제를 관리하세요."
-    charge_error_remote_spending_disabled: "이 계정에서는 원격 지출이 꺼져 있어요 — 결제 관리자가 포털의 Hermes Agent 페이지에서 켤 수 있어요."
+    charge_error_remote_spending_disabled: "이 계정에서는 원격 지출이 꺼져 있어요 — 결제 관리자가 포털의 VAEL Agent 페이지에서 켤 수 있어요."
     charge_error_role_required: "금액 추가는 조직 관리자/소유자만 할 수 있어요. 관리자에게 요청하거나 포털에서 관리하세요."
     charge_error_idempotency_conflict: "🔴 이 결제 키는 이미 다른 금액에 사용되었어요. 새로 충전을 시작하세요."
     revoked_by_admin: "관리자가 이 터미널의 지출을 중지했어요."
@@ -1808,7 +1808,7 @@ cli:
     charge_stepup_noninteractive: "`hermes portal`을 실행해 원격 지출을 허용한 뒤 다시 시도하세요."
     charge_stepup_declined: "결제하지 않았어요. 원격 지출을 허용하려면 /topup을 실행하세요."
     charge_stepup_not_granted: "원격 지출을 허용할 수 없어요 — 조직 관리자나 소유자의 승인이 필요해요. 카드는 결제되지 않았어요."
-    allowed_but_org_off: "이 터미널에서는 원격 지출이 허용되었지만 조직에서는 아직 꺼져 있어요. 결제 관리자가 포털의 Hermes Agent 페이지에서 켠 뒤 /topup을 다시 실행하세요."
+    allowed_but_org_off: "이 터미널에서는 원격 지출이 허용되었지만 조직에서는 아직 꺼져 있어요. 결제 관리자가 포털의 VAEL Agent 페이지에서 켠 뒤 /topup을 다시 실행하세요."
     allowed_no_card: "원격 지출이 허용되었어요 — 하지만 아직 등록된 카드가 없어요."
     topup_on_portal_to_continue: "계속하려면 포털에서 충전하고 결제를 관리하세요."
     allowed_run_topup: "원격 지출이 허용되었어요. 계속하려면 /topup을 실행하세요."
@@ -1964,7 +1964,7 @@ cli:
     usage_switch_provider: "제공자 전환"
     usage_refresh: "실시간 모델 목록 다시 가져오기"
     choice_switch_anyway: "그래도 전환"
-    desc_switch_anyway: "현재 Hermes 세션에서 이 모델을 사용해요."
+    desc_switch_anyway: "현재 VAEL 세션에서 이 모델을 사용해요."
     choice_cancel: "취소"
     desc_keep_current_model: "현재 모델을 유지해요."
     switch_cancelled: "모델 전환이 취소됐어요."
@@ -2112,7 +2112,7 @@ cli:
     images_attached_one: "📎 이미지 {count}개 첨부됨"
     images_attached_other: "📎 이미지 {count}개 첨부됨"
     command_interrupted: "명령이 중단됐어요."
-    welcome: "Hermes Agent에 오신 것을 환영해요! 메시지를 입력하거나 /help로 명령을 확인하세요."
+    welcome: "VAEL Agent에 오신 것을 환영해요! 메시지를 입력하거나 /help로 명령을 확인하세요."
     activated_skills_label: "활성화된 스킬:"
     redaction_disabled_title: "⚠  시크릿 마스킹이 비활성화됨"
     redaction_disabled_body: "(HERMES_REDACT_SECRETS={value}). API 키와 토큰이 채팅 출력, 세션 JSON, 로그에 그대로 노출될 수 있어요. 다시 활성화하려면 config.yaml에서 {setting}을(를) 설정하세요."
@@ -2192,7 +2192,7 @@ cli:
   render:
     response_transformed: "[스트리밍 후 응답이 변환됨]"
     banner_tagline: "{name} - AI 에이전트 프레임워크"
-    banner_version: "Hermes Agent v{version} ({date})"
+    banner_version: "VAEL Agent v{version} ({date})"
   subagents:
     cannot_steer_process: "백그라운드 프로세스는 조정할 수 없어요. 중지하거나 로그를 확인해 주세요."
     count_live: "{count}개 진행 중"
@@ -2472,7 +2472,7 @@ cli:
     yolo_bypass_suffix: " (YOLO 우회 활성)"
     ctx_left_prefix: "{percent}% 남음 · "
     ctx_tokens_used: "{left}{used} / {max} 토큰 사용"
-    status_title: "Hermes CLI 상태"
+    status_title: "VAEL CLI 상태"
     label_reasoning: "추론"
     label_approvals: "승인"
     label_context: "컨텍스트"
@@ -3012,7 +3012,7 @@ cli:
       prompt_required: "사용법: /heartbeat every <interval> <prompt> — 프롬프트는 필수예요."
       invalid_label: "잘못된 하트비트"
       set: "♥ 하트비트 설정됨 ({interval}마다): {prompt}"
-      set_note: "세션이 유휴 상태이고 간격이 지날 때마다 일반 턴으로 실행돼요. /heartbeat pause | resume | clear로 관리할 수 있어요. 이 Hermes 프로세스가 실행되는 동안만 유지되니, 영구적인 예약은 `hermes cron`을 사용하세요."
+      set_note: "세션이 유휴 상태이고 간격이 지날 때마다 일반 턴으로 실행돼요. /heartbeat pause | resume | clear로 관리할 수 있어요. 이 VAEL 프로세스가 실행되는 동안만 유지되니, 영구적인 예약은 `hermes cron`을 사용하세요."
     refine:
       nothing_yet: "아직 다듬을 내용이 없어요 — 먼저 메시지를 보내세요."
       empty: "아직 다듬을 내용이 없어요 — 대화가 비어 있어요."
@@ -3066,12 +3066,12 @@ cli:
       usage: "/timestamps [on|off|status]"
       label: "메시지 타임스탬프"
     update:
-      managed_action: "Hermes Agent 업데이트"
+      managed_action: "VAEL Agent 업데이트"
       choice_update: "지금 업데이트"
-      choice_update_desc: "현재 세션을 종료하고 Hermes Agent를 업데이트해요"
+      choice_update_desc: "현재 세션을 종료하고 VAEL Agent를 업데이트해요"
       choice_cancel: "취소"
       choice_cancel_desc: "현재 세션을 유지해요"
-      title: "☤  Hermes Agent 업데이트"
+      title: "☤  VAEL Agent 업데이트"
       detail: "현재 세션을 종료하고 `hermes update`를 실행해요."
       cancelled: "🟡 /update가 취소됐어요."
       launching: "☤ 업데이트를 시작해요..."
@@ -3091,7 +3091,7 @@ cli:
     fix_lm_studio: "LM Studio 해결법: 모델 설정에서 컨텍스트 길이를 지정 → 모델 다시 불러오기"
     fix_local_server: "해결법: 서버를 최소 {tokens_k}K 컨텍스트로 시작하거나 (llama.cpp: -c {tokens}), config.yaml의 model.ollama_num_ctx를 실제로 제공하는 창 크기로 설정하세요"
     fix_config: "해결법: config.yaml에서 model.context_length를 설정하거나 서버의 컨텍스트 설정을 늘리세요"
-    hermes_models_not_agentic: "⚠  Nous Research Hermes 3 & 4 모델은 에이전트용이 아니며 Hermes Agent와 함께 사용하도록 설계되지 않았어요."
+    hermes_models_not_agentic: "⚠  Nous Research VAEL 3 & 4 모델은 에이전트용이 아니며 VAEL Agent와 함께 사용하도록 설계되지 않았어요."
     hermes_models_lack_tools: "에이전트 워크플로에 필요한 도구 호출 기능이 없어요. 에이전트용 모델(Claude, GPT, Gemini, DeepSeek 등)을 사용해 보세요."
     hermes_models_switch_hint: "전환 방법: /model sonnet  또는  /model gpt5"
     project_skills_loaded: "◆ 이 저장소에서 프로젝트 스킬 {count}개를 불러왔어요"
@@ -3143,7 +3143,7 @@ cli:
     with_details: "{lead}\n세부 정보: {details}"
     agent_init_failed: "Hermes가 모델 연결을 시작하지 못했어요: {error}. 메시지는 전송되지 않았어요. `hermes doctor`로 설정을 점검하거나 /model로 다른 제공자를 선택하세요."
   gateway:
-    starting: "Hermes 게이트웨이(메시징 플랫폼)를 시작하는 중..."
+    starting: "VAEL 게이트웨이(메시징 플랫폼)를 시작하는 중..."
   gateway_status:
     header: "(✿◠‿◠) 게이트웨이 상태"
     platform_config_header: "메시징 플랫폼 설정:"
@@ -3458,15 +3458,15 @@ explainer:
   persistence:
     compression: "다른 프로세스가 이 세션을 압축하고 있어서 턴을 멈췄어요. 메시지는 이미 저장되어 있을 거예요 — 압축이 끝난 뒤 다시 보내 주세요."
     compression_closed: "컨텍스트 압축으로 이 세션이 교체되었고 실시간 이어받기를 할 수 없어서 턴을 멈췄어요. 저장소 자체는 정상이에요 — 클라이언트를 새로 고치거나 새 턴을 시작해 새 세션 ID를 받은 뒤 메시지를 다시 보내 주세요."
-    turn_lease: "다른 Hermes 프로세스가 이 세션을 넘겨받아서 턴을 멈췄어요. 답변은 저장되지 않았어요 — 다른 프로세스가 끝나길 기다린 뒤 메시지를 다시 보내 주세요."
+    turn_lease: "다른 VAEL 프로세스가 이 세션을 넘겨받아서 턴을 멈췄어요. 답변은 저장되지 않았어요 — 다른 프로세스가 끝나길 기다린 뒤 메시지를 다시 보내 주세요."
     session_row_missing: "채팅이 열려 있는 동안 이 세션이 저장소에서 삭제되었고 Hermes가 다시 만들 수 없어서 이 메시지는 저장되지 않았어요. 메시지를 다시 보내 주세요. 계속 실패하면 `hermes {profile_arg}doctor`를 실행하세요."
-    locked: "세션 저장소가 사용 중이어서(다른 Hermes 프로세스가 상태 데이터베이스에 쓰고 있었어요) 턴을 멈췄어요. 메시지는 이미 저장되어 있을 거예요 — 잠시 후 다시 보내 주세요."
+    locked: "세션 저장소가 사용 중이어서(다른 VAEL 프로세스가 상태 데이터베이스에 쓰고 있었어요) 턴을 멈췄어요. 메시지는 이미 저장되어 있을 거예요 — 잠시 후 다시 보내 주세요."
     replaced: "Hermes가 실행되는 동안 세션 데이터베이스 파일이 교체되어 이 메시지는 저장되지 않았어요 (복사본은 {home}/sessions/에 보관돼요). Hermes를 중지하고(`hermes {profile_arg}gateway stop`), `hermes {profile_arg}doctor`를 실행한 뒤 — `hermes {profile_arg}doctor --fix`는 잘못된 파일을 그 자리에서 수리하니 사용하지 마세요 — 다시 시작하고 메시지를 한 번 더 보내 주세요. 고급 복구 절차는 로그에 있어요."
-    deleted_wal: "다른 Hermes 프로세스가 세션 데이터베이스의 미리 쓰기 로그(WAL) 이전 복사본을 아직 잡고 있어서, 파일을 안전하게 지키기 위해 Hermes가 쓰기를 멈췄고 이 메시지는 저장되지 않았어요 (복사본은 {home}/sessions/에 보관돼요). 잃어버린 것은 없어요. 이 프로필의 모든 Hermes 프로세스(Desktop 앱, `hermes {profile_arg}gateway stop`, 대시보드, 크론)를 종료하고 `hermes {profile_arg}doctor`를 실행하세요 — 로그를 아직 잡고 있는 프로세스를 알려 줘요 — 그런 다음 Hermes를 다시 시작하고 메시지를 한 번 더 보내 주세요. 프로세스가 실행 중인 동안에는 `doctor --fix`를 실행하거나 state.db 파일을 삭제하지 마세요. 가이드: {recovery_docs}"
+    deleted_wal: "다른 VAEL 프로세스가 세션 데이터베이스의 미리 쓰기 로그(WAL) 이전 복사본을 아직 잡고 있어서, 파일을 안전하게 지키기 위해 Hermes가 쓰기를 멈췄고 이 메시지는 저장되지 않았어요 (복사본은 {home}/sessions/에 보관돼요). 잃어버린 것은 없어요. 이 프로필의 모든 VAEL 프로세스(Desktop 앱, `hermes {profile_arg}gateway stop`, 대시보드, 크론)를 종료하고 `hermes {profile_arg}doctor`를 실행하세요 — 로그를 아직 잡고 있는 프로세스를 알려 줘요 — 그런 다음 Hermes를 다시 시작하고 메시지를 한 번 더 보내 주세요. 프로세스가 실행 중인 동안에는 `doctor --fix`를 실행하거나 state.db 파일을 삭제하지 마세요. 가이드: {recovery_docs}"
     corrupt: "상태 데이터베이스에서 구조적 손상이 보고되어(재시작 시 대화 기록이 사라질 수 있어요) 턴을 멈췄어요. 디스크 공간을 확보해도 도움이 되지 않아요. 복구 방법:\n1. `hermes {profile_arg}doctor --fix` 실행\n2. 게이트웨이를 중지한 뒤 다음으로 복구:\n   hermes {profile_arg}sessions recover --source {db_path} --inspect-only\n   (복구 가능하다고 나오면) hermes {profile_arg}sessions recover --source {db_path} --output recovered-state.db\n   — 복구 시 손상된 파일의 스냅샷을 먼저 만들어요. 실행 중인 state.db에 `sqlite3 ... \".recover\"`를 절대 실행하지 마세요. 취약한 sqlite3 CLI가 손상을 더 키울 수 있어요\n3. {backups_dir}/의 백업에서 복원\n그런 다음 메시지를 다시 보내 주세요."
     fts_index: "세션 검색 인덱스(FTS5)가 손상되었고 분리할 수 없어서 턴을 멈췄고 이 메시지는 저장되지 않았어요. 메시지 저장소 자체는 손상되지 않았으니 복구 도구를 실행하거나 백업을 복원하지 마세요. `hermes {profile_arg}doctor --fix`를 실행하거나(또는 Hermes를 재시작하면 열 때 인덱스를 수리해요) 메시지를 다시 보내 주세요."
     disk: "Hermes가 이 대화를 디스크에 저장할 수 없어서 메시지를 잃지 않도록 멈췄어요. 디스크가 가득 찼을 가능성이 커요. 공간을 확보하거나 {home}/state.db의 권한을 고친 뒤 메시지를 다시 보내 주세요."
-    default: "Hermes가 이 대화를 저장할 수 없어서 메시지를 잃지 않도록 멈췄어요. 가능한 원인: 드라이브 공간 부족, 또는 다른 Hermes 프로세스가 데이터베이스를 잡고 있는 경우예요. 다른 Hermes 창을 닫고 `hermes {profile_arg}doctor`로 저장소를 확인한 뒤 메시지를 다시 보내 주세요."
+    default: "Hermes가 이 대화를 저장할 수 없어서 메시지를 잃지 않도록 멈췄어요. 가능한 원인: 드라이브 공간 부족, 또는 다른 VAEL 프로세스가 데이터베이스를 잡고 있는 경우예요. 다른 VAEL 창을 닫고 `hermes {profile_arg}doctor`로 저장소를 확인한 뒤 메시지를 다시 보내 주세요."
   file_mutation:
     header: "⚠️ 파일 변경 검증기: 위의 문구가 어떻게 보이든, 이번 턴에 파일 편집 {count}건이 실패했어요. `git status`나 `read_file`로 실제 반영된 내용을 확인하세요."
     entry: "  • `{path}` — [{tool}] {preview}"
@@ -3546,11 +3546,11 @@ tips:
   t069: "hermes skills tap add myorg/skills-repo는 사용자 지정 GitHub 스킬 소스를 추가해요."
   t070: "hermes skills snapshot export setup.json은 백업이나 공유를 위해 스킬 설정을 내보내요."
   t071: "hermes mcp add github --command npx는 명령줄에서 MCP 서버를 추가해요."
-  t072: "hermes mcp serve는 Hermes 자체를 다른 에이전트를 위한 MCP 서버로 실행해요."
+  t072: "hermes mcp serve는 VAEL 자체를 다른 에이전트를 위한 MCP 서버로 실행해요."
   t073: "hermes auth add로 자격 증명 풀 순환을 위한 API 키를 여러 개 추가할 수 있어요."
   t074: "hermes completion bash >> ~/.bashrc는 모든 명령과 프로필에 대한 탭 자동 완성을 활성화해요."
   t075: "hermes logs -f는 agent.log를 실시간으로 따라가요. --level WARNING --since 1h로 출력을 필터링해요."
-  t076: "hermes backup은 Hermes 홈 디렉터리 전체를 zip 파일로 백업해요."
+  t076: "hermes backup은 VAEL 홈 디렉터리 전체를 zip 파일로 백업해요."
   t077: "hermes profile create coder는 격리된 프로필을 만들고, 그 프로필은 자체 명령이 돼요."
   t078: "hermes profile create work --clone은 현재 설정과 키를 새 프로필로 복사해요."
   t079: "hermes update는 새로 번들된 스킬을 모든 프로필에 자동으로 동기화해요."
@@ -3581,7 +3581,7 @@ tips:
   t104: "config.yaml의 빠른 명령은 토큰을 전혀 쓰지 않고 셸 명령을 즉시 실행해요."
   t105: "사용자 지정 성격은 config.yaml의 agent.personalities 아래에 정의할 수 있어요."
   t106: "provider_routing은 OpenRouter 제공자 정렬, 허용 목록, 차단 목록을 제어해요."
-  t107: "execute_code는 Hermes 도구를 프로그래밍 방식으로 호출하는 Python 스크립트를 실행해요 — 결과가 컨텍스트에 쌓이지 않아요."
+  t107: "execute_code는 VAEL 도구를 프로그래밍 방식으로 호출하는 Python 스크립트를 실행해요 — 결과가 컨텍스트에 쌓이지 않아요."
   t108: "delegate_task는 기본적으로 최대 10개의 서브에이전트(delegation.max_concurrent_children)를 격리된 컨텍스트로 동시에 생성해서 병렬 작업을 수행해요."
   t109: "web_extract는 PDF URL에도 동작해요 — PDF 링크를 넘기면 마크다운으로 변환해요."
   t110: "search_files는 ripgrep 기반이라 grep보다 빨라요 — terminal에서 grep을 쓰는 대신 이걸 사용하세요."
@@ -3719,7 +3719,7 @@ tips:
   t242: "어떤 웹사이트든 /.well-known/skills/index.json으로 스킬을 공개할 수 있어요 — 스킬 허브가 자동으로 찾아내요."
   t243: "~/.hermes/skills/.hub/audit.log의 스킬 감사 로그는 모든 설치와 제거 작업을 기록해요."
   t244: "오래된 git 워크트리는 시작 시 자동 정리돼요: 깨끗하고 완전히 병합된 트리는 제거되고, 변경 중이거나 푸시되지 않은 작업은 항상 보존돼요."
-  t245: "프로필은 HERMES_HOME으로 Hermes 상태를 분리해요; 호스트 도구의 하위 프로세스는 terminal.home_mode가 profile이 아닌 한 실제 HOME을 유지해요."
+  t245: "프로필은 HERMES_HOME으로 VAEL 상태를 분리해요; 호스트 도구의 하위 프로세스는 terminal.home_mode가 profile이 아닌 한 실제 HOME을 유지해요."
   t246: "HERMES_HOME_MODE 환경 변수(8진수, 예: 0701)는 웹 서버 접근을 위한 사용자 정의 디렉터리 권한을 설정해요."
   t247: "컨테이너 모드: HERMES_HOME에 .container-mode를 두면 호스트 CLI가 자동으로 컨테이너 안에서 실행돼요."
   t248: "Ctrl+C에는 5단계 우선순위가 있어요: 녹음 취소 → 프롬프트 취소 → 선택기 취소 → 에이전트 중단 → 종료."
@@ -3760,7 +3760,7 @@ tips:
   t283: "~/.hermes/skills/.hub/quarantine/의 스킬 격리 구역에는 보안 리뷰를 기다리는 스킬이 보관돼요."
   t284: "/steer <prompt>는 다음 도구 호출 뒤에 메모를 끼워 넣어요 — 중단 없이 작업 도중 방향을 조정할 수 있어요."
   t285: "/goal <text>는 지속적인 Ralph 루프 목표를 설정해요 — 판정자가 완료라고 할 때까지 Hermes가 턴을 계속 이어가요."
-  t286: "/snapshot create [label]은 Hermes 설정의 전체 상태 스냅샷을 저장하고, /snapshot restore <id>로 나중에 되돌릴 수 있어요."
+  t286: "/snapshot create [label]은 VAEL 설정의 전체 상태 스냅샷을 저장하고, /snapshot restore <id>로 나중에 되돌릴 수 있어요."
   t287: "/copy [N]은 마지막 어시스턴트 응답을 클립보드에 복사하고, 숫자를 주면 뒤에서 N번째 응답을 복사해요."
   t288: "/redraw는 UI 전체를 다시 그려서 tmux 크기 조정이나 마우스 선택 잔상으로 생긴 터미널 어긋남을 고쳐요."
   t289: "/agents(별칭 /tasks)는 현재 세션의 활동 중인 에이전트와 실행 중인 백그라운드 작업을 보여줘요."
@@ -3790,7 +3790,7 @@ tips:
   t313: "TUI에서 Ctrl+G 또는 Ctrl+X Ctrl+E를 누르면 긴 여러 줄 프롬프트를 위해 입력 버퍼가 $EDITOR로 열려요."
   t314: "TUI는 LaTeX를 인라인으로 렌더링해요 — $E=mc^2$가 원본 TeX 대신 유니코드 수식으로 표시돼요."
   t315: "hermes dashboard는 127.0.0.1:9119에서 로컬 웹 UI를 실행해요 — 데이터가 localhost 밖으로 전혀 나가지 않아요."
-  t316: "hermes dashboard는 xterm.js와 WebSocket PTY를 통해 브라우저 안에 전체 Hermes TUI를 내장해요."
+  t316: "hermes dashboard는 xterm.js와 WebSocket PTY를 통해 브라우저 안에 전체 VAEL TUI를 내장해요."
   t317: "~/.hermes/dashboard-themes/에 팔레트 색 두 개를 담은 YAML을 넣으면 대시보드 전체의 스킨이 바뀌어요."
   t318: "대시보드 플러그인은 드롭인 방식이에요: ~/.hermes/dashboard-plugins/에 manifest.json + JS 번들만 넣으면 돼요 — npm 빌드가 필요 없어요."
   t319: "대시보드 테마의 layoutVariant: cockpit은 플러그인이 sidebar 슬롯으로 채울 수 있는 260px 왼쪽 레일을 추가해요."
@@ -3828,7 +3828,7 @@ tips:
   t351: "hermes chat --source tool은 프로그램에서 실행한 채팅에 태그를 붙여 hermes sessions list를 어지럽히지 않게 해요."
   t352: "hermes dump --show-keys는 마스킹된 API 키 지문을 포함해서 더 깊은 지원 디버깅에 도움이 돼요."
   t353: "hermes sessions rename <ID> \"new title\"은 과거 세션의 이름을 바꾸고, hermes sessions delete <ID>는 세션 하나를 삭제해요."
-  t354: "hermes import는 전체 Hermes 백업 zip을 복원해요. 세션 JSON/JSONL 내보내기는 대시보드의 Sessions 페이지에서 가져와요."
+  t354: "hermes import는 전체 VAEL 백업 zip을 복원해요. 세션 JSON/JSONL 내보내기는 대시보드의 Sessions 페이지에서 가져와요."
   t355: "hermes fallback은 fallback_model 체인을 대화형으로 관리해요 — config.yaml을 직접 편집할 필요가 없어요."
   t356: "hermes pairing은 DM 페어링 토큰을 교체해요 — 교체 후 처음 메시지를 보낸 사람이 봇 접근 권한을 얻어요."
   t357: "hermes setup은 처음 사용하는 분을 제공자, 키, 플랫폼 연결까지 하나의 대화형 흐름으로 안내해요."

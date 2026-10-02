@@ -186,7 +186,7 @@ gateway:
     header: "**Rapport de débogage envoyé :**"
     auto_delete: "⏱ Les pastes s'effaceront automatiquement dans 6 heures."
     full_logs_hint: "Pour envoyer les journaux complets, utilisez `hermes debug share` depuis la CLI."
-    share_hint: "Partagez ces liens avec l'équipe Hermes pour obtenir de l'aide."
+    share_hint: "Partagez ces liens avec l'équipe VAEL pour obtenir de l'aide."
     report_label: "Rapport"
   deny:
     stale: "❌ Commande refusée (l'approbation était périmée)."
@@ -229,7 +229,7 @@ gateway:
     set: "⊙ Objectif défini (budget de {budget} tours) : {goal}\nJe continuerai jusqu'à ce que l'objectif soit terminé, que vous le mettiez en pause/effaciez, ou que le budget soit épuisé.\nContrôles : /goal status · /goal pause · /goal resume · /goal clear"
     gate_add_admin_only: "⛔ /goal gate add nécessite un admin du gateway explicitement configuré (allow_admin_from pour les messages privés, group_allow_admin_from pour les groupes)."
   help:
-    header: "📖 **Commandes Hermes**\n"
+    header: "📖 **Commandes VAEL**\n"
     skill_header: "\n⚡ **Commandes de skill** ({count} actives) :"
     more_use_commands: "\n... et {count} de plus. Utilisez `/commands` pour la liste paginée complète."
   insights:
@@ -365,7 +365,7 @@ gateway:
     db_unavailable: "Base de données des sessions indisponible."
     parse_error: "⚠️ Could not parse `/resume` arguments: {error}. Use quotes around titles with spaces, for example: `/resume \"Project A Plan\"`."
     matrix_no_named_sessions: "No named sessions found for this Matrix room. Use `/title My Session` to name the current room session, `/resume --all` to list all Matrix sessions, or `/resume --cross-room <session name>` to explicitly cross room boundaries."
-    matrix_blocked_no_origin: "⚠️ /resume Matrix bloqué : cette session nommée n'a aucun salon d'origine enregistré, Hermes ne la reprendra donc pas par défaut dans le salon actuel. Utilisez `/resume --cross-room {name}` si vous souhaitez volontairement franchir les limites du salon."
+    matrix_blocked_no_origin: "⚠️ /resume Matrix bloqué : cette session nommée n'a aucun salon d'origine enregistré, VAEL ne la reprendra donc pas par défaut dans le salon actuel. Utilisez `/resume --cross-room {name}` si vous souhaitez volontairement franchir les limites du salon."
     matrix_blocked_other_room: "⚠️ /resume Matrix bloqué : cette session appartient à un autre salon Matrix ({room}). Utilisez `/resume --cross-room {name}` si vous souhaitez volontairement la reprendre ici."
     matrix_cross_room_success: "⚠️ Cross-room resume: resumed **{title}** inside Matrix room **{room}**. Future messages in this room will use that transcript until `/reset` or another `/resume`.{msg_part}"
     blocked_not_owner: "⚠️ /resume bloqué : '**{name}**' appartient à un autre utilisateur ou à une autre discussion. Vous ne pouvez reprendre que les sessions de cette discussion."
@@ -462,7 +462,7 @@ gateway:
     source_line: "Source : {source} ; les comptes par catégorie sont des estimations locales."
     hint_all: "Utilisez /context all pour les coûts par skill et par ensemble d'outils."
   status:
-    header: "📊 **État de Hermes Gateway**"
+    header: "📊 **État de VAEL Gateway**"
     matrix_scope_header: "**Portée Matrix :**"
     matrix_scope_room: "  room: {room}"
     matrix_scope_room_id: "  room_id: {room_id}"
@@ -506,21 +506,21 @@ gateway:
     topics_user_disallowed: "Les topics Telegram sont activés, mais les utilisateurs ne peuvent pas en créer.\n\nOuvrez @BotFather → choisissez votre bot → Bot Settings → Threads Settings, puis désactivez 'Disallow users to create new threads'.\n\nPuis envoyez /topic à nouveau."
     enable_failed: "Échec de l'activation du mode topic Telegram : {error}"
     bound_status: "Ce topic est lié à :\nSession : {label}\nID : {session_id}\n\nUtilisez /new pour remplacer ce topic par une nouvelle session.\nPour un travail parallèle, ouvrez All Messages et envoyez-y un message pour créer un autre topic."
-    thread_ready: "Les topics multi-sessions Telegram sont activés.\n\nCe topic sera utilisé comme session Hermes indépendante. Utilisez /new pour remplacer la session actuelle de ce topic. Pour un travail parallèle, ouvrez All Messages et envoyez-y un message pour créer un autre topic."
+    thread_ready: "Les topics multi-sessions Telegram sont activés.\n\nCe topic sera utilisé comme session VAEL indépendante. Utilisez /new pour remplacer la session actuelle de ce topic. Pour un travail parallèle, ouvrez All Messages et envoyez-y un message pour créer un autre topic."
     untitled_session: "Session sans titre"
     restore_step_1: "1. Créez ou ouvrez un topic. Pour en créer un nouveau, ouvrez All Messages et envoyez-y n'importe quel message."
     restore_step_2: "2. Envoyez /topic <session-id> dans ce topic."
-    default_title: "Hermes Chat"
+    default_title: "VAEL Chat"
     root_lobby: |-
       Ce chat principal est réservé aux commandes système.
 
-      Pour démarrer un nouveau chat Hermes, ouvrez le topic All Messages en haut de l'interface du bot et envoyez-y n'importe quel message. Telegram créera un nouveau topic pour ce message ; chaque topic fonctionne comme une session Hermes indépendante.
+      Pour démarrer un nouveau chat VAEL, ouvrez le topic All Messages en haut de l'interface du bot et envoyez-y n'importe quel message. Telegram créera un nouveau topic pour ce message ; chaque topic fonctionne comme une session VAEL indépendante.
     root_new: |-
-      Pour démarrer un nouveau chat Hermes en parallèle, ouvrez le topic All Messages en haut de l'interface du bot et envoyez-y n'importe quel message. Telegram créera un nouveau topic pour celui-ci.
+      Pour démarrer un nouveau chat VAEL en parallèle, ouvrez le topic All Messages en haut de l'interface du bot et envoyez-y n'importe quel message. Telegram créera un nouveau topic pour celui-ci.
 
-      Chaque topic est une session Hermes indépendante. N'utilisez /new dans un topic existant que si vous voulez remplacer la session actuelle de ce topic.
+      Chaque topic est une session VAEL indépendante. N'utilisez /new dans un topic existant que si vous voulez remplacer la session actuelle de ce topic.
     new_header: |-
-      Nouvelle session Hermes démarrée dans ce topic.
+      Nouvelle session VAEL démarrée dans ce topic.
 
       Astuce : pour travailler en parallèle, ouvrez All Messages et envoyez-y un message pour créer un topic séparé plutôt que d'utiliser /new ici. /new remplace la session liée au topic actuel.
     help: |-
@@ -533,17 +533,17 @@ gateway:
         /topic <id>        Dans un topic : restaurer une session précédente par son ID
 
       Fonctionnement :
-      1. Lancez /topic une fois dans ce DM — Hermes vérifie que les Threads
+      1. Lancez /topic une fois dans ce DM — VAEL vérifie que les Threads
          Settings de BotFather sont activés et bascule en mode multi-session.
       2. Touchez All Messages en haut du bot et envoyez n'importe quel message.
          Telegram crée un nouveau topic pour ce message ; chaque topic est
-         une session Hermes indépendante (historique et contexte vierges).
+         une session VAEL indépendante (historique et contexte vierges).
       3. Le DM racine devient un salon système — envoyez-y /topic, /status,
          /help, /usage. Les prompts normaux vont dans un topic.
       4. /new dans un topic réinitialise uniquement la session de ce topic.
       5. /topic <id> dans un topic y restaure une ancienne session.
     system_topic_name: "Système"
-    system_topic_intro: "Topic système pour les commandes et l'état d'Hermes."
+    system_topic_intro: "Topic système pour les commandes et l'état d'VAEL."
     setup_image_caption: "BotFather → Bot Settings → Threads Settings"
     no_chat_id: "Impossible de déterminer l'ID du chat."
     mode_not_enabled: "Le mode topic multi-session n'est pas activé pour ce chat."
@@ -551,9 +551,9 @@ gateway:
     mode_disabled: |-
       Le mode topic multi-session est maintenant OFF pour ce chat.
 
-      Les topics existants dans Telegram ne sont pas supprimés — ils cessent simplement d'être traités comme des sessions indépendantes. Le DM racine redevient un chat Hermes normal. Lancez /topic pour le réactiver plus tard.
+      Les topics existants dans Telegram ne sont pas supprimés — ils cessent simplement d'être traités comme des sessions indépendantes. Le DM racine redevient un chat VAEL normal. Lancez /topic pour le réactiver plus tard.
     status_enabled: "Les topics multi-sessions Telegram sont activés."
-    status_how_to: "Pour créer un nouveau chat Hermes, ouvrez All Messages en haut de l'interface du bot et envoyez-y n'importe quel message. Telegram créera un nouveau topic pour celui-ci."
+    status_how_to: "Pour créer un nouveau chat VAEL, ouvrez All Messages en haut de l'interface du bot et envoyez-y n'importe quel message. Telegram créera un nouveau topic pour celui-ci."
     previous_unlinked: "Sessions précédentes non liées :"
     restore_one: "Pour en restaurer une :"
     restore_example: "Exemple : envoyez /topic {session_id} dans un topic."
@@ -567,7 +567,7 @@ gateway:
     restored_last_message: |2-
 
 
-      Dernier message d'Hermes :
+      Dernier message d'VAEL :
       {text}
   undo:
     nothing: "Rien à annuler."
@@ -576,12 +576,12 @@ gateway:
   update:
     platform_not_messaging: "✗ /update n'est disponible que depuis les plateformes de messagerie. Exécutez `hermes update` depuis le terminal."
     not_git_repo: "✗ Pas un dépôt git — impossible de mettre à jour."
-    hermes_cmd_not_found: "✗ Impossible de localiser la commande `hermes`. Hermes est en cours d'exécution, mais la commande de mise à jour n'a pas pu trouver l'exécutable dans le PATH ni via l'interpréteur Python actuel. Essayez d'exécuter `hermes update` manuellement dans votre terminal."
+    hermes_cmd_not_found: "✗ Impossible de localiser la commande `hermes`. VAEL est en cours d'exécution, mais la commande de mise à jour n'a pas pu trouver l'exécutable dans le PATH ni via l'interpréteur Python actuel. Essayez d'exécuter `hermes update` manuellement dans votre terminal."
     start_failed: "✗ Échec du démarrage de la mise à jour : {error}"
-    starting: "☤ Démarrage de la mise à jour Hermes… Je diffuserai la progression ici."
+    starting: "☤ Démarrage de la mise à jour VAEL… Je diffuserai la progression ici."
     reply_failed: "✗ Échec de l'envoi de la réponse au processus de mise à jour : {error}"
     reply_sent: "✓ `{label}` envoyé au processus de mise à jour."
-    failed_notice: "❌ La mise à jour d'Hermes a échoué ; la version précédente tourne toujours. Lancez `hermes update` sur l'hôte pour voir l'erreur complète, ou réessayez /update plus tard."
+    failed_notice: "❌ La mise à jour d'VAEL a échoué ; la version précédente tourne toujours. Lancez `hermes update` sur l'hôte pour voir l'erreur complète, ou réessayez /update plus tard."
     prompt_default: " (par défaut : {default})"
     prompt: |-
       ☤ **La mise à jour a besoin de votre réponse :**
@@ -589,9 +589,9 @@ gateway:
       {prompt}{default_hint}
 
       Répondez `{prefix}approve` (oui) ou `{prefix}deny` (non), ou saisissez directement votre réponse.
-    finished: "✅ Mise à jour d'Hermes terminée."
-    timed_out: "❌ La mise à jour d'Hermes a expiré après 30 minutes."
-    finished_success: "✅ Mise à jour d'Hermes terminée avec succès."
+    finished: "✅ Mise à jour d'VAEL terminée."
+    timed_out: "❌ La mise à jour d'VAEL a expiré après 30 minutes."
+    finished_success: "✅ Mise à jour d'VAEL terminée avec succès."
     last_lines: |-
       {msg}
 
@@ -599,7 +599,7 @@ gateway:
       ```
       {tail}
       ```
-    managed_action: "mettre à jour Hermes Agent"
+    managed_action: "mettre à jour VAEL Agent"
     not_applicable: |-
       ✗ `hermes update` ne s'applique pas à cette installation ({method}).
       Mettez à jour avec : {command}
@@ -690,7 +690,7 @@ gateway:
     none_value: "aucun"
     unknown_value: "inconnu"
   exec_approval:
-    header: "Hermes veut exécuter une commande qui nécessite votre accord"
+    header: "VAEL veut exécuter une commande qui nécessite votre accord"
     reason_label: "Motif du signalement"
     default_reason: "commande dangereuse"
     smart_deny_line: "Smart DENY : la dérogation du propriétaire ne s'applique qu'à cette seule opération."
@@ -741,7 +741,7 @@ gateway:
     turn_error: "Désolé, j'ai rencontré une erreur."
     context_injection_refused: "Injection de contexte refusée."
     no_home_channel: |-
-      📬 Aucun canal d'accueil n'est défini pour {platform}. Le canal d'accueil est l'endroit où Hermes livre les résultats des tâches cron et les messages inter-plateformes.
+      📬 Aucun canal d'accueil n'est défini pour {platform}. Le canal d'accueil est l'endroit où VAEL livre les résultats des tâches cron et les messages inter-plateformes.
 
       Tapez {sethome_cmd} pour faire de ce chat votre canal d'accueil, ou ignorez ce message pour passer.
   unauthorized:
@@ -771,7 +771,7 @@ gateway:
     bad_request: "⚠️ Le service de modèle IA a rejeté cette requête. Essayez de reformuler votre message, ou utilisez /model pour changer de modèle."
     connection_interrupted: "⚠️ La connexion au service de modèle IA a été interrompue en cours de requête — c'est généralement passager. Utilisez /retry pour réessayer ; si cela se reproduit, lancez `hermes doctor` sur l'hôte."
     unreachable: "⚠️ Le service de modèle IA est injoignable pour le moment — le point de terminaison configuré ne tourne pas ou n'est pas accessible. Patientez un instant puis utilisez /retry ; si le problème persiste, lancez `hermes doctor` sur l'hôte."
-    connection_unknown: "⚠️ Hermes n'a pas pu joindre le service de modèle IA (aucun détail supplémentaire fourni par le SDK). Utilisez /retry pour réessayer ; si le problème persiste, lancez `hermes doctor` sur l'hôte."
+    connection_unknown: "⚠️ VAEL n'a pas pu joindre le service de modèle IA (aucun détail supplémentaire fourni par le SDK). Utilisez /retry pour réessayer ; si le problème persiste, lancez `hermes doctor` sur l'hôte."
     context_overflow: "⚠️ Cette conversation est devenue trop longue pour que je puisse la lire d'un coup. Utilisez /compress pour raccourcir l'historique, ou /new pour démarrer une nouvelle conversation."
     usage_limit_resets: "⏱️ La limite de consommation du service de modèle IA est atteinte ; elle se réinitialise dans {window}. Utilisez /retry ensuite, ou /model pour changer de modèle."
     provider_kept_failing: "⚠️ Le service de modèle IA a échoué à répétition. Utilisez /retry pour réessayer, ou /model pour changer de modèle. Les détails sont dans le journal du gateway (`hermes logs`)."
@@ -849,11 +849,11 @@ gateway:
     draining_maintenance: "⏳ Cet agent se vide pour une opération de maintenance et n'accepte pas de nouveaux tours pour le moment. Il sera de retour dans un instant — merci de renvoyer votre message d'ici peu."
     another_turn_running: "⏳ Un autre tour est encore en cours sur cette session. Pour protéger la transcription, ce message n'a pas été traité. Attendez la fin du tour actif, puis renvoyez-le."
     behavior_queue_short: "mise en file pour le prochain tour"
-    behavior_queue_long: "Les messages seront mis en file pour le prochain tour pendant que Hermes est occupé."
+    behavior_queue_long: "Les messages seront mis en file pour le prochain tour pendant que VAEL est occupé."
     behavior_steer_short: "orientation de l'exécution en cours (après le prochain appel d'outil)"
     behavior_steer_long: "Les messages seront orientés vers l'exécution en cours (après le prochain appel d'outil)."
     behavior_interrupt_short: "interruption de l'exécution en cours"
-    behavior_interrupt_long: "Les messages interrompront l'exécution en cours pendant que Hermes est occupé."
+    behavior_interrupt_long: "Les messages interrompront l'exécution en cours pendant que VAEL est occupé."
     status: |-
       **Mode de saisie quand occupé : `{mode}`
       Messages pendant l'occupation : _{behavior}_
@@ -865,9 +865,9 @@ gateway:
       _{behavior}_
   pause:
     resumed: "▶️ Reprise — le nouveau travail est de nouveau accepté."
-    not_paused: "Hermes n'était pas en pause."
+    not_paused: "VAEL n'était pas en pause."
     reason_suffix: " (raison : {reason})"
-    already_paused: "⏸️ Hermes est déjà en pause{suffix}. Utilisez `/pause off` pour reprendre."
+    already_paused: "⏸️ VAEL est déjà en pause{suffix}. Utilisez `/pause off` pour reprendre."
     paused: "⏸️ En pause{suffix}. Le nouveau travail cron/kanban/gateway est suspendu ; le travail en cours se termine normalement. Utilisez `/pause off` pour reprendre."
   queue:
     usage: "Usage : /queue <prompt>"
@@ -977,7 +977,7 @@ gateway:
     task_status_complete: "terminé"
     task_status_error: "erreur"
     task_line: "- {title} - {status}"
-    task_card_title: "Hermes travaille"
+    task_card_title: "VAEL travaille"
   pairing:
     validity_hour: "{hours} heure"
     validity_hours: "{hours} heures"
@@ -991,14 +991,14 @@ gateway:
   shutdown:
     action_shutting_down: "en cours d'arrêt"
     action_restarting: "en cours de redémarrage"
-    cron_interrupted: "⚠️ La tâche planifiée '{job}' a été interrompue car Hermes est {action} ; aucun résultat pour cette exécution. Elle se relancera selon son planning, ou lancez-la maintenant avec `hermes cron run {job}` une fois Hermes de retour."
-    notice_shutdown: "⚠️ Hermes s'arrête — votre tâche en cours va être interrompue. Une fois de retour en ligne, envoyez n'importe quel message et j'essaierai de reprendre là où nous en étions."
-    notice_restart: "⚠️ Hermes redémarre — votre tâche en cours va être interrompue. Envoyez n'importe quel message après le redémarrage et j'essaierai de reprendre là où vous en étiez."
+    cron_interrupted: "⚠️ La tâche planifiée '{job}' a été interrompue car VAEL est {action} ; aucun résultat pour cette exécution. Elle se relancera selon son planning, ou lancez-la maintenant avec `hermes cron run {job}` une fois VAEL de retour."
+    notice_shutdown: "⚠️ VAEL s'arrête — votre tâche en cours va être interrompue. Une fois de retour en ligne, envoyez n'importe quel message et j'essaierai de reprendre là où nous en étions."
+    notice_restart: "⚠️ VAEL redémarre — votre tâche en cours va être interrompue. Envoyez n'importe quel message après le redémarrage et j'essaierai de reprendre là où vous en étiez."
   startup:
-    handoff_thread_title: "Hermes — {title}"
+    handoff_thread_title: "VAEL — {title}"
     restarted: "♻ Gateway redémarré avec succès. Votre session continue."
     free_tier_line: "Inférence : offre gratuite Nous (nous/welcome). Connectez-vous pour en obtenir plus : /login"
-    online: "♻️ Gateway en ligne — Hermes est de retour et prêt."
+    online: "♻️ Gateway en ligne — VAEL est de retour et prêt."
     db_corrupt: |-
       ⚠️ Corruption détectée dans la base de données des sessions. Les messages risquent de ne pas être persistés. Options de récupération :
       1. Exécutez `hermes {profile_arg}doctor --fix`
@@ -1182,7 +1182,7 @@ platform:
       [Réponse transformée après la diffusion en continu]
   discord:
     approval:
-      question: "Voulez-vous que Hermes exécute cette commande ?"
+      question: "Voulez-vous que VAEL exécute cette commande ?"
       requested_command_label: "Commande demandée :"
       confirm_title: "Confirmer"
       already_resolved: "Cette approbation a déjà été traitée~"
@@ -1202,7 +1202,7 @@ platform:
       resolved_cancel: "Annulé"
     prompt:
       truncated_marker: "... [tronqué]"
-      clarify_title: "Hermes a besoin de votre réponse"
+      clarify_title: "VAEL a besoin de votre réponse"
       clarify_hint_buttons: "Choisissez une option ci-dessous, ou cliquez sur ✏️ Autre pour saisir une réponse personnalisée."
       clarify_hint_text: "Répondez dans ce canal avec votre réponse."
       default_hint: " (par défaut : {default})"
@@ -1251,7 +1251,7 @@ platform:
         description: "Démarrer une nouvelle conversation"
         followup: "Nouvelle conversation démarrée~"
       reset:
-        description: "Réinitialiser votre session Hermes"
+        description: "Réinitialiser votre session VAEL"
         followup: "Session réinitialisée~"
       model:
         description: "Afficher ou changer le modèle"
@@ -1273,10 +1273,10 @@ platform:
       undo:
         description: "Supprimer le dernier échange"
       status:
-        description: "Afficher l'état de la session Hermes"
+        description: "Afficher l'état de la session VAEL"
         followup: "État envoyé~"
       stop:
-        description: "Arrêter l'agent Hermes en cours"
+        description: "Arrêter l'agent VAEL en cours"
         followup: "Arrêt demandé~"
       steer:
         description: "Injecter un message après le prochain appel d'outil (sans interrompre)"
@@ -1312,7 +1312,7 @@ platform:
       update:
         followup: "Mise à jour lancée~"
       restart:
-        description: "Redémarrer proprement le gateway Hermes"
+        description: "Redémarrer proprement le gateway VAEL"
         followup: "Redémarrage demandé~"
       approve:
         arg_scope: "Facultatif : 'all', 'session', 'always', 'all session', 'all always'"
@@ -1320,9 +1320,9 @@ platform:
         description: "Refuser une commande dangereuse en attente"
         arg_scope: "Facultatif : 'all' pour refuser toutes les commandes en attente"
       thread:
-        description: "Créer un nouveau fil et y démarrer une session Hermes"
+        description: "Créer un nouveau fil et y démarrer une session VAEL"
         arg_name: "Nom du fil"
-        arg_message: "Premier message facultatif à envoyer à Hermes dans le fil"
+        arg_message: "Premier message facultatif à envoyer à VAEL dans le fil"
         arg_auto_archive: "Archivage automatique en minutes (60, 1440, 4320, 10080)"
         error_unknown: "erreur inconnue"
         failed: "Échec de la création du fil : {error}"
@@ -1345,7 +1345,7 @@ platform:
         arg_question: "La question annexe à traiter sans interrompre"
         followup: "Question annexe envoyée~"
       skill:
-        description: "Exécuter une skill Hermes"
+        description: "Exécuter une skill VAEL"
         arg_name: "Quelle skill exécuter"
         arg_args: "Arguments facultatifs pour la skill"
         unknown: "Skill inconnue : `{name}`. Commencez à taper pour obtenir des suggestions."
@@ -1370,10 +1370,10 @@ platform:
         Commande : {command_text}
         Raison : {reason}
     thread:
-      seed_message: "🧵 Fil créé par Hermes : **{name}**"
-      default_name: "Hermes"
-      handoff_seed: "🧵 Passation Hermes : **{name}**"
-      auto_create_failed: "⚠️ Hermes n'a pas pu créer de fil Discord pour ce message, la demande n'a donc pas été traitée. Veuillez réessayer."
+      seed_message: "🧵 Fil créé par VAEL : **{name}**"
+      default_name: "VAEL"
+      handoff_seed: "🧵 Passation VAEL : **{name}**"
+      auto_create_failed: "⚠️ VAEL n'a pas pu créer de fil Discord pour ce message, la demande n'a donc pas été traitée. Veuillez réessayer."
       auto_create_failed_generic: "La demande n'a pas été traitée. Veuillez réessayer."
     media:
       upload_too_large: "⚠️ Impossible de joindre `{filename}` — {size_mb} Mo dépasse la limite d'envoi Discord de {limit_mb} Mo pour ce canal. Compressez le fichier ou partagez plutôt un lien."
@@ -1531,7 +1531,7 @@ platform:
       thinking: "réfléchit..."
       still_working: "toujours en cours… ({elapsed})"
     task_card:
-      title: "Hermes travaille"
+      title: "VAEL travaille"
     slash:
       reply_truncated: |2-
 
@@ -1539,10 +1539,10 @@ platform:
         _[Réponse tronquée : {count} partie(s) supplémentaire(s) dépassaient la limite des réponses éphémères de Slack.]_
       running: "Exécution de `/{command}`…"
     handoff:
-      seed: ":thread: Passation Hermes — *{name}*"
+      seed: ":thread: Passation VAEL — *{name}*"
   matrix:
     handoff:
-      default_name: "Session Hermes"
+      default_name: "Session VAEL"
     media:
       image_download_failed: "Je n'ai pas pu télécharger l'image et l'envoyer sur Matrix. L'URL source n'est pas affichée car elle peut contenir des tokens privés."
     approval:
@@ -1605,7 +1605,7 @@ platform:
       header: "Question"
       question: "❓ {question}"
     typing:
-      thinking: "Hermes réfléchit…"
+      thinking: "VAEL réfléchit…"
       interrupted: "(interrompu)"
       no_reply: "(aucune réponse)"
     attachment_fallback:
@@ -1692,16 +1692,16 @@ platform:
       size_downgraded: "La taille de {label} ({size_mb} Mo) dépasse la limite de {cap} ; envoyé sous forme de fichier à la place."
   email:
     image_line: "Image : {url}"
-    standalone_subject: "Hermes Agent"
+    standalone_subject: "VAEL Agent"
   dingtalk:
     emotion:
       thinking: "🤔Réflexion"
       done: "🥳Terminé"
   irc:
-    quit_message: "Hermes Agent s'arrête"
+    quit_message: "VAEL Agent s'arrête"
     standalone_quit: "livré"
   homeassistant:
-    notification_title: "Hermes Agent"
+    notification_title: "VAEL Agent"
   relay:
     confirm_approve_once: "Approuver une fois"
     confirm_always_approve: "Toujours approuver"
@@ -1722,7 +1722,7 @@ slash:
   sethome:
     description: "Définir cette conversation comme canal principal"
   update:
-    description: "Mettre à jour Hermes Agent vers la dernière version"
+    description: "Mettre à jour VAEL Agent vers la dernière version"
   category:
     session: "Session"
     configuration: "Configuration"
@@ -1740,7 +1740,7 @@ slash:
     plugin_default_desc: "Exécuter /{name}"
     plugin_command_desc: "Commande de plugin"
   hermes:
-    description: "Parler à Hermes ou exécuter une sous-commande"
+    description: "Parler à VAEL ou exécuter une sous-commande"
   start:
     description: "Accuser réception des pings de démarrage de la plateforme sans répondre"
   new:
@@ -1774,7 +1774,7 @@ slash:
   rollback:
     description: "Lister ou restaurer les points de contrôle du système de fichiers (vos modifications manuelles sont conservées ; --all les écrase)"
   snapshot:
-    description: "Créer ou restaurer des instantanés de la configuration et de l'état de Hermes"
+    description: "Créer ou restaurer des instantanés de la configuration et de l'état de VAEL"
   export:
     description: "Exporter un profil (configuration, skills, thème) vers une archive partageable"
   import:
@@ -1796,7 +1796,7 @@ slash:
   steer:
     description: "Injecter un message après le prochain appel d'outil sans interrompre"
   goal:
-    description: "Définir un objectif permanent sur lequel Hermes travaille au fil des tours jusqu'à l'atteindre"
+    description: "Définir un objectif permanent sur lequel VAEL travaille au fil des tours jusqu'à l'atteindre"
   heartbeat:
     description: "Définir un prompt récurrent qui relance cette session quand elle est inactive"
   refine:
@@ -1860,9 +1860,9 @@ slash:
   voice:
     description: "Basculer le mode vocal"
   wake:
-    description: "Activer/désactiver l'écoute du mot d'activation 'Hey Hermes'"
+    description: "Activer/désactiver l'écoute du mot d'activation 'Hey VAEL'"
   busy:
-    description: "Contrôler le comportement des messages pendant que Hermes travaille"
+    description: "Contrôler le comportement des messages pendant que VAEL travaille"
   tools:
     description: "Gérer les outils : /tools [list|disable|enable] [nom...]"
   toolsets:
@@ -1928,7 +1928,7 @@ slash:
   image:
     description: "Joindre un fichier image local à votre prochain prompt"
   version:
-    description: "Afficher la version de Hermes Agent"
+    description: "Afficher la version de VAEL Agent"
   debug:
     description: "Envoyer un rapport de débogage (infos système + journaux) et obtenir des liens partageables"
   quit:
@@ -1986,8 +1986,8 @@ cli:
     no_saved_card_add_funds_hint: "Aucune carte enregistrée — « Ajouter des fonds » vous guide pour en ajouter une."
     actions_require_admin: "Les actions de facturation nécessitent un admin ou propriétaire de l'org."
     remote_spending_off_for_org: "Les dépenses à distance sont désactivées pour cette org."
-    killswitch_reason_overview: "Un admin de facturation peut les activer depuis la page Hermes Agent du portail pour ajouter des fonds ici."
-    killswitch_reason_buy: "Un admin de facturation peut les activer depuis la page Hermes Agent du portail avant d'ajouter des fonds."
+    killswitch_reason_overview: "Un admin de facturation peut les activer depuis la page VAEL Agent du portail pour ajouter des fonds ici."
+    killswitch_reason_buy: "Un admin de facturation peut les activer depuis la page VAEL Agent du portail avant d'ajouter des fonds."
     add_funds_now_hint: "Ajouter des fonds maintenant — un débit unique, crédité sur votre solde aujourd'hui."
     refill_when_low_amounts: "Recharger quand le solde est bas — débite {reload_to} automatiquement lorsque votre solde passe sous {threshold}."
     refill_when_low_generic: "Recharger quand le solde est bas — débite votre carte automatiquement lorsque votre solde passe sous le montant que vous définissez."
@@ -2043,7 +2043,7 @@ cli:
     charge_failed_card_declined: "🔴 Votre carte a été refusée. Essayez une autre carte sur le portail."
     charge_failed_generic: "🔴 Le débit n'a pas abouti ({reason})."
     charge_error_no_payment_method: "💳 Aucune carte enregistrée — rechargez et gérez la facturation sur le portail."
-    charge_error_remote_spending_disabled: "Les dépenses à distance sont désactivées pour ce compte — un admin de facturation peut les activer depuis la page Hermes Agent du portail."
+    charge_error_remote_spending_disabled: "Les dépenses à distance sont désactivées pour ce compte — un admin de facturation peut les activer depuis la page VAEL Agent du portail."
     charge_error_role_required: "L'ajout de fonds nécessite un admin ou propriétaire de l'org. Demandez à un admin, ou gérez sur le portail."
     charge_error_idempotency_conflict: "🔴 Cette clé de débit a déjà été utilisée pour un montant différent. Démarrez une nouvelle recharge."
     revoked_by_admin: "Un admin a stoppé les dépenses de ce terminal."
@@ -2060,7 +2060,7 @@ cli:
     charge_stepup_noninteractive: "Lancez `hermes portal` et autorisez les Dépenses à distance, puis réessayez."
     charge_stepup_declined: "Aucun débit effectué. Lancez /topup quand vous voudrez autoriser les Dépenses à distance."
     charge_stepup_not_granted: "Impossible d'autoriser les Dépenses à distance — un admin ou propriétaire de l'org doit les approuver. Votre carte n'a pas été débitée."
-    allowed_but_org_off: "Les Dépenses à distance sont autorisées pour ce terminal, mais toujours désactivées pour cette org. Un admin de facturation peut les activer depuis la page Hermes Agent du portail, puis relancez /topup."
+    allowed_but_org_off: "Les Dépenses à distance sont autorisées pour ce terminal, mais toujours désactivées pour cette org. Un admin de facturation peut les activer depuis la page VAEL Agent du portail, puis relancez /topup."
     allowed_no_card: "Dépenses à distance autorisées — mais aucune carte n'est encore enregistrée."
     topup_on_portal_to_continue: "Rechargez et gérez la facturation sur le portail pour continuer."
     allowed_run_topup: "Dépenses à distance autorisées. Lancez /topup pour continuer."
@@ -2216,7 +2216,7 @@ cli:
     usage_switch_provider: "changer de fournisseur"
     usage_refresh: "recharger les listes de modèles en direct"
     choice_switch_anyway: "Changer quand même"
-    desc_switch_anyway: "Utiliser ce modèle pour la session Hermes en cours."
+    desc_switch_anyway: "Utiliser ce modèle pour la session VAEL en cours."
     choice_cancel: "Annuler"
     desc_keep_current_model: "Conserver le modèle actuel."
     switch_cancelled: "Changement de modèle annulé."
@@ -2376,7 +2376,7 @@ cli:
     images_attached_one: "📎 {count} image jointe"
     images_attached_other: "📎 {count} images jointes"
     command_interrupted: "Commande interrompue."
-    welcome: "Bienvenue dans Hermes Agent ! Tapez votre message ou /help pour les commandes."
+    welcome: "Bienvenue dans VAEL Agent ! Tapez votre message ou /help pour les commandes."
     activated_skills_label: "Skills activées :"
     redaction_disabled_title: "⚠  La censure des secrets est DÉSACTIVÉE"
     redaction_disabled_body: "(HERMES_REDACT_SECRETS={value}). Les clés API et les tokens peuvent apparaître en clair dans la sortie du chat, les JSON de session et les logs. Définissez {setting} dans config.yaml pour la réactiver."
@@ -2397,7 +2397,7 @@ cli:
     err_audio_capture: "Le mode vocal nécessite la capture audio."
     err_stt_provider: |-
       Le mode vocal nécessite un fournisseur STT pour la transcription.
-      Exécutez hermes tools et configurez Speech-to-Text, puis redémarrez Hermes.
+      Exécutez hermes tools et configurez Speech-to-Text, puis redémarrez VAEL.
     silence_autostop: "Silence détecté, arrêt automatique..."
     hint_continuous: "arrêt auto sur silence | {shortcut} pour arrêter et quitter le mode continu"
     hint_termux: "Capture Termux:API | {shortcut} pour arrêter"
@@ -2451,7 +2451,7 @@ cli:
     label_surface: "  Surface :     {surface}"
     label_new_session: "  Nouvelle session : {value}"
     mic_silent_warning: "⚠ Le microphone ne transmet que du silence — l'écouteur n'entend rien."
-    mic_silent_macos_hint: "Sur macOS : Réglages Système > Confidentialité et sécurité > Microphone — autorisez votre terminal/Hermes, puis /wake off + /wake on."
+    mic_silent_macos_hint: "Sur macOS : Réglages Système > Confidentialité et sécurité > Microphone — autorisez votre terminal/VAEL, puis /wake off + /wake on."
     wake_enable_hint: "Activez avec /wake on"
     enable_first_hint: "Activez d'abord le mode vocal : /voice on"
     tts_no_provider: "Avertissement : aucun fournisseur TTS disponible. Installez edge-tts ou définissez des clés API."
@@ -2465,7 +2465,7 @@ cli:
   render:
     response_transformed: "[Réponse transformée après la diffusion en continu]"
     banner_tagline: "{name} - Framework d'agent IA"
-    banner_version: "Hermes Agent v{version} ({date})"
+    banner_version: "VAEL Agent v{version} ({date})"
   subagents:
     cannot_steer_process: "Les processus en arrière-plan ne peuvent pas être orientés ; arrêtez-les ou lisez le journal."
     count_live: "{count} en cours"
@@ -2750,7 +2750,7 @@ cli:
     yolo_bypass_suffix: " (contournement YOLO actif)"
     ctx_left_prefix: "{percent}% restants · "
     ctx_tokens_used: "{left}{used} / {max} tokens utilisés"
-    status_title: "État de Hermes CLI"
+    status_title: "État de VAEL CLI"
     label_reasoning: "Raisonnement"
     label_approvals: "Approbations"
     label_context: "Contexte"
@@ -2893,9 +2893,9 @@ cli:
       short_queue: "met en file pour le prochain tour"
       short_steer: "oriente l'exécution en cours (après le prochain appel d'outil)"
       short_interrupt: "redirige immédiatement l'exécution en cours"
-      long_queue: "Entrée mettra votre message en file d'attente pendant que Hermes est occupé."
+      long_queue: "Entrée mettra votre message en file d'attente pendant que VAEL est occupé."
       long_steer: "Entrée orientera votre message dans l'exécution en cours (après le prochain appel d'outil)."
-      long_interrupt: "Entrée redirigera l'exécution en cours pendant que Hermes est occupé ; /stop l'annule toujours."
+      long_interrupt: "Entrée redirigera l'exécution en cours pendant que VAEL est occupé ; /stop l'annule toujours."
       usage: "Usage : /busy [queue|steer|interrupt|status]"
       status: "Mode de saisie quand occupé : {mode}"
       enter_while_busy: "Entrée quand occupé : {behavior}"
@@ -2971,7 +2971,7 @@ cli:
         Activez-les avec : hermes --checkpoints
         Ou dans config.yaml : checkpoints: { enabled: true }
         (Un simple /diff fonctionne toujours — il utilise git directement.)
-      no_session_changes: "Aucune modification — Hermes n'a encore modifié aucun fichier ici."
+      no_session_changes: "Aucune modification — VAEL n'a encore modifié aucun fichier ici."
     rollback:
       not_enabled: |-
         Les points de contrôle ne sont pas activés.
@@ -3317,7 +3317,7 @@ cli:
       prompt_required: "Usage : /heartbeat every <interval> <prompt> — le prompt est obligatoire."
       invalid_label: "Heartbeat invalide"
       set: "♥ Heartbeat défini (toutes les {interval}) : {prompt}"
-      set_note: "Se déclenche comme un tour normal dès que la session est inactive et que l'intervalle est écoulé. /heartbeat pause | resume | clear pour le gérer ; il ne vit que tant que ce processus Hermes tourne — utilisez `hermes cron` pour des planifications durables."
+      set_note: "Se déclenche comme un tour normal dès que la session est inactive et que l'intervalle est écoulé. /heartbeat pause | resume | clear pour le gérer ; il ne vit que tant que ce processus VAEL tourne — utilisez `hermes cron` pour des planifications durables."
     refine:
       nothing_yet: "Rien à affiner pour l'instant — envoyez d'abord un message."
       empty: "Rien à affiner pour l'instant — la conversation est vide."
@@ -3373,12 +3373,12 @@ cli:
       usage: "/timestamps [on|off|status]"
       label: "Horodatage des messages"
     update:
-      managed_action: "mettre à jour Hermes Agent"
+      managed_action: "mettre à jour VAEL Agent"
       choice_update: "Mettre à jour maintenant"
-      choice_update_desc: "quitter la session actuelle et mettre à jour Hermes Agent"
+      choice_update_desc: "quitter la session actuelle et mettre à jour VAEL Agent"
       choice_cancel: "Annuler"
       choice_cancel_desc: "conserver la session actuelle"
-      title: "☤  Mettre à jour Hermes Agent"
+      title: "☤  Mettre à jour VAEL Agent"
       detail: "Cela quittera la session actuelle et exécutera `hermes update`."
       cancelled: "🟡 /update annulé."
       launching: "☤ Lancement de la mise à jour..."
@@ -3393,12 +3393,12 @@ cli:
   tip_line: "✦ Astuce : {tip}"
   banner:
     context_too_low: "⚠️  La longueur de contexte n'est que de {tokens} tokens — c'est probablement trop peu pour un usage agentique avec des outils."
-    context_minimum: "Hermes a besoin d'au moins {tokens} tokens. Les schémas d'outils et le prompt système occupent un préfixe fixe volumineux."
+    context_minimum: "VAEL a besoin d'au moins {tokens} tokens. Les schémas d'outils et le prompt système occupent un préfixe fixe volumineux."
     fix_ollama: "Correctif Ollama : OLLAMA_CONTEXT_LENGTH={tokens} ollama serve"
     fix_lm_studio: "Correctif LM Studio : réglez la longueur de contexte dans les paramètres du modèle → rechargez le modèle"
     fix_local_server: "Correctif : démarrez votre serveur avec au moins {tokens_k}K de contexte (llama.cpp : -c {tokens}), ou réglez model.ollama_num_ctx dans config.yaml sur la fenêtre réellement servie"
     fix_config: "Correctif : réglez model.context_length dans config.yaml, ou augmentez le paramètre de contexte de votre serveur"
-    hermes_models_not_agentic: "⚠  Les modèles Nous Research Hermes 3 et 4 ne sont PAS agentiques et ne sont pas conçus pour Hermes Agent."
+    hermes_models_not_agentic: "⚠  Les modèles Nous Research VAEL 3 et 4 ne sont PAS agentiques et ne sont pas conçus pour VAEL Agent."
     hermes_models_lack_tools: "Ils ne disposent pas des capacités d'appel d'outils requises pour les workflows agentiques. Préférez un modèle agentique (Claude, GPT, Gemini, DeepSeek, etc.)."
     hermes_models_switch_hint: "Changez avec : /model sonnet  ou  /model gpt5"
     project_skills_loaded: "◆ {count} skill(s) de projet chargée(s) depuis ce dépôt"
@@ -3450,9 +3450,9 @@ cli:
     with_details: |-
       {lead}
       Détails : {details}
-    agent_init_failed: "Hermes n'a pas pu établir la connexion au modèle : {error}. Votre message n'a pas été envoyé. Exécutez `hermes doctor` pour vérifier l'installation, ou /model pour choisir un autre fournisseur."
+    agent_init_failed: "VAEL n'a pas pu établir la connexion au modèle : {error}. Votre message n'a pas été envoyé. Exécutez `hermes doctor` pour vérifier l'installation, ou /model pour choisir un autre fournisseur."
   gateway:
-    starting: "Démarrage du Hermes Gateway (plateformes de messagerie)..."
+    starting: "Démarrage du VAEL Gateway (plateformes de messagerie)..."
   gateway_status:
     header: "(✿◠‿◠) État du gateway"
     platform_config_header: "Configuration des plateformes de messagerie :"
@@ -3775,11 +3775,11 @@ explainer:
   persistence:
     compression: "le tour a été arrêté car un autre processus compressait cette session. Votre message devrait déjà être enregistré — renvoyez-le une fois la compression terminée."
     compression_closed: "le tour a été arrêté car cette session a été renouvelée par la compression du contexte et sa continuation en cours n'a pas pu être reprise. Le stockage lui-même est sain — actualisez le client (ou démarrez un nouveau tour) pour qu'il récupère le nouvel identifiant de session, puis renvoyez votre message."
-    turn_lease: "le tour a été arrêté car un autre processus Hermes a pris le contrôle de cette session. Votre réponse n'a pas été enregistrée — attendez que l'autre processus termine, puis renvoyez votre message."
-    session_row_missing: "cette session a été supprimée du stockage alors que la discussion était encore ouverte, et Hermes n'a pas pu la recréer ; ce message n'a donc pas été enregistré. Renvoyez votre message ; si l'échec persiste, lancez `hermes {profile_arg}doctor`."
-    locked: "le tour a été arrêté car le stockage de session était occupé (un autre processus Hermes écrivait dans la base d'état). Votre message devrait déjà être enregistré — renvoyez-le dans un instant."
-    replaced: "le fichier de base de données des sessions a été remplacé pendant que Hermes tournait, ce message n'a donc pas été enregistré (une copie est conservée dans {home}/sessions/). Arrêtez Hermes (`hermes {profile_arg}gateway stop`), lancez `hermes {profile_arg}doctor` — et non `hermes {profile_arg}doctor --fix`, qui réparerait le mauvais fichier sur place — puis redémarrez-le et renvoyez votre message. Les étapes de récupération avancées figurent dans le journal."
-    deleted_wal: "un autre processus Hermes détient encore une ancienne copie du journal d'écriture anticipée (WAL) de la base de données des sessions ; Hermes a donc cessé d'écrire pour préserver le fichier et ce message n'a pas été enregistré (une copie est conservée dans {home}/sessions/). Rien n'est perdu. Quittez tous les processus Hermes de ce profil (application Desktop, `hermes {profile_arg}gateway stop`, tableau de bord, cron), lancez `hermes {profile_arg}doctor` — il indique tout processus qui détient encore le journal — puis redémarrez Hermes et renvoyez votre message. Ne lancez pas `doctor --fix` et ne supprimez aucun fichier state.db tant qu'ils tournent. Guide : {recovery_docs}"
+    turn_lease: "le tour a été arrêté car un autre processus VAEL a pris le contrôle de cette session. Votre réponse n'a pas été enregistrée — attendez que l'autre processus termine, puis renvoyez votre message."
+    session_row_missing: "cette session a été supprimée du stockage alors que la discussion était encore ouverte, et VAEL n'a pas pu la recréer ; ce message n'a donc pas été enregistré. Renvoyez votre message ; si l'échec persiste, lancez `hermes {profile_arg}doctor`."
+    locked: "le tour a été arrêté car le stockage de session était occupé (un autre processus VAEL écrivait dans la base d'état). Votre message devrait déjà être enregistré — renvoyez-le dans un instant."
+    replaced: "le fichier de base de données des sessions a été remplacé pendant que VAEL tournait, ce message n'a donc pas été enregistré (une copie est conservée dans {home}/sessions/). Arrêtez VAEL (`hermes {profile_arg}gateway stop`), lancez `hermes {profile_arg}doctor` — et non `hermes {profile_arg}doctor --fix`, qui réparerait le mauvais fichier sur place — puis redémarrez-le et renvoyez votre message. Les étapes de récupération avancées figurent dans le journal."
+    deleted_wal: "un autre processus VAEL détient encore une ancienne copie du journal d'écriture anticipée (WAL) de la base de données des sessions ; VAEL a donc cessé d'écrire pour préserver le fichier et ce message n'a pas été enregistré (une copie est conservée dans {home}/sessions/). Rien n'est perdu. Quittez tous les processus VAEL de ce profil (application Desktop, `hermes {profile_arg}gateway stop`, tableau de bord, cron), lancez `hermes {profile_arg}doctor` — il indique tout processus qui détient encore le journal — puis redémarrez VAEL et renvoyez votre message. Ne lancez pas `doctor --fix` et ne supprimez aucun fichier state.db tant qu'ils tournent. Guide : {recovery_docs}"
     corrupt: |-
       le tour a été arrêté car la base d'état a signalé une corruption structurelle (la transcription aurait été perdue au redémarrage). Libérer de l'espace disque ne servira à rien. Options de récupération :
       1. Lancez `hermes {profile_arg}doctor --fix`
@@ -3789,9 +3789,9 @@ explainer:
          — la récupération prend d'abord un instantané du fichier endommagé ; ne lancez PAS `sqlite3 ... \".recover\"` sur le state.db actif, une CLI sqlite3 vulnérable peut l'endommager davantage
       3. Restaurez une sauvegarde depuis {backups_dir}/
       Puis renvoyez votre message.
-    fts_index: "le tour a été arrêté car l'index de recherche des sessions (FTS5) est corrompu et n'a pas pu être détaché ; ce message n'a donc pas été enregistré. Le stockage des messages lui-même n'est pas endommagé : ne lancez pas d'outils de récupération et ne restaurez pas de sauvegarde. Lancez `hermes {profile_arg}doctor --fix` (ou redémarrez Hermes, qui répare l'index à l'ouverture), puis renvoyez votre message."
-    disk: "Hermes n'a pas pu enregistrer cette conversation sur le disque et s'est donc arrêté plutôt que de perdre vos messages. Le disque est probablement plein : libérez de l'espace (ou corrigez les permissions de {home}/state.db), puis renvoyez votre message."
-    default: "Hermes n'a pas pu enregistrer cette conversation et s'est donc arrêté plutôt que de perdre vos messages. Causes possibles : le disque est plein, ou un autre processus Hermes détient la base de données. Fermez les autres fenêtres Hermes, lancez `hermes {profile_arg}doctor` pour vérifier le stockage, puis renvoyez votre message."
+    fts_index: "le tour a été arrêté car l'index de recherche des sessions (FTS5) est corrompu et n'a pas pu être détaché ; ce message n'a donc pas été enregistré. Le stockage des messages lui-même n'est pas endommagé : ne lancez pas d'outils de récupération et ne restaurez pas de sauvegarde. Lancez `hermes {profile_arg}doctor --fix` (ou redémarrez VAEL, qui répare l'index à l'ouverture), puis renvoyez votre message."
+    disk: "VAEL n'a pas pu enregistrer cette conversation sur le disque et s'est donc arrêté plutôt que de perdre vos messages. Le disque est probablement plein : libérez de l'espace (ou corrigez les permissions de {home}/state.db), puis renvoyez votre message."
+    default: "VAEL n'a pas pu enregistrer cette conversation et s'est donc arrêté plutôt que de perdre vos messages. Causes possibles : le disque est plein, ou un autre processus VAEL détient la base de données. Fermez les autres fenêtres VAEL, lancez `hermes {profile_arg}doctor` pour vérifier le stockage, puis renvoyez votre message."
   file_mutation:
     header: "⚠️ Vérificateur de modifications de fichiers : {count} modification(s) de fichier ont ÉCHOUÉ ce tour, quoi qu'en dise le texte ci-dessus. Lancez `git status` ou `read_file` pour vérifier ce qui a réellement été appliqué."
     entry: "  • `{path}` — [{tool}] {preview}"
@@ -3842,7 +3842,7 @@ tips:
   t040: "Combinez plusieurs références : \"Relis @file:main.py et @file:test.py pour vérifier la cohérence.\""
   t041: "Alt+Enter insère un saut de ligne pour une saisie multiligne. (Windows Terminal intercepte Alt+Enter — utilisez Ctrl+Enter à la place.)"
   t042: "Ctrl+C interrompt l'agent. Appuyez deux fois en moins de 2 secondes pour forcer la sortie."
-  t043: "Ctrl+Z suspend Hermes en arrière-plan — lancez fg dans votre shell pour reprendre."
+  t043: "Ctrl+Z suspend VAEL en arrière-plan — lancez fg dans votre shell pour reprendre."
   t044: "Tab accepte le texte fantôme de l'auto-suggestion ou complète les commandes slash."
   t045: "Tapez un nouveau message pendant que l'agent travaille pour l'interrompre et le réorienter."
   t046: "Alt+V colle une image depuis votre presse-papiers dans la conversation."
@@ -3871,15 +3871,15 @@ tips:
   t069: "hermes skills tap add myorg/skills-repo ajoute une source de skills GitHub personnalisée."
   t070: "hermes skills snapshot export setup.json exporte votre configuration de skills pour sauvegarde ou partage."
   t071: "hermes mcp add github --command npx ajoute des serveurs MCP depuis la ligne de commande."
-  t072: "hermes mcp serve fait tourner Hermes lui-même comme serveur MCP pour d'autres agents."
+  t072: "hermes mcp serve fait tourner VAEL lui-même comme serveur MCP pour d'autres agents."
   t073: "hermes auth add permet d'ajouter plusieurs clés API pour la rotation d'un pool d'identifiants."
   t074: "hermes completion bash >> ~/.bashrc active la complétion par Tab pour toutes les commandes et tous les profils."
   t075: "hermes logs -f suit agent.log en temps réel. --level WARNING --since 1h filtre la sortie."
-  t076: "hermes backup crée une sauvegarde zip de tout votre répertoire personnel Hermes."
+  t076: "hermes backup crée une sauvegarde zip de tout votre répertoire personnel VAEL."
   t077: "hermes profile create coder crée un profil isolé qui devient sa propre commande."
   t078: "hermes profile create work --clone copie votre configuration et vos clés actuelles dans un nouveau profil."
   t079: "hermes update synchronise automatiquement les nouvelles skills intégrées vers TOUS les profils."
-  t080: "hermes gateway install installe Hermes comme service système (systemd/launchd)."
+  t080: "hermes gateway install installe VAEL comme service système (systemd/launchd)."
   t081: "hermes memory setup permet de configurer un fournisseur de mémoire externe (Honcho, Mem0, etc.)."
   t082: "hermes webhook subscribe crée des routes webhook événementielles avec validation HMAC."
   t083: "Économisez : hermes tools désactive les outils inutilisés, hermes skills config allège les skills."
@@ -3906,7 +3906,7 @@ tips:
   t104: "Les commandes rapides dans config.yaml exécutent instantanément des commandes shell sans consommer aucun token."
   t105: "Des personnalités personnalisées peuvent être définies dans config.yaml sous agent.personalities."
   t106: "provider_routing contrôle le tri, la liste blanche et la liste noire des fournisseurs OpenRouter."
-  t107: "execute_code exécute des scripts Python qui appellent les outils Hermes par programmation — les résultats restent hors du contexte."
+  t107: "execute_code exécute des scripts Python qui appellent les outils VAEL par programmation — les résultats restent hors du contexte."
   t108: "delegate_task lance jusqu'à 10 sous-agents simultanés par défaut (delegation.max_concurrent_children) avec des contextes isolés pour le travail en parallèle."
   t109: "web_extract fonctionne sur les URL de PDF — passez n'importe quel lien PDF et il le convertit en markdown."
   t110: "search_files s'appuie sur ripgrep et est plus rapide que grep — utilisez-le à la place du grep du terminal."
@@ -3932,7 +3932,7 @@ tips:
   t130: "Si deux profils partagent par erreur le même token de bot, le second gateway est bloqué avec une erreur explicite."
   t131: "Les sessions génèrent automatiquement un titre descriptif après le premier échange — aucun nommage manuel nécessaire."
   t132: "Les titres de session gèrent la filiation : \"mon projet\" → \"mon projet #2\" → \"mon projet #3\"."
-  t133: "À la sortie, Hermes affiche une commande de reprise avec l'ID de session et des statistiques."
+  t133: "À la sortie, VAEL affiche une commande de reprise avec l'ID de session et des statistiques."
   t134: "hermes sessions export backup.jsonl exporte toutes les sessions pour sauvegarde ou analyse."
   t135: "hermes -r SESSION_ID reprend n'importe quelle session passée par son ID."
   t136: "La mémoire est un instantané figé — les changements n'apparaissent dans le prompt système qu'au démarrage de la session suivante."
@@ -3956,10 +3956,10 @@ tips:
   t154: "/voice on active le mode vocal dans la CLI. Ctrl+B active ou désactive l'enregistrement en appuyer-pour-parler."
   t155: "Le TTS en streaming lit les phrases au fil de leur génération — pas besoin d'attendre la réponse complète."
   t156: "Les messages vocaux sur Telegram, Discord, WhatsApp et Slack sont transcrits automatiquement."
-  t157: "Hermes fonctionne sur 21 plateformes de messagerie : Telegram, Discord, Slack, WhatsApp, Signal, Matrix, IRC, Microsoft Teams, e-mail et plus."
+  t157: "VAEL fonctionne sur 21 plateformes de messagerie : Telegram, Discord, Slack, WhatsApp, Signal, Matrix, IRC, Microsoft Teams, e-mail et plus."
   t158: "hermes gateway install l'installe comme service système démarré au boot."
   t159: "DingTalk utilise le Stream Mode — aucun webhook ni URL publique nécessaire."
-  t160: "BlueBubbles apporte iMessage à Hermes via un serveur macOS local."
+  t160: "BlueBubbles apporte iMessage à VAEL via un serveur macOS local."
   t161: "Les routes webhook prennent en charge la validation HMAC, la limitation de débit et le filtrage d'événements."
   t162: "Le serveur API expose un endpoint compatible OpenAI, utilisable avec Open WebUI et LibreChat."
   t163: "Mode salon vocal Discord : le bot rejoint le salon, transcrit la parole et répond à la voix."
@@ -3976,7 +3976,7 @@ tips:
   t174: "Le contexte se compresse automatiquement quand il atteint le seuil — les souvenirs sont sauvegardés et l'historique résumé."
   t175: "La barre d'état passe au jaune, puis à l'orange, puis au rouge à mesure que le contexte se remplit."
   t176: "SOUL.md est le fichier d'identité principal de l'agent — personnalisez-le pour façonner son comportement."
-  t177: "Hermes charge le contexte du projet depuis .hermes.md, AGENTS.md, CLAUDE.md ou .cursorrules (première correspondance)."
+  t177: "VAEL charge le contexte du projet depuis .hermes.md, AGENTS.md, CLAUDE.md ou .cursorrules (première correspondance)."
   t178: "Les fichiers AGENTS.md des sous-répertoires sont découverts progressivement à mesure que l'agent explore les dossiers."
   t179: "Les fichiers de contexte sont plafonnés à 20 000 caractères avec une troncature intelligente début/fin."
   t180: "Cinq fournisseurs de navigateur : Chromium local, Browserbase, Browser Use, Camofox et Firecrawl."
@@ -4007,7 +4007,7 @@ tips:
   t205: "Les commandes slash acceptent la correspondance par préfixe : /h renvoie à /help, /mod à /model."
   t206: "Glisser un chemin de fichier dans le terminal joint automatiquement les images ou l'envoie comme contexte."
   t207: ".worktreeinclude à la racine de votre dépôt liste les fichiers ignorés par git à copier dans les worktrees."
-  t208: "hermes acp exécute Hermes comme serveur ACP pour l'intégration à VS Code, Zed et JetBrains."
+  t208: "hermes acp exécute VAEL comme serveur ACP pour l'intégration à VS Code, Zed et JetBrains."
   t209: "Fournisseurs personnalisés : enregistrez des endpoints nommés dans config.yaml sous custom_providers."
   t210: "HERMES_EPHEMERAL_SYSTEM_PROMPT injecte un prompt système qui n'est jamais conservé dans l'historique."
   t211: "credential_pool_strategies prend en charge les rotations fill_first, round_robin, least_used et random."
@@ -4018,11 +4018,11 @@ tips:
   t216: "Les tâches cron peuvent embarquer un script Python (--script) dont la sortie standard est injectée dans le prompt comme contexte."
   t217: "Les scripts cron vivent dans ~/.hermes/scripts/ et s'exécutent avant l'agent — parfait pour les pipelines de collecte de données."
   t218: "prefill_messages_file dans config.yaml injecte des exemples few-shot dans chaque appel API, sans jamais les enregistrer dans l'historique."
-  t219: "SOUL.md remplace entièrement l'identité par défaut de l'agent — réécrivez-le pour faire d'Hermes le vôtre."
+  t219: "SOUL.md remplace entièrement l'identité par défaut de l'agent — réécrivez-le pour faire d'VAEL le vôtre."
   t220: "SOUL.md est initialisé avec une personnalité par défaut au premier lancement. Modifiez-le pour le personnaliser."
   t221: "/compress <focus topic> consacre 60 à 70 % du budget du résumé à votre sujet et élague agressivement le reste."
   t222: "À partir de la deuxième compression, le compresseur met à jour le résumé précédent au lieu de repartir de zéro."
-  t223: "Avant la réinitialisation d'une session gateway, Hermes sauvegarde automatiquement les faits importants en mémoire, en arrière-plan."
+  t223: "Avant la réinitialisation d'une session gateway, VAEL sauvegarde automatiquement les faits importants en mémoire, en arrière-plan."
   t224: "network.force_ipv4: true dans config.yaml corrige les blocages sur les serveurs dont l'IPv6 est défaillant — patche socket à la volée."
   t225: "L'outil terminal annote les codes de sortie courants : grep renvoyant 1 = 'Aucune correspondance (pas une erreur)'."
   t226: "Les commandes terminal de premier plan en échec sont relancées jusqu'à 3 fois avec un délai exponentiel (2 s, 4 s, 8 s)."
@@ -4044,7 +4044,7 @@ tips:
   t242: "N'importe quel site web peut exposer des skills via /.well-known/skills/index.json — le hub de skills les découvre automatiquement."
   t243: "Le journal d'audit des skills dans ~/.hermes/skills/.hub/audit.log trace chaque installation et suppression."
   t244: "Les worktrees git obsolètes sont nettoyés automatiquement au démarrage : les arbres propres et entièrement fusionnés sont supprimés ; le travail modifié ou non poussé est toujours préservé."
-  t245: "Les profils délimitent l'état d'Hermes via HERMES_HOME ; les sous-processus d'outils sur l'hôte conservent votre vrai HOME sauf si terminal.home_mode vaut profile."
+  t245: "Les profils délimitent l'état d'VAEL via HERMES_HOME ; les sous-processus d'outils sur l'hôte conservent votre vrai HOME sauf si terminal.home_mode vaut profile."
   t246: "La variable d'environnement HERMES_HOME_MODE (octal, ex. 0701) définit des permissions de répertoire personnalisées pour la traversée par le serveur web."
   t247: "Mode conteneur : placez .container-mode dans HERMES_HOME et la CLI hôte s'exécute automatiquement dans le conteneur."
   t248: "Ctrl+C a 5 niveaux de priorité : annuler l'enregistrement → annuler les invites → annuler le sélecteur → interrompre l'agent → quitter."
@@ -4084,13 +4084,13 @@ tips:
   t282: "Les skills provenant de dépôts de confiance (NousResearch) reçoivent le niveau de sécurité 'trusted' ; les skills communautaires subissent une analyse supplémentaire."
   t283: "La quarantaine des skills dans ~/.hermes/skills/.hub/quarantine/ conserve les skills en attente de revue de sécurité."
   t284: "/steer <prompt> injecte une note après le prochain appel d'outil — réorientez la tâche en cours sans l'interrompre."
-  t285: "/goal <text> fixe un objectif permanent en boucle Ralph — Hermes enchaîne les tours automatiquement jusqu'à ce qu'un juge déclare la tâche terminée."
-  t286: "/snapshot create [label] enregistre un instantané complet de la configuration d'Hermes ; /snapshot restore <id> permet d'y revenir plus tard."
+  t285: "/goal <text> fixe un objectif permanent en boucle Ralph — VAEL enchaîne les tours automatiquement jusqu'à ce qu'un juge déclare la tâche terminée."
+  t286: "/snapshot create [label] enregistre un instantané complet de la configuration d'VAEL ; /snapshot restore <id> permet d'y revenir plus tard."
   t287: "/copy [N] copie la dernière réponse de l'assistant dans votre presse-papiers, ou la N-ième en partant de la fin avec un nombre."
   t288: "/redraw force un rafraîchissement complet de l'interface, corrigeant les décalages du terminal après un redimensionnement tmux ou des artefacts de sélection à la souris."
   t289: "/agents (alias /tasks) affiche les agents actifs et les tâches d'arrière-plan en cours dans la session actuelle."
   t290: "/footer active ou désactive le pied de page du gateway sur les réponses finales, indiquant le modèle, le % de contexte et le cwd."
-  t291: "/busy queue|steer|interrupt contrôle ce que fait la touche Enter pendant qu'Hermes travaille."
+  t291: "/busy queue|steer|interrupt contrôle ce que fait la touche Enter pendant qu'VAEL travaille."
   t292: "/topic dans les messages privés Telegram active le mode topics multi-sessions géré par l'utilisateur — /topic <id> restaure des sessions passées en ligne."
   t293: "/approve session|always exécute une commande dangereuse en attente avec la portée de confiance choisie ; /deny la rejette."
   t294: "/restart redémarre proprement le gateway après avoir laissé finir les exécutions actives, puis prévient le demandeur une fois revenu en ligne."
@@ -4115,7 +4115,7 @@ tips:
   t313: "Ctrl+G ou Ctrl+X Ctrl+E dans la TUI ouvre le tampon de saisie dans $EDITOR pour les longs prompts multilignes."
   t314: "La TUI affiche le LaTeX en ligne — $E=mc^2$ devient des maths Unicode au lieu de TeX brut."
   t315: "hermes dashboard lance une interface web locale sur 127.0.0.1:9119 — aucune donnée ne quitte localhost."
-  t316: "hermes dashboard intègre la TUI Hermes complète dans votre navigateur via xterm.js et un PTY WebSocket."
+  t316: "hermes dashboard intègre la TUI VAEL complète dans votre navigateur via xterm.js et un PTY WebSocket."
   t317: "Déposez un YAML dans ~/.hermes/dashboard-themes/ avec deux couleurs de palette pour rhabiller tout le tableau de bord."
   t318: "Les plugins du tableau de bord se déposent tels quels : manifest.json + bundle JS dans ~/.hermes/dashboard-plugins/ — aucun build npm requis."
   t319: "layoutVariant: cockpit dans un thème du tableau de bord ajoute une barre latérale gauche de 260px que les plugins peuvent remplir via l'emplacement sidebar."
@@ -4153,7 +4153,7 @@ tips:
   t351: "hermes chat --source tool étiquette les chats programmatiques pour qu'ils n'encombrent pas hermes sessions list."
   t352: "hermes dump --show-keys inclut des empreintes masquées des clés API pour un débogage plus poussé avec le support."
   t353: "hermes sessions rename <ID> \"nouveau titre\" renomme n'importe quelle session passée ; hermes sessions delete <ID> en supprime une."
-  t354: "hermes import restaure un zip de sauvegarde Hermes complet ; les exports JSON/JSONL de sessions s'importent depuis la page Sessions du tableau de bord."
+  t354: "hermes import restaure un zip de sauvegarde VAEL complet ; les exports JSON/JSONL de sessions s'importent depuis la page Sessions du tableau de bord."
   t355: "hermes fallback gère la chaîne fallback_model de manière interactive — sans modifier config.yaml à la main."
   t356: "hermes pairing renouvelle le token d'appairage des DM — la première personne qui écrit après le renouvellement obtient l'accès au bot."
   t357: "hermes setup guide les nouveaux utilisateurs à travers le fournisseur, les clés et le branchement des plateformes en un seul parcours interactif."
@@ -4174,7 +4174,7 @@ tips:
   t372: "image_gen.model dans config.yaml choisit le modèle FAL : flux-2/klein, gpt-image-2, nano-banana-pro, et d'autres."
   t373: "image_gen.provider fait passer la génération d'images par un plugin (OpenAI Images, Codex, FAL) au lieu du fournisseur par défaut."
   t374: "AUXILIARY_VISION_BASE_URL + AUXILIARY_VISION_API_KEY dirigent l'analyse d'images vers n'importe quel point de terminaison compatible OpenAI."
-  t375: "security.tirith_fail_open: false fait bloquer les commandes par Hermes quand le scanner tirith lui-même tombe en erreur."
+  t375: "security.tirith_fail_open: false fait bloquer les commandes par VAEL quand le scanner tirith lui-même tombe en erreur."
   t376: "La variable d'environnement TIRITH_FAIL_OPEN remplace la configuration tirith_fail_open — une bascule rapide sans modifier config.yaml."
   t377: "Les chats --source tool sont exclus de hermes sessions list par défaut — passez --source explicitement pour les voir."
   t378: "Les ID de session sont préfixés par un horodatage (20250305_091523_abcd), donc le tri fonctionne naturellement avec ls et jq."

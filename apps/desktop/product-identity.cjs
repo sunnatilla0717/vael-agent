@@ -9,14 +9,16 @@
 'use strict'
 
 const variants = {
-  '': { display: 'Hermes', kebab: 'hermes', pascal: 'Hermes' },
+  // VAEL rebrand (PR-1): display names only — kebab/pascal kept for
+  // artifact names, install paths and upstream merge compatibility.
+  '': { display: 'VAEL', kebab: 'hermes', pascal: 'Hermes' },
   light: {
-    display: 'Hermes Light',
+    display: 'VAEL Light',
     kebab: 'hermes-light',
     pascal: 'HermesLight'
   },
   bundled: {
-    display: 'Hermes Agent',
+    display: 'VAEL',
     kebab: 'hermes-bundled',
     pascal: 'HermesBundled'
   }

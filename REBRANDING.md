@@ -1,0 +1,95 @@
+# VAEL Agent — Rebranding Plan (Hermes → VAEL, surface-only)
+
+> Status: PR-1 done (branch `feat/vael-pr1-foundation`). R-0 audit + R-1..R-4
+> foundation landed. Core logic untouched.
+> Baseline: `origin https://github.com/NousResearch/hermes-agent.git` (shallow, main).
+
+## 1. Maqsad
+
+Hermes Agent (Nous Research, MIT) ni **VAEL Agent** (CyberAI product family)
+sifatida rebrand qilish — **faqat surface layer** (brending, adapter matnlari,
+UI stringlar). Core agent loop, memory, skill engine, cua integratsiyasi
+**tegilmaydi**. Upstream security patch lar uchun merge imkoniyati saqlanadi.
+
+## 2. Audit xulosasi (R-0, 2026-10-02)
+
+- `'hermes'` (case-insensitive): **135,059** moslik. To'liq rename real emas —
+  fazali, surface-first yondashuv shart.
+- Eng katta to'planish: `tests/` (50k), `website/` (22k), `apps/` (15k),
+  `hermes_cli/` (13k), `locales/` (6.8k).
+- Kalit nuqtalar (tekshirilgan):
+  - Identity: `agent/prompt_builder.py:160` (`DEFAULT_AGENT_IDENTITY`),
+    `agent/system_prompt.py`, `hermes_cli/default_soul.py:9`, `SOUL.md:1`.
+  - Telegram: `plugins/platforms/telegram/adapter.py` (~7201 qator).
+    Diqqat: `gateway/platforms/telegram.py` **mavjud emas** — platformalar
+    `plugins/` ga ko'chgan.
+  - CUA: `tools/computer_use/cua_*.py` (backend/driver/session). Diqqat:
+    `HERMES_CUA_REMOTE_TOKEN` **0 ta** — bunday env yo'q. Remote tokenlar:
+    `HERMES_DESKTOP_REMOTE_TOKEN`, `HERMES_DASHBOARD_SESSION_TOKEN`.
+    `cua-driver` / `cua-host-bridge` alohida komponent sifatida **mavjud
+    emas** — bridge **yangidan quriladi** (CyberAI tomonida).
+  - Config: `~/.hermes` (`hermes_constants.py`), `%LOCALAPPDATA%\hermes`.
+  - License: `LICENSE` = MIT, Copyright (c) 2025 Nous Research. `SECURITY.md` bor.
+  - Testlar: `uv sync --locked` → `uv run pytest` (`-m 'not integration and not live'`);
+    web: `web/` da vitest; npm workspaces (`apps/*`, `ui-tui`, `web`, `tests-js`).
+
+## 3. Scope: nima o'zgaradi / nima qoladi
+
+O'zgaradi (user-facing):
+
+- `agent/prompt_builder.py` identity + `hermes_cli/default_soul.py` + `SOUL.md`
+  (`You are Hermes Agent` → `You are VAEL`, + `part of CyberAI product family`).
+- CLI launcher matnlari, `locales/*.yaml` (36+ til — faqat `en` to'liq, qolganiga
+  fallback), `web/src/`, `apps/desktop` product identity
+  (`product-identity.cjs`, window title), Telegram adapter matnlari,
+  `website/docs` user sahifalari, `setup-hermes.{sh,ps1}` nomlari.
+- `README.md` ga attribution qatori (LICENSE tegilmaydi).
+- Yangi: `NOTICE`, `docs/vael-agent.md`, migratsiya scripti
+  `scripts/migrate-hermes-to-vael.sh`, `~/.hermes` fallback.
+
+O'zgarmaydi:
+
+- `LICENSE` (Nous Research copyright — MIT talabi).
+- Core: `agent/` loop, memory (`MEMORY.md`/`USER.md`/session DB), skill system,
+  learning loop, `tools/computer_use/`, gateway arxitektura (portlar, API),
+  approval logic, adapter base classlar.
+- Ichki nomlar: `hermes_*.py`, o'zgaruvchilar, loglar, testlar, `nix/`,
+  `docker/`, telemetriya kalitlari.
+- CyberAI tomonidagi BYOK/M1/M2/Console — bu repo ga tegilmaydi.
+
+## 4. R-5 tuzatish (spetsifikatsiyadagi xato)
+
+Spetsifikatsiyada `cua-host-bridge` + `HERMES_CUA_REMOTE_TOKEN` bor deb
+faraz qilingan — ikkalasi ham upstream da **yo'q**. To'g'ri reja:
+
+- Bridge CyberAI tomonida yangi komponent (`vael-pc-bridge`): PC dagi agent
+  **pull** qiladi (push qabul qilmaydi), whitelist action lar:
+  `run-flow`, `status`, `list-flows`, `cancel-flow`.
+- Auth: VAEL surface token (`vael1.*`, scope `cua:bridge`), 60s nonce.
+- Destructive action lar: Telegram inline button bilan 2-step tasdiq.
+- Hermes tomonda faqat Telegram `/start`/`/help` VAEL matnlari — bridge
+  integratsiyasi CyberAI repo da yashaydi.
+
+## 5. Upstream merge strategiyasi
+
+- `origin` = NousResearch (o'zgarmaydi). Shallow clone → to'liq tarix kerak
+  bo'lsa: `git fetch --unshallow origin`.
+- Surface o'zgarishlar core dan ajratilgan fayllarda → security patch larni
+  `git fetch origin && git cherry-pick <sha>` bilan olish, konflikt faqat
+  surface fayllarda yechiladi.
+- Har chorakda `git fetch origin main` + diff ko'rish eslatmasi.
+
+## 6. Fazalar
+
+- [x] PR-1 (R-1..R-4 foundation): LICENSE intact, README/NOTICE attribution,
+  identity (`prompt_builder`, `SOUL.md`, `default_soul`), `locales/*.yaml` +
+  `web/src/i18n/*` (`\bHermes\b` → `VAEL`), web title/header, desktop display
+  names, Telegram `plugin.yaml`, CLI user strings, `tests/branding/` +
+  `vael-brand.yml` CI. Ataylab qoldirildi: `hermes` komanda literallari,
+  `~/.hermes` path lar, `_LEGACY_TEMPLATE_SOULS`, kebab/pascal artifact
+  nomlari, `website/` marketing docs (keyingi PR lar).
+- [ ] PR-2 (R-5): skill rename `hermes-*` → `vael-*`.
+- [ ] PR-3 (R-6): Claude-orange (`#D97757`/`#CC785C`) + CyberAI UI style.
+- [ ] R-7: docs + `migrate-hermes-to-vael.sh` + `~/.hermes` fallback.
+- [ ] R-5-bridge/R-8/R-9: bridge kontrakt (CyberAI repo), branding testlari,
+  CI guardlar (qisman PR-1 da bor).

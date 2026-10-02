@@ -1,0 +1,26 @@
+name: VAEL Brand Guards
+
+# PR-1 rebrand enforcement: LICENSE intact, attribution present, no
+# whole-word "Hermes" in rebranded user-facing strings, identity says VAEL.
+# Dependency-free (system python3 only) so it runs on every PR.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  vael-brand:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      # Standalone mode (no pytest needed): the file runs its checks in __main__.
+      # Under a full `pytest` run the same test_* functions are discovered
+      # normally (root conftest is bypassed here on purpose).
+      - name: Run VAEL brand guards
+        run: python3 tests/branding/test_vael_brand.py
