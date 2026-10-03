@@ -613,6 +613,7 @@ def skill_view(
                 hint="Use a relative path within the skill directory")
         # tags/related_skills: metadata.vael.* (agentskills.io schema, upstream key
         # metadata.hermes.* still accepted) first, then top-level.
+        metadata = frontmatter.get("metadata")
         hermes_meta = _skill_metadata_block(frontmatter)
         tags, related_skills = (
             _parse_tags(hermes_meta.get(k) or frontmatter.get(k, "")) for k in ("tags", "related_skills"))

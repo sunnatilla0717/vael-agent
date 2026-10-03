@@ -489,7 +489,7 @@ class TestHappyEyeballsSocketConnect:
         # The bootstrap must not pay urllib3's import (~50 ms) on every process start: a fresh
         # interpreter gets the patch the moment urllib3 loads, not before.
         subprocess.run([sys.executable, "-c", textwrap.dedent("""
-            import sys, hermes_bootstrap
+            import sys, vael_bootstrap
             assert "urllib3" not in sys.modules, "bootstrap imported urllib3 eagerly"
             import urllib3.util.connection as c
             assert c.create_connection._hermes_happy_eyeballs
@@ -598,7 +598,7 @@ class TestNeverFreeEnviron:
     def test_arrays_superseded_by_new_names_stay_intact(self):
         # Fresh interpreter: the test process's own environ history must not matter.
         subprocess.run([sys.executable, "-c", textwrap.dedent("""
-            import ctypes, os, hermes_bootstrap
+            import ctypes, os, vael_bootstrap
             environ = ctypes.c_void_p.in_dll(ctypes.CDLL(None), "environ")
             def snapshot(addr):
                 array, out = ctypes.cast(addr, ctypes.POINTER(ctypes.c_void_p)), []
@@ -621,7 +621,7 @@ class TestNeverFreeEnviron:
     def test_concurrent_writers_lose_no_name_in_the_c_environ(self):
         # Unserialized writers each copied the live array; the later publish dropped the others' names.
         subprocess.run([sys.executable, "-c", textwrap.dedent("""
-            import ctypes, os, sys, threading, hermes_bootstrap
+            import ctypes, os, sys, threading, vael_bootstrap
             getenv = ctypes.CDLL(None).getenv
             getenv.restype, getenv.argtypes = ctypes.c_char_p, [ctypes.c_char_p]
             sys.setswitchinterval(1e-6)
@@ -640,7 +640,7 @@ class TestNeverFreeEnviron:
     def test_set_del_churn_of_the_same_names_keeps_memory_bounded(self):
         # Kanban ticks, the spinner pause and _restore_env set and pop the same names forever.
         subprocess.run([sys.executable, "-c", textwrap.dedent("""
-            import os, tracemalloc, hermes_bootstrap
+            import os, tracemalloc, vael_bootstrap
             def churn(cycles):
                 for _ in range(cycles):
                     for k in range(4):

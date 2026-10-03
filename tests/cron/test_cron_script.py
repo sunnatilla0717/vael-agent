@@ -367,11 +367,11 @@ class TestRunJobScript:
 
         script = cron_env / "scripts" / "probe.py"
         script.write_text(
-            "import atexit, os, pickle, sys, probe_pkg, hermes_constants\n"
+            "import atexit, os, pickle, sys, probe_pkg, vael_constants\n"
             "class Probe: pass\n"
             "atexit.register(lambda: print('pickled', bool(pickle.dumps(Probe()))))\n"
             "print(probe_pkg.VALUE)\n"
-            "print(hermes_constants.__file__)\n"
+            "print(vael_constants.__file__)\n"
             "print(sys.path[0])\n"
             "print('PYTHONPATH=' + (os.environ.get('PYTHONPATH') or ''))\n",
             encoding="utf-8",
