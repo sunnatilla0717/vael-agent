@@ -33,10 +33,10 @@ def test_auth_failure_names_the_pinned_provider_and_the_failing_profile(monkeypa
     monkeypatch.setenv("HERMES_HOME", str(profile_home))
     msg = _summarize_cron_failure_for_delivery(
         {**JOB, "provider": "openai-codex"}, "Error code: 401 - Unauthorized")
-    assert "`hermes -p ops auth add openai-codex --type oauth`" in msg, msg
+    assert "`vael -p ops auth add openai-codex --type oauth`" in msg, msg
     assert "<provider>" not in msg
     unpinned = _summarize_cron_failure_for_delivery(JOB, "Error code: 401 - Unauthorized")
-    assert "`hermes -p ops auth add <provider>`" in unpinned, unpinned
+    assert "`vael -p ops auth add <provider>`" in unpinned, unpinned
 
 
 def test_rate_and_usage_limit_phrases_still_yield_a_provider_notice(monkeypatch):
