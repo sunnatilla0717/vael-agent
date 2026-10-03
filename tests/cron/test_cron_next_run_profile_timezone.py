@@ -19,7 +19,7 @@ from zoneinfo import ZoneInfo
 
 import pytest
 
-import vael_time
+import vael_time as hermes_time
 
 
 @pytest.fixture(autouse=True)

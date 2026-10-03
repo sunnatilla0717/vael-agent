@@ -36,7 +36,7 @@ from vael_state import AsyncSessionDB, SessionDB
 @pytest.fixture()
 def store(tmp_path, monkeypatch):
     """Real SessionStore backed by a real SessionDB (SQLite in tmp_path)."""
-    import vael_state
+    import vael_state as hermes_state
 
     monkeypatch.setattr(hermes_state, "DEFAULT_DB_PATH", tmp_path / "state.db")
     config = GatewayConfig()

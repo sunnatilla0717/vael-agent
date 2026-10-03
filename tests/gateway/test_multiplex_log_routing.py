@@ -13,7 +13,7 @@ from pathlib import Path
 
 import pytest
 
-import vael_logging
+import vael_logging as hermes_logging
 from gateway import run
 
 

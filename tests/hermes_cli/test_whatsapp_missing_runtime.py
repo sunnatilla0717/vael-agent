@@ -8,7 +8,7 @@ from fastapi import HTTPException
 
 def _missing_package(monkeypatch):
     import pm
-    import vael_constants
+    import vael_constants as hermes_constants
 
     monkeypatch.setattr(hermes_constants, "find_node_executable", lambda executable: None)
     monkeypatch.setattr(hermes_constants, "with_hermes_node_path", lambda: {})

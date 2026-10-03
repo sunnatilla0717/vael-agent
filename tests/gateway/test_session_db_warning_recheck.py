@@ -7,7 +7,7 @@ import threading
 import pytest
 
 import gateway.run as gateway_run
-import vael_state
+import vael_state as hermes_state
 import vael_state_registry
 from gateway.run import _SESSION_DB_UNPINNED
 from gateway.session_db_recovery import RecoverableHandleCache

@@ -914,7 +914,7 @@ class TestCrossPlatformDeliveryMirror:
     @pytest.fixture
     def homes(self, tmp_path, monkeypatch):
         from pathlib import Path
-        import vael_state
+        import vael_state as hermes_state
         from hermes_cli.profiles import get_profile_dir
         default_home = tmp_path / ".hermes"
         default_home.mkdir()

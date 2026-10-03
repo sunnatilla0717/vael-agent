@@ -11,7 +11,7 @@ import zipfile
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-import vael_yaml
+import vael_yaml as hermes_yaml
 import pytest
 
 from scripts.bundles.release_artifacts import materialize, record, stamp_matches

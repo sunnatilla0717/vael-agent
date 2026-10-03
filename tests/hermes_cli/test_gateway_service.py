@@ -12,7 +12,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-import vael_constants
+import vael_constants as hermes_constants
 
 pwd = pytest.importorskip("pwd")
 grp = pytest.importorskip("grp")

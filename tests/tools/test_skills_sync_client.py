@@ -461,7 +461,7 @@ class TestMergeDecision:
 @pytest.fixture
 def synced_env(tmp_path, monkeypatch):
     """A HERMES_HOME with two opted-in skills + a token-carrying identity."""
-    import vael_constants
+    import vael_constants as hermes_constants
     home = tmp_path / "hermes"
     skills = home / "skills"
     skills.mkdir(parents=True)

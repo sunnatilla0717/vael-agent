@@ -13,7 +13,7 @@ from unittest import mock
 
 import pytest
 
-import vael_state
+import vael_state as hermes_state
 import vael_state_wal
 import vael_state_common
 from agent.session_activity import ActivityProvenance, build_activity_snapshot
@@ -5185,7 +5185,7 @@ def test_peer_fallback_never_adopts_a_sibling_profiles_row(tmp_path, monkeypatch
     before the per-profile partition — must lose to the older own row, and
     with no own row recovery must return nothing rather than the sibling's.
     """
-    import vael_state
+    import vael_state as hermes_state
 
     root = tmp_path / "hermes"
     root.mkdir()
@@ -5222,7 +5222,7 @@ def test_peer_fallback_reset_boundary_is_profile_fenced(tmp_path, monkeypatch):
     newer session_reset row used to suppress THIS profile's recoverable session.
     The profile's own reset must still fence.
     """
-    import vael_state
+    import vael_state as hermes_state
 
     root = tmp_path / "hermes"
     root.mkdir()

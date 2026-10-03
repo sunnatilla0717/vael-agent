@@ -631,7 +631,7 @@ class TestLegacyLaunchdLabelsForInstall:
     def test_only_units_pinned_to_this_installs_homes_are_credited(self, monkeypatch, tmp_path):
         agents = _fake_launchd_account(monkeypatch, tmp_path)
         root = tmp_path / "hermes-root"
-        import vael_constants
+        import vael_constants as hermes_constants
         monkeypatch.setattr(hermes_constants, "get_default_hermes_root", lambda: root)
         venv_python = str(root.parent / "install" / ".venv" / "bin" / "python")
         _write_launchd_plist(agents, "ai.hermes.gateway-398559f7", argv=[venv_python], hermes_home=root / "profiles" / "gopod")

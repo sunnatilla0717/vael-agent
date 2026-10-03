@@ -27,7 +27,7 @@ def curator_status_env(tmp_path, monkeypatch):
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
 
     import importlib
-    import vael_constants
+    import vael_constants as hermes_constants
     importlib.reload(hermes_constants)
     from tools import skill_usage
     importlib.reload(skill_usage)

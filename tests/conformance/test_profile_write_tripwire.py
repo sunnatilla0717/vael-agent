@@ -40,7 +40,7 @@ from pathlib import Path
 
 import pytest
 
-import vael_state
+import vael_state as hermes_state
 from vael_constants import (
     reset_hermes_home_override,
     set_hermes_home_override,

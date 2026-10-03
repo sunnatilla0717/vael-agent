@@ -11,7 +11,7 @@ from unittest.mock import patch
 
 import pytest
 
-import vael_logging
+import vael_logging as hermes_logging
 # Use whatever RotatingFileHandler class hermes_logging actually resolved so
 # the autouse fixture's isinstance checks (which strip rotating handlers
 # between tests) match the real handlers on every platform. hermes_logging

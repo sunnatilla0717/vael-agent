@@ -28,7 +28,7 @@ def _isolate_hermes_home(tmp_path, monkeypatch):
     """Redirect HERMES_HOME to a temp directory."""
     monkeypatch.setenv("HERMES_HOME", str(tmp_path))
     try:
-        import vael_constants
+        import vael_constants as hermes_constants
         monkeypatch.setattr(hermes_constants, "get_hermes_home", lambda: tmp_path)
     except (ImportError, AttributeError):
         pass

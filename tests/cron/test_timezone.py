@@ -15,7 +15,7 @@ import pytest
 from datetime import datetime, timedelta, timezone
 from unittest.mock import patch
 
-import vael_time
+import vael_time as hermes_time
 
 
 def _reset_hermes_time_cache():

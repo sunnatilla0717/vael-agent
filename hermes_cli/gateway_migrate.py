@@ -215,7 +215,7 @@ def _home_env(home: Path) -> Iterator[None]:
         get_routing_process_hermes_home, pin_process_hermes_home, process_hermes_home_is_pinned,
         reset_hermes_home_override, set_hermes_home_override,
     )
-    import vael_constants
+    import vael_constants as hermes_constants
     previous = os.environ.get("HERMES_HOME")
     pinned_here = not process_hermes_home_is_pinned()
     if pinned_here:

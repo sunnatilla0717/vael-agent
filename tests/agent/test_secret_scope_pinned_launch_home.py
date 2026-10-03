@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import pytest
 
-import vael_constants
+import vael_constants as hermes_constants
 from agent.secret_scope import serves_routed_profile, set_multiplex_active
 from vael_constants import (
     get_hermes_home,

@@ -34,7 +34,7 @@ def _make_dep_plugin(plugins_dir: Path, name: str) -> Path:
 
 @pytest.mark.parametrize("layout", ["default", "custom", "profile"])
 def test_home_layout_joins_sibling_union(tmp_path, monkeypatch, layout):
-    import vael_constants
+    import vael_constants as hermes_constants
 
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
     root = tmp_path / (".hermes" if layout == "default" else "data-root")

@@ -18,7 +18,7 @@ from pathlib import Path
 
 import pytest
 
-import vael_state
+import vael_state as hermes_state
 from vael_state import DeletedWalGenerationError, SessionDB
 from vael_state_dbfile import (
     RETIRED_GENERATION_MANIFEST, RetiredGenerationCaptureError, capture_retired_wal_generation,

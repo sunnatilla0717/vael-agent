@@ -47,7 +47,7 @@ class BrokenThenHealedDb:
 def spool_home(tmp_path, monkeypatch):
     """Point the pending spool at an isolated HERMES_HOME."""
     monkeypatch.setenv("HERMES_HOME", str(tmp_path))
-    import vael_constants
+    import vael_constants as hermes_constants
     monkeypatch.setattr(
         hermes_constants, "get_hermes_home", lambda: tmp_path, raising=True
     )

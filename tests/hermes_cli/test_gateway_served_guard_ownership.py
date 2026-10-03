@@ -21,7 +21,7 @@ from pathlib import Path
 
 import pytest
 
-import vael_constants
+import vael_constants as hermes_constants
 from gateway import host_attach
 from gateway.host_attach import HostGateway
 

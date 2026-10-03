@@ -12,7 +12,7 @@ See: https://github.com/NousResearch/hermes-agent/issues/29015
 
 from pathlib import Path
 
-import vael_constants
+import vael_constants as hermes_constants
 
 
 

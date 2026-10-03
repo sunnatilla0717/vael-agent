@@ -12,7 +12,7 @@ from __future__ import annotations
 import json
 import threading
 
-import vael_state
+import vael_state as hermes_state
 from gateway.config import GatewayConfig, Platform
 from gateway.session import SessionSource, SessionStore
 
@@ -32,7 +32,7 @@ def _make_store(tmp_path, monkeypatch, **config_kwargs) -> SessionStore:
     # The routing index is pinned to HERMES_HOME's store (#66887 recovery
     # fix); point it at the test tmp so the ambient and routing stores are
     # the same file, matching the store this harness inspects.
-    import vael_constants
+    import vael_constants as hermes_constants
 
     monkeypatch.setattr(hermes_constants, "get_hermes_home", lambda: str(tmp_path))
     return SessionStore(

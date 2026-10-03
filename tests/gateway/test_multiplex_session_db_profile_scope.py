@@ -51,7 +51,7 @@ def multiplex_homes(tmp_path, monkeypatch):
     home, serving a ``fitness`` profile whose store lives under
     ``profiles/fitness``.
     """
-    import vael_state
+    import vael_state as hermes_state
 
     root = tmp_path / "hermes"
     profile = root / "profiles" / "fitness"

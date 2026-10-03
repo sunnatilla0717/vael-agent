@@ -322,6 +322,7 @@ def test_permits_are_not_stranded_by_a_failed_open(db, monkeypatch):
     import sqlite3 as _sqlite3
 
     import vael_state as _hs
+    import vael_state as hermes_state
     from vael_state import _READ_POOL_MAX
 
     def boom(*a, **kw):
@@ -703,7 +704,7 @@ def test_handle_diagnostics_unavailable_does_not_block_database(tmp_path, monkey
     """An audit hook denying frame access must not deny session storage."""
     from types import SimpleNamespace
 
-    import vael_state
+    import vael_state as hermes_state
 
     def deny_frame_access(depth):
         raise PermissionError("frame access denied")

@@ -26,7 +26,7 @@ def hermes_home(tmp_path, monkeypatch):
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
     monkeypatch.setenv("HERMES_HOME", str(home))
     # Clear any cached hermes_home computation
-    import vael_constants
+    import vael_constants as hermes_constants
     if hasattr(hermes_constants, "_hermes_home_cache"):
         hermes_constants._hermes_home_cache = None
     return home

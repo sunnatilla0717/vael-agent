@@ -379,7 +379,7 @@ def test_inactive_portable_publication_does_not_inspect_unrelated_dependency_man
 
 
 def test_selection_preserves_yaml11_values_and_quotes_plugin_names(client, tmp_path, monkeypatch):
-    import vael_yaml
+    import vael_yaml as hermes_yaml
     _current_environment(tmp_path, monkeypatch, [])
     home = tmp_path / "home"
     config = home / "config.yaml"

@@ -302,7 +302,7 @@ class TestSessionStoreRewriteTranscript:
 
     @pytest.fixture()
     def store(self, tmp_path, monkeypatch):
-        import vael_state
+        import vael_state as hermes_state
         monkeypatch.setattr(hermes_state, "DEFAULT_DB_PATH", tmp_path / "state.db")
         config = GatewayConfig()
         s = SessionStore(sessions_dir=tmp_path, config=config)
@@ -337,7 +337,7 @@ class TestLoadTranscriptDBOnly:
 
 
     def test_db_only_returns_messages(self, tmp_path, monkeypatch):
-        import vael_state
+        import vael_state as hermes_state
         monkeypatch.setattr(hermes_state, "DEFAULT_DB_PATH", tmp_path / "state.db")
         config = GatewayConfig()
         store = SessionStore(sessions_dir=tmp_path, config=config)
@@ -748,7 +748,7 @@ class TestSlackWorkspaceSessionKeys:
         self, tmp_path, monkeypatch
     ):
         # Given
-        import vael_state
+        import vael_state as hermes_state
 
         monkeypatch.setattr(hermes_state, "DEFAULT_DB_PATH", tmp_path / "state.db")
         legacy_source = SessionSource(
@@ -793,7 +793,7 @@ class TestSlackWorkspaceSessionKeys:
         self, tmp_path, monkeypatch
     ):
         # Given
-        import vael_state
+        import vael_state as hermes_state
 
         monkeypatch.setattr(hermes_state, "DEFAULT_DB_PATH", tmp_path / "state.db")
         source = SessionSource(
@@ -1448,7 +1448,7 @@ class TestGatewaySessionDbRecovery:
         to disk (long before the 200-message cap) and replayed in order on recovery."""
         import threading
         from types import SimpleNamespace
-        import vael_constants
+        import vael_constants as hermes_constants
 
         monkeypatch.setenv("HERMES_HOME", str(tmp_path))
         monkeypatch.setattr(hermes_constants, "get_hermes_home", lambda: tmp_path)
@@ -1486,7 +1486,7 @@ class TestGatewayRoutingTable:
         # Each test gets its own state.db — DEFAULT_DB_PATH is module-level
         # and would otherwise be shared by every SessionDB() in this file's
         # subprocess, leaking gateway_routing rows between tests.
-        import vael_state
+        import vael_state as hermes_state
         monkeypatch.setattr(hermes_state, "DEFAULT_DB_PATH", tmp_path / "state.db")
 
     def _source(self, chat_id="chat-1", user_id="user-1"):

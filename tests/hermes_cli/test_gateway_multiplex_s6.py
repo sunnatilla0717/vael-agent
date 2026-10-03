@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-import vael_constants
+import vael_constants as hermes_constants
 from hermes_cli import gateway as gw
 from hermes_cli import gateway_migrate as gm
 from hermes_cli import gateway_multiplex_mode as mode

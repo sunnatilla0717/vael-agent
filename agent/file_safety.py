@@ -16,7 +16,7 @@ from typing import Optional
 def _constants_path(getter_name: str) -> Path:
     """Call ``hermes_constants.<getter_name>()`` (local import avoids cycles); ``~/.hermes`` on any failure."""
     try:
-        import vael_constants
+        import vael_constants as hermes_constants
 
         return getattr(hermes_constants, getter_name)()
     except Exception:

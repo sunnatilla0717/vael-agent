@@ -263,7 +263,7 @@ class TestSessionDbCacheAfterProfileDelete:
     def test_delete_then_recreate_gets_a_live_store(self, hermes_home):
         import shutil
 
-        import vael_state
+        import vael_state as hermes_state
         import vael_state_registry as registry
         from vael_constants import reset_hermes_home_override, set_hermes_home_override
         from hermes_cli.goals import GoalState, _get_session_db, load_goal, save_goal

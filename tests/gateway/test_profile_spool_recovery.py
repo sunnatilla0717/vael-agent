@@ -25,7 +25,7 @@ from vael_constants import get_hermes_home, reset_hermes_home_override, set_herm
 @pytest.fixture
 def multiplex_homes(tmp_path, monkeypatch):
     """A launch home plus a named ``work`` profile, as in test_multiplex_session_db_profile_scope."""
-    import vael_state
+    import vael_state as hermes_state
 
     root = tmp_path / "hermes"
     profile = root / "profiles" / "work"

@@ -24,7 +24,7 @@ def client(monkeypatch, _isolate_hermes_home):
     except ImportError:
         pytest.skip("fastapi/starlette not installed")
 
-    import vael_state
+    import vael_state as hermes_state
     from hermes_cli.web_server import app, _SESSION_HEADER_NAME, _SESSION_TOKEN
     from vael_constants import get_hermes_home
 

@@ -25,8 +25,8 @@ import pytest
 from aiohttp import web
 from aiohttp.test_utils import TestClient, TestServer
 
-import vael_constants
-import vael_state
+import vael_constants as hermes_constants
+import vael_state as hermes_state
 from gateway.config import GatewayConfig, Platform, PlatformConfig
 from gateway.platforms.api_server import APIServerAdapter
 from gateway.session import SessionEntry, SessionSource, SessionStore

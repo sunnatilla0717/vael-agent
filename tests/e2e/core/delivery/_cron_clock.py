@@ -238,7 +238,7 @@ def install(clock: VirtualClock, control: Control, setattr_fn=setattr) -> None:
     import cron.executions as executions
     import cron.jobs as jobs
     import cron.scheduler as scheduler
-    import vael_time
+    import vael_time as hermes_time
     import tools.send_message_tool as send_message_tool
 
     setattr_fn(hermes_time, "datetime", _virtual_datetime_class(clock))

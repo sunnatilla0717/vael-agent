@@ -38,7 +38,7 @@ def test_retired_code_identity_is_unknown(refresh, no_external_work, monkeypatch
 
 
 def test_retired_constants_reload_handoffs_old_gateway_recovery(fresh_child, monkeypatch):
-    import vael_constants
+    import vael_constants as hermes_constants
 
     # Shipped get_python_path uses this fallback when its constants module is stale.
     monkeypatch.delattr(hermes_constants, "venv_python_path")

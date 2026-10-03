@@ -20,7 +20,7 @@ from types import SimpleNamespace
 
 import pytest
 
-import vael_state
+import vael_state as hermes_state
 from vael_state import SessionDB
 
 

@@ -22,7 +22,7 @@ from pathlib import Path
 
 import pytest
 
-import vael_state
+import vael_state as hermes_state
 import vael_state_repair
 import vael_state_wal
 from vael_state import SessionDB, is_malformed_db_error

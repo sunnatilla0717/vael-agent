@@ -278,7 +278,7 @@ def _profile_label_for_home(home: Path | str) -> Optional[str]:
         return None
     if canonical.parent.name == "profiles" and _PROFILE_LABEL_RE.match(canonical.name):
         return canonical.name
-    import vael_constants
+    import vael_constants as hermes_constants
     default_homes = (hermes_constants.get_default_hermes_root, _get_platform_default_hermes_home)
     for default_home in default_homes:
         with contextlib.suppress(Exception):

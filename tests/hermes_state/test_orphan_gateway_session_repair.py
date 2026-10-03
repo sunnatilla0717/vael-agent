@@ -324,7 +324,7 @@ def test_donor_must_share_the_orphans_profile(tmp_path, monkeypatch):
     sibling profile's keyed row in a shared legacy store must never be named as donor
     (by contiguity or lineage), and the write-time re-verify must refuse the pair even
     from a stale report. A legacy NULL-stamped row still reads as this store's own."""
-    import vael_state
+    import vael_state as hermes_state
 
     root = tmp_path / "hermes"
     root.mkdir()

@@ -247,7 +247,7 @@ class TestWebServerEndpoints:
         except ImportError:
             pytest.skip("fastapi/starlette not installed")
 
-        import vael_state
+        import vael_state as hermes_state
         from vael_constants import get_hermes_home
         from hermes_cli.web_server import app, _SESSION_HEADER_NAME, _SESSION_TOKEN
 
@@ -520,7 +520,7 @@ class TestWebServerEndpoints:
         dashboard (close-time checkpoint, possible FTS rebuild) is the
         two-writer corruption vector. Only the stale-schema heal may write.
         """
-        import vael_state
+        import vael_state as hermes_state
         from vael_constants import get_hermes_home
         from vael_state import SessionDB
 
@@ -543,7 +543,7 @@ class TestWebServerEndpoints:
         """A store the eager reconcile cannot open must not break startup."""
         import sqlite3 as sqlite3_module
 
-        import vael_state
+        import vael_state as hermes_state
 
 
         def boom(*args, **kwargs):
@@ -584,7 +584,7 @@ class TestWebServerEndpoints:
 
         writable_opens = []
 
-        import vael_state
+        import vael_state as hermes_state
 
         original_init = hermes_state.SessionDB.__init__
 
@@ -621,7 +621,7 @@ class TestWebServerEndpoints:
         """Unscoped SQLITE_CORRUPT must not escalate a dashboard read to writes."""
         import sqlite3
 
-        import vael_state
+        import vael_state as hermes_state
 
         db_path = tmp_path / "state.db"
         db_path.write_bytes(b"not-empty")
@@ -642,7 +642,7 @@ class TestWebServerEndpoints:
         """UnicodeDecodeError — pysqlite failing to decode SQLite's own error
         message over corrupt file bytes (#98924) — must route through the
         same one-writable-open heal as malformed schema."""
-        import vael_state
+        import vael_state as hermes_state
 
         db_path = tmp_path / "state.db"
         db_path.write_bytes(b"not-empty")
@@ -2888,7 +2888,7 @@ class TestNewEndpoints:
         except ImportError:
             pytest.skip("fastapi/starlette not installed")
 
-        import vael_state
+        import vael_state as hermes_state
         from vael_constants import get_hermes_home
         from hermes_cli.web_server import app, _SESSION_HEADER_NAME, _SESSION_TOKEN
 
@@ -4247,7 +4247,7 @@ class TestDeleteSessionEndpoint:
         except ImportError:
             pytest.skip("fastapi/starlette not installed")
 
-        import vael_state
+        import vael_state as hermes_state
         from vael_constants import get_hermes_home
         from hermes_cli.web_server import app, _SESSION_HEADER_NAME, _SESSION_TOKEN
 
@@ -4360,7 +4360,7 @@ class TestBulkDeleteSessionsEndpoint:
         except ImportError:
             pytest.skip("fastapi/starlette not installed")
 
-        import vael_state
+        import vael_state as hermes_state
         from vael_constants import get_hermes_home
         from hermes_cli.web_server import app, _SESSION_HEADER_NAME, _SESSION_TOKEN
 
@@ -4427,7 +4427,7 @@ class TestDeleteEmptySessionsEndpoint:
         except ImportError:
             pytest.skip("fastapi/starlette not installed")
 
-        import vael_state
+        import vael_state as hermes_state
         from vael_constants import get_hermes_home
         from hermes_cli.web_server import app, _SESSION_HEADER_NAME, _SESSION_TOKEN
 
@@ -4543,7 +4543,7 @@ class TestPluginAPIAuth:
         except ImportError:
             pytest.skip("fastapi/starlette not installed")
 
-        import vael_state
+        import vael_state as hermes_state
         from vael_constants import get_hermes_home
         from hermes_cli.web_server import app, _SESSION_HEADER_NAME, _SESSION_TOKEN
 
@@ -4626,7 +4626,7 @@ class TestPluginAPISecretScopeProductionMount:
         except ImportError:
             pytest.skip("fastapi/starlette not installed")
 
-        import vael_state
+        import vael_state as hermes_state
         from vael_constants import get_hermes_home
         from hermes_cli import profiles
         from hermes_cli.web_server import app, _SESSION_HEADER_NAME, _SESSION_TOKEN
@@ -5520,7 +5520,7 @@ class TestDashboardComponentHealth:
         except ImportError:
             pytest.skip("fastapi/starlette not installed")
 
-        import vael_state
+        import vael_state as hermes_state
         from vael_constants import get_hermes_home
         import hermes_cli.web_server as ws
 
@@ -5587,7 +5587,7 @@ class TestSessionPatchUnread:
         except ImportError:
             pytest.skip("fastapi/starlette not installed")
 
-        import vael_state
+        import vael_state as hermes_state
         from vael_constants import get_hermes_home
         from hermes_cli.web_server import app, _SESSION_HEADER_NAME, _SESSION_TOKEN
 

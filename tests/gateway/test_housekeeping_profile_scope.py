@@ -57,7 +57,7 @@ def two_homes(tmp_path, monkeypatch):
     # hermes_state is already imported, and that pin WINS over ``get_hermes_home()`` inside
     # ``_default_db_path()`` — exactly the per-profile resolution these tests exist to prove.
     # Restore the import-time sentinel so an argless ``acquire()`` resolves through the scope.
-    import vael_state
+    import vael_state as hermes_state
     monkeypatch.setattr(hermes_state, "DEFAULT_DB_PATH", hermes_state._IMPORT_DEFAULT_DB_PATH)
     # Disabling the hermetic pin is only safe while the sentinel still resolves INSIDE the sandbox:
     # a resolution that escaped to the real home would have these tests writing the live store.

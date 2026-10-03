@@ -50,7 +50,7 @@ def test_timezone_honors_managed(homes, monkeypatch):
     monkeypatch.delenv("HERMES_TIMEZONE", raising=False)
     monkeypatch.delenv("TZ", raising=False)
     _seed(home, managed, user="timezone: America/New_York\n", mgd="timezone: Asia/Tokyo\n")
-    import vael_time
+    import vael_time as hermes_time
 
     assert hermes_time._resolve_timezone_name() == "Asia/Tokyo"
 

@@ -354,7 +354,7 @@ def test_allowlist_has_no_stale_entries():
 )
 def test_managed_node_helpers_exist(helper):
     """The alternatives this guard points contributors at must be importable."""
-    import vael_constants
+    import vael_constants as hermes_constants
 
     assert callable(getattr(hermes_constants, helper))
 

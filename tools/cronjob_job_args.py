@@ -8,7 +8,7 @@ from typing import Any, Dict, List, Optional, Union
 
 from cron.jobs import effective_job_state
 
-import vael_time
+import vael_time as hermes_time
 
 # Logger parity with the origin module.
 logger = logging.getLogger("tools.cronjob_tools")

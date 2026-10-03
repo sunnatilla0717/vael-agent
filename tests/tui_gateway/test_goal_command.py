@@ -540,7 +540,7 @@ def test_goal_draft_uses_session_profile_without_blocking_rpc_reader(
 ):
     from hermes_cli import goals
     from vael_constants import get_hermes_home
-    import vael_state
+    import vael_state as hermes_state
 
     # Restore call-time profile resolution; conftest pins this constant to one DB.
     monkeypatch.setattr(hermes_state, "DEFAULT_DB_PATH", hermes_state._IMPORT_DEFAULT_DB_PATH)

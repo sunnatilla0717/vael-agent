@@ -80,7 +80,7 @@ def live_home(monkeypatch):
                 except Exception:
                     pass
 
-    import vael_state
+    import vael_state as hermes_state
     import tui_gateway.server as server
 
     # The launch DB handle and the module-level home snapshot are import-time

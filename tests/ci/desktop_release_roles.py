@@ -13,7 +13,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-import vael_yaml
+import vael_yaml as hermes_yaml
 
 from scripts.releases.job_groups import JOB_GROUPS
 

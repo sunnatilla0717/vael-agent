@@ -12,7 +12,7 @@ from types import SimpleNamespace
 
 import pytest
 
-import vael_constants
+import vael_constants as hermes_constants
 from agent.secret_scope import current_secret_scope
 from tools import mcp_tool_agent as _mcp_agent
 from tools import mcp_tool_discovery as _mcp_discovery

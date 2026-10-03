@@ -122,7 +122,7 @@ def test_computer_use_cache_files_owner_only(tmp_path, monkeypatch):
     """computer_use's capture caches (screenshots, vision temps) are created 0700 and
     the capture bytes land 0600 — a capture is as sensitive as the screen it came
     from."""
-    import vael_constants
+    import vael_constants as hermes_constants
 
     home = tmp_path / "hh"
     _no_managed(monkeypatch, home)

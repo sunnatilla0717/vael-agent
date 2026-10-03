@@ -308,7 +308,7 @@ def test_scan_sessions_never_opens_a_writable_session_db(plugin_api, tmp_path, m
     per /rescan). A writable ``SessionDB()`` there was one more writer connection on the
     dashboard's own state.db each time — the same-process handle leak behind the
     ``N live SessionDB handles`` precursor (#100896). Real store, real open, no fakes."""
-    import vael_state
+    import vael_state as hermes_state
     from vael_state import SessionDB
 
     monkeypatch.setenv("HERMES_HOME", str(tmp_path))

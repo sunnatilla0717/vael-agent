@@ -326,7 +326,7 @@ def test_launch_external_worker_treats_a_routed_fire_as_multiplexed(tmp_path, mo
     and the worker inherited the launch profile's residue. The payload must carry ``True`` and the
     worker env must not carry a launch-only value — and the context must not outlive the handoff."""
     import cron.scheduler as scheduler
-    import vael_constants
+    import vael_constants as hermes_constants
     from agent import secret_scope
     from vael_constants import reset_hermes_home_override, set_hermes_home_override
     from tools.process_registry import GatewayChildDispatch

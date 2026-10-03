@@ -29,7 +29,7 @@ _HOLDER = (
 
 @pytest.fixture
 def state_db(monkeypatch, tmp_path):
-    import vael_state
+    import vael_state as hermes_state
     from vael_state import SessionDB
 
     db_path = tmp_path / "state.db"

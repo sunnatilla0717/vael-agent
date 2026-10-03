@@ -16,7 +16,7 @@ def store(tmp_path, monkeypatch):
     home = tmp_path / ".hermes"
     home.mkdir()
     monkeypatch.setenv("HERMES_HOME", str(home))
-    import vael_constants
+    import vael_constants as hermes_constants
     importlib.reload(hermes_constants)
     import cron.suggestions as s
     importlib.reload(s)

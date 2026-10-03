@@ -29,7 +29,7 @@ def _assert_diverted(tmp_path, sid, needle):
 
 @pytest.mark.platforms("posix")
 def test_replaced_state_db_diverts_pending_without_fts_rebuild(tmp_path, monkeypatch):
-    import vael_state
+    import vael_state as hermes_state
 
     live = tmp_path / "state.db"
     other = tmp_path / "other.db"
@@ -68,7 +68,7 @@ def test_replaced_state_db_diverts_pending_without_fts_rebuild(tmp_path, monkeyp
 def test_copyfile_replaced_state_db_diverts_pending_without_fts_rebuild(
     tmp_path, monkeypatch
 ):
-    import vael_state
+    import vael_state as hermes_state
 
     live = tmp_path / "state.db"
     other = tmp_path / "other.db"

@@ -25,7 +25,7 @@ import json
 from datetime import timedelta
 from unittest.mock import patch
 
-import vael_time
+import vael_time as hermes_time
 from tools.cronjob_tools import _origin_from_env
 
 

@@ -10,7 +10,7 @@ import hermes_cli.sessions_cmd as sessions_cmd
 
 def test_sessions_observational_commands_on_missing_store_stay_empty(monkeypatch, tmp_path, capsys):
     """Fresh profile: list/stats/pinned report empty without creating a writable store."""
-    import vael_state
+    import vael_state as hermes_state
 
     db_path = tmp_path / "state.db"
     monkeypatch.setattr(hermes_state, "_default_db_path", lambda: db_path)

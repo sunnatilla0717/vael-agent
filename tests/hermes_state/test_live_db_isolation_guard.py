@@ -19,7 +19,7 @@ from pathlib import Path
 
 import pytest
 
-import vael_state
+import vael_state as hermes_state
 from gateway.config import GatewayConfig
 from gateway.session import SessionStore
 from vael_state import SessionDB

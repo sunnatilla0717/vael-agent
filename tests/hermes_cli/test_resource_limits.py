@@ -258,7 +258,7 @@ def test_named_profile_reroute_defers_limit_to_final_process(monkeypatch, tmp_pa
     """The launcher profile must not leak its limit across machine re-exec."""
     from hermes_cli import main as cli_main
     import hermes_cli.profiles
-    import vael_constants
+    import vael_constants as hermes_constants
     from tools.environments import local as local_environment
 
     calls: list[str] = []

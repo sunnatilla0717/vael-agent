@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-import vael_constants
+import vael_constants as hermes_constants
 from hermes_platform.host import runtime as host_runtime
 from vael_constants import (
     agent_browser_runnable,

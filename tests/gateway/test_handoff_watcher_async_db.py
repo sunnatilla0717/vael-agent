@@ -113,7 +113,7 @@ async def test_watcher_wraps_calls_via_asyncio_to_thread(monkeypatch):
     hermes_state) and records which SessionDB callables were handed to it.
     Mutation-survivable: dropping any await removes its callable from the set.
     """
-    import vael_state
+    import vael_state as hermes_state
 
     db = _RecordingSessionDB(loop_thread_ident=-1)
     fake = _make_fake_runner(db, fail_process=False)

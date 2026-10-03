@@ -29,7 +29,7 @@ def _malformed_state_db(home: Path) -> Path:
 
 def test_corrupt_store_polls_return_status_and_warn_once_per_interval(tmp_path, monkeypatch, caplog):
     monkeypatch.setenv("HERMES_HOME", str(tmp_path))
-    import vael_state
+    import vael_state as hermes_state
     db_path = _malformed_state_db(tmp_path)
     monkeypatch.setattr(hermes_state, "_default_db_path", lambda: db_path)
     monkeypatch.setattr(_common, "_corrupt_store_warned_at", {})

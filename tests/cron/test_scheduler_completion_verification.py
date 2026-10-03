@@ -64,7 +64,7 @@ class _RecordingSessionDB:
 
 
 def _run_booked_job(monkeypatch, tmp_path):
-    import vael_state
+    import vael_state as hermes_state
     import run_agent
 
     instances: list[_RecordingSessionDB] = []

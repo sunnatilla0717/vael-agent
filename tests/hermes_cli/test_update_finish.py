@@ -357,7 +357,7 @@ def _npm_graph(source):
 def test_selected_child_builds_and_finalizes_under_parent_lock(completion):
     from hermes_cli.config_defaults import DEFAULT_CONFIG
     from hermes_cli.update_lock import UpdateLock
-    import vael_yaml
+    import vael_yaml as hermes_yaml
 
     source, home, request, context, result, run = completion
     node = _npm_graph(source)

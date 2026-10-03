@@ -15,7 +15,7 @@ from types import SimpleNamespace
 
 import pytest
 
-import vael_constants
+import vael_constants as hermes_constants
 from hermes_cli import gateway_migrate as gm
 
 

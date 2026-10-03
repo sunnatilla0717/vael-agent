@@ -588,7 +588,7 @@ def test_canonical_session_scoped_per_profile_db(home):
 
 def test_profiles_list_opens_session_db_read_only(home, monkeypatch):
     """Roster inspection must not take a writable SessionDB (20s lock patience)."""
-    import vael_state
+    import vael_state as hermes_state
 
     db = _db(home)
     _add_session(db, "bot", title="Bot Chat", ts=1000, text="hello")

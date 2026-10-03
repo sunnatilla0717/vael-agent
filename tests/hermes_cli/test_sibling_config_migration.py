@@ -45,7 +45,7 @@ def _setup(monkeypatch, tmp_path, active_home: Path, *, default_home: Path | Non
         "_get_default_hermes_home",
         lambda: default_home if default_home is not None else missing,
     )
-    import vael_constants
+    import vael_constants as hermes_constants
 
     monkeypatch.setattr(
         hermes_constants, "get_process_hermes_home", lambda: active_home

@@ -9,7 +9,7 @@ import xml.etree.ElementTree as ET
 import zipfile
 from pathlib import Path
 
-import vael_yaml
+import vael_yaml as hermes_yaml
 import pytest
 
 from tests.ci.desktop_release_roles import (

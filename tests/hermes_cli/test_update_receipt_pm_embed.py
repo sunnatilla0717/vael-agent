@@ -18,7 +18,7 @@ import hermes_cli.update_receipt as ur
 
 @pytest.fixture
 def homed(tmp_path, monkeypatch):
-    import vael_constants
+    import vael_constants as hermes_constants
 
     monkeypatch.setattr(hermes_constants, "get_hermes_home", lambda: tmp_path)
     import pm.receipt as pm_receipt_mod

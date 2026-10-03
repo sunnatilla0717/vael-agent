@@ -43,7 +43,7 @@ def test_sessions_export_rejects_oversized_single_before_touching_output(
     monkeypatch,
     tmp_path,
 ):
-    import vael_state
+    import vael_state as hermes_state
     from vael_state import SessionDB
 
     db = SessionDB()
@@ -93,7 +93,7 @@ def test_sessions_export_all_uses_per_session_budget(
     """
     import json
 
-    import vael_state
+    import vael_state as hermes_state
     from vael_state import SessionDB
 
     db = SessionDB()
@@ -134,7 +134,7 @@ def test_sessions_export_all_rejects_single_oversized_session(
     monkeypatch,
     tmp_path,
 ):
-    import vael_state
+    import vael_state as hermes_state
     from vael_state import SessionDB
 
     db = SessionDB()
@@ -181,7 +181,7 @@ def test_sessions_export_zero_limit_disables_guard(
     monkeypatch,
     tmp_path,
 ):
-    import vael_state
+    import vael_state as hermes_state
     from vael_state import SessionDB
 
     db = SessionDB()

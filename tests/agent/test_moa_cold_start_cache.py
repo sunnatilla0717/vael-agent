@@ -232,7 +232,7 @@ def test_slot_runtime_cache_is_scoped_per_profile_home(monkeypatch, tmp_path):
     """Under a multiplex gateway two profiles can share (provider, model) with different
     accounts; a cached api_key/base_url must never cross the per-turn HERMES_HOME override."""
     import agent.moa_loop as moa
-    import vael_constants
+    import vael_constants as hermes_constants
 
     moa._runtime_cache.clear()
     a, b = tmp_path / "a", tmp_path / "b"

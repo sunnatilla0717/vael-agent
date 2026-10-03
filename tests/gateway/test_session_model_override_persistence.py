@@ -53,7 +53,7 @@ def store_factory(tmp_path, monkeypatch):
     def _raise():
         raise RuntimeError("SQLite disabled in test")
 
-    import vael_state
+    import vael_state as hermes_state
 
     monkeypatch.setattr(hermes_state, "SessionDB", _raise)
 

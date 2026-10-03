@@ -71,7 +71,7 @@ def mux_home(tmp_path, monkeypatch):
         (root / "profiles" / name).mkdir(parents=True)
         (root / "profiles" / name / ".env").write_text(f"LINE_CHANNEL_SECRET=secret-{name}\n")
     monkeypatch.setenv("HERMES_HOME", str(root))
-    import vael_constants
+    import vael_constants as hermes_constants
     monkeypatch.setattr(hermes_constants, "_default_hermes_root_memo", None)
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
     from agent import secret_scope

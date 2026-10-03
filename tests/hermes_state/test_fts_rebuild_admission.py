@@ -328,7 +328,7 @@ class TestOrphanedHolderStalenessBreak:
     @pytest.mark.live_system_guard_bypass
     def test_repair_lock_breaks_orphaned_holder(self, tmp_path, monkeypatch):
         """_cross_process_repair_lock shares the same staleness break."""
-        import vael_state
+        import vael_state as hermes_state
 
         monkeypatch.setattr(hermes_state, "_REPAIR_LOCK_TIMEOUT_SECONDS", 0.5)
         db_path = tmp_path / "state.db"
@@ -462,7 +462,7 @@ class TestNonContentionErrnoFailsFast:
         """Sibling site: the state.db repair lock shares the errno filter."""
         import fcntl
 
-        import vael_state
+        import vael_state as hermes_state
         import vael_state_repair
 
         monkeypatch.setattr(hermes_state, "_REPAIR_LOCK_TIMEOUT_SECONDS", 30.0)

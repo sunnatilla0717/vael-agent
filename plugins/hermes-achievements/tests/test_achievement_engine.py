@@ -198,7 +198,7 @@ class CompactionScanTests(unittest.TestCase):
     def test_scan_stats_survive_compaction_and_v1_checkpoint_is_rescanned(self):
         """#112273: compaction archives the active rows (active=0, compacted=1); the scan must
         keep counting them, and a schema-1 (active-only) checkpoint must not be reused."""
-        import vael_state
+        import vael_state as hermes_state
         from vael_state import SessionDB
 
         with TemporaryDirectory() as tmp, patch.object(plugin_api, "_data_dir", return_value=Path(tmp) / "data"), patch.object(plugin_api, "get_hermes_home", return_value=Path(tmp)):

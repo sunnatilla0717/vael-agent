@@ -14,7 +14,7 @@ from hermes_cli import main, update_cmd, update_cmd_fleet as fleet, update_cmd_m
 from hermes_cli import update_cmd_zip, update_receipt
 from hermes_cli.config_defaults import DEFAULT_CONFIG
 from hermes_cli.update_inventory import RuntimeRecord, UpdatePlan
-import vael_yaml
+import vael_yaml as hermes_yaml
 
 
 @pytest.fixture

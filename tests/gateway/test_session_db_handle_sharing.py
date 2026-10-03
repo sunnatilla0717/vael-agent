@@ -36,7 +36,7 @@ def _live_count(path) -> int:
 @pytest.fixture
 def home(tmp_path, monkeypatch):
     """A gateway home under tmp_path, with path resolution going through it."""
-    import vael_state
+    import vael_state as hermes_state
 
     root = tmp_path / "hermes"
     root.mkdir(parents=True)

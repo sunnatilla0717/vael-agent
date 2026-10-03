@@ -6,7 +6,7 @@ Automation gates on the exit status; printing the reason and exiting 0 read as "
 import argparse
 from pathlib import Path
 
-import vael_state
+import vael_state as hermes_state
 from hermes_cli import sessions_cmd
 from vael_state import SessionDB
 

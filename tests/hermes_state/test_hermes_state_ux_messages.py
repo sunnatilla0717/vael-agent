@@ -1,6 +1,6 @@
 """Plain-language contracts for hermes_state user-facing errors (CLI UX message campaign, cluster D)."""
 
-import vael_state
+import vael_state as hermes_state
 from vael_state import format_session_db_unavailable
 
 

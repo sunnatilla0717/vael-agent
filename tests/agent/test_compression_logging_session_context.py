@@ -17,7 +17,7 @@ import os
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-import vael_logging
+import vael_logging as hermes_logging
 from vael_state import SessionDB
 
 

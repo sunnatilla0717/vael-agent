@@ -12,7 +12,7 @@ import sys
 import xml.etree.ElementTree as ET
 import zipfile
 
-import vael_yaml
+import vael_yaml as hermes_yaml
 import pytest
 
 from hermes_cli.release_channels import canonical_json

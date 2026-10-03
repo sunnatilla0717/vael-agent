@@ -41,7 +41,7 @@ def _fresh_import():
     runs again and the platform check re-evaluates.
     """
     sys.modules.pop("vael_bootstrap", None)
-    import vael_bootstrap  # noqa: WPS433
+    import vael_bootstrap as hermes_bootstrap  # noqa: WPS433
     return hermes_bootstrap
 
 
@@ -278,7 +278,7 @@ class PrePMEditableFinder(MetaPathFinder):
 sys.meta_path.append(PrePMEditableFinder())
 sys.argv = ['hermes', 'pm', 'repair']
 import hermes_cli
-import vael_bootstrap
+import vael_bootstrap as hermes_bootstrap
 assert hermes_bootstrap._pm_repair is True
 print('reached-pm')
 """
@@ -410,7 +410,7 @@ class TestEnableWindowsVt:
             import ctypes, msvcrt, sys
             from ctypes import wintypes
             sys.path.insert(0, sys.argv[1])
-            import vael_bootstrap
+            import vael_bootstrap as hermes_bootstrap
             kernel32 = ctypes.WinDLL("kernel32")
             handle = msvcrt.get_osfhandle(sys.stdout.fileno())
             mode = wintypes.DWORD()
@@ -435,7 +435,7 @@ class TestEnableWindowsVt:
     def test_leaves_non_console_handles_and_colour_alone(self, tmp_path, monkeypatch):
         # Redirected output must neither fail nor flip Hermes to NO_COLOR.
         monkeypatch.delenv("NO_COLOR", raising=False)
-        import vael_bootstrap
+        import vael_bootstrap as hermes_bootstrap
 
         with open(tmp_path / "out.txt", "w", encoding="utf-8") as stream:
             assert hermes_bootstrap.enable_windows_vt([stream]) is True

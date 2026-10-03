@@ -27,7 +27,7 @@ class _ThreadAdapter:
 
 @pytest.fixture()
 def store(tmp_path, monkeypatch):
-    import vael_state
+    import vael_state as hermes_state
 
     monkeypatch.setattr(hermes_state, "DEFAULT_DB_PATH", tmp_path / "state.db")
     return SessionStore(sessions_dir=tmp_path, config=GatewayConfig())

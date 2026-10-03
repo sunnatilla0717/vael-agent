@@ -43,7 +43,7 @@ def worker_home(tmp_path, monkeypatch):
     for var in ("HERMES_KANBAN_DB", "HERMES_KANBAN_WORKSPACES_ROOT", "HERMES_KANBAN_HOME", "HERMES_KANBAN_BOARD"):
         monkeypatch.delenv(var, raising=False)
     try:
-        import vael_constants
+        import vael_constants as hermes_constants
         hermes_constants._cached_default_hermes_root = None  # type: ignore[attr-defined]
     except Exception:
         pass

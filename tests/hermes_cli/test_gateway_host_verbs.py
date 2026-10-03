@@ -104,7 +104,7 @@ def test_named_profile_start_all_starts_the_default_host_service(monkeypatch, tm
     Skipping the generic named-profile guard alone is insufficient on Windows: the Windows backend
     derives its Scheduled Task name, launcher HERMES_HOME and detached child from the active home.
     """
-    import vael_constants
+    import vael_constants as hermes_constants
 
     root = tmp_path / "hermes"
     named = root / "profiles" / "leinad"
@@ -172,7 +172,7 @@ def test_named_profile_restart_all_with_host_down_restarts_the_default_root(monk
     CLI already loaded X's ``.env`` into ``os.environ``, and an in-process ``run_gateway`` served the
     default profile with X's credentials.
     """
-    import vael_constants
+    import vael_constants as hermes_constants
 
     root = tmp_path / "hermes"
     named = root / "profiles" / "leinad"

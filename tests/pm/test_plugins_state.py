@@ -18,7 +18,7 @@ def homes(tmp_path, monkeypatch):
     default_home.mkdir(parents=True)
     profile_home.mkdir(parents=True)
 
-    import vael_constants
+    import vael_constants as hermes_constants
 
     monkeypatch.setattr(
         hermes_constants, "get_default_hermes_root", lambda: default_home
