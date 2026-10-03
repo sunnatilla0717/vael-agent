@@ -63,9 +63,9 @@ jobs:
           test -f scripts/migrate-hermes-to-vael.sh || { echo "missing migrate .sh"; exit 1; }
           test -f scripts/migrate-hermes-to-vael.ps1 || { echo "missing migrate .ps1"; exit 1; }
           test -f docs/migrating-from-hermes.md || { echo "missing migration guide"; exit 1; }
-          grep -q "def resolve_config_dir" hermes_constants.py || { echo "missing resolve_config_dir"; exit 1; }
-          grep -q "def resolve_env" hermes_constants.py || { echo "missing resolve_env"; exit 1; }
-          grep -q "_mirror_vael_env" hermes_constants.py || { echo "missing env mirror"; exit 1; }
+          grep -q "def resolve_config_dir" vael_constants.py || { echo "missing resolve_config_dir"; exit 1; }
+          grep -q "def resolve_env" vael_constants.py || { echo "missing resolve_env"; exit 1; }
+          grep -q "_mirror_vael_env" vael_constants.py || { echo "missing env mirror"; exit 1; }
           grep -q "resolveConfigDir" apps/desktop/electron/data-paths.mjs || { echo "missing TS resolver"; exit 1; }
           grep -q "mirrorVaelEnv" apps/desktop/electron/data-paths.mjs || { echo "missing TS mirror"; exit 1; }
           echo "R-7 presence: OK"
@@ -76,7 +76,7 @@ jobs:
           import os, sys, tempfile
           from pathlib import Path
           sys.path.insert(0, ".")
-          import hermes_constants as H
+          import vael_constants as H
           tmp = Path(tempfile.mkdtemp(prefix="vael-r7-"))
           home = tmp / "home"
           (home / ".hermes").mkdir(parents=True)
@@ -110,6 +110,6 @@ jobs:
         run: |
           # `.vael` literals may only live in the resolver layer, migration
           # scripts/docs, and tests — never scattered across features.
-          bad=$(git grep -l -e '\.vael' -- '*.py' '*.ts' '*.mjs' | grep -v -e '^tests/' -e '^docs/' -e '^scripts/migrate' -e '^website/' -e '^locales/' -e 'hermes_constants.py' -e 'data-paths' -e 'theme-presets' -e 'presets.ts' -e 'product-identity' -e 'prompt_builder.py' -e 'skill_utils.py' -e 'skills_config.py' -e 'App.tsx' -e 'index.html' -e 'plugin.yaml' -e 'cli.py' -e 'main.py' -e 'test_store_traversal' -e 'test_vael_brand' -e 'test_hermes_constants' || true)
+          bad=$(git grep -l -e '\.vael' -- '*.py' '*.ts' '*.mjs' | grep -v -e '^tests/' -e '^docs/' -e '^scripts/migrate' -e '^website/' -e '^locales/' -e 'vael_constants.py' -e 'data-paths' -e 'theme-presets' -e 'presets.ts' -e 'product-identity' -e 'prompt_builder.py' -e 'skill_utils.py' -e 'skills_config.py' -e 'App.tsx' -e 'index.html' -e 'plugin.yaml' -e 'cli.py' -e 'main.py' -e 'test_store_traversal' -e 'test_vael_brand' -e 'test_hermes_constants' || true)
           if [ -n "$bad" ]; then echo "scattered .vael literals:"; echo "$bad"; exit 1; fi
           echo "R-7 audit: OK"

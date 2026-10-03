@@ -77,7 +77,7 @@ If you're just running the VAEL Agent and want to use Docker, see `website/docs/
 
 ## Why Architecture B (CMD as main program, not s6-supervised)
 
-The original plan (v1–v3) called for main hermes to run as a supervised s6-rc service. Two real s6-overlay v3 mechanics blocked that:
+The original plan (v1–v3) called for main vael to run as a supervised s6-rc service. Two real s6-overlay v3 mechanics blocked that:
 
 1. **cont-init.d scripts receive no CMD args** — so the stage2 hook can't parse `docker run <image> chat -q "hi"` to set `HERMES_ARGS` for a service `run` script to consume.
 2. **`/run/s6/basedir/bin/halt` does NOT propagate the exit code** written to `/run/s6-linux-init-container-results/exitcode`. Containers always exit 143 (SIGTERM) regardless. Confirmed by skarnet (s6 author) in [issue #477](https://github.com/just-containers/s6-overlay/issues/477): _"if you want a container shutdown, you need to either have your CMD exit, or, if you have no CMD, write the container exit code you want then call halt"_.

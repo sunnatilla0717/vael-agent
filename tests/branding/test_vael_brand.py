@@ -345,6 +345,159 @@ def test_website_brand_assets_exist():
     assert "#D97757" in _read("website/static/img/favicon.svg")
 
 
+# ---------------------------------------------------------------------------
+# IR-5/IR-6: model-facing content guards. The model reads skill bodies, tool
+# descriptions and the assembled system prompt; those must say VAEL.
+# Facts that must survive (same allowlist philosophy as the website guards):
+#   * `author:` rows — upstream skill authorship, not branding.
+#   * upstream URLs (github.com/NousResearch/hermes-agent, *.nousresearch.com).
+#   * R-7 compat paths/env (`~/.hermes`, `$HERMES_HOME`, `HERMES_*`) and
+#     infra artifacts joined to path characters (`/opt/hermes/...`,
+#     `main-hermes/run`, `hermes.service`).
+#   * `metadata.hermes.*` where it documents the accepted legacy frontmatter
+#     key (dual-read: `metadata.vael` primary, `metadata.hermes` fallback).
+#   * code spans/fences (command literals work via the `hermes` alias) and
+#     Nous Research model names (`Hermes 4`, `Hermes-4-70B`).
+# ---------------------------------------------------------------------------
+
+import ast
+
+_SKILL_BODY_ALLOWLIST = (
+    re.compile(r"^\s*author\s*:", re.IGNORECASE),
+    re.compile(r"https?://\S*"),
+    re.compile(r"NousResearch/hermes-agent"),
+    re.compile(r"hermes-agent\.nousresearch\.com"),
+    re.compile(r"~\/\.hermes|\$HERMES_HOME|\bHERMES_[A-Z_]+|\.hermes\/|\/opt\/hermes\/"),
+    re.compile(r"metadata\.hermes\b"),
+    re.compile(r"\bHermes(?=[ -]?\d)"),
+)
+
+_INLINE_CODE_RE = re.compile(r"(`+)(?:(?!\1).)*\1")
+_FENCE_RE = re.compile(r"^\s*(`{3,}|~{3,})")
+
+
+def _skill_prose_hits(path):
+    """Whole-word Hermes in a SKILL.md's prose (not code/URLs/attribution)."""
+    hits = []
+    try:
+        text = path.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return hits
+    in_fence = False
+    for lineno, line in enumerate(text.splitlines(), 1):
+        if _FENCE_RE.match(line):
+            in_fence = not in_fence
+            continue
+        if in_fence:
+            continue
+        prose = _INLINE_CODE_RE.sub(" ", line)
+        if _HERMES_RE.search(prose) and not any(p.search(line) for p in _SKILL_BODY_ALLOWLIST):
+            hits.append(f"{path.relative_to(ROOT)}:{lineno}: {line.strip()[:110]}")
+    return hits
+
+
+def test_vael_skill_bodies_say_vael():
+    """Renamed (vael-*) skills read VAEL in prose (IR-5)."""
+    offenders = []
+    for base in ("skills", "optional-skills"):
+        root = ROOT / base
+        if not root.is_dir():
+            continue
+        for path in sorted(root.rglob("SKILL.md")):
+            if "vael-" not in str(path):
+                continue
+            offenders.extend(_skill_prose_hits(path))
+    assert not offenders, offenders[:5]
+
+
+def test_tool_schema_descriptions_say_vael():
+    """Model-facing tool (schema description=) strings carry no Hermes (IR-5)."""
+    offenders = []
+    for path in sorted((ROOT / "tools").glob("*.py")):
+        try:
+            tree = ast.parse(path.read_text(encoding="utf-8"))
+        except (SyntaxError, OSError):
+            continue
+        for node in ast.walk(tree):
+            values = []
+            if isinstance(node, ast.keyword) and node.arg == "description":
+                values = [node.value]
+            elif isinstance(node, ast.Dict):
+                values = [
+                    v for k, v in zip(node.keys, node.values)
+                    if isinstance(k, ast.Constant) and k.value == "description"
+                ]
+            for value in values:
+                if (
+                    isinstance(value, ast.Constant)
+                    and isinstance(value.value, str)
+                    and _HERMES_RE.search(value.value)
+                ):
+                    offenders.append(f"{path.name}:{value.lineno}")
+    assert not offenders, offenders[:5]
+
+
+def test_cli_primary_is_vael():
+    """`vael` is the primary entry point; `hermes` is a deprecated alias (IR-4)."""
+    scripts = _read("pyproject.toml")
+    vael = re.search(r'^\s*vael\s*=\s*"([^"]+)"', scripts, re.MULTILINE)
+    hermes = re.search(r'^\s*hermes\s*=\s*"([^"]+)"', scripts, re.MULTILINE)
+    assert vael and hermes, "both entry points must exist"
+    assert vael.group(1) == hermes.group(1), "alias must run the same CLI"
+    main = _read("hermes_cli/main.py")
+    assert "_warn_if_deprecated_hermes_alias" in main
+
+
+def test_no_old_top_module_imports():
+    """No code imports the pre-IR2 top-level `hermes_*` modules (IR-6).
+
+    The `hermes_cli` package is real and stays; only the renamed top-level
+    modules (every `vael_*.py` at the repo root, mapped back) are forbidden.
+    AST-based so comments, strings and docstrings never trip it.
+    """
+    forbidden = {"hermes_" + p.stem[len("vael_"):] for p in ROOT.glob("vael_*.py")}
+    assert forbidden, "expected renamed vael_*.py modules at the repo root"
+    offenders = []
+    dirs = (
+        "tests",
+        "tools",
+        "agent",
+        "gateway",
+        "hermes_cli",
+        "tui_gateway",
+        "cron",
+        "plugins",
+        "acp_adapter",
+    )
+    files = [p for p in ROOT.glob("*.py")]
+    for d in dirs:
+        root = ROOT / d
+        if root.is_dir():
+            files.extend(root.rglob("*.py"))
+    import_re = re.compile(r"(?m)^\s*(?:from|import)\s+hermes_(?!cli\b)")
+    for path in sorted(set(files)):
+        try:
+            text = path.read_text(encoding="utf-8")
+        except OSError:
+            continue
+        if not import_re.search(text):
+            continue  # cheap pre-filter; AST parse only on candidates
+        try:
+            tree = ast.parse(text)
+        except SyntaxError:
+            continue
+        for node in ast.walk(tree):
+            names = []
+            if isinstance(node, ast.Import):
+                names = [(a.name or "").split(".")[0] for a in node.names]
+            elif isinstance(node, ast.ImportFrom) and node.module:
+                names = [node.module.split(".")[0]]
+            for name in names:
+                if name in forbidden:
+                    offenders.append(f"{path.relative_to(ROOT)}:{node.lineno}: {name}")
+    assert not offenders, offenders[:5]
+
+
 if __name__ == "__main__":
     for name, fn in sorted(
         [(k, v) for k, v in globals().items() if k.startswith("test_")],
