@@ -177,3 +177,17 @@ cd website && npm ci && npm run build                          # EN + zh-Hans [S
 - tests/cron full: 1349+ passed; 29 failed triaged per-test (bash/POSIX/timing/uv-launcher-PID environmental; rebrand-caused ones fixed, see open-items for the environmental list).
 - Rollback: revert commits 2dfd9c07, 1001ede6 (+ sweep base) in reverse; hermes_cli/ package rename out of scope.
 
+
+## Final session verification (2026-10-03)
+
+- tests/branding/: 89 passed (85 + 4 new IR-5/IR-6 guards).
+- tests/skills/test_authoring_standards.py: green after dual-read fix (was 205 failed).
+- tests/tools/test_computer_use.py + test_computer_use_advanced_actions.py: 105 passed, 1 skipped.
+- tests/test_hermes_bootstrap.py: 35 passed, 4 posix-skipped.
+- tests/cron/test_cron_failure_notice_copy.py + test_cron_prompt_injection_skill.py: 21 passed.
+- ruff check on all touched source/test files: clean. ty: 193 diagnostics, all pre-existing (none on changed lines).
+- Website docusaurus build: SUCCESS (EN + zh-Hans). Skill-docs generator: idempotent.
+- CLI: simulated vael --help (usage: vael, silent) + hermes --help (deprecation NOTE on stderr + help).
+- No wrangler/cloud deploy config in repo (Python agent, not Workers) - deploy step N/A; no D:/CyberAI changes.
+- Commits this session: 2dfd9c07, 1001ede6, d2a32102, 49f43068, c2fc7b0f, 2b65d698, d9f22751, 3831159b (one per logical task).
+
