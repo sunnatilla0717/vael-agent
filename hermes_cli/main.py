@@ -202,6 +202,30 @@ def _warn_if_unsupervised_pid1(pid: "int | None" = None) -> None:
     )
 
 
+_HERMES_ALIAS_WARNED = False
+
+
+def _warn_if_deprecated_hermes_alias(argv0: "str | None" = None) -> None:
+    """Remind once per process that `hermes` is a deprecated alias of `vael` (IR-4).
+
+    Both entry points run the same parser; the notice goes to stderr so stdout
+    (JSON output, `--help`, piped replies) stays clean. Never fatal.
+    """
+    global _HERMES_ALIAS_WARNED
+    if _HERMES_ALIAS_WARNED:
+        return
+    invoked = os.path.basename(argv0 if argv0 is not None else (sys.argv[0] if sys.argv else ""))
+    invoked = os.path.splitext(invoked.lower())[0]
+    if invoked == "hermes":
+        _HERMES_ALIAS_WARNED = True
+        print(
+            "[vael] NOTE: the `hermes` command is a deprecated alias and will be "
+            "removed in a future release; please use `vael` instead "
+            "(same subcommands, same config).",
+            file=sys.stderr,
+        )
+
+
 def _set_process_title() -> None:
     """Cosmetic: show 'vael' instead of 'python3.xx' in ps/top/htop.
 
@@ -212,7 +236,7 @@ def _set_process_title() -> None:
     try:
         import setproctitle  # type: ignore[import-untyped]
 
-        setproctitle.setproctitle("hermes")
+        setproctitle.setproctitle("vael")
         return
     except ImportError:
         pass
@@ -224,10 +248,10 @@ def _set_process_title() -> None:
         system = platform.system()
         if system == "Linux":
             libc = ctypes.CDLL("libc.so.6", use_errno=True)
-            libc.prctl(15, b"hermes", 0, 0, 0)  # PR_SET_NAME = 15
+            libc.prctl(15, b"vael", 0, 0, 0)  # PR_SET_NAME = 15
         elif system == "Darwin":
             libc = ctypes.CDLL("libc.dylib", use_errno=True)
-            libc.pthread_setname_np(b"hermes")
+            libc.pthread_setname_np(b"vael")
     except Exception:
         pass
 
@@ -3601,6 +3625,7 @@ def _default_to_chat(args) -> None:
 def main():
     """Main entry point for vael CLI."""
     _set_process_title()
+    _warn_if_deprecated_hermes_alias()
     _warn_if_unsupervised_pid1()
     _advertise_agent_env()
 
