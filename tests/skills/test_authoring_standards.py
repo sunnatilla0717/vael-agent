@@ -85,9 +85,12 @@ def test_required_frontmatter_fields(p):
     ]
     if missing and not _grandfathered(p, "fields"):
         pytest.fail(f"{_rel(p)}: missing frontmatter fields: {missing}")
-    hermes = (fm.get("metadata") or {}).get("hermes") or {}
-    if not (hermes.get("tags") or fm.get("tags")) and not _grandfathered(p, "tags"):
-        pytest.fail(f"{_rel(p)}: no tags (metadata.hermes.tags or top-level tags)")
+    meta = fm.get("metadata") or {}
+    # Dual-read mirrors production (agent/skill_utils.py::skill_metadata_block):
+    # `metadata.vael` primary, `metadata.hermes` legacy fallback.
+    block = meta.get("vael") or meta.get("hermes") or {}
+    if not (block.get("tags") or fm.get("tags")) and not _grandfathered(p, "tags"):
+        pytest.fail(f"{_rel(p)}: no tags (metadata.vael.tags, metadata.hermes.tags or top-level tags)")
 
 @pytest.mark.parametrize("p", _params())
 def test_name_matches_directory(p):

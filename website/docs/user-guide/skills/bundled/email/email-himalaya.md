@@ -32,8 +32,8 @@ The following is the complete skill definition that VAEL loads when this skill i
 
 Himalaya is a CLI email client that lets you manage emails from the terminal using IMAP, SMTP, Notmuch, or Sendmail backends.
 
-This skill is separate from the Hermes Email gateway adapter. The gateway
-adapter lets people email the agent and uses Hermes' built-in IMAP/SMTP
+This skill is separate from the VAEL Email gateway adapter. The gateway
+adapter lets people email the agent and uses VAEL's built-in IMAP/SMTP
 adapter; this skill lets the agent operate a mailbox from terminal tools and
 requires the external `himalaya` CLI.
 
@@ -114,7 +114,7 @@ folder.aliases.trash = "Trash"
 > emails to recipients. Always use `folder.aliases.X` (plural, dotted
 > keys, directly under `[accounts.NAME]`).
 
-## Hermes Integration Notes
+## VAEL Integration Notes
 
 - **Reading, listing, searching, moving, deleting** all work directly through the terminal tool
 - **Composing/replying/forwarding** — piped input (`cat << EOF | himalaya template send`) is recommended for reliability. Interactive `$EDITOR` mode works with `pty=true` + background + process tool, but requires knowing the editor and its commands
@@ -171,7 +171,7 @@ himalaya message export 42 --full
 
 ### Reply to an Email
 
-To reply non-interactively from Hermes, read the original message, compose a reply, and pipe it:
+To reply non-interactively from VAEL, read the original message, compose a reply, and pipe it:
 
 ```bash
 # Get the reply template, edit it, and send
@@ -206,7 +206,7 @@ himalaya template forward 42 | sed 's/^To:.*/To: newrecipient@example.com/' | hi
 
 ### Write a New Email
 
-**Non-interactive (use this from Hermes)** — pipe the message via stdin:
+**Non-interactive (use this from VAEL)** — pipe the message via stdin:
 
 ```bash
 cat << 'EOF' | himalaya template send

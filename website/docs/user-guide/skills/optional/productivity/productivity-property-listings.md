@@ -30,7 +30,7 @@ The following is the complete skill definition that VAEL loads when this skill i
 
 # Property Listings Skill
 
-Present researched properties as browsable cards in the Hermes desktop transcript.
+Present researched properties as browsable cards in the VAEL desktop transcript.
 This is a presentation recipe, not a listing search service or an investment valuation.
 
 ## When to Use
@@ -41,7 +41,7 @@ This is a presentation recipe, not a listing search service or an investment val
 
 ## Prerequisites
 
-- A Hermes desktop conversation for native cards; the backend may be local or remote.
+- A VAEL desktop conversation for native cards; the backend may be local or remote.
 - Property details supplied by the user or verified through `web_search`, `web_extract`, or the browser tools available in this session.
 - No additional API keys or dependencies are required for card formatting.
 
@@ -50,7 +50,7 @@ This is a presentation recipe, not a listing search service or an investment val
 Install this optional skill through the Skills catalog, or use `terminal`:
 
 ```text
-hermes skills install official/productivity/property-listings
+vael skills install official/productivity/property-listings
 ```
 
 Load it with `skill_view(name="property-listings")` when presenting listings.

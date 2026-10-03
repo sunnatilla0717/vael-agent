@@ -33,7 +33,7 @@ The following is the complete skill definition that VAEL loads when this skill i
 
 > **Catalog stub.** This entry is maintained upstream at
 > [latent-spaces/brag](https://github.com/latent-spaces/brag): the project
-> ships `/brag-slim` as a single `SKILL.md` under `skills/brag-slim/`. `hermes
+> ships `/brag-slim` as a single `SKILL.md` under `skills/brag-slim/`. `vael
 > skills install official/creative/brag-slim` pulls the current file live from
 > that repo (quarantined and scanned like any hub install) — this directory
 > holds only the catalog metadata, so the vendored copy can never go stale.

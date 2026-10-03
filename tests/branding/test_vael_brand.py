@@ -74,7 +74,7 @@ def test_skill_rename_pr2():
     renames = {
         "skills/autonomous-ai-agents/vael-agent/SKILL.md": "name: vael-agent",
         "skills/software-development/vael-skill-authoring/SKILL.md": (
-            "name: vael-agent-skill-authoring"
+            "name: vael-skill-authoring"
         ),
         "skills/software-development/inspecting-vael-desktop-dom/SKILL.md": (
             "name: inspecting-vael-desktop-dom"

@@ -35,7 +35,7 @@ Write technical text with the rules of ASD-STE100 Simplified Technical English. 
 
 Write for that tired reader. Each sentence must survive one read.
 
-## How to use it in Hermes
+## How to use it in VAEL
 
 The text usually arrives one of three ways:
 

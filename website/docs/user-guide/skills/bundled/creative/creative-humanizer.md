@@ -44,9 +44,9 @@ Load this skill whenever the user asks to:
 - match their voice in writing they're producing
 - review text for AI tells before publishing
 
-Also apply this skill to **your own** output when writing user-facing prose such as release notes, PR descriptions, docs, and summaries. Hermes's baseline voice already strips most of these, but a focused pass catches what slips through.
+Also apply this skill to **your own** output when writing user-facing prose such as release notes, PR descriptions, docs, and summaries. VAEL's baseline voice already strips most of these, but a focused pass catches what slips through.
 
-## How to use it in Hermes
+## How to use it in VAEL
 
 The text usually arrives one of three ways:
 1. **Inline.** The user pastes the text into the message. Work on it in place and reply with the rewrite.

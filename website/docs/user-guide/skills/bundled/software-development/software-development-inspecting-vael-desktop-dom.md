@@ -160,7 +160,7 @@ also want the perf harness.
   kill nukes Chromium's socket pool, and the resulting `ERR_NETWORK_CHANGED`
   gets blamed on whatever you just changed.
 - **A throwaway `HERMES_HOME` has no backend.** The app logs `ECONNREFUSED` for
-  `hermes:api` and may exit on its own. The renderer still mounts and the DOM is
+  `vael:api` and may exit on its own. The renderer still mounts and the DOM is
   readable — read promptly, and don't mistake a self-exited probe for a broken
   port. Chromium logs `DevTools listening on ws://127.0.0.1:<port>/…` when it
   binds; that line is the proof the port opened.

@@ -219,7 +219,7 @@ python3 ~/.hermes/skills/productivity/memento-flashcards/scripts/youtube_quiz.py
 This returns `{"title": "...", "transcript": "..."}` or an error.
 
 If the script reports `missing_dependency`, use `terminal` with a PM-prepared
-Hermes checkout to prepare the declared `youtube` extra, then reactivate:
+VAEL checkout to prepare the declared `youtube` extra, then reactivate:
 
 ```bash
 python -c "import pm; pm.sync_venv(['youtube'], explicit=True)"
@@ -232,7 +232,7 @@ Follow the isolated development-home setup in
 before preparation. Retry `youtube_quiz.py` with that Python and the actual
 skill directory returned by `skill_view`. For a remote or sandbox terminal,
 prepare an independent helper environment on that host. Never pip-install into
-Hermes's selected environment.
+VAEL's selected environment.
 
 **Step 3:** Generate 5 quiz questions from the transcript. Use these rules:
 

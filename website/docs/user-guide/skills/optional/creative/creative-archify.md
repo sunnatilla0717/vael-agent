@@ -34,7 +34,7 @@ The following is the complete skill definition that VAEL loads when this skill i
 > **Catalog stub.** This entry is maintained upstream at
 > [tt-a1i/archify](https://github.com/tt-a1i/archify): the project ships a
 > self-contained skill directory (`archify/`) with the Node CLI, schemas,
-> renderers, examples and references. `hermes skills install
+> renderers, examples and references. `vael skills install
 > official/creative/archify` pulls the current tree live from that repo
 > (quarantined and scanned like any hub install) — this directory holds only
 > the catalog metadata, so the vendored copy can never go stale.

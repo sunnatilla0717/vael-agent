@@ -31,7 +31,7 @@ The following is the complete skill definition that VAEL loads when this skill i
 
 # Stripe Projects Skill
 
-Wraps the [Stripe Projects](https://projects.dev) CLI plugin so Hermes can provision SaaS services (Neon, Twilio, Vercel, etc.), generate and sync credentials into the user's `.env`, and manage billing across providers from one place.
+Wraps the [Stripe Projects](https://projects.dev) CLI plugin so VAEL can provision SaaS services (Neon, Twilio, Vercel, etc.), generate and sync credentials into the user's `.env`, and manage billing across providers from one place.
 
 Gated `[linux, macos]` while the broader payments cluster matures on Windows. The Stripe CLI itself is cross-platform; this gate is a posture for the cluster, not a hard limit.
 

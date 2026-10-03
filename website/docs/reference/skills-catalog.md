@@ -122,7 +122,7 @@ If a skill is missing from this list but present in the repo, the catalog is reg
 | [`spike`](../user-guide/skills/bundled/software-development/software-development-spike.md) | Throwaway experiments to validate an idea before build. | `software-development/spike` |
 | [`systematic-debugging`](../user-guide/skills/bundled/software-development/software-development-systematic-debugging.md) | 4-phase root cause debugging: understand bugs before fixing. | `software-development/systematic-debugging` |
 | [`test-driven-development`](../user-guide/skills/bundled/software-development/software-development-test-driven-development.md) | TDD: enforce RED-GREEN-REFACTOR, tests before code. | `software-development/test-driven-development` |
-| [`vael-agent-skill-authoring`](../user-guide/skills/bundled/software-development/software-development-vael-skill-authoring.md) | Author in-repo SKILL.md files: frontmatter and structure. | `software-development/vael-skill-authoring` |
+| [`vael-skill-authoring`](../user-guide/skills/bundled/software-development/software-development-vael-skill-authoring.md) | Author in-repo SKILL.md files: frontmatter and structure. | `software-development/vael-skill-authoring` |
 
 ## web
 

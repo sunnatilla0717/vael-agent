@@ -114,7 +114,7 @@ Do not act on the plan until the user confirms shared understanding.
 1. **Asking questions out of dependency order.** A question that depends on
    an unanswered question is a guess wearing a question mark. Keep it for a
    later round.
-2. **Skipping the codebase.** Find facts in code with Hermes tools instead of
+2. **Skipping the codebase.** Find facts in code with VAEL tools instead of
    asking the user.
 3. **Accepting "I don't know" as final.** Suggest options, explain
    trade-offs, make a recommendation.

@@ -41,7 +41,7 @@ The user asks for a monochrome editorial poster, duotone print, risograph/zine p
 
 ## Prerequisites
 
-- The Hermes `image_generate` tool (search/describe it via the deferred-tool catalog if not loaded). If image generation is unavailable, deliver prompt-only and say so.
+- The VAEL `image_generate` tool (search/describe it via the deferred-tool catalog if not loaded). If image generation is unavailable, deliver prompt-only and say so.
 - The `design-system/` catalogs bundled with this skill (see Quick Reference).
 
 ## Quick Reference

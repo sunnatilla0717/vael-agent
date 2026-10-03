@@ -30,7 +30,7 @@ The following is the complete skill definition that VAEL loads when this skill i
 
 # Article Illustrator
 
-Adapted from [baoyu-article-illustrator](https://github.com/JimLiu/baoyu-skills) for Hermes Agent's tool ecosystem.
+Adapted from [baoyu-article-illustrator](https://github.com/JimLiu/baoyu-skills) for VAEL Agent's tool ecosystem.
 
 Analyze articles, identify illustration positions, generate images with **Type × Style × Palette** consistency.
 

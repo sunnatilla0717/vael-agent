@@ -1,5 +1,5 @@
 ---
-name: vael-agent-skill-authoring
+name: vael-skill-authoring
 description: "Author in-repo SKILL.md files: frontmatter and structure."
 version: 2.0.0
 author: VAEL
