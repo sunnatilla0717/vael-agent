@@ -14,8 +14,8 @@ Artifacts: `files.txt`, `files-by-dir.md`, `imports.txt`,
 | Files matching `hermes` (case-insensitive) in `git ls-files` | 2802 |
 | `rename-map.tsv` rows (= files, 100%) | 2802 |
 | — action RENAME | 2697 |
-| — action KEEP | 28 |
-| — action MANUAL-REVIEW | 77 |
+| — action KEEP | 104 (28 contributor emails + 66 catalog + 9 vendored + 1 migration script) |
+| — action MANUAL-REVIEW | 1 (`hey_hermes.tflite`; product decision pending) |
 | Raw Python import hits (`git grep 'from hermes_\|import hermes_'`) | 16702 |
 | `import-map.tsv` rows | 17451 |
 | — origin py-import (real AST import statements) | 16249 |
@@ -27,32 +27,24 @@ Checks: zero duplicate `new_path`s, zero `new_path` collisions with tracked
 files, zero case-only renames (Windows-safe), zero RENAME rows with residual
 `hermes`, every row has a non-empty reason.
 
-## KEEP (28) — do_not_rename_allowlist
+## KEEP (104) — do_not_rename_allowlist + owner decisions 2026-10-04
 
-All 28 are `contributors/emails/*` (historical contributor records).
-Allowlist items that are *content*, not filenames (LICENSE/NOTICE text,
+- `contributors/emails/*` (28): historical contributor records.
+- `plugin-catalog/*.yaml` (66): third-party catalog IDs are install keys;
+  renaming breaks existing user installs (owner decision).
+- `plugins/hermes-achievements/**` (9): vendored third-party
+  (PCinkusz/hermes-achievements); keep wrapped (owner decision).
+- `openclaw_to_hermes.py` (1): filename states historical migration
+  direction (owner decision).
+Content-allowlist items that are not filenames (LICENSE/NOTICE text,
 upstream remote, `Hermes 4` model name) need no map rows. The two
-`migrating-from-hermes.md` allowlist paths do not exist on `main`
-(they were created later on the rebrand branch); if IR2-B runs there,
-they are KEEP.
+`migrating-from-hermes.md` allowlist paths do not exist on `main`.
 
-## MANUAL-REVIEW (77) — decide before/with IR2-B
+## MANUAL-REVIEW (1)
 
-- `plugin-catalog/*.yaml` (66): third-party catalog entries; the filename
-  stem is the catalog ID (consumed via `_yaml_stems`). Renaming changes
-  user-facing install keys. Embedded upstream names (`githermes`,
-  `tamahermes`, `local-system-one-hermes`, `yantrikdb-hermes-dashboard`)
-  must never be rewritten. Recommendation: KEEP upstream names (optionally
-  add `vael-` aliases); needs a product decision.
-- `plugins/hermes-achievements/**` (10): vendored third-party plugin
-  (PCinkusz/hermes-achievements); manifest `"name"`, `/api/plugins/...`
-  path and README install paths carry the name. Dir rename forks from
-  upstream — needs a decision (vendor-rename vs keep-wrapped).
-- `optional-skills/migration/openclaw-migration/scripts/openclaw_to_hermes.py`:
-  filename states migration direction (OpenClaw→Hermes product); whether the
-  target is now VAEL is a content decision.
 - `tools/wakewords/hey_hermes.tflite`: wake-word model binary; loader paths
-  plus the `hey hermes` utterance are user-facing; needs a product decision.
+  plus the `hey hermes` utterance are user-facing; needs a product decision
+  (keep the utterance vs ship a new wake word + model).
 
 ## Import contexts (from imports-detailed.md)
 
@@ -100,7 +92,7 @@ shell 6, nix 4, misc 5) = content decisions, no import rewrite.
 | 14 | `skills/` + website mirrors + regen + redirects | ~60 | generator idempotence + docs build |
 | 15 | `apps/desktop` (code, assets, electron) | ~192 | `tsc` + vitest slice + build |
 | 16 | `ui-tui` (+ `hermes-ink.d.ts`) | ~165 | `tsc` + build |
-| 17 | `plugin-catalog` only if REVIEW decides rename | 0 or 66 | catalog tests |
+| 17 | dropped — `plugin-catalog` stays (owner decision 2026-10-04) | 0 | — |
 | 18 | Leftovers + final full verification | — | `ty`, full pytest, site build |
 
 Rough estimate: 15–18 commits over 2–4 sessions; verification (typecheck +

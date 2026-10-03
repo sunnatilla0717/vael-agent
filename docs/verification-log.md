@@ -38,3 +38,12 @@
 - `config-refs.md`: 1279 rows (path-or-package 562, env-var 351, other 356,
   module-ref 8).
 - Full detail: `docs/ir2-mapping/summary.md`.
+
+## IR2-A amendment + origin/main verdict (2026-10-04)
+
+- Owner KEEP decisions applied to rename-map.tsv (76 rows REVIEW->KEEP, script ir2a_reclassify.py): RENAME 2697 / KEEP 104 / REVIEW 1 (hey_hermes.tflite). Collision checks re-ran clean.
+- Arithmetic reconciled: REVIEW was 66 catalog + 9 achievements + 1 openclaw + 1 wakeword = 77 exact (summary prose miscount of 10 fixed to 9).
+- origin/main forensics: 92 files = 86 byte-identical to local main + 2 identical to feat/vael-website-rebrand + 4 intermediate files proven superseded (cli.py: 6 import-only lines; hermes_constants.py: 96 defs each, same R-7 design; README/REBRANDING.md: older strings). Zero unique work. Verdict: partial early-rebrand snapshot, safe to supersede.
+- Rollback dry-run re-verified after amendment (moved=0 skipped=2697 warned=0).
+- Force-push NOT executed: destructive remote op, needs explicit owner confirmation. Safe sequence proposed: tag archive/origin-main-pre-ir2 at 4b7634b6 + push tag, then push --force.
+
