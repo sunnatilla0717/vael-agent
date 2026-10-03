@@ -28,7 +28,7 @@ import os
 
 import pytest
 
-import vael_state_holders
+import vael_state_holders as hermes_state_holders
 
 # Capture the pristine stdlib functions at import time: monkeypatched calls
 # re-enter these closures, and re-capturing ``os.listdir`` after a previous

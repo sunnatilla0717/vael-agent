@@ -26,7 +26,7 @@ from pathlib import Path
 
 import pytest
 
-import vael_state_common
+import vael_state_common as hermes_state_common
 from vael_state import SessionDB
 from vael_state_common import FTS_STALE_KEY, _FTS_TRIGGERS
 
@@ -245,7 +245,7 @@ class TestSchemaPathAdmission:
 _ORPHANING_HOLDER_SCRIPT = """
 import os, sys, time
 sys.path.insert(0, {repo!r})
-import vael_state_common
+import vael_state_common as hermes_state_common
 
 admission = hermes_state_common.fts_rebuild_admission({db!r})
 admitted = admission.__enter__()
@@ -338,7 +338,7 @@ class TestOrphanedHolderStalenessBreak:
 import os, sys, time
 sys.path.insert(0, {repo!r})
 from pathlib import Path
-import vael_state_repair
+import vael_state_repair as hermes_state_repair
 
 lock_cm = hermes_state_repair._cross_process_repair_lock(Path({db!r}))
 assert lock_cm.__enter__() is True
@@ -358,7 +358,7 @@ os._exit(1)
         grandchild = int(proc.stdout.readline().strip().split()[1])
         proc.wait(timeout=10)
         try:
-            import vael_state_repair
+            import vael_state_repair as hermes_state_repair
 
             with hermes_state_repair._cross_process_repair_lock(db_path) as holding:
                 assert holding is True
@@ -391,7 +391,7 @@ class TestNonContentionErrnoFailsFast:
         self, tmp_path, monkeypatch
     ):
         """Gateway-shaped: same SessionDB stays open and retries after deferral."""
-        import vael_state_schema
+        import vael_state_schema as hermes_state_schema
 
         monkeypatch.setattr(hermes_state_schema, "_FTS_STALE_RETRY_SECONDS", 0.0)
         db_path = tmp_path / "state.db"
@@ -463,7 +463,7 @@ class TestNonContentionErrnoFailsFast:
         import fcntl
 
         import vael_state as hermes_state
-        import vael_state_repair
+        import vael_state_repair as hermes_state_repair
 
         monkeypatch.setattr(hermes_state, "_REPAIR_LOCK_TIMEOUT_SECONDS", 30.0)
 
@@ -513,7 +513,7 @@ class TestDeferredFtsRetryInProcess:
     def test_retry_is_non_blocking_while_live_holder_and_backs_off(
         self, tmp_path, fast_timeout, monkeypatch
     ):
-        import vael_state_schema
+        import vael_state_schema as hermes_state_schema
 
         db_path = tmp_path / "state.db"
         d = SessionDB(db_path=db_path)
@@ -571,8 +571,8 @@ class TestDeferredFtsRetryInProcess:
         and reaches shared-registry instances."""
         import threading
 
-        import vael_state_registry
-        import vael_state_schema
+        import vael_state_registry as hermes_state_registry
+        import vael_state_schema as hermes_state_schema
         import gateway.run as grun
 
         monkeypatch.setattr(hermes_state_schema, "_FTS_STALE_RETRY_SECONDS", 0.0)

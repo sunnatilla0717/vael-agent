@@ -19,7 +19,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-import vael_state_guard
+import vael_state_guard as hermes_state_guard
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -27,7 +27,7 @@ _CHILD_PROBE = r"""
 import json, os, sys
 sys.path.insert(0, {repo!r})
 import vael_state as hs
-import vael_state_guard
+import vael_state_guard as hermes_state_guard
 fired = False
 try:
     hs._ensure_test_isolation(hs._real_platform_state_root() / "state.db")

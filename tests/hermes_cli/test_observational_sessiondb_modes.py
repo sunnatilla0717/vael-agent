@@ -34,8 +34,8 @@ def test_doctor_write_probe_never_touches_a_store_a_live_writer_holds(monkeypatc
     """The write probe runs against a read-only snapshot when a gateway holds state.db, in place otherwise."""
     import sqlite3
 
-    import vael_state_holders
-    import vael_state_repair
+    import vael_state_holders as hermes_state_holders
+    import vael_state_repair as hermes_state_repair
     from hermes_cli import doctor_state
 
     state_db = tmp_path / "state.db"

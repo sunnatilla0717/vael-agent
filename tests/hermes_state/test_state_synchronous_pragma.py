@@ -14,7 +14,7 @@ import sqlite3
 
 import pytest
 
-import vael_state_wal
+import vael_state_wal as hermes_state_wal
 from vael_state import apply_database_pragmas
 from vael_state_wal import resolve_synchronous_level
 

@@ -11,7 +11,7 @@ import pytest
 
 from gateway import hosted_room_driver as driver
 from gateway import hosted_rooms as rooms
-import vael_state_wal
+import vael_state_wal as hermes_state_wal
 from gateway.hosted_room_policy_checkpoint import HostedRoomPolicyCheckpoint
 from vael_state import SessionDB
 

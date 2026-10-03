@@ -35,7 +35,7 @@ holds POSIX locks on that inode, so raw descriptor counts lag the real
 connection count and make such assertions flaky.
 """
 
-import vael_state_readpool
+import vael_state_readpool as hermes_state_readpool
 import queue
 import sqlite3
 import threading
@@ -564,6 +564,7 @@ def test_no_read_connection_is_opened_without_descriptor_headroom(db, monkeypatc
     report was terminal_tool, not SQLite.
     """
     import vael_state_readpool as readpool
+    import vael_state_readpool as hermes_state_readpool
 
     # Drain the pool so the next read must OPEN rather than reuse.
     while True:
@@ -593,6 +594,7 @@ def test_no_read_connection_is_opened_without_descriptor_headroom(db, monkeypatc
 def test_fd_headroom_guard_fails_open_where_it_cannot_measure(monkeypatch):
     """No RLIMIT_NOFILE (Windows) means unmeasurable, not tight."""
     import vael_state_readpool as readpool
+    import vael_state_readpool as hermes_state_readpool
 
     monkeypatch.setattr(readpool, "_fd_soft_limit", lambda: None)
     assert readpool._fd_headroom_ok() is True

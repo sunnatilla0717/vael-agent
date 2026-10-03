@@ -10,7 +10,7 @@ import sqlite3
 
 import pytest
 
-import vael_state_wal
+import vael_state_wal as hermes_state_wal
 from vael_state_wal import WalUnsupportedError, _detect_cross_vm_fs, apply_wal_with_fallback
 
 

@@ -5,7 +5,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-import vael_state_common
+import vael_state_common as hermes_state_common
 from vael_state import SessionDB
 
 

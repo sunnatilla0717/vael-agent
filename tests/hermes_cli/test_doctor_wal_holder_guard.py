@@ -57,7 +57,7 @@ def test_doctor_names_retired_wal_holders_instead_of_healthy_state_db(tmp_path, 
     health probe is another opener) nor checkpoint under --fix."""
     import hermes_cli.doctor as doctor
     import hermes_cli.doctor_state as doctor_state
-    import vael_state_dbfile
+    import vael_state_dbfile as hermes_state_dbfile
 
     db = tmp_path / "state.db"
     db.write_bytes(b"")

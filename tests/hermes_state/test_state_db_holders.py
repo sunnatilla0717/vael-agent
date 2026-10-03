@@ -5,7 +5,7 @@ from types import SimpleNamespace
 
 import pytest
 
-import vael_state_holders
+import vael_state_holders as hermes_state_holders
 
 
 @pytest.mark.platforms("linux")

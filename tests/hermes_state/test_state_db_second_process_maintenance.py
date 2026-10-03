@@ -26,7 +26,7 @@ conn.close()
 
 @pytest.fixture
 def delete_mode_db(tmp_path, monkeypatch) -> Path:
-    import vael_state_wal
+    import vael_state_wal as hermes_state_wal
     monkeypatch.setattr(hermes_state_wal, "resolve_journal_mode", lambda: "delete")
     db = tmp_path / "state.db"
     handle = SessionDB(db_path=db)

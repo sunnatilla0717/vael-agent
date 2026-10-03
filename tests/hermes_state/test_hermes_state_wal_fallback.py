@@ -19,7 +19,7 @@ from unittest.mock import patch
 import pytest
 
 import vael_state as hermes_state
-import vael_state_wal
+import vael_state_wal as hermes_state_wal
 from vael_state import SessionDB, get_last_init_error
 from vael_state_wal import WalUnsupportedError, apply_wal_with_fallback
 

@@ -23,8 +23,8 @@ from pathlib import Path
 import pytest
 
 import vael_state as hermes_state
-import vael_state_repair
-import vael_state_wal
+import vael_state_repair as hermes_state_repair
+import vael_state_wal as hermes_state_wal
 from vael_state import SessionDB, is_malformed_db_error
 from vael_state_repair import repair_state_db_schema
 
@@ -510,7 +510,7 @@ def _release_header_probe_fds() -> None:
     """Close this process's cached header-probe fds (no SQLite connection is live, so no lock is at risk)."""
     import os
 
-    import vael_state_dbfile
+    import vael_state_dbfile as hermes_state_dbfile
     with hermes_state_dbfile._HEADER_PROBE_LOCK:
         for fd, _dev, _ino in hermes_state_dbfile._HEADER_PROBE_FDS.values():
             os.close(fd)

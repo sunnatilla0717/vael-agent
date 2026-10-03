@@ -34,8 +34,8 @@ from pathlib import Path
 import pytest
 
 import vael_state
-import vael_state_repair
-import vael_state_common
+import vael_state_repair as hermes_state_repair
+import vael_state_common as hermes_state_common
 from vael_state import SessionDB
 from vael_state_repair import repair_state_db_schema
 

@@ -29,7 +29,7 @@ from pathlib import Path
 import pytest
 
 import vael_state as hermes_state
-import vael_state_guard
+import vael_state_guard as hermes_state_guard
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 

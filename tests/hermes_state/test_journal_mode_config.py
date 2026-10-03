@@ -6,7 +6,7 @@ import sqlite3
 
 import pytest
 
-import vael_state_wal
+import vael_state_wal as hermes_state_wal
 import vael_yaml as yaml
 
 

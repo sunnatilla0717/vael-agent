@@ -23,7 +23,7 @@ from __future__ import annotations
 import threading
 import time
 
-import vael_state_guard
+import vael_state_guard as hermes_state_guard
 from vael_state import SessionDB
 
 # Deliberate cross-test handoff: test_leaked_instance_* leaks an instance;

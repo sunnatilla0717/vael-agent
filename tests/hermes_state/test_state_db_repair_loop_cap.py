@@ -25,7 +25,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import vael_state
-import vael_state_repair
+import vael_state_repair as hermes_state_repair
 from vael_state_repair import _MAX_MALFORMED_BACKUPS, _MAX_PERSISTENT_REPAIR_ATTEMPTS, _backup_db_file, _existing_malformed_backups, _persistent_repair_attempts_exhausted, _prune_malformed_backups, _record_repair_outcome, _repair_ledger_path, repair_state_db_schema
 
 

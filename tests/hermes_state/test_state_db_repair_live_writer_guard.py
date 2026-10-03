@@ -29,8 +29,8 @@ from pathlib import Path
 import pytest
 
 import vael_state
-import vael_state_repair
-import vael_state_holders
+import vael_state_repair as hermes_state_repair
+import vael_state_holders as hermes_state_holders
 from vael_state import SessionDB
 from vael_state_repair import repair_state_db_schema
 

@@ -60,7 +60,7 @@ def _apply_sqlite_version_pin() -> None:
     pin = os.environ.get("HERMES_E2E_SQLITE_VERSION_PIN")
     if not pin:
         return
-    import vael_state_wal
+    import vael_state_wal as hermes_state_wal
 
     pinned = tuple(int(p) for p in pin.split("."))
     probe = hermes_state_wal.is_sqlite_wal_reset_vulnerable

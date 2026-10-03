@@ -16,9 +16,9 @@ from pathlib import Path
 
 import pytest
 
-import vael_state_dbfile
-import vael_state_readpool
-import vael_state_wal
+import vael_state_dbfile as hermes_state_dbfile
+import vael_state_readpool as hermes_state_readpool
+import vael_state_wal as hermes_state_wal
 from vael_state import (
     DeletedWalGenerationError, SessionDB, StateDbReplacedError, _close_time_checkpoint_configurable,
     classify_persistence_error, refuse_deleted_wal_generation,

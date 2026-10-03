@@ -16,7 +16,7 @@ import time
 
 import pytest
 
-import vael_state_wal
+import vael_state_wal as hermes_state_wal
 from vael_state_wal import apply_wal_with_fallback, is_sqlite_wal_reset_vulnerable
 
 @pytest.fixture(autouse=True)

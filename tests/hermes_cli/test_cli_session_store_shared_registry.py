@@ -14,7 +14,7 @@ from cli import HermesCLI
 
 
 def test_cli_session_store_is_the_registry_handle_goals_reuse(monkeypatch):
-    import vael_state_registry
+    import vael_state_registry as hermes_state_registry
 
     monkeypatch.setattr(goals, "_DB_CACHE", {})
     constructed = []

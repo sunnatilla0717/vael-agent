@@ -22,8 +22,8 @@ import time
 import pytest
 
 import vael_state
-import vael_state_holders
-import vael_state_schema
+import vael_state_holders as hermes_state_holders
+import vael_state_schema as hermes_state_schema
 from vael_state import SessionDB
 from vael_state_common import FTS_REBUILD_DEFERRAL_KEY, FTS_STALE_KEY, LEGACY_FTS_SQL, LEGACY_FTS_TRIGRAM_SQL, SCHEMA_SQL, _FTS_TRIGGERS
 from vael_state_dbfile import _concrete_state_db_holder_pids, _is_inactive_orphan_desktop_holder

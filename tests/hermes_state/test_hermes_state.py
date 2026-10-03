@@ -14,8 +14,8 @@ from unittest import mock
 import pytest
 
 import vael_state as hermes_state
-import vael_state_wal
-import vael_state_common
+import vael_state_wal as hermes_state_wal
+import vael_state_common as hermes_state_common
 from agent.session_activity import ActivityProvenance, build_activity_snapshot
 from vael_state import SessionDB
 from vael_state_common import FTS_SQL, FTS_STORAGE_VERSION, SCHEMA_SQL, SCHEMA_VERSION

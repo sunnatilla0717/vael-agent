@@ -50,7 +50,7 @@ def _clean_cache(monkeypatch):
 def _patch_sessiondb(monkeypatch, cls=_RecordingDB):
     # goals.py acquires through hermes_state_registry (shared writer per home); patch its
     # construction seam, and keep every acquired fake out of the registry so tests don't share.
-    import vael_state_registry
+    import vael_state_registry as hermes_state_registry
 
     monkeypatch.setattr(hermes_state_registry, "_open_session_db", lambda path: cls(db_path=path))
 
