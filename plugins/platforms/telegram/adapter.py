@@ -301,7 +301,7 @@ def _video_thumbnail_jpeg(path: str, duration: Optional[int]) -> Optional[str]:
         if not shutil.which("ffmpeg"):
             return None
         seek = max(1, int((duration or 3) * 0.25))
-        fd, out = tempfile.mkstemp(suffix=".jpg", prefix="hermes-tg-thumb-")
+        fd, out = tempfile.mkstemp(suffix=".jpg", prefix="vael-tg-thumb-")
         os.close(fd)
         proc = subprocess.run(
             ["ffmpeg", "-y", "-ss", str(seek), "-i", path, "-frames:v", "1",

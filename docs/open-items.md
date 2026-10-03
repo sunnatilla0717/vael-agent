@@ -44,3 +44,14 @@ asset/credential that the rebrand itself cannot produce.
 | P-4 | `generate-skill-docs.py` emitted platform-specific path separators | Windows checkouts produced `apple\notes`, Linux CI produces `apple/notes`, so the "committed docs match the generator" check could pass locally and fail in CI. Fixed in this PR (`rel.as_posix()`). | Done. Watch the next Windows-authored regeneration. |
 | P-5 | 84 broken anchors in the zh-Hans build | Chinese translations have Chinese heading ids while their links still point at English anchors (pre-existing translation drift; e.g. `#mention-control`, `#websocket-tuning`). One rebrand-caused instance was fixed with an id pin. | Run the zh translation refresh (`npm run write-translations` + translator pass) and fix links page by page. |
 | P-6 | `docs/getting-started/migrating-from-hermes.md` has no zh-Hans translation | New page; Docusaurus falls back to English in the zh build. | Include it in the next translation batch (W-14). |
+
+## IR-4..IR-8 / IR2 follow-ups (2026-10-03 session)
+
+- [x] Model-facing rename done: CLI primary vael (+hermes alias notice), skill bodies (vael-*), tool descriptions, prompt identity, guards in CI.
+- [ ] 'hermes cron ...' / 'hermes doctor' strings in cron + delivery notices: still the old binary name (work via alias). Mass user-copy rebrand needs a product decision.
+- [ ] Non-vael-* skill prose with Hermes-isms ('Hermes-specific', 'Hermes-managed', 'Hermes-native', 'Hermes-compatible', 'official Hermes Docker layout', ~24 lines): third-party-flavored text; rename per-file with judgment, or leave.
+- [ ] hermes_cli/ package directory rename: explicitly out of scope (2,244 import sites, zero model-facing gain).
+- [ ] Dangling 'debugging-hermes-desktop' skill reference in inspecting-vael-desktop-dom/SKILL.md:42: pre-existing on main (no such skill in-tree); fix or drop.
+- [ ] .pytest-tmp/ artifacts committed by the earlier sweep commit (relay-plugins.toml etc.): untracked-temp hygiene for a future cleanup commit; .pytest-tmp2/ variant avoided (temp moved outside repo).
+- [ ] Windows-environmental test gaps on this box (NOT rebrand fallout, verified per-test): no bash on PATH for child .sh (monitor/no_agent/empty_payload/heredoc/missed_window/desktop_ticker), os.getuid/termios/pwd/SIGKILL POSIX-only collection errors, missing aiohttp/acp extras in .venv, uv-launcher PID mismatch breaking run_reported_turn booking (Popen pid != inner getpid; Linux CI runners with symlink venvs unaffected).
+

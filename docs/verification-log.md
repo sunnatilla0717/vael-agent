@@ -152,3 +152,28 @@ cd website && npm ci && npm run build                          # EN + zh-Hans [S
 | Upstream URLs (site `url`, OAuth `client_uri`/`logo_uri`, `editUrl`, Algolia index name) | No VAEL-owned deployment exists yet; changing them would break links and search. Tracked in `open-items.md`. |
 | `logo.png` / `logo-dark.png` / `hermes-agent-banner.png` | Upstream marketing assets kept on disk but no longer referenced by config. Delete with the next upstream sync review. |
 | 12,625 lowercase `hermes` | CLI command, config dir and env-var contracts. |
+
+## IR-4..IR-6 + IR2 (2026-10-03, feat/vael-website-rebrand)
+
+### IR-4 CLI rename
+- New: _warn_if_deprecated_hermes_alias() in hermes_cli/main.py; tests/hermes_cli/test_cli_alias_deprecation.py: 4 passed.
+- Simulated runs: 'vael --help' -> 'usage: vael ...', no notice. 'hermes --help' -> '[vael] NOTE: the hermes command is a deprecated alias ...' on stderr + full help.
+- _set_process_title() now stamps vael (was hermes).
+
+### IR-5/IR-6 guards
+- tests/branding/: 19 passed (15 existing + 4 new: vael-skill bodies, tool descriptions, CLI primary, no-old-imports).
+- New-guard catches fixed in-tree: browser_use_cli.py description, vael-s6 SKILL.md prose.
+- Guard simulation: temp 'import hermes_state' probe -> guard FAILED naming tests/branding/_tmp_violation_probe.py:1; probe deleted -> passed.
+- vael-brand.yml R-7 job repaired (hermes_constants.py -> vael_constants.py); greps + import verified locally.
+- tests/cron/test_cron_failure_notice_copy.py: 2 stale 'hermes -p ops auth add' asserts -> vael (code already VAEL).
+
+### IR2 import migration
+- AST re-scan: 0 unbound hermes_* module refs (was 222 + 43 files). All touched files py_compile clean.
+- 'import vael_state' + siblings resolve in .venv python.
+- Collection: 121 errors -> 105, zero NameError. Remaining 105 are Windows-environmental (pwd/termios/SIGKILL, missing aiohttp/acp extras), identical before/after.
+- tests/hermes_state/test_hermes_state.py FTS/WAL/perf classes: 19 passed after sibling-alias round.
+- tests/cron/test_cron_prompt_injection_skill.py: 17 passed after skills_tool metadata restore.
+- tests/test_hermes_bootstrap.py: 35 passed, 4 posix-skipped after snippet fixes.
+- tests/cron full: 1349+ passed; 29 failed triaged per-test (bash/POSIX/timing/uv-launcher-PID environmental; rebrand-caused ones fixed, see open-items for the environmental list).
+- Rollback: revert commits 2dfd9c07, 1001ede6 (+ sweep base) in reverse; hermes_cli/ package rename out of scope.
+

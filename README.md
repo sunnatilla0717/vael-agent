@@ -67,6 +67,10 @@ source ~/.bashrc    # reload shell (or: source ~/.zshrc)
 vael                # start chatting!
 ```
 
+> **Coming from Hermes?** `vael` is the primary command. `hermes` still works as a
+> deprecated alias (same subcommands, same config) and prints a one-line notice
+> pointing at `vael`. Prefer `vael` in scripts and docs.
+
 ### Troubleshooting
 
 #### Windows Defender or antivirus flags `uv.exe` as malware

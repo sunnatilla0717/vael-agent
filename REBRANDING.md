@@ -1,6 +1,8 @@
 # VAEL Agent — Rebranding Plan (Hermes → VAEL, surface-only)
 
-> Status: PR-1 + PR-2 done. Core logic untouched.
+> Status: PR-1 + PR-2 + PR-3 + PR-RF + R-7 + IR-1..IR-8 + IR2 done (branch
+> `feat/vael-website-rebrand`). Core logic untouched; model-facing content is
+> now fully VAEL.
 > - PR-1 (branch `feat/vael-pr1-foundation`, commit `7b890d00`): R-0 audit +
 >   R-1..R-4 foundation.
 > - PR-2 (branch `feat/vael-pr2-skills`, this change): skill rename.
@@ -124,5 +126,106 @@ faraz qilingan — ikkalasi ham upstream da **yo'q**. To'g'ri reja:
   `docs/getting-started/migrating-from-hermes.md` sahifasi va 5 ta yangi
   website guard testi. Batafsil: `docs/verification-log.md` (W bo'limi),
   qoldiqlar: `docs/open-items.md`.
-- [ ] R-5-bridge/R-8/R-9: bridge kontrakt (CyberAI repo), branding testlari,
-  CI guardlar (qisman PR-1 da bor; W fazasida website guardlari qo'shildi).
+- [x] R-5-bridge/R-8/R-9: bridge kontrakt (CyberAI repo), branding testlari,
+  CI guardlar (PR-1 + W + IR-5/IR-6 da to'liq).
+
+## IR-4 — CLI rename (done)
+
+- Primary: `vael`. Backward-compat alias: `hermes` (same `hermes_cli.main:main`
+  target in `pyproject.toml [project.scripts]`; parser help shows `usage: vael`).
+- `hermes`/`hermes.exe`/`hermes.py` invocation prints a once-per-process
+  `[vael] NOTE: the hermes command is a deprecated alias ...` to stderr
+  (`_warn_if_deprecated_hermes_alias()` at the top of `main()`); stdout stays
+  clean for JSON/help/pipes. `hermes-agent` (legacy ACP entry) is NOT the alias.
+- `_set_process_title()` now stamps `vael` (was `hermes`).
+- Contract test: `tests/hermes_cli/test_cli_alias_deprecation.py` (4 tests).
+- Verified: simulated `vael --help` (no notice) and `hermes --help`
+  (notice + full help).
+
+## IR-5 — model-facing content tests (done)
+
+New guards in `tests/branding/test_vael_brand.py` (stdlib-only; run under
+pytest AND by the `vael-brand` CI job):
+- `test_vael_skill_bodies_say_vael` — renamed `vael-*` SKILL.md prose
+  (allowlist: `author:` rows, upstream URLs, R-7 paths/env, `metadata.hermes`
+  legacy-key docs, code spans, `Hermes 4`).
+- `test_tool_schema_descriptions_say_vael` — AST scan of `description=`
+  values in `tools/` (caught + fixed `browser_use_cli.py`
+  "Hermes-managed copy" → "VAEL-managed copy").
+- `test_cli_primary_is_vael` — entry points agree + alias notice present.
+- `test_no_old_top_module_imports` — AST scan pinning the IR2 rename
+  (regex pre-filter: 100s → 10s).
+- Stale-test updates: `test_cron_failure_notice_copy.py` now expects the
+  rebranded `vael -p ops auth add ...` notice (code was already VAEL).
+- Prompt assembly audited (`agent/prompt_builder.py`): identity says VAEL;
+  remaining hits are attribution, upstream URLs, wire attrs
+  (`data-hermes-send`), paths and comments — covered by
+  `test_system_prompt_identity`.
+
+## IR-6 — CI guards (done)
+
+- `vael-brand.yml` R-7 job repaired: it referenced the deleted
+  `hermes_constants.py` (now `vael_constants.py` in presence greps, smoke
+  import and audit allowlist).
+- The `vael-brand` job runs `test_vael_brand.py`, so the four IR-5 guards
+  ARE the CI guards (no new jobs needed).
+- Simulation proof: a temp `import hermes_state` probe file fails
+  `test_no_old_top_module_imports` naming the offender; deleting it passes.
+
+## IR-7 — documentation (this file + README + logs)
+
+- `README.md`: primary `vael` usage + `hermes` alias note, attribution kept.
+- `docs/verification-log.md`: IR-4..IR-6 + IR2 results appended.
+- `docs/open-items.md`: model-facing rename marked done; residuals listed.
+
+## IR-8 — what NOT to rename (intentional `hermes` references)
+
+These stay, deliberately. Changing any of them breaks merges, contracts or
+the law:
+- `LICENSE` (MIT, Copyright (c) 2025 Nous Research) + `NOTICE` + the single
+  README/footer attribution line ("based on Hermes Agent by Nous Research").
+- Upstream git remote (`github.com/NousResearch/hermes-agent`) — security
+  patches merge from there. Same for upstream URLs in docs/site config.
+- `HERMES_*` env vars and `~/.hermes` paths at call sites — the R-7 mirror
+  (`resolve_env`, `_mirror_vael_env`) bridges them; rewiring call sites
+  would destroy upstream cherry-pickability.
+- `Hermes 4` / `Hermes-4-70B` — Nous Research model names, not ours.
+- Wire/protocol contracts: `X-Hermes-Session-Id`, `X-Hermes-Session-Key`,
+  `X-Hermes-Delivery`, `X-Hermes-Event`, `X-Hermes-Signature-256`,
+  `Hermes-Monitor/1.0`, `Hermes-Setup.exe`, `data-hermes-send`,
+  `window.hermes.send`, `hermes-gateway` service names.
+- Logger names (`logging.getLogger("hermes_state")` etc.) — caplog tests pin
+  the origin module's name for log-record parity across the split.
+- `hermes_cli/` package directory + `hermes-cli` toolset keys — internal
+  surface; renaming a 100+ module package (2,244 import sites) buys nothing
+  model-facing and maximizes merge conflicts. See IR2 below.
+- `hermes cron ...` / `hermes doctor` strings in cron/delivery notices —
+  both binaries run the same parser so they keep working via the alias;
+  mass-rebranding user copy is a separate product decision (open item).
+- Skill `author: ... Hermes Agent` rows + upstream skill prose in
+  non-`vael-*` skills — authorship facts / third-party text.
+- The `gui` deprecated alias in `hermes_cli/main.py` (pre-existing).
+
+## IR2 — `hermes_*.py` → `vael_*.py` file/import rename (done)
+
+Top-level modules renamed via `git mv` (history preserved): `hermes_bootstrap`,
+`hermes_constants(+_scratch)`, `hermes_logging`, `hermes_startup_watchdog`,
+`hermes_state(+21 siblings)`, `hermes_time`, `hermes_yaml`, plus the `hermes`
+→ `vael` launcher and `setup-hermes.*` → `setup-vael.*`.
+Import migration convention: `import vael_X as hermes_X` (one line per file,
+zero body churn; matches the pre-existing
+`import vael_state_wal as hermes_state` in `test_wal_reset_repair_hint.py`).
+Two repair rounds: 222 files (top-level modules) + 43 files (siblings like
+`hermes_state_wal`, `hermes_state_repair`). Sweep fallout fixed along the way:
+`tools/skills_tool.py` dropped `metadata = frontmatter.get("metadata")`
+(every `skill_view` failed; one-line restore), four `import hermes_bootstrap`
+child-process snippets in `tests/test_hermes_bootstrap.py`, the posix-only
+`hermes_constants` probe in `tests/cron/test_cron_script.py`.
+Verification: scope-aware AST re-scan finds 0 unbound `hermes_*` module refs;
+`import vael_state` (+ siblings) resolves; collection errors 121 → 105 with
+zero `NameError` (remaining 105 are Windows-environmental: `pwd`/`termios`/
+`signal.SIGKILL`, uninstalled `aiohttp`/`acp` extras — identical before/after).
+Rollback: the renames are ordinary commits on this branch (`git log
+--oneline` `2dfd9c07`, `1001ede6` + sweep base); revert those commits in
+reverse order — no history rewrite needed. The `hermes_cli/` package rename
+is explicitly OUT of scope (see IR-8).
