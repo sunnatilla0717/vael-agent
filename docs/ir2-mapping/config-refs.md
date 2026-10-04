@@ -1,0 +1,1297 @@
+# IR2-A config reference inventory
+
+Hermes mentions in build/packaging/CI config on main @ 10c6188d.
+Kind: env-var | module-ref | asset-path | path-or-package | upstream-url | other.
+IR2-B must update path-or-package + module-ref entries alongside the file renames;
+env-var entries stay (R-7 mirror); upstream-url entries stay (IR-8).
+
+## Counts by kind
+
+| Kind | Hits |
+| --- | --- |
+| `path-or-package` | 562 |
+| `other` | 356 |
+| `env-var` | 351 |
+| `module-ref` | 8 |
+
+## Full detail (file | line | kind | text)
+
+- `pyproject.toml:6` | path-or-package | name = "hermes-agent"
+- `pyproject.toml:11` | other | # we *only* support 3.14, BUT we need to allow old hermes installs on <3.14
+- `pyproject.toml:30` | other | # After a pin change, run `hermes pm lock` so the transitive resolution
+- `pyproject.toml:34` | other | # Scope rule: only packages used by EVERY hermes session belong here.
+- `pyproject.toml:155` | path-or-package | # Desktop SSH's Windows remote runtime (hermes_cli/windows_ssh_runtime.py)
+- `pyproject.toml:183` | other | # builds render icons with the runtime interpreter (`hermes desktop`,
+- `pyproject.toml:184` | other | # `hermes update`), so a source install carries its renderer instead of
+- `pyproject.toml:191` | other | # ``agent.log`` (always the case in Hermes — TUI, gateway, ``hy_memory``
+- `pyproject.toml:196` | module-ref | # Windows) so only one process rotates at a time. ``hermes_logging.py``
+- `pyproject.toml:231` | other | # search provider (configured via `hermes tools` or config.yaml).
+- `pyproject.toml:400` | other | # resolution. Hermes' own `httpx[socks]==0.28.1` in [dependencies] is
+- `pyproject.toml:449` | path-or-package | "hermes-agent[cron]",
+- `pyproject.toml:450` | path-or-package | "hermes-agent[mcp]",
+- `pyproject.toml:451` | path-or-package | "hermes-agent[honcho]",
+- `pyproject.toml:452` | path-or-package | "hermes-agent[acp]",
+- `pyproject.toml:459` | path-or-package | "hermes-agent[termux]",
+- `pyproject.toml:460` | path-or-package | "hermes-agent[google]",
+- `pyproject.toml:461` | path-or-package | "hermes-agent[homeassistant]",
+- `pyproject.toml:462` | path-or-package | "hermes-agent[sms]",
+- `pyproject.toml:463` | path-or-package | "hermes-agent[web]",
+- `pyproject.toml:464` | path-or-package | "hermes-agent[pty]",
+- `pyproject.toml:494` | other | # `hermes dashboard` (localhost SPA + API).  Not in core to keep the default install lean.
+- `pyproject.toml:528` | path-or-package | "hermes-agent[cron]",
+- `pyproject.toml:529` | path-or-package | "hermes-agent[pty]",
+- `pyproject.toml:530` | path-or-package | "hermes-agent[mcp]",
+- `pyproject.toml:531` | path-or-package | "hermes-agent[uvloop]",
+- `pyproject.toml:532` | path-or-package | "hermes-agent[homeassistant]",
+- `pyproject.toml:533` | path-or-package | "hermes-agent[sms]",
+- `pyproject.toml:534` | path-or-package | "hermes-agent[acp]",
+- `pyproject.toml:535` | path-or-package | "hermes-agent[google]",
+- `pyproject.toml:536` | path-or-package | "hermes-agent[web]",
+- `pyproject.toml:537` | path-or-package | "hermes-agent[youtube]",
+- `pyproject.toml:570` | path-or-package | hermes = "hermes_cli.main:main"
+- `pyproject.toml:571` | path-or-package | hermes-agent = "agent.legacy_cli:main"
+- `pyproject.toml:572` | path-or-package | hermes-acp = "acp_adapter.entry:main"
+- `pyproject.toml:574` | other | [tool.hermes]
+- `pyproject.toml:589` | other | [tool.hermes.extras-platforms]
+- `pyproject.toml:678` | other | # the release bricks on `hermes update` ("no version of
+- `pyproject.toml:811` | path-or-package | "hermes_cli",
+- `pyproject.toml:812` | path-or-package | "hermes_cli.*",
+- `pyproject.toml:824` | path-or-package | "hermes_platform",
+- `pyproject.toml:825` | path-or-package | "hermes_platform.*",
+- `pyproject.toml:833` | path-or-package | hermes_cli = [
+- `pyproject.toml:861` | path-or-package | "real_concurrent_gate: opt out of the autouse stub that disables _detect_concurrent_hermes_instances",
+- `pyproject.toml:864` | other | "requires_wal: needs the runtime to actually enable SQLite WAL mode (skipped where Hermes falls back to journal_mode=DELETE)",
+- `pyproject.toml:946` | path-or-package | "hermes_cli/web_routers/profiles.py" = ["ASYNC220", "ASYNC221"]
+- `setup.py:5` | other | Hermes Agent (see website/docs/getting-started/platform-support.md). The
+- `setup.py:19` | env-var | build sandbox. ``nix/python.nix`` sets ``HERMES_NIX_BUILD=1`` on the
+- `setup.py:20` | other | Hermes package derivation, so only that build may create an artifact.
+- `setup.py:34` | env-var | _IN_NIX_BUILD = os.environ.get("HERMES_NIX_BUILD") == "1"
+- `setup.py:37` | path-or-package | "Building wheels or sdists for hermes-agent is not supported.\n"
+- `setup.py:38` | other | "Hermes is distributed via the shell installer, Docker image, or Nix.\n"
+- `setup.py:39` | path-or-package | "See: https://hermes-agent.nousresearch.com/docs/getting-started/installation\n"
+- `setup.py:45` | env-var | "the Hermes Nix derivation sets HERMES_NIX_BUILD=1. If it does, file a bug."
+- `setup.py:76` | path-or-package | # Root single-file modules (``run_agent``, ``hermes_state``, ``toolsets``...)
+- `setup.cfg:-` | missing-file | -
+- `package.json:2` | path-or-package | "name": "hermes-agent",
+- `package.json:30` | path-or-package | "url": "git+https://github.com/NousResearch/Hermes-Agent.git"
+- `package.json:34` | path-or-package | "url": "https://github.com/NousResearch/Hermes-Agent/issues"
+- `package.json:36` | path-or-package | "homepage": "https://github.com/NousResearch/Hermes-Agent#readme",
+- `Dockerfile:49` | other | # Do not write .pyc files at runtime: /opt/hermes is immutable in the
+- `Dockerfile:55` | path-or-package | # /opt/hermes/tools — outside the /opt/data volume mount, so the
+- `Dockerfile:61` | path-or-package | ENV PLAYWRIGHT_BROWSERS_PATH=/opt/hermes/tools
+- `Dockerfile:65` | other | # subprocesses, git, bun, etc.) that would otherwise accumulate when hermes
+- `Dockerfile:69` | other | # hermes process, the dashboard, and per-profile gateways.
+- `Dockerfile:75` | path-or-package | # names (see .hermes/plans/termux-removal-commit-spec.md).
+- `Dockerfile:91` | env-var | #   docker build --build-arg HERMES_BOT_DESKTOP=1 .
+- `Dockerfile:92` | env-var | ARG HERMES_BOT_DESKTOP=0
+- `Dockerfile:93` | env-var | RUN if [ "$HERMES_BOT_DESKTOP" = "1" ]; then \
+- `Dockerfile:114` | other | db.execute(\"INSERT INTO docs VALUES ('hermes')\"); \
+- `Dockerfile:119` | other | # s6-overlay provides supervision for the main hermes process, the dashboard,
+- `Dockerfile:164` | other | # 'Hermes WebUI' catalog, NAS compose projects that preserve an old
+- `Dockerfile:174` | env-var | # Non-root user for runtime; UID can be overridden via HERMES_UID at runtime
+- `Dockerfile:175` | other | RUN useradd -u 10000 -m -d /opt/data hermes
+- `Dockerfile:178` | other | WORKDIR /opt/hermes
+- `Dockerfile:189` | other | # /opt/hermes, outside the /opt/data volume so it survives the overlay.
+- `Dockerfile:197` | path-or-package | # baked to /etc/hermes/agent-browser-executable-path for stage2-hook.sh:
+- `Dockerfile:201` | env-var | ENV HERMES_RUNTIME_DIR=/opt/hermes/tools
+- `Dockerfile:203` | path-or-package | # pm's lazy imports resolve get_default_hermes_root()/project_venv_dir()
+- `Dockerfile:204` | module-ref | # from hermes_constants (stdlib-only) at install time — a sealed-stage
+- `Dockerfile:206` | path-or-package | # 'hermes_constants'" without it on the path. Copy the module next to pm.
+- `Dockerfile:207` | module-ref | COPY hermes_constants.py hermes_constants.py
+- `Dockerfile:209` | path-or-package | COPY hermes_cli/__init__.py hermes_cli/runtime_state.py hermes_cli/
+- `Dockerfile:220` | other | mkdir -p /etc/hermes; \
+- `Dockerfile:221` | path-or-package | printf '%s' "$browser_bin" > /etc/hermes/agent-browser-executable-path
+- `Dockerfile:225` | other | RUN python3 -c 'from pathlib import Path; from pm import stage_manager_runtime; from scripts.bundles.payload import seal_pm_runtime; root = Path("/opt/hermes");
+- `Dockerfile:228` | env-var | ENV HERMES_PYTHON=/usr/local/bin/python3
+- `Dockerfile:258` | other | # The [otlp] extra contains the SDK/exporter imported by Hermes when Gateway
+- `Dockerfile:260` | other | # remain external and are not part of the Hermes production image.
+- `Dockerfile:276` | other | RUN python3 -m pm.build_env --source /opt/hermes --python /usr/local/bin/python3 \
+- `Dockerfile:277` | path-or-package | --out /opt/hermes/.venv --no-install-project --sealed \
+- `Dockerfile:287` | path-or-package | RUN /opt/hermes/.venv/bin/python -I scripts/generate_icons.py --source /opt/hermes --out /tmp/hermes-icons
+- `Dockerfile:294` | path-or-package | COPY ui-tui/packages/hermes-ink/ ui-tui/packages/hermes-ink/
+- `Dockerfile:298` | other | RUN node scripts/build/node-deps.mjs --source /opt/hermes --workspace ui-tui --workspace web
+- `Dockerfile:306` | path-or-package | COPY --from=icons /tmp/hermes-icons /tmp/hermes-icons
+- `Dockerfile:307` | other | RUN node scripts/build/tui.mjs --source /opt/hermes --out /opt/products/tui && \
+- `Dockerfile:308` | path-or-package | node scripts/build/web.mjs --source /opt/hermes --icons /tmp/hermes-icons --out /opt/products/web
+- `Dockerfile:312` | path-or-package | COPY --from=frontend_build /opt/hermes/node_modules/typescript /opt/hermes/node_modules/typescript
+- `Dockerfile:313` | path-or-package | RUN mkdir -p /opt/hermes/node_modules/.bin && \
+- `Dockerfile:314` | path-or-package | ln -s ../typescript/bin/tsc /opt/hermes/node_modules/.bin/tsc
+- `Dockerfile:333` | path-or-package | COPY --from=frontend_build /opt/products/tui /opt/hermes/ui-tui
+- `Dockerfile:334` | path-or-package | COPY --from=frontend_build /opt/products/web /opt/hermes/hermes_cli/web_dist
+- `Dockerfile:337` | env-var | # deterministic when HERMES_UID is remapped between boots.
+- `Dockerfile:342` | path-or-package | RUN mkdir -p /tmp/hermes-runtime && chmod 0700 /tmp/hermes-runtime
+- `Dockerfile:350` | other | # gives the non-root hermes user read + traverse but no write; root retains
+- `Dockerfile:355` | path-or-package | RUN /opt/hermes/.venv/bin/python -m docker.build_agent
+- `Dockerfile:357` | other | # Wire the exec shim and install-method stamp.  Files under /opt/hermes are
+- `Dockerfile:359` | other | # read-only for the hermes user (go-w from the --chmod above).
+- `Dockerfile:362` | path-or-package | RUN mkdir -p /opt/hermes/bin && \
+- `Dockerfile:363` | path-or-package | cp /opt/hermes/docker/hermes-exec-shim.sh /opt/hermes/bin/hermes && \
+- `Dockerfile:364` | path-or-package | chmod 0755 /opt/hermes /opt/hermes/bin/hermes && \
+- `Dockerfile:365` | path-or-package | printf 'docker\n' > /opt/hermes/.install_method
+- `Dockerfile:367` | env-var | # tree), NOT into $HERMES_HOME. $HERMES_HOME (/opt/data) is a shared data
+- `Dockerfile:370` | other | # host install's marker and wrongly block its ``hermes update``. A code-scoped
+- `Dockerfile:373` | other | # the data volume. Each supervised service then drops to the hermes user via
+- `Dockerfile:374` | env-var | # `s6-setuidgid hermes` in its run script. If HERMES_UID is unset, services
+- `Dockerfile:375` | other | # run as the default hermes user (UID 10000).
+- `Dockerfile:380` | path-or-package | # full-provenance /opt/hermes/install-stamp.json next to the code.
+- `Dockerfile:382` | path-or-package | # image carries: hermes_cli/version_info.py reads it at runtime (stamp
+- `Dockerfile:383` | other | # first, live git second, unknown third), and both `hermes dump` and
+- `Dockerfile:393` | other | # lives outside both /opt/hermes (which operators sometimes bind-mount as a
+- `Dockerfile:394` | env-var | # checkout) and /opt/data (the mutable HERMES_HOME volume).  Its `revision`
+- `Dockerfile:398` | path-or-package | if [ ! -f /opt/hermes/install-stamp.json ]; then \
+- `Dockerfile:400` | path-or-package | > /opt/hermes/install-stamp.json; \
+- `Dockerfile:402` | path-or-package | python3 -c 'import json; from pathlib import Path; path = Path("/opt/hermes/install-stamp.json"); stamp = json.loads(path.read_text()); stamp["pmRuntime"] = "/o
+- `Dockerfile:403` | other | mkdir -p /etc/hermes; \
+- `Dockerfile:404` | path-or-package | python3 -c 'import json, pathlib, tomllib; project = tomllib.loads(pathlib.Path("/opt/hermes/pyproject.toml").read_text(encoding="utf-8"))["project"]; stamp = j
+- `Dockerfile:407` | other | # Static services declared at build time: main-hermes + dashboard.
+- `Dockerfile:416` | other | # `exec hermes`. Wired in as cont-init.d/01- so it
+- `Dockerfile:420` | env-var | # slots from $HERMES_HOME/profiles/<name>/ after a container restart
+- `Dockerfile:423` | path-or-package | printf '#!/command/with-contenv sh\nexec /opt/hermes/docker/stage2-hook.sh\n' \
+- `Dockerfile:424` | path-or-package | > /etc/cont-init.d/01-hermes-setup && \
+- `Dockerfile:425` | path-or-package | chmod +x /etc/cont-init.d/01-hermes-setup
+- `Dockerfile:430` | env-var | ENV HERMES_WEB_DIST=/opt/hermes/hermes_cli/web_dist
+- `Dockerfile:433` | path-or-package | # fast path (`node --expose-gc /opt/hermes/ui-tui/dist/entry.js`) and skip the
+- `Dockerfile:447` | env-var | ENV HERMES_TUI_DIR=/opt/hermes/ui-tui
+- `Dockerfile:448` | env-var | ENV HERMES_HOME=/opt/data
+- `Dockerfile:449` | env-var | ENV HERMES_WRITE_SAFE_ROOT=/opt/data
+- `Dockerfile:451` | path-or-package | # /opt/data/installs (the sealed /opt/hermes/.venv is never written); stage2
+- `Dockerfile:459` | path-or-package | ENV XDG_RUNTIME_DIR=/tmp/hermes-runtime
+- `Dockerfile:462` | other | # `docker exec <c> hermes ...` they default to root, and any file the
+- `Dockerfile:463` | env-var | # command writes under $HERMES_HOME (auth.json, .env, config.yaml) ends
+- `Dockerfile:465` | path-or-package | # The shim lives at /opt/hermes/bin/hermes, sits earliest on PATH, and
+- `Dockerfile:466` | other | # transparently re-exec's the real venv binary via `s6-setuidgid hermes`
+- `Dockerfile:468` | other | # `--user hermes`, etc.) hit the short-circuit path with no overhead.
+- `Dockerfile:470` | path-or-package | # absolute path (/opt/hermes/.venv/bin/hermes). See the shim source for
+- `Dockerfile:471` | env-var | # the opt-out env var (HERMES_DOCKER_EXEC_AS_ROOT=1).
+- `Dockerfile:472` | path-or-package | COPY --chmod=0755 docker/hermes-exec-shim.sh /opt/hermes/bin/hermes
+- `Dockerfile:473` | path-or-package | COPY --chmod=0755 docker/entrypoint-dispatch.sh /opt/hermes/docker/entrypoint-dispatch.sh
+- `Dockerfile:479` | other | # bin globally so `docker exec <container> hermes ...` and any
+- `Dockerfile:480` | other | # subprocess that doesn't activate the venv first still find hermes.
+- `Dockerfile:482` | path-or-package | # /opt/hermes/bin is prepended ahead of the venv so the privilege-drop
+- `Dockerfile:486` | path-or-package | ENV PATH="/opt/hermes/bin:/opt/hermes/.venv/bin:/opt/data/.local/bin:${PATH}"
+- `Dockerfile:491` | path-or-package | RUN mkdir -p /opt/data && chmod 0644 /opt/hermes/tools/facts.json && \
+- `Dockerfile:492` | path-or-package | rm -f /opt/hermes/.venv/.lock /opt/hermes/pm-runtime/.lock
+- `Dockerfile:494` | env-var | ENV HERMES_PYTHON=/opt/hermes/.venv/bin/python
+- `Dockerfile:522` | other | # main-wrapper.sh handles arg routing (bare-exec vs. hermes
+- `Dockerfile:523` | other | # subcommand vs. no-args), drops to the hermes user via s6-setuidgid,
+- `Dockerfile:529` | path-or-package | ENTRYPOINT [ "/opt/hermes/docker/entrypoint-dispatch.sh" ]
+- `flake.nix:2` | other | description = "Hermes Agent - AI agent framework by Nous Research";
+- `.gitignore:6` | path-or-package | /.hermes-runtime/
+- `.gitignore:11` | path-or-package | hermes_cli/_version.py
+- `.gitignore:25` | path-or-package | .hermes-docker/
+- `.gitignore:31` | other | compose.hermes.local.yml
+- `.gitignore:39` | path-or-package | !hermes_cli/data/
+- `.gitignore:48` | path-or-package | hermes-*/*
+- `.gitignore:71` | path-or-package | hermes_agent.egg-info/
+- `.gitignore:82` | path-or-package | # Skills Hub state (lives in ~/.hermes/skills/.hub/ at runtime, but just in case)
+- `.gitignore:89` | path-or-package | hermes_cli/web_dist/
+- `.gitignore:104` | path-or-package | # e.g. hermes-bots): plugin.js IS the source, not tsc output. No .tsx
+- `.gitignore:165` | path-or-package | hermes_cli/tui_dist/*
+- `.gitignore:166` | path-or-package | hermes_cli/scripts/
+- `.gitignore:168` | path-or-package | # Working directory for the Hermes Agent's session state (~/.hermes/ at runtime;
+- `.gitignore:171` | path-or-package | .hermes/
+- `.gitignore:174` | path-or-package | # bootstrap installer. It is Hermes-managed runtime state, never a code change —
+- `.gitignore:175` | other | # ignore it so `hermes update`'s `git stash push --include-untracked` does not
+- `.gitignore:177` | path-or-package | .hermes-bootstrap-complete
+- `.gitignore:179` | env-var | # Flat-install runtime state (checkout root == $HERMES_HOME, e.g. installs made
+- `.gitignore:180` | env-var | # with HERMES_INSTALL_DIR=$HERMES_HOME or by older installers): every root-level
+- `.gitignore:192` | path-or-package | # swept state.db is restored from) and the secret vault are Hermes-managed
+- `.gitignore:194` | other | # Ignore them so `hermes update`'s `git stash push --include-untracked` cannot
+- `.gitignore:196` | env-var | # gateway (#110648). Nested installs keep all of this under $HERMES_HOME outside
+- `.gitignore:197` | path-or-package | # the checkout, where the `.hermes/` rule above already applies.
+- `.gitignore:224` | path-or-package | /.hermes_history
+- `.gitignore:255` | path-or-package | .hermes-sandbox/
+- `.gitignore:258` | path-or-package | .hermes-sandbox-e2e*/
+- `.gitignore:261` | other | # by `hermes update` / launch-time self-heal. Runtime state, never a code change
+- `.gitignore:273` | other | # and `hermes update`'s untracked autostash does not treat it as a local edit (#66189 / #54855).
+- `.gitignore:284` | path-or-package | # committed to the repo root. See the hermes-release skill.
+- `.gitignore:287` | other | # Desktop demo-run scratch output (hermes writes demo/*.txt during recorded
+- `.gitignore:293` | path-or-package | # PR body is the archive. See the hermes-agent-dev skill's
+- `.gitignore:305` | other | # Runtime marker written by hermes update when a lazy dependency refresh is
+- `.dockerignore:37` | path-or-package | # that now depends on the full ui-tui/packages/hermes-ink/ tree being present.
+- `.dockerignore:39` | path-or-package | ui-tui/packages/hermes-ink/dist/
+- `.dockerignore:47` | env-var | # ...but keep the template: docker/stage2-hook.sh seeds $HERMES_HOME/.env from
+- `.dockerignore:48` | path-or-package | # /opt/hermes/.env.example on first boot (OOF-285 — excluding it silently broke
+- `.dockerignore:70` | path-or-package | .hermes-docker/
+- `.dockerignore:74` | path-or-package | hermes-config/
+- `.dockerignore:102` | path-or-package | # Plugin-level docs (hermes-achievements ships docs/ but the runtime doesn't read them)
+- `.dockerignore:103` | path-or-package | plugins/hermes-achievements/docs/
+- `.dockerignore:114` | path-or-package | .hermes/
+- `Makefile:-` | missing-file | -
+- `docker-compose.windows.yml:7` | other | #   - Uses Windows-style volume path for ~/.hermes
+- `docker-compose.windows.yml:14` | path-or-package | image: nousresearch/hermes-agent:latest
+- `docker-compose.windows.yml:15` | other | container_name: hermes
+- `docker-compose.windows.yml:18` | other | - ${USERPROFILE}/.hermes:/opt/data
+- `docker-compose.windows.yml:20` | env-var | - HERMES_UID=10000
+- `docker-compose.windows.yml:21` | env-var | - HERMES_GID=10000
+- `docker-compose.windows.yml:25` | path-or-package | image: nousresearch/hermes-agent:latest
+- `docker-compose.windows.yml:26` | path-or-package | container_name: hermes-dashboard
+- `docker-compose.windows.yml:31` | other | - ${USERPROFILE}/.hermes:/opt/data
+- `docker-compose.windows.yml:33` | env-var | - HERMES_UID=10000
+- `docker-compose.windows.yml:34` | env-var | - HERMES_GID=10000
+- `docker-compose.windows.yml:35` | env-var | - HERMES_DASHBOARD_HOST=0.0.0.0
+- `docker-compose.yml:2` | other | # docker-compose.yml for Hermes Agent
+- `docker-compose.yml:5` | env-var | #   HERMES_UID=$(id -u) HERMES_GID=$(id -g) docker compose up -d
+- `docker-compose.yml:7` | env-var | # Set HERMES_UID / HERMES_GID to the host user that owns ~/.hermes so
+- `docker-compose.yml:9` | other | # The s6-overlay stage2 hook remaps the internal `hermes` user to these
+- `docker-compose.yml:20` | path-or-package | #     which is `["/init", "/opt/hermes/docker/main-wrapper.sh"]`).
+- `docker-compose.yml:32` | path-or-package | image: hermes-agent
+- `docker-compose.yml:33` | other | container_name: hermes
+- `docker-compose.yml:37` | other | - ~/.hermes:/opt/data
+- `docker-compose.yml:39` | env-var | - HERMES_UID=${HERMES_UID:-10000}
+- `docker-compose.yml:40` | env-var | - HERMES_GID=${HERMES_GID:-10000}
+- `docker-compose.yml:55` | path-or-package | # add a volume entry above (e.g. ``- ~/.hermes/google-chat-sa.json:/secrets/google-chat-sa.json:ro``)
+- `docker-compose.yml:64` | path-or-package | image: hermes-agent
+- `docker-compose.yml:65` | path-or-package | container_name: hermes-dashboard
+- `docker-compose.yml:71` | other | - ~/.hermes:/opt/data
+- `docker-compose.yml:73` | env-var | - HERMES_UID=${HERMES_UID:-10000}
+- `docker-compose.yml:74` | env-var | - HERMES_GID=${HERMES_GID:-10000}
+- `apps/bootstrap-installer/package.json:2` | path-or-package | "name": "@hermes/bootstrap-installer",
+- `apps/bootstrap-installer/package.json:5` | other | "description": "Hermes Setup — signed installer that drives scripts/install.ps1 with a polished native UI.",
+- `apps/desktop/package.json:2` | other | "name": "hermes",
+- `apps/desktop/package.json:3` | other | "productName": "Hermes",
+- `apps/desktop/package.json:6` | other | "description": "Native desktop shell for Hermes Agent.",
+- `apps/desktop/package.json:10` | path-or-package | "url": "git+https://github.com/NousResearch/hermes-agent.git"
+- `apps/desktop/package.json:23` | env-var | "dev:fake-boot": "cross-env HERMES_DESKTOP_BOOT_FAKE=1 HERMES_DESKTOP_BOOT_FAKE_STEP_MS=650 npm run dev",
+- `apps/desktop/package.json:26` | env-var | "dev:electron": "tsc --build tsconfig.electron.json && wait-on http://127.0.0.1:5174 && node scripts/bundle-electron-main.mjs --dev && cross-env XCURSOR_SIZE=24
+- `apps/desktop/package.json:27` | env-var | "profile:main": "tsc --build tsconfig.electron.json && wait-on http://127.0.0.1:5174 && node scripts/bundle-electron-main.mjs --dev && cross-env XCURSOR_SIZE=24
+- `apps/desktop/package.json:28` | env-var | "profile:main:cpu": "tsc --build tsconfig.electron.json && wait-on http://127.0.0.1:5174 && node scripts/bundle-electron-main.mjs --dev && cross-env XCURSOR_SIZ
+- `apps/desktop/package.json:37` | env-var | "dist:bundled": "npm run payload && cross-env HERMES_DESKTOP_VARIANT=bundled npm run dist",
+- `apps/desktop/package.json:94` | path-or-package | "@hermes/shared": "file:../shared",
+- `apps/shared/package.json:2` | path-or-package | "name": "@hermes/shared",
+- `plugins/platforms/photon/sidecar/package.json:2` | path-or-package | "name": "@hermes-agent/photon-sidecar",
+- `plugins/platforms/photon/sidecar/package.json:5` | other | "description": "Spectrum-ts bridge for the Hermes Agent Photon platform plugin.",
+- `scripts/whatsapp-bridge/package.json:2` | path-or-package | "name": "hermes-whatsapp-bridge",
+- `scripts/whatsapp-bridge/package.json:4` | other | "description": "WhatsApp bridge for Hermes Agent using Baileys",
+- `tests-js/package.json:2` | path-or-package | "name": "@hermes/root-tests",
+- `ui-tui/package.json:2` | path-or-package | "name": "hermes-tui",
+- `ui-tui/package.json:12` | path-or-package | "build:ink": "npm run build --prefix packages/hermes-ink",
+- `ui-tui/package.json:24` | path-or-package | "@hermes/ink": "file:./packages/hermes-ink",
+- `ui-tui/package.json:25` | path-or-package | "@hermes/shared": "file:../apps/shared",
+- `ui-tui/package.json:35` | path-or-package | "ink": "npm:@hermes/ink@0.0.1"
+- `ui-tui/packages/hermes-ink/package.json:2` | path-or-package | "name": "@hermes/ink",
+- `web/package.json:18` | path-or-package | "@hermes/shared": "file:../apps/shared",
+- `apps/desktop/tsconfig.json:21` | path-or-package | "@hermes/plugin-sdk": ["./src/sdk/index.ts"],
+- `apps/desktop/tsconfig.json:22` | path-or-package | "@hermes/shared/ansi": ["../shared/src/ansi.ts"],
+- `apps/desktop/tsconfig.json:23` | path-or-package | "@hermes/shared/billing": ["../shared/src/billing-types.ts"],
+- `apps/desktop/tsconfig.json:24` | path-or-package | "@hermes/shared/color": ["../shared/src/color.ts"],
+- `apps/desktop/tsconfig.json:25` | path-or-package | "@hermes/shared/i18n": ["../shared/src/i18n.ts"],
+- `apps/desktop/tsconfig.json:26` | path-or-package | "@hermes/shared/translucency": ["../shared/src/translucency.ts"],
+- `apps/desktop/tsconfig.json:27` | path-or-package | "@hermes/shared": ["../shared/src/index.ts"]
+- `ui-tui/tsconfig.build.json:5` | path-or-package | "@hermes/ink": ["src/types/hermes-ink.d.ts"]
+- `web/tsconfig.app.json:22` | path-or-package | "@hermes/shared": ["../apps/shared/src/index.ts"],
+- `web/tsconfig.app.json:23` | path-or-package | "@hermes/shared/ansi": ["../apps/shared/src/ansi.ts"],
+- `web/tsconfig.app.json:24` | path-or-package | "@hermes/shared/i18n": ["../apps/shared/src/i18n.ts"]
+- `apps/bootstrap-installer/vite.config.ts:6` | other | // Hermes Setup — Tauri-targeted Vite config.
+- `apps/desktop/vite.config.ts:84` | other | name: 'hermes:emojibase-assets',
+- `apps/desktop/vite.config.ts:128` | path-or-package | // `C:\Users\<name>\AppData\Local\hermes\hermes-agent\apps\desktop`), so an
+- `apps/desktop/vite.config.ts:221` | path-or-package | '@hermes/plugin-sdk': path.resolve(__dirname, './src/sdk/index.ts'),
+- `apps/desktop/vite.config.ts:222` | path-or-package | '@hermes/shared/billing': path.resolve(__dirname, '../shared/src/billing-types.ts'),
+- `apps/desktop/vite.config.ts:223` | path-or-package | '@hermes/shared/color': path.resolve(__dirname, '../shared/src/color.ts'),
+- `apps/desktop/vite.config.ts:224` | path-or-package | '@hermes/shared': path.resolve(__dirname, '../shared/src'),
+- `web/vite.config.ts:20` | env-var | const BACKEND = process.env.HERMES_DASHBOARD_URL ?? "http://127.0.0.1:9119";
+- `web/vite.config.ts:23` | other | * In production the Python `hermes dashboard` server injects a one-shot
+- `web/vite.config.ts:24` | path-or-package | * session token into `index.html` (see `hermes_cli/web_server.py`). The
+- `web/vite.config.ts:32` | other | function hermesDevToken(): Plugin {
+- `web/vite.config.ts:33` | path-or-package | const TOKEN_RE = /window\.__HERMES_SESSION_TOKEN__\s*=\s*"([^"]+)"/;
+- `web/vite.config.ts:35` | path-or-package | /window\.__HERMES_DASHBOARD_EMBEDDED_CHAT__\s*=\s*(true|false)/;
+- `web/vite.config.ts:37` | path-or-package | /window\.__HERMES_INITIAL_PROFILE__\s*=\s*("(?:\\.|[^"\\])*")/;
+- `web/vite.config.ts:40` | other | name: "hermes:dev-session-token",
+- `web/vite.config.ts:49` | other | `[hermes] Could not find session token in ${BACKEND} — ` +
+- `web/vite.config.ts:50` | other | `is \`hermes dashboard\` running? /api calls will 401.`,
+- `web/vite.config.ts:63` | path-or-package | `window.__HERMES_SESSION_TOKEN__="${match[1]}";` +
+- `web/vite.config.ts:64` | path-or-package | `window.__HERMES_DASHBOARD_EMBEDDED_CHAT__=${embeddedJs};` +
+- `web/vite.config.ts:65` | path-or-package | `window.__HERMES_INITIAL_PROFILE__=${initialProfileJs};`,
+- `web/vite.config.ts:70` | other | `[hermes] Dashboard at ${BACKEND} unreachable — ` +
+- `web/vite.config.ts:71` | env-var | `start it with \`hermes dashboard\` or set HERMES_DASHBOARD_URL. ` +
+- `web/vite.config.ts:84` | other | hermesDevToken(),
+- `web/vite.config.ts:89` | path-or-package | "@hermes/shared": path.resolve(configDir, "../apps/shared/src"),
+- `web/vite.config.ts:111` | path-or-package | outDir: "../hermes_cli/web_dist",
+- `web/vite.config.ts:165` | other | // Same host as `hermes dashboard` must serve these; Vite has no
+- `nix/checks.nix:9` | path-or-package | hermes-agent = self'.packages.default;
+- `nix/checks.nix:10` | path-or-package | hermesVenv = hermes-agent.hermesVenv;
+- `nix/checks.nix:40` | path-or-package | { services.hermes-agent = settings; }
+- `nix/checks.nix:52` | path-or-package | username = "hermes-check";
+- `nix/checks.nix:53` | path-or-package | homeDirectory = "/home/hermes-check";
+- `nix/checks.nix:57` | path-or-package | { services.hermes-agent = settings; }
+- `nix/checks.nix:74` | path-or-package | username = "hermes-check";
+- `nix/checks.nix:75` | path-or-package | homeDirectory = "/home/hermes-check";
+- `nix/checks.nix:80` | path-or-package | programs.hermes-agent = programs;
+- `nix/checks.nix:81` | path-or-package | services.hermes-agent = services;
+- `nix/checks.nix:87` | path-or-package | # services.hermes-agent. The internal names that the module system adds
+- `nix/checks.nix:90` | path-or-package | eval: lib.attrNames (lib.filterAttrs (n: _: !lib.hasPrefix "_" n) eval.options.services.hermes-agent);
+- `nix/checks.nix:106` | other | "hermesHome"
+- `nix/checks.nix:111` | path-or-package | configKeys = pkgs.runCommand "hermes-config-keys" {} ''
+- `nix/checks.nix:114` | other | ${hermesVenv}/bin/python3 -c '
+- `nix/checks.nix:116` | module-ref | from hermes_cli.config import DEFAULT_CONFIG
+- `nix/checks.nix:148` | path-or-package | in pkgs.runCommand "hermes-cross-eval" { } (
+- `nix/checks.nix:162` | path-or-package | pm-packages-unpack = pkgs.runCommand "hermes-pm-packages-unpack" { } ''
+- `nix/checks.nix:172` | path-or-package | build-package = pkgs.runCommand "hermes-build-package" { } ''
+- `nix/checks.nix:173` | path-or-package | echo "PASS: package built at ${hermes-agent}"
+- `nix/checks.nix:180` | path-or-package | frontend-icons = pkgs.runCommand "hermes-frontend-icons" {
+- `nix/checks.nix:188` | path-or-package | dist = desktop / 'hermes-desktop/dist'
+- `nix/checks.nix:189` | other | launcher = desktop / 'icons/hicolor/1024x1024/apps/hermes.png'
+- `nix/checks.nix:205` | path-or-package | build-devshell = pkgs.runCommand "hermes-build-devshell" { } ''
+- `nix/checks.nix:225` | env-var | environment.HERMES_TEST = "1";
+- `nix/checks.nix:226` | path-or-package | environmentFiles = [ "/run/secrets/hermes-env" ];
+- `nix/checks.nix:227` | other | hermesHomeFiles."SOUL.md" = "test soul";
+- `nix/checks.nix:241` | env-var | # HERMES_HOME.
+- `nix/checks.nix:247` | other | }) (lib.filterAttrs (n: _: lib.hasPrefix "hermes" n) cfg.launchd.agents)
+- `nix/checks.nix:252` | other | }) (lib.filterAttrs (n: _: lib.hasPrefix "hermes" n) cfg.systemd.user.services);
+- `nix/checks.nix:268` | other | activation = cfg.home.activation.hermesAgentSetup.data;
+- `nix/checks.nix:272` | path-or-package | "hermes-agent"
+- `nix/checks.nix:273` | path-or-package | "hermes-backend"
+- `nix/checks.nix:274` | path-or-package | ]) "expected hermes-agent + hermes-backend processes, got: ${toString names}"
+- `nix/checks.nix:276` | path-or-package | !lib.hasInfix "bin/hermes gateway" (argvOf "hermes-agent")
+- `nix/checks.nix:277` | path-or-package | ) "gateway process does not run `hermes gateway`: ${argvOf "hermes-agent"}"
+- `nix/checks.nix:279` | path-or-package | !lib.hasInfix "bin/hermes serve" (argvOf "hermes-backend")
+- `nix/checks.nix:280` | path-or-package | ) "backend process does not run `hermes serve`: ${argvOf "hermes-backend"}"
+- `nix/checks.nix:282` | path-or-package | !lib.hasInfix "--no-open" (argvOf "hermes-backend")
+- `nix/checks.nix:285` | path-or-package | lib.any (n: !lib.hasInfix "/home/hermes-check/.hermes" (envOf n)) names
+- `nix/checks.nix:286` | env-var | ) "gateway and backend must share one HERMES_HOME"
+- `nix/checks.nix:288` | env-var | cfg.home.sessionVariables.HERMES_HOME or null != "/home/hermes-check/.hermes"
+- `nix/checks.nix:289` | env-var | ) "programs.hermes-agent.enable must export HERMES_HOME for interactive shells"
+- `nix/checks.nix:291` | path-or-package | !lib.hasInfix "hermes-config-merge" activation
+- `nix/checks.nix:294` | path-or-package | !lib.hasInfix "/home/hermes-check/.hermes/SOUL.md" activation
+- `nix/checks.nix:295` | env-var | ) "hermesHomeFiles must install into HERMES_HOME"
+- `nix/checks.nix:299` | env-var | # The CLI reads HERMES_MANAGED to name the rebuild command when
+- `nix/checks.nix:303` | env-var | !lib.any (n: lib.hasInfix "HERMES_MANAGED=home-manager" (envOf n)) names
+- `nix/checks.nix:304` | env-var | ) "processes must report HERMES_MANAGED=home-manager"
+- `nix/checks.nix:306` | path-or-package | !lib.hasInfix "hermes-managed" activation
+- `nix/checks.nix:309` | path-or-package | pkgs.runCommand "hermes-home-manager-module" { } (
+- `nix/checks.nix:344` | path-or-package | sameAsDefault = "/home/hermes-check";
+- `nix/checks.nix:373` | other | name = "hermesHomeFiles needs no directory";
+- `nix/checks.nix:374` | other | ok = accepts { hermesHomeFiles."SOUL.md" = "x"; };
+- `nix/checks.nix:384` | path-or-package | pkgs.runCommand "hermes-workspace-files-need-a-directory" { } (
+- `nix/checks.nix:397` | env-var | # ── The desktop application shares one HERMES_HOME ───────────────
+- `nix/checks.nix:398` | env-var | # `programs.enable` exports HERMES_HOME with home.sessionVariables,
+- `nix/checks.nix:401` | other | # no shell profile. Thus the desktop application would open ~/.hermes
+- `nix/checks.nix:402` | env-var | # while the services use the HERMES_HOME of the module, and the user
+- `nix/checks.nix:410` | path-or-package | tokenFile = "/run/secrets/hermes-desktop-token";
+- `nix/checks.nix:419` | path-or-package | hermesHome = "/home/hermes-check/.hermes-work";
+- `nix/checks.nix:434` | path-or-package | desktopPackages = builtins.filter (p: (p.pname or "") == "hermes-desktop") cfg.home.packages;
+- `nix/checks.nix:451` | other | # second Hermes runtime beside the services is the fault that
+- `nix/checks.nix:453` | path-or-package | agentPackages = builtins.filter (p: (p.pname or "") == "hermes-agent") cfg.home.packages;
+- `nix/checks.nix:460` | path-or-package | cfg.launchd.agents.hermes-backend.config.ProgramArguments
+- `nix/checks.nix:462` | path-or-package | [ cfg.systemd.user.services.hermes-backend.Service.ExecStart ];
+- `nix/checks.nix:473` | path-or-package | ) "programs.desktop.enable must install exactly one hermes-desktop package, got ${toString (lib.length desktopPackages)}"
+- `nix/checks.nix:475` | env-var | setValue "HERMES_HOME" != "/home/hermes-check/.hermes-work"
+- `nix/checks.nix:476` | env-var | ) "the launcher must carry HERMES_HOME: a GUI launcher reads no shell profile, so home.sessionVariables never reaches it (got: ${toString (setValue "HERMES_HOME
+- `nix/checks.nix:478` | env-var | setValue "HERMES_MANAGED" != "home-manager"
+- `nix/checks.nix:479` | env-var | ) "the launcher must report HERMES_MANAGED=home-manager while the services own the configuration (got: ${toString (setValue "HERMES_MANAGED")})"
+- `nix/checks.nix:482` | env-var | && setValue "HERMES_DESKTOP_HERMES" != "${lib.head agentPackages}/bin/hermes"
+- `nix/checks.nix:483` | env-var | ) "the launcher must pin the agent package that programs.enable installs, and not a second runtime: ${toString (setValue "HERMES_DESKTOP_HERMES")}"
+- `nix/checks.nix:487` | env-var | setValue "HERMES_DESKTOP_REMOTE_URL" != "http://127.0.0.1:9231"
+- `nix/checks.nix:488` | env-var | ) "the launcher must name the backend of the service, or the application starts a second one (got: ${toString (setValue "HERMES_DESKTOP_REMOTE_URL")})"
+- `nix/checks.nix:490` | env-var | !lib.hasInfix "HERMES_DESKTOP_REMOTE_TOKEN" wrapper
+- `nix/checks.nix:493` | env-var | !lib.hasInfix "HERMES_DASHBOARD_SESSION_TOKEN" backendScript
+- `nix/checks.nix:507` | env-var | setValue "HERMES_DESKTOP_REMOTE_TOKEN" != null
+- `nix/checks.nix:510` | path-or-package | pkgs.runCommand "hermes-home-manager-desktop" { } (
+- `nix/checks.nix:515` | env-var | echo "PASS: the desktop launcher shares HERMES_HOME, the runtime and the backend of the service"
+- `nix/checks.nix:537` | path-or-package | desktopPackages = builtins.filter (p: (p.pname or "") == "hermes-desktop") cfg.home.packages;
+- `nix/checks.nix:545` | env-var | !lib.hasInfix "--set HERMES_HOME" wrapper
+- `nix/checks.nix:546` | env-var | ) "the launcher must carry HERMES_HOME even with no services"
+- `nix/checks.nix:548` | env-var | lib.hasInfix "HERMES_MANAGED" wrapper
+- `nix/checks.nix:551` | env-var | lib.hasInfix "HERMES_DESKTOP_REMOTE_URL" wrapper
+- `nix/checks.nix:554` | path-or-package | cfg.systemd.user.services ? hermes-backend || cfg.launchd.agents ? hermes-backend
+- `nix/checks.nix:557` | path-or-package | pkgs.runCommand "hermes-home-manager-desktop-standalone" { } (
+- `nix/checks.nix:571` | other | # command line. A silent removal thus leaves them with no `hermes`
+- `nix/checks.nix:602` | path-or-package | expect = "programs.hermes-agent.enable = true;";
+- `nix/checks.nix:606` | path-or-package | expect = "programs.hermes-agent.enable = false;";
+- `nix/checks.nix:630` | path-or-package | pkgs.runCommand "hermes-home-manager-install-package-removed" { } (
+- `nix/checks.nix:678` | path-or-package | pkgs.runCommand "hermes-module-option-parity" { } (
+- `nix/checks.nix:698` | path-or-package | environmentFiles = [ "/run/secrets/hermes-env" ];
+- `nix/checks.nix:699` | other | hermesHomeFiles."SOUL.md" = "test soul";
+- `nix/checks.nix:702` | other | units = lib.filterAttrs (n: _: lib.hasPrefix "hermes" n) cfg.systemd.services;
+- `nix/checks.nix:705` | path-or-package | activation = cfg.system.activationScripts."hermes-agent-setup".text;
+- `nix/checks.nix:709` | path-or-package | "hermes-agent"
+- `nix/checks.nix:710` | path-or-package | "hermes-backend"
+- `nix/checks.nix:711` | path-or-package | ]) "expected hermes-agent + hermes-backend units, got: ${toString names}"
+- `nix/checks.nix:713` | path-or-package | !lib.hasInfix "bin/hermes gateway" (execOf "hermes-agent")
+- `nix/checks.nix:714` | path-or-package | ) "gateway unit does not run `hermes gateway`: ${execOf "hermes-agent"}"
+- `nix/checks.nix:716` | path-or-package | !lib.hasInfix "bin/hermes dashboard" (execOf "hermes-backend")
+- `nix/checks.nix:717` | path-or-package | ) "backend unit does not run `hermes dashboard`: ${execOf "hermes-backend"}"
+- `nix/checks.nix:719` | env-var | units.hermes-agent.environment.HERMES_HOME != units.hermes-backend.environment.HERMES_HOME
+- `nix/checks.nix:720` | env-var | ) "gateway and backend must share one HERMES_HOME"
+- `nix/checks.nix:722` | path-or-package | !lib.hasInfix "/var/lib/hermes/.hermes/SOUL.md" activation
+- `nix/checks.nix:723` | env-var | ) "hermesHomeFiles must install into HERMES_HOME";
+- `nix/checks.nix:738` | path-or-package | pkgs.runCommand "hermes-nixos-module" { } (
+- `nix/checks.nix:757` | other | # polls and then execs hermes, and the assertions reject a
+- `nix/checks.nix:763` | path-or-package | (evalNixosModule ({ enable = true; } // settings)).config.systemd.services.hermes-backend.serviceConfig.ExecStart;
+- `nix/checks.nix:798` | other | lib.optional (!lib.hasInfix "bin/hermes serve --host 127.0.0.1" direct)
+- `nix/checks.nix:799` | other | "without waitFor the backend must exec hermes directly, got: ${direct}"
+- `nix/checks.nix:800` | path-or-package | ++ lib.optional (lib.hasInfix "hermes-backend-launch" direct)
+- `nix/checks.nix:804` | path-or-package | ++ lib.optional (!lib.hasInfix "hermes-backend-launch" hostnameWait)
+- `nix/checks.nix:811` | other | "the launcher must exec hermes, so that it keeps the MainPID"
+- `nix/checks.nix:820` | other | ++ lib.optional (!lib.hasInfix "bin/hermes dashboard" interfaceScript)
+- `nix/checks.nix:843` | path-or-package | pkgs.runCommand "hermes-backend-bind-wait" { } (
+- `nix/checks.nix:869` | path-or-package | gateway = managed.systemd.services.hermes-agent;
+- `nix/checks.nix:874` | path-or-package | unmanaged = (configOf { createUser = false; }).systemd.services.hermes-agent;
+- `nix/checks.nix:886` | path-or-package | pkgs.runCommand "hermes-cron-worker-user-scope" { } (
+- `nix/checks.nix:899` | env-var | # $HERMES_HOME/.env. The important property is that a second run
+- `nix/checks.nix:910` | env-var | HERMES_PUBLIC = "visible";
+- `nix/checks.nix:914` | path-or-package | pkgs.runCommand "hermes-env-file-assembly" { } ''
+- `nix/checks.nix:924` | env-var | grep -qx 'HERMES_PUBLIC=visible' "$workdir/.env" || \
+- `nix/checks.nix:976` | path-or-package | package = hermes-agent;
+- `nix/checks.nix:994` | path-or-package | sentinel = "--hermes-nix-argv-probe";
+- `nix/checks.nix:997` | path-or-package | pkgs.runCommand "hermes-service-argv" { } ''
+- `nix/checks.nix:1032` | path-or-package | package-contents = pkgs.runCommand "hermes-package-contents" { } ''
+- `nix/checks.nix:1035` | path-or-package | test -x ${hermes-agent}/bin/hermes || (echo "FAIL: hermes binary missing"; exit 1)
+- `nix/checks.nix:1036` | path-or-package | test -x ${hermes-agent}/bin/hermes-agent || (echo "FAIL: hermes-agent binary missing"; exit 1)
+- `nix/checks.nix:1040` | path-or-package | ${hermes-agent}/bin/hermes --version 2>&1 | grep -qi "hermes" || (echo "FAIL: version check"; exit 1)
+- `nix/checks.nix:1050` | path-or-package | entry-points-sync = pkgs.runCommand "hermes-entry-points-sync" { } ''
+- `nix/checks.nix:1051` | path-or-package | ${hermes-agent.python}/bin/python3 ${./tests/agent-references.py} \
+- `nix/checks.nix:1052` | path-or-package | ${hermes-agent} ${../pyproject.toml} ${hermes-agent.agentInputsFile}
+- `nix/checks.nix:1057` | path-or-package | desktop-backend = pkgs.runCommand "hermes-desktop-backend" {
+- `nix/checks.nix:1058` | path-or-package | nativeBuildInputs = [ hermes-agent.python pkgs.cage ];
+- `nix/checks.nix:1061` | path-or-package | ${self'.packages.desktop}/bin/hermes-desktop ${hermes-agent}/bin/hermes
+- `nix/checks.nix:1066` | path-or-package | cli-commands = pkgs.runCommand "hermes-cli-commands" { } ''
+- `nix/checks.nix:1070` | other | echo "=== Checking hermes --help ==="
+- `nix/checks.nix:1071` | path-or-package | ${hermes-agent}/bin/hermes --help 2>&1 | grep -q "gateway" || (echo "FAIL: gateway subcommand missing"; exit 1)
+- `nix/checks.nix:1072` | path-or-package | ${hermes-agent}/bin/hermes --help 2>&1 | grep -q "config" || (echo "FAIL: config subcommand missing"; exit 1)
+- `nix/checks.nix:1081` | path-or-package | bundled-skills = pkgs.runCommand "hermes-bundled-skills" { } ''
+- `nix/checks.nix:1084` | path-or-package | test -d ${hermes-agent}/share/hermes-agent/skills || (echo "FAIL: skills directory missing"; exit 1)
+- `nix/checks.nix:1088` | path-or-package | SKILL_COUNT=$(find -L ${hermes-agent}/share/hermes-agent/skills -name "SKILL.md" | wc -l)
+- `nix/checks.nix:1092` | env-var | grep -q "HERMES_BUNDLED_SKILLS" ${hermes-agent}/bin/hermes || \
+- `nix/checks.nix:1093` | env-var | (echo "FAIL: HERMES_BUNDLED_SKILLS not in wrapper"; exit 1)
+- `nix/checks.nix:1094` | env-var | echo "PASS: HERMES_BUNDLED_SKILLS set in wrapper"
+- `nix/checks.nix:1098` | path-or-package | test -d ${hermes-agent}/share/hermes-agent/optional-skills || \
+- `nix/checks.nix:1100` | path-or-package | OPT_COUNT=$(find -L ${hermes-agent}/share/hermes-agent/optional-skills -name "SKILL.md" | wc -l)
+- `nix/checks.nix:1102` | env-var | grep -q "HERMES_OPTIONAL_SKILLS" ${hermes-agent}/bin/hermes || \
+- `nix/checks.nix:1103` | env-var | (echo "FAIL: HERMES_OPTIONAL_SKILLS not in wrapper"; exit 1)
+- `nix/checks.nix:1104` | env-var | echo "PASS: $OPT_COUNT optional skills found, HERMES_OPTIONAL_SKILLS set in wrapper"
+- `nix/checks.nix:1112` | path-or-package | bundled-plugins = pkgs.runCommand "hermes-bundled-plugins" { } ''
+- `nix/checks.nix:1115` | path-or-package | test -d ${hermes-agent}/share/hermes-agent/plugins || (echo "FAIL: plugins directory missing"; exit 1)
+- `nix/checks.nix:1118` | path-or-package | test -f ${hermes-agent}/share/hermes-agent/plugins/platforms/irc/plugin.yaml || \
+- `nix/checks.nix:1122` | env-var | grep -q "HERMES_BUNDLED_PLUGINS" ${hermes-agent}/bin/hermes || \
+- `nix/checks.nix:1123` | env-var | (echo "FAIL: HERMES_BUNDLED_PLUGINS not in wrapper"; exit 1)
+- `nix/checks.nix:1124` | env-var | echo "PASS: HERMES_BUNDLED_PLUGINS set in wrapper"
+- `nix/checks.nix:1134` | path-or-package | bundled-locales = pkgs.runCommand "hermes-bundled-locales" { } ''
+- `nix/checks.nix:1137` | path-or-package | test -d ${hermes-agent}/share/hermes-agent/locales || (echo "FAIL: locales directory missing"; exit 1)
+- `nix/checks.nix:1141` | path-or-package | LOC_COUNT=$(find -L ${hermes-agent}/share/hermes-agent/locales -name "*.yaml" | wc -l)
+- `nix/checks.nix:1145` | path-or-package | test -f ${hermes-agent}/share/hermes-agent/locales/en.yaml || (echo "FAIL: en.yaml missing"; exit 1)
+- `nix/checks.nix:1148` | env-var | grep -q "HERMES_BUNDLED_LOCALES" ${hermes-agent}/bin/hermes || \
+- `nix/checks.nix:1149` | env-var | (echo "FAIL: HERMES_BUNDLED_LOCALES not in wrapper"; exit 1)
+- `nix/checks.nix:1150` | env-var | echo "PASS: HERMES_BUNDLED_LOCALES set in wrapper"
+- `nix/checks.nix:1153` | env-var | # symlink + HERMES_BUNDLED_LOCALES (not via wheel data-files).
+- `nix/checks.nix:1156` | env-var | RENDERED=$(cd "$HOME" && HERMES_BUNDLED_LOCALES=${hermes-agent}/share/hermes-agent/locales \
+- `nix/checks.nix:1157` | other | ${hermesVenv}/bin/python3 -c "from agent import i18n; print(i18n.t('gateway.reset.header_default', lang='en'))")
+- `nix/checks.nix:1159` | env-var | test "$RENDERED" != "gateway.reset.header_default" || (echo "FAIL: i18n returned the raw key with HERMES_BUNDLED_LOCALES set"; exit 1)
+- `nix/checks.nix:1169` | env-var | # HERMES_OPTIONAL_MCPS (not via wheel data-files).
+- `nix/checks.nix:1170` | path-or-package | bundled-mcps = pkgs.runCommand "hermes-bundled-mcps" { } ''
+- `nix/checks.nix:1173` | path-or-package | test -d ${hermes-agent}/share/hermes-agent/optional-mcps || (echo "FAIL: optional-mcps directory missing"; exit 1)
+- `nix/checks.nix:1176` | path-or-package | MANIFEST_COUNT=$(find -L ${hermes-agent}/share/hermes-agent/optional-mcps -name "manifest.yaml" | wc -l)
+- `nix/checks.nix:1180` | env-var | grep -q "HERMES_OPTIONAL_MCPS" ${hermes-agent}/bin/hermes || \
+- `nix/checks.nix:1181` | env-var | (echo "FAIL: HERMES_OPTIONAL_MCPS not in wrapper"; exit 1)
+- `nix/checks.nix:1182` | env-var | echo "PASS: HERMES_OPTIONAL_MCPS set in wrapper"
+- `nix/checks.nix:1185` | path-or-package | CATALOG=$(cd "$HOME" && ${hermes-agent}/bin/hermes mcp catalog 2>/dev/null || true)
+- `nix/checks.nix:1187` | other | test -n "$CATALOG" || (echo "FAIL: hermes mcp catalog returned empty"; exit 1)
+- `nix/checks.nix:1196` | path-or-package | bundled-tui = pkgs.runCommand "hermes-bundled-tui" { } ''
+- `nix/checks.nix:1199` | path-or-package | test -d ${hermes-agent}/ui-tui || (echo "FAIL: ui-tui directory missing"; exit 1)
+- `nix/checks.nix:1202` | path-or-package | test -f ${hermes-agent}/ui-tui/dist/entry.js || (echo "FAIL: compiled entry.js missing"; exit 1)
+- `nix/checks.nix:1207` | env-var | grep -q "HERMES_TUI_DIR" ${hermes-agent}/bin/hermes || \
+- `nix/checks.nix:1208` | env-var | (echo "FAIL: HERMES_TUI_DIR not in wrapper"; exit 1)
+- `nix/checks.nix:1209` | env-var | echo "PASS: HERMES_TUI_DIR set in wrapper"
+- `nix/checks.nix:1216` | env-var | # Verify HERMES_NODE is set in wrapper and points to Node 26+
+- `nix/checks.nix:1217` | other | # (Hermes pins its toolchain to Node 26 everywhere)
+- `nix/checks.nix:1218` | path-or-package | hermes-node = pkgs.runCommand "hermes-node-version" { } ''
+- `nix/checks.nix:1220` | env-var | echo "=== Checking HERMES_NODE in wrapper ==="
+- `nix/checks.nix:1221` | env-var | grep -q "HERMES_NODE" ${hermes-agent}/bin/hermes || \
+- `nix/checks.nix:1222` | env-var | (echo "FAIL: HERMES_NODE not set in wrapper"; exit 1)
+- `nix/checks.nix:1223` | env-var | echo "PASS: HERMES_NODE present in wrapper"
+- `nix/checks.nix:1225` | env-var | HERMES_NODE=$(sed -n "s/^export HERMES_NODE='\(.*\)'/\1/p" ${hermes-agent}/bin/hermes)
+- `nix/checks.nix:1226` | env-var | test -x "$HERMES_NODE" || (echo "FAIL: HERMES_NODE=$HERMES_NODE not executable"; exit 1)
+- `nix/checks.nix:1227` | env-var | echo "PASS: HERMES_NODE executable at $HERMES_NODE"
+- `nix/checks.nix:1229` | env-var | NODE_MAJOR=$("$HERMES_NODE" --version | sed 's/^v//' | cut -d. -f1)
+- `nix/checks.nix:1231` | other | (echo "FAIL: Node v$NODE_MAJOR < 26, Hermes requires Node 26"; exit 1)
+- `nix/checks.nix:1234` | env-var | echo "=== All HERMES_NODE checks passed ==="
+- `nix/checks.nix:1239` | env-var | # Verify HERMES_MANAGED guard works on all mutation commands
+- `nix/checks.nix:1240` | path-or-package | managed-guard = pkgs.runCommand "hermes-managed-guard" { } ''
+- `nix/checks.nix:1247` | env-var | OUTPUT=$(HERMES_MANAGED=true "$@" 2>&1 || true)
+- `nix/checks.nix:1255` | env-var | echo "=== Checking HERMES_MANAGED guards ==="
+- `nix/checks.nix:1256` | path-or-package | check_blocked "config set" ${hermes-agent}/bin/hermes config set model foo
+- `nix/checks.nix:1257` | path-or-package | check_blocked "config edit" ${hermes-agent}/bin/hermes config edit
+- `nix/checks.nix:1269` | path-or-package | hermesWithExtra = hermes-agent.override {
+- `nix/checks.nix:1272` | path-or-package | in pkgs.runCommand "hermes-extra-python-packages" { } ''
+- `nix/checks.nix:1276` | other | grep -q "PYTHONPATH" ${hermesWithExtra}/bin/hermes || \
+- `nix/checks.nix:1280` | other | grep -q "${testPkg}" ${hermesWithExtra}/bin/hermes || \
+- `nix/checks.nix:1285` | path-or-package | if grep -q "PYTHONPATH" ${hermes-agent}/bin/hermes; then
+- `nix/checks.nix:1296` | path-or-package | python-lock-derived = pkgs.runCommand "hermes-python-lock-derived" { } ''
+- `nix/checks.nix:1301` | other | if [ "$family" != "$(${hermesVenv}/bin/python3 -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')" ]; then
+- `nix/checks.nix:1319` | path-or-package | in pkgs.runCommand "hermes-python-lock-no-fallback" { } ''
+- `nix/checks.nix:1332` | path-or-package | hermesWithGroups = hermes-agent.override {
+- `nix/checks.nix:1335` | path-or-package | in pkgs.runCommand "hermes-extra-dependency-groups" { } ''
+- `nix/checks.nix:1342` | other | echo "derivation: ${hermesWithGroups}"
+- `nix/checks.nix:1343` | other | echo "venv: ${hermesWithGroups.hermesVenv}"
+- `nix/checks.nix:1354` | path-or-package | messaging-variant = pkgs.runCommand "hermes-messaging-variant" { } ''
+- `nix/checks.nix:1357` | other | ${self'.packages.messaging.hermesVenv}/bin/python3 -c \
+- `nix/checks.nix:1364` | other | # A fresh declarative install must be current to the Hermes it ships
+- `nix/checks.nix:1365` | other | # with. Hermes cannot stamp config.yaml in managed mode, so an
+- `nix/checks.nix:1374` | path-or-package | package = hermes-agent;
+- `nix/checks.nix:1380` | path-or-package | workingDirectory = "/var/lib/hermes/workspace";
+- `nix/checks.nix:1383` | path-or-package | pkgs.runCommand "hermes-generated-config-version" { } ''
+- `nix/checks.nix:1385` | env-var | export HOME=$(mktemp -d) HERMES_HOME=$(mktemp -d)
+- `nix/checks.nix:1386` | env-var | ${configMergeScript} ${configFiles.generated} "$HERMES_HOME/config.yaml"
+- `nix/checks.nix:1387` | other | ${hermesVenv}/bin/python3 -c '
+- `nix/checks.nix:1388` | module-ref | from hermes_cli.config import check_config_version
+- `nix/checks.nix:1457` | path-or-package | in pkgs.runCommand "hermes-config-roundtrip" {
+- `nix/checks.nix:1468` | path-or-package | local hermes_home="$1"
+- `nix/checks.nix:1469` | env-var | export HERMES_HOME="$hermes_home"
+- `nix/checks.nix:1470` | path-or-package | ${configMergeScript} ${nixSettings} "$hermes_home/config.yaml"
+- `nix/checks.nix:1471` | other | ${hermesVenv}/bin/python3 -c '
+- `nix/checks.nix:1473` | module-ref | from hermes_cli.config import load_config
+- `nix/configMergeScript.nix:6` | path-or-package | pkgs.writeScript "hermes-config-merge" ''
+- `nix/desktop.nix:1` | other | # nix/desktop.nix — Hermes Desktop (Electron) app build + wrapper
+- `nix/desktop.nix:3` | other | # `hermesAgent` is the fully-built `.#default` package — it ships the
+- `nix/desktop.nix:4` | other | # `hermes` binary with the venv, runtime PATH, bundled skills/plugins, etc.
+- `nix/desktop.nix:6` | env-var | # `HERMES_DESKTOP_HERMES` override env var, so the desktop's resolver
+- `nix/desktop.nix:14` | other | hermesNpmLib,
+- `nix/desktop.nix:16` | other | hermesAgent,
+- `nix/desktop.nix:23` | env-var | # HERMES_HOME and HERMES_MANAGED here, which gives the app the same state
+- `nix/desktop.nix:53` | path-or-package | throw "hermes-desktop: unsupported host platform for node-pty staging";
+- `nix/desktop.nix:61` | path-or-package | throw "hermes-desktop: unsupported host arch for node-pty staging";
+- `nix/desktop.nix:64` | other | renderer = hermesNpmLib.buildNpmPackage {
+- `nix/desktop.nix:76` | path-or-package | pname = "hermes-desktop-renderer";
+- `nix/desktop.nix:93` | other | ${lib.getExe hermesNpmLib.node-gyp} rebuild \
+- `nix/desktop.nix:152` | path-or-package | pname = "hermes-desktop";
+- `nix/desktop.nix:166` | path-or-package | mkdir -p $out/share/hermes-desktop $out/bin
+- `nix/desktop.nix:167` | path-or-package | cp -r ${renderer}/* $out/share/hermes-desktop/
+- `nix/desktop.nix:172` | path-or-package | substituteInPlace $out/share/hermes-desktop/dist/electron-main.mjs \
+- `nix/desktop.nix:173` | path-or-package | --replace-fail "process.resourcesPath" "'$out/share/hermes-desktop'"
+- `nix/desktop.nix:176` | env-var | # HERMES_DESKTOP_HERMES to the absolute path of the nix-built `hermes`
+- `nix/desktop.nix:181` | path-or-package | makeWrapper ${lib.getExe electron} $out/bin/hermes-desktop \
+- `nix/desktop.nix:182` | path-or-package | --add-flags "$out/share/hermes-desktop" \
+- `nix/desktop.nix:183` | env-var | --set HERMES_DESKTOP_HERMES "${lib.getExe hermesAgent}" \
+- `nix/desktop.nix:189` | other | $out/share/icons/hicolor/1024x1024/apps/hermes.png
+- `nix/desktop.nix:191` | path-or-package | cp ${../hermes_cli/linux_desktop_entry.py} "$PYTHONPATH/linux_desktop_entry.py"
+- `nix/desktop.nix:192` | path-or-package | export DESKTOP_EXEC="$out/bin/hermes-desktop"
+- `nix/desktop.nix:193` | other | export DESKTOP_ICON="$out/share/icons/hicolor/1024x1024/apps/hermes.png"
+- `nix/desktop.nix:204` | other | description = "Native Electron desktop shell for Hermes Agent";
+- `nix/desktop.nix:205` | path-or-package | homepage = "https://github.com/NousResearch/hermes-agent";
+- `nix/desktop.nix:208` | path-or-package | mainProgram = "hermes-desktop";
+- `nix/devShell.nix:14` | other | hermesNpmLib = self'.packages.default.passthru.hermesNpmLib;
+- `nix/devShell.nix:21` | other | hermesAgentDevShellHook = self'.packages.default.passthru.devShellHook;
+- `nix/devShell.nix:26` | other | (pkgs.runCommand "hermes" { } ''
+- `nix/devShell.nix:28` | other | install -Dm755 ${../hermes} $out/bin/hermes
+- `nix/devShell.nix:46` | other | ${hermesAgentDevShellHook}
+- `nix/devShell.nix:47` | other | ${hermesNpmLib.mkNpmDevShellHook npmPackageJsonPaths}
+- `nix/devShell.nix:53` | env-var | export HERMES_PYTHON_SRC_ROOT=$(git rev-parse --show-toplevel)
+- `nix/devShell.nix:59` | env-var | echo "Hermes Agent dev shell in $HERMES_PYTHON_SRC_ROOT"
+- `nix/devShell.nix:60` | other | echo "Ready. Run 'hermes' or 'sandbox hermes' to start."
+- `nix/hermes-agent.nix:1` | path-or-package | # nix/hermes-agent.nix — Overridable Hermes Agent package
+- `nix/hermes-agent.nix:5` | path-or-package | #   pkgs.hermes-agent.override { extraPythonPackages = [...]; }
+- `nix/hermes-agent.nix:6` | path-or-package | #   pkgs.hermes-agent.override { extraDependencyGroups = [ "honcho" ]; }
+- `nix/hermes-agent.nix:64` | path-or-package | installStampFile = writeText "hermes-install-stamp.json" (builtins.toJSON {
+- `nix/hermes-agent.nix:81` | other | mkHermesVenv =
+- `nix/hermes-agent.nix:85` | other | pythonSrc = hermesNpmLib.pythonSrc;
+- `nix/hermes-agent.nix:89` | other | hermesVenv = (mkHermesVenv extraDependencyGroups).venv;
+- `nix/hermes-agent.nix:97` | other | inherit (mkHermesVenv [ ]) venv;
+- `nix/hermes-agent.nix:100` | other | hermesNpmLib = callPackage ./lib.nix {
+- `nix/hermes-agent.nix:104` | other | hermesTui = callPackage ./tui.nix {
+- `nix/hermes-agent.nix:105` | other | inherit hermesNpmLib;
+- `nix/hermes-agent.nix:108` | other | hermesWeb = callPackage ./web.nix {
+- `nix/hermes-agent.nix:109` | other | inherit hermesNpmLib generatedIcons;
+- `nix/hermes-agent.nix:118` | env-var | # lib.nix) — the wrapper exposes them via HERMES_OPTIONAL_SKILLS, the
+- `nix/hermes-agent.nix:127` | env-var | # to a dev checkout — the loader reads them from HERMES_BUNDLED_PLUGINS.
+- `nix/hermes-agent.nix:134` | env-var | # at by HERMES_BUNDLED_LOCALES so the wrapped binary always resolves human
+- `nix/hermes-agent.nix:140` | env-var | # exposed via HERMES_OPTIONAL_MCPS.
+- `nix/hermes-agent.nix:147` | other | hermesNpmLib.nodejs
+- `nix/hermes-agent.nix:174` | path-or-package | agentInputsFile = writeText "hermes-agent-inputs.json" (builtins.toJSON {
+- `nix/hermes-agent.nix:176` | other | code = "${hermesVenv}/${sitePackagesPath}";
+- `nix/hermes-agent.nix:177` | path-or-package | repo = "share/hermes-agent";
+- `nix/hermes-agent.nix:182` | other | python = "${hermesVenv}/bin/python3";
+- `nix/hermes-agent.nix:183` | other | site_packages = "${hermesVenv}/${sitePackagesPath}";
+- `nix/hermes-agent.nix:184` | other | environment = toString hermesVenv;
+- `nix/hermes-agent.nix:186` | other | command_dir = "${hermesVenv}/bin";
+- `nix/hermes-agent.nix:195` | path-or-package | tui = "${hermesTui}/lib/hermes-tui";
+- `nix/hermes-agent.nix:196` | other | web = toString hermesWeb;
+- `nix/hermes-agent.nix:201` | env-var | HERMES_NODE = lib.getExe hermesNpmLib.nodejs;
+- `nix/hermes-agent.nix:203` | env-var | HERMES_REVISION = rev;
+- `nix/hermes-agent.nix:222` | other | venv_sp = pathlib.Path('${hermesVenv}/${sitePackagesPath}')
+- `nix/hermes-agent.nix:245` | other | print(f'ERROR: plugin package \"{pkg}\" collides with a package in hermes sealed venv', file=sys.stderr)
+- `nix/hermes-agent.nix:255` | path-or-package | pname = "hermes-agent";
+- `nix/hermes-agent.nix:277` | env-var | --set-default HERMES_BIN "$out/bin/hermes"${
+- `nix/hermes-agent.nix:296` | other | ${hermesVenv}/bin/python3 -c "${checkPackageCollisions}"
+- `nix/hermes-agent.nix:305` | other | devPython = (mkHermesVenv (extraDependencyGroups ++ [ "dev" ])).editableVenv;
+- `nix/hermes-agent.nix:309` | other | hermesTui
+- `nix/hermes-agent.nix:310` | other | hermesWeb
+- `nix/hermes-agent.nix:311` | other | hermesNpmLib
+- `nix/hermes-agent.nix:312` | other | hermesVenv
+- `nix/hermes-agent.nix:320` | other | # `hermesDesktop` references `finalAttrs.finalPackage` (this whole
+- `nix/hermes-agent.nix:322` | env-var | # can pin its `hermes` command via HERMES_DESKTOP_HERMES. The
+- `nix/hermes-agent.nix:324` | other | # `hermes` binary — venv with all deps, bundled skills/plugins,
+- `nix/hermes-agent.nix:327` | other | hermesDesktop = callPackage ./desktop.nix {
+- `nix/hermes-agent.nix:328` | other | inherit hermesNpmLib electron installStampFile generatedIcons;
+- `nix/hermes-agent.nix:330` | other | hermesAgent = finalAttrs.finalPackage;
+- `nix/hermes-agent.nix:334` | env-var | export HERMES_PYTHON=${devPython}/bin/python3
+- `nix/hermes-agent.nix:349` | path-or-package | homepage = "https://github.com/NousResearch/hermes-agent";
+- `nix/hermes-agent.nix:350` | other | mainProgram = "hermes";
+- `nix/homeManagerModules.nix:1` | path-or-package | # nix/homeManagerModules.nix — the Home Manager module for hermes-agent
+- `nix/homeManagerModules.nix:3` | other | # This module is the user-level equivalent of nixosModules.default. Hermes is
+- `nix/homeManagerModules.nix:8` | path-or-package | # `services.hermes-agent` is the same option set on both modules. All of the
+- `nix/homeManagerModules.nix:20` | path-or-package | #   changed   addToSystemPackages      -> programs.hermes-agent.enable and
+- `nix/homeManagerModules.nix:22` | path-or-package | #   added     programs.hermes-agent    the CLI and the desktop application,
+- `nix/homeManagerModules.nix:25` | other | #   changed   stateDir (+ "/.hermes")  -> hermesHome, set directly
+- `nix/homeManagerModules.nix:28` | path-or-package | #   imports = [ hermes-agent.homeManagerModules.default ];
+- `nix/homeManagerModules.nix:29` | path-or-package | #   programs.hermes-agent = {
+- `nix/homeManagerModules.nix:30` | other | #     enable = true;          # the hermes CLI on your PATH
+- `nix/homeManagerModules.nix:33` | path-or-package | #   services.hermes-agent = {
+- `nix/homeManagerModules.nix:37` | path-or-package | #     environmentFiles = [ config.sops.secrets."hermes/env".path ];
+- `nix/homeManagerModules.nix:57` | path-or-package | cfg = config.services.hermes-agent;
+- `nix/homeManagerModules.nix:58` | path-or-package | cfgPrograms = config.programs.hermes-agent;
+- `nix/homeManagerModules.nix:62` | path-or-package | hermes-agent = inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.default;
+- `nix/homeManagerModules.nix:67` | other | inherit (cfg) hermesHome;
+- `nix/homeManagerModules.nix:76` | other | # not reach it, and the application would open ~/.hermes while the
+- `nix/homeManagerModules.nix:77` | other | # services use hermesHome. Thus the launcher carries the value itself.
+- `nix/homeManagerModules.nix:79` | env-var | # HERMES_MANAGED rides along only when the services are enabled. That
+- `nix/homeManagerModules.nix:85` | env-var | HERMES_HOME = cfg.hermesHome;
+- `nix/homeManagerModules.nix:88` | env-var | inherit (processEnvironment) HERMES_MANAGED;
+- `nix/homeManagerModules.nix:91` | env-var | HERMES_DESKTOP_REMOTE_URL = "http://${cfg.backend.host}:${toString cfg.backend.port}";
+- `nix/homeManagerModules.nix:96` | env-var | # token the desktop resolver throws ("HERMES_DESKTOP_REMOTE_URL is set
+- `nix/homeManagerModules.nix:97` | env-var | # but HERMES_DESKTOP_REMOTE_TOKEN is not"), so the two variables travel
+- `nix/homeManagerModules.nix:105` | env-var | HERMES_DESKTOP_REMOTE_TOKEN="$(tr -d '\r\n' < ${lib.escapeShellArg cfg.backend.sessionTokenFile})"
+- `nix/homeManagerModules.nix:106` | env-var | export HERMES_DESKTOP_REMOTE_TOKEN
+- `nix/homeManagerModules.nix:108` | path-or-package | echo "hermes-desktop: cannot read the session token at ${cfg.backend.sessionTokenFile}." >&2
+- `nix/homeManagerModules.nix:109` | path-or-package | echo "hermes-desktop: the application starts its own backend instead of the one of the service." >&2
+- `nix/homeManagerModules.nix:181` | path-or-package | # ── programs.hermes-agent — the installation ───────────────────────
+- `nix/homeManagerModules.nix:183` | other | # this daemon". Hermes needs both, and a person can want one without
+- `nix/homeManagerModules.nix:187` | path-or-package | # `services.hermes-agent` stays the authority for the state and the
+- `nix/homeManagerModules.nix:188` | other | # configuration. This module reads hermesHome and the backend address
+- `nix/homeManagerModules.nix:190` | path-or-package | options.programs.hermes-agent = {
+- `nix/homeManagerModules.nix:192` | other | the Hermes Agent command line application.
+- `nix/homeManagerModules.nix:194` | env-var | This adds `hermes` to home.packages, and exports HERMES_HOME with
+- `nix/homeManagerModules.nix:196` | path-or-package | state as `services.hermes-agent`
+- `nix/homeManagerModules.nix:202` | path-or-package | defaultText = lib.literalExpression "config.services.hermes-agent.package";
+- `nix/homeManagerModules.nix:204` | path-or-package | The hermes-agent package to install.
+- `nix/homeManagerModules.nix:206` | path-or-package | The default follows `services.hermes-agent.package`, and applies
+- `nix/homeManagerModules.nix:216` | other | the Hermes Desktop application (Electron).
+- `nix/homeManagerModules.nix:218` | path-or-package | This adds `hermes-desktop` to home.packages, with an XDG
+- `nix/homeManagerModules.nix:219` | other | launcher entry on Linux. The launcher starts the same Hermes
+- `nix/homeManagerModules.nix:220` | env-var | runtime that `package` gives, and reads the HERMES_HOME of
+- `nix/homeManagerModules.nix:221` | path-or-package | `services.hermes-agent`. Thus the application, the interactive
+- `nix/homeManagerModules.nix:224` | other | The Electron application carries its own Hermes runtime with
+- `nix/homeManagerModules.nix:226` | env-var | instead, with HERMES_DESKTOP_HERMES. It installs no second copy
+- `nix/homeManagerModules.nix:227` | other | of Hermes, and it downloads nothing on the first start
+- `nix/homeManagerModules.nix:232` | other | default = cfgPrograms.package.hermesDesktop;
+- `nix/homeManagerModules.nix:233` | path-or-package | defaultText = lib.literalExpression "config.programs.hermes-agent.package.hermesDesktop";
+- `nix/homeManagerModules.nix:235` | path-or-package | The hermes-desktop package to use.
+- `nix/homeManagerModules.nix:238` | path-or-package | `services.hermes-agent.extraPythonPackages` and
+- `nix/homeManagerModules.nix:241` | other | carries its own Hermes runtime, and this module cannot make
+- `nix/homeManagerModules.nix:248` | path-or-package | options.services.hermes-agent =
+- `nix/homeManagerModules.nix:250` | path-or-package | defaultPackage = hermes-agent;
+- `nix/homeManagerModules.nix:251` | path-or-package | defaultPackageText = lib.literalExpression "hermes-agent.packages.\${system}.default";
+- `nix/homeManagerModules.nix:256` | other | hermesHome = lib.mkOption {
+- `nix/homeManagerModules.nix:258` | other | default = "${config.home.homeDirectory}/.hermes";
+- `nix/homeManagerModules.nix:259` | other | defaultText = lib.literalExpression ''"''${config.home.homeDirectory}/.hermes"'';
+- `nix/homeManagerModules.nix:261` | env-var | The value of HERMES_HOME. This state directory holds
+- `nix/homeManagerModules.nix:265` | other | The NixOS module takes a `stateDir` and adds `/.hermes` to it.
+- `nix/homeManagerModules.nix:266` | env-var | This module sets HERMES_HOME directly. Thus an existing
+- `nix/homeManagerModules.nix:267` | other | ~/.hermes continues to work, and you can give the directory any
+- `nix/homeManagerModules.nix:270` | path-or-package | example = "/home/alice/.hermes-work";
+- `nix/homeManagerModules.nix:273` | path-or-package | # `installPackage` moved to `programs.hermes-agent.enable`. The
+- `nix/homeManagerModules.nix:276` | other | # quiet removal gives them a machine with no `hermes` and no
+- `nix/homeManagerModules.nix:285` | path-or-package | Removed. Use `programs.hermes-agent.enable` instead.
+- `nix/homeManagerModules.nix:294` | path-or-package | # ── programs.hermes-agent — the installation ──────────────────────
+- `nix/homeManagerModules.nix:300` | env-var | home.sessionVariables.HERMES_HOME = cfg.hermesHome;
+- `nix/homeManagerModules.nix:304` | env-var | # HERMES_HOME that `programs.enable` exports does not reach it. Home
+- `nix/homeManagerModules.nix:306` | env-var | # environment.d, and this module does not put HERMES_HOME there,
+- `nix/homeManagerModules.nix:318` | other | # with no `hermes` on the PATH and no message.
+- `nix/homeManagerModules.nix:330` | path-or-package | services.hermes-agent.settings.mcp_servers = common.mcpServersToConfig cfg.mcpServers;
+- `nix/homeManagerModules.nix:337` | path-or-package | optionPath = "services.hermes-agent";
+- `nix/homeManagerModules.nix:341` | path-or-package | opt = options.services.hermes-agent.workingDirectory;
+- `nix/homeManagerModules.nix:342` | path-or-package | optionPath = "services.hermes-agent";
+- `nix/homeManagerModules.nix:346` | path-or-package | optionPath = "services.hermes-agent";
+- `nix/homeManagerModules.nix:353` | path-or-package | message = "services.hermes-agent.backend.waitFor = \"interface\" works on Linux only. Use \"hostname\" on Darwin.";
+- `nix/homeManagerModules.nix:370` | other | home.activation.hermesAgentSetup =
+- `nix/homeManagerModules.nix:379` | other | inherit (cfg) hermesHome workingDirectory;
+- `nix/homeManagerModules.nix:397` | path-or-package | systemd.user.services.hermes-agent = mkUnit {
+- `nix/homeManagerModules.nix:398` | other | description = "Hermes Agent Gateway";
+- `nix/homeManagerModules.nix:404` | path-or-package | systemd.user.services.hermes-backend = mkUnit {
+- `nix/homeManagerModules.nix:412` | path-or-package | launchd.agents.hermes-agent = mkAgent {
+- `nix/homeManagerModules.nix:414` | path-or-package | logName = "hermes-agent";
+- `nix/homeManagerModules.nix:419` | path-or-package | launchd.agents.hermes-backend = mkAgent {
+- `nix/homeManagerModules.nix:421` | path-or-package | logName = "hermes-backend";
+- `nix/icons.nix:12` | path-or-package | runCommand "hermes-icons" { nativeBuildInputs = [ venv ]; } ''
+- `nix/lib.nix:109` | path-or-package | name = "hermes-python-source";
+- `nix/lib.nix:138` | env-var | # Skills are shipped via HERMES_BUNDLED_SKILLS /
+- `nix/lib.nix:139` | env-var | # HERMES_OPTIONAL_SKILLS (see hermes-agent.nix), not via the
+- `nix/lib.nix:146` | env-var | # __init__.py) shipped via symlinks + HERMES_BUNDLED_LOCALES
+- `nix/lib.nix:147` | env-var | # / HERMES_OPTIONAL_MCPS, not via the wheel. Excluding them
+- `nix/lib.nix:172` | other | "setup-hermes.sh"
+- `nix/lib.nix:246` | other | #   hermesNpmLib.buildNpmPackage {
+- `nix/moduleCommon.nix:3` | path-or-package | # `services.hermes-agent` is the same option set on both modules. Both modules
+- `nix/moduleCommon.nix:13` | path-or-package | #   homeManagerModules.nix  hermesHome, programs.hermes-agent (the CLI and
+- `nix/moduleCommon.nix:32` | path-or-package | name = "hermes-config-attrs";
+- `nix/moduleCommon.nix:33` | other | description = "Hermes YAML config (attrset), merged deeply via lib.recursiveUpdate.";
+- `nix/moduleCommon.nix:76` | env-var | (remote MCP servers). Tokens are stored in $HERMES_HOME/mcp-tokens/.
+- `nix/moduleCommon.nix:237` | other | enable = lib.mkEnableOption "Hermes Agent";
+- `nix/moduleCommon.nix:244` | path-or-package | description = "The hermes-agent package to use.";
+- `nix/moduleCommon.nix:274` | other | The Hermes configuration, as an attribute set. The module joins the
+- `nix/moduleCommon.nix:279` | other | which includes the keys that `hermes config set` and the settings
+- `nix/moduleCommon.nix:302` | env-var | $HERMES_HOME/.env. Hermes reads that file at each start, with
+- `nix/moduleCommon.nix:303` | path-or-package | load_hermes_dotenv().
+- `nix/moduleCommon.nix:308` | path-or-package | example = literalExpression ''[ config.sops.secrets."hermes/env".path ]'';
+- `nix/moduleCommon.nix:316` | env-var | to $HERMES_HOME/.env.
+- `nix/moduleCommon.nix:329` | other | does not exist. Thus a token that Hermes refreshes at runtime stays
+- `nix/moduleCommon.nix:351` | env-var | Hermes reads SOUL.md and memories/ from HERMES_HOME, so put those
+- `nix/moduleCommon.nix:352` | other | files in `hermesHomeFiles`.
+- `nix/moduleCommon.nix:366` | other | hermesHomeFiles = mkOption {
+- `nix/moduleCommon.nix:370` | env-var | Files that the module installs into HERMES_HOME. Each key is a path
+- `nix/moduleCommon.nix:374` | env-var | Hermes reads SOUL.md and the memory files from HERMES_HOME and not
+- `nix/moduleCommon.nix:375` | other | from the working directory. Declare those files here, or Hermes
+- `nix/moduleCommon.nix:423` | other | Directory-based plugin packages to symlink into the hermes plugins
+- `nix/moduleCommon.nix:425` | other | at its root. Hermes discovers these automatically on startup.
+- `nix/moduleCommon.nix:431` | path-or-package | repo = "hermes-lcm";
+- `nix/moduleCommon.nix:432` | path-or-package | name = "hermes-lcm";
+- `nix/moduleCommon.nix:446` | path-or-package | hermes_agent.plugins entry-point group. Each package must be built
+- `nix/moduleCommon.nix:447` | other | with the same Python interpreter as hermes. The interpreter
+- `nix/moduleCommon.nix:449` | path-or-package | take packages from config.services.hermes-agent.package.python.pkgs so the set always
+- `nix/moduleCommon.nix:450` | other | matches the interpreter hermes was built with.
+- `nix/moduleCommon.nix:454` | path-or-package | (config.services.hermes-agent.package.python.pkgs.buildPythonPackage {
+- `nix/moduleCommon.nix:455` | other | pname = "rtk-hermes";
+- `nix/moduleCommon.nix:459` | other | repo = "rtk-hermes";
+- `nix/moduleCommon.nix:476` | path-or-package | Use this for optional extras already declared in hermes-agent's
+- `nix/moduleCommon.nix:487` | other | description = "Extra command-line arguments for `hermes gateway`.";
+- `nix/moduleCommon.nix:502` | other | # ── The backend: `hermes serve` or `hermes dashboard` ──────────────
+- `nix/moduleCommon.nix:503` | other | # `hermes serve` and `hermes dashboard` are the same entry point,
+- `nix/moduleCommon.nix:504` | path-or-package | # hermes_cli.main:cmd_dashboard, with one flag of difference. serve runs
+- `nix/moduleCommon.nix:506` | other | # Both give the /api/ws and /api/pty sockets that Hermes Desktop
+- `nix/moduleCommon.nix:511` | other | # controls an external gateway, with `hermes gateway restart`. It does
+- `nix/moduleCommon.nix:526` | other | the /api/ws and /api/pty sockets that Hermes
+- `nix/moduleCommon.nix:638` | env-var | HERMES_DASHBOARD_SESSION_TOKEN. That token authorizes the /api
+- `nix/moduleCommon.nix:639` | other | routes and the /api/ws socket. Hermes Desktop presents the same
+- `nix/moduleCommon.nix:650` | path-or-package | example = literalExpression ''config.sops.secrets."hermes/desktop-token".path'';
+- `nix/moduleCommon.nix:658` | other | # removal leaves them with no `hermes` on the PATH and no message. The
+- `nix/moduleCommon.nix:667` | path-or-package | services.hermes-agent.installPackage was removed. Hermes now
+- `nix/moduleCommon.nix:671` | env-var | programs.hermes-agent.enable = ${lib.boolToString (value != false)};  # the hermes CLI, and HERMES_HOME for your shells
+- `nix/moduleCommon.nix:672` | path-or-package | programs.hermes-agent.desktop.enable = true;  # the desktop application
+- `nix/moduleCommon.nix:674` | path-or-package | `services.hermes-agent` keeps the state, the configuration and
+- `nix/moduleCommon.nix:693` | other | # mode Hermes refuses to write config.yaml, so it cannot stamp the version
+- `nix/moduleCommon.nix:704` | path-or-package | pkgs.runCommand "hermes-config.yaml"
+- `nix/moduleCommon.nix:710` | other | HOME=$TMPDIR ${(effectivePackage cfg).hermesVenv}/bin/python3 - "$settingsPath" > $out <<'PY'
+- `nix/moduleCommon.nix:712` | module-ref | from hermes_cli.config_defaults import DEFAULT_CONFIG
+- `nix/moduleCommon.nix:731` | path-or-package | pkgs.runCommand "hermes-documents" { } (
+- `nix/moduleCommon.nix:745` | env-var | "${mkdir}\ncat > $out/${name} <<'HERMES_DOC_EOF'\n${value}\nHERMES_DOC_EOF"
+- `nix/moduleCommon.nix:758` | path-or-package | base = pkgs.writeText "hermes-env-base" (
+- `nix/moduleCommon.nix:763` | path-or-package | pkgs.writeShellScript "hermes-env-merge" ''
+- `nix/moduleCommon.nix:776` | path-or-package | echo "hermes-agent: WARNING cannot read environmentFile $file" >&2
+- `nix/moduleCommon.nix:797` | other | hermesHome,
+- `nix/moduleCommon.nix:810` | env-var | # HERMES_MANAGED variable of the service. The value tells the shell
+- `nix/moduleCommon.nix:835` | other | documents = cfg.hermesHomeFiles;
+- `nix/moduleCommon.nix:849` | other | # Directories. The service units and Hermes make most of these
+- `nix/moduleCommon.nix:856` | other | hermesHome
+- `nix/moduleCommon.nix:859` | other | ++ map (d: "${hermesHome}/${d}") stateDirs
+- `nix/moduleCommon.nix:863` | other | # config.yaml: merge the Nix settings into the file on disk. Hermes
+- `nix/moduleCommon.nix:869` | other | "${inst} -m ${modes.config} -D ${configFiles.effective} ${hermesHome}/config.yaml"
+- `nix/moduleCommon.nix:872` | other | ${run}${configFiles.mergeScript} ${configFiles.generated} ${hermesHome}/config.yaml
+- `nix/moduleCommon.nix:873` | other | ${run}chmod ${modes.config} ${hermesHome}/config.yaml
+- `nix/moduleCommon.nix:879` | path-or-package | ${inst} -m ${modes.managed} ${pkgs.writeText "hermes-managed" managedSystem} ${hermesHome}/.managed
+- `nix/moduleCommon.nix:882` | other | ${run}${envScript} ${hermesHome}/.env ${modes.env} ${lib.escapeShellArgs cfg.environmentFiles}
+- `nix/moduleCommon.nix:883` | other | ${lib.optionalString (owner != null) "${run}chown ${owner} ${hermesHome}/.env"}
+- `nix/moduleCommon.nix:888` | other | "${inst} -m ${modes.auth} ${cfg.authFile} ${hermesHome}/auth.json"
+- `nix/moduleCommon.nix:891` | other | if [ ! -e ${hermesHome}/auth.json ]; then
+- `nix/moduleCommon.nix:892` | other | ${inst} -m ${modes.auth} ${cfg.authFile} ${hermesHome}/auth.json
+- `nix/moduleCommon.nix:898` | other | ${installDocuments homeDocumentTree hermesHome cfg.hermesHomeFiles}
+- `nix/moduleCommon.nix:903` | other | ${run}find ${hermesHome}/plugins -maxdepth 1 -type l -name 'nix-managed-*' -delete 2>/dev/null || true
+- `nix/moduleCommon.nix:906` | path-or-package | echo "hermes-agent: ERROR extraPlugins entry '${plugin}' has no plugin.yaml" >&2
+- `nix/moduleCommon.nix:909` | other | ${run}ln -sfn ${plugin} ${hermesHome}/plugins/nix-managed-${lib.getName plugin}
+- `nix/moduleCommon.nix:917` | other | "${effectivePackage cfg}/bin/hermes"
+- `nix/moduleCommon.nix:926` | other | "${effectivePackage cfg}/bin/hermes"
+- `nix/moduleCommon.nix:946` | other | # `exec` on the last line keeps hermes as the MainPID of the unit. No shell
+- `nix/moduleCommon.nix:954` | path-or-package | pkgs.writeShellScript "hermes-backend-launch" (
+- `nix/moduleCommon.nix:967` | path-or-package | echo "hermes-backend: cannot read the session token file '$_token_file'. The unit stops." >&2
+- `nix/moduleCommon.nix:968` | path-or-package | echo "hermes-backend: backend.sessionTokenFile must name a runtime path that this user can read." >&2
+- `nix/moduleCommon.nix:972` | env-var | HERMES_DASHBOARD_SESSION_TOKEN="$(${pkgs.coreutils}/bin/tr -d '\r\n' < "$_token_file")"
+- `nix/moduleCommon.nix:973` | env-var | export HERMES_DASHBOARD_SESSION_TOKEN
+- `nix/moduleCommon.nix:975` | env-var | if [ -z "$HERMES_DASHBOARD_SESSION_TOKEN" ]; then
+- `nix/moduleCommon.nix:976` | path-or-package | echo "hermes-backend: the session token file '$_token_file' is empty. The unit stops." >&2
+- `nix/moduleCommon.nix:997` | path-or-package | echo "hermes-backend: '$_target' did not resolve after ''${_timeout}s. The unit stops." >&2
+- `nix/moduleCommon.nix:1002` | path-or-package | echo "hermes-backend: waits for '$_target' to resolve..." >&2
+- `nix/moduleCommon.nix:1024` | path-or-package | echo "hermes-backend: interface '$_iface' had no IPv4 address after ''${_timeout}s. The unit stops." >&2
+- `nix/moduleCommon.nix:1025` | path-or-package | echo "hermes-backend: a fallback address can expose the backend more widely than you intend." >&2
+- `nix/moduleCommon.nix:1030` | path-or-package | echo "hermes-backend: waits for an IPv4 address on '$_iface'..." >&2
+- `nix/moduleCommon.nix:1038` | path-or-package | echo "hermes-backend: binds to $_target:${toString cfg.backend.port} (from $_how)" >&2
+- `nix/moduleCommon.nix:1057` | other | "Hermes Agent web dashboard and desktop backend"
+- `nix/moduleCommon.nix:1059` | other | "Hermes Agent backend for Hermes Desktop";
+- `nix/moduleCommon.nix:1061` | other | # The environment that each Hermes process needs, from either module.
+- `nix/moduleCommon.nix:1063` | env-var | # managedSystem gives the value of HERMES_MANAGED. The CLI reads that
+- `nix/moduleCommon.nix:1069` | other | hermesHome,
+- `nix/moduleCommon.nix:1073` | env-var | HERMES_HOME = hermesHome;
+- `nix/moduleCommon.nix:1074` | env-var | HERMES_MANAGED = managedSystem;
+- `nix/moduleCommon.nix:1119` | other | To give Hermes an identity and a memory, use
+- `nix/moduleCommon.nix:1120` | other | ${optionPath}.hermesHomeFiles instead. Those files go to
+- `nix/moduleCommon.nix:1121` | env-var | HERMES_HOME. Hermes reads SOUL.md and memories/ only from there.
+- `nix/moduleCommon.nix:1155` | env-var | # The subdirectories of HERMES_HOME that both modules make.
+- `nix/nixosModules.nix:1` | path-or-package | # nix/nixosModules.nix — the NixOS module for hermes-agent
+- `nix/nixosModules.nix:13` | other | # Container mode: hermes runs from /nix/store bind-mounted read-only into a
+- `nix/nixosModules.nix:16` | env-var | # container recreation. Environment variables are written to $HERMES_HOME/.env
+- `nix/nixosModules.nix:17` | other | # and read by hermes at startup — no container recreation needed for env changes.
+- `nix/nixosModules.nix:19` | other | # Tool resolution: the hermes wrapper uses --suffix PATH for nix store tools,
+- `nix/nixosModules.nix:26` | path-or-package | #   services.hermes-agent = {
+- `nix/nixosModules.nix:29` | path-or-package | #     environmentFiles = [ config.sops.secrets."hermes/env".path ];
+- `nix/nixosModules.nix:44` | path-or-package | cfg = config.services.hermes-agent;
+- `nix/nixosModules.nix:48` | path-or-package | hermes-agent = inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.default;
+- `nix/nixosModules.nix:50` | other | hermesHome = "${cfg.stateDir}/.hermes";
+- `nix/nixosModules.nix:56` | env-var | # HERMES_HOME via addToSystemPackages, so they can save settings through the
+- `nix/nixosModules.nix:61` | path-or-package | containerName = "hermes-agent";
+- `nix/nixosModules.nix:63` | other | containerHomeDir = "/home/hermes";
+- `nix/nixosModules.nix:73` | other | # hermes user + sudo on first boot (writable layer persists), then
+- `nix/nixosModules.nix:75` | path-or-package | containerEntrypoint = pkgs.writeShellScript "hermes-container-entrypoint" ''
+- `nix/nixosModules.nix:78` | env-var | HERMES_UID="''${HERMES_UID:?HERMES_UID must be set}"
+- `nix/nixosModules.nix:79` | env-var | HERMES_GID="''${HERMES_GID:?HERMES_GID must be set}"
+- `nix/nixosModules.nix:81` | env-var | # ── Group: ensure a group with GID=$HERMES_GID exists ──
+- `nix/nixosModules.nix:84` | env-var | EXISTING_GROUP=$(getent group "$HERMES_GID" 2>/dev/null | cut -d: -f1 || true)
+- `nix/nixosModules.nix:88` | other | GROUP_NAME="hermes"
+- `nix/nixosModules.nix:90` | env-var | groupadd -g "$HERMES_GID" "$GROUP_NAME"
+- `nix/nixosModules.nix:92` | env-var | addgroup -g "$HERMES_GID" "$GROUP_NAME" 2>/dev/null || true
+- `nix/nixosModules.nix:96` | env-var | # ── User: ensure a user with UID=$HERMES_UID exists ──
+- `nix/nixosModules.nix:97` | env-var | PASSWD_ENTRY=$(getent passwd "$HERMES_UID" 2>/dev/null || true)
+- `nix/nixosModules.nix:102` | other | TARGET_USER="hermes"
+- `nix/nixosModules.nix:103` | other | TARGET_HOME="/home/hermes"
+- `nix/nixosModules.nix:105` | env-var | useradd -u "$HERMES_UID" -g "$HERMES_GID" -m -d "$TARGET_HOME" -s /bin/bash "$TARGET_USER"
+- `nix/nixosModules.nix:107` | env-var | adduser -u "$HERMES_UID" -D -h "$TARGET_HOME" -s /bin/sh -G "$GROUP_NAME" "$TARGET_USER" 2>/dev/null || true
+- `nix/nixosModules.nix:111` | env-var | chown "$HERMES_UID:$HERMES_GID" "$TARGET_HOME"
+- `nix/nixosModules.nix:114` | env-var | # Ensure HERMES_HOME is owned by the target user.
+- `nix/nixosModules.nix:119` | env-var | if [ -n "''${HERMES_HOME:-}" ] && [ -d "$HERMES_HOME" ]; then
+- `nix/nixosModules.nix:120` | env-var | find "$HERMES_HOME" \! -user "$HERMES_UID" -exec chown "$HERMES_UID:$HERMES_GID" {} +
+- `nix/nixosModules.nix:128` | path-or-package | if [ ! -f /var/lib/hermes-tools-provisioned ] && command -v apt-get >/dev/null 2>&1; then
+- `nix/nixosModules.nix:139` | path-or-package | touch /var/lib/hermes-tools-provisioned
+- `nix/nixosModules.nix:142` | other | if command -v sudo >/dev/null 2>&1 && [ ! -f /etc/sudoers.d/hermes ]; then
+- `nix/nixosModules.nix:144` | other | echo "$TARGET_USER ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/hermes
+- `nix/nixosModules.nix:145` | other | chmod 0440 /etc/sudoers.d/hermes
+- `nix/nixosModules.nix:170` | env-var | exec setpriv --reuid="$HERMES_UID" --regid="$HERMES_GID" --init-groups "$@"
+- `nix/nixosModules.nix:181` | env-var | # so they can update without recreation. Env vars go through $HERMES_HOME/.env.
+- `nix/nixosModules.nix:195` | path-or-package | containerModeFile = pkgs.writeText "hermes-container-mode" ''
+- `nix/nixosModules.nix:200` | path-or-package | hermes_bin=${containerDataDir}/current-package/bin/hermes
+- `nix/nixosModules.nix:203` | path-or-package | # Default: /var/lib/hermes/workspace → /data/workspace.
+- `nix/nixosModules.nix:222` | other | # so interactive users in the hermes group can read/write them.
+- `nix/nixosModules.nix:239` | other | // common.processEnvironment { inherit hermesHome; };
+- `nix/nixosModules.nix:252` | path-or-package | options.services.hermes-agent =
+- `nix/nixosModules.nix:254` | path-or-package | defaultPackage = hermes-agent;
+- `nix/nixosModules.nix:255` | path-or-package | defaultPackageText = lib.literalExpression "hermes-agent.packages.\${system}.default";
+- `nix/nixosModules.nix:265` | other | default = "hermes";
+- `nix/nixosModules.nix:271` | other | default = "hermes";
+- `nix/nixosModules.nix:284` | other | default = "/var/lib/hermes";
+- `nix/nixosModules.nix:285` | env-var | description = "State directory. Contains .hermes/ subdir (HERMES_HOME).";
+- `nix/nixosModules.nix:292` | other | Add the hermes CLI to environment.systemPackages and export
+- `nix/nixosModules.nix:293` | env-var | HERMES_HOME system-wide (via environment.variables) so interactive
+- `nix/nixosModules.nix:334` | other | Interactive users who get a ~/.hermes symlink to the service
+- `nix/nixosModules.nix:335` | other | stateDir. These users are automatically added to the hermes group.
+- `nix/nixosModules.nix:348` | path-or-package | services.hermes-agent.settings.mcp_servers = common.mcpServersToConfig cfg.mcpServers;
+- `nix/nixosModules.nix:374` | env-var | # Add the hermes CLI to system PATH and export HERMES_HOME system-wide
+- `nix/nixosModules.nix:376` | path-or-package | # gateway service instead of creating a separate ~/.hermes/.
+- `nix/nixosModules.nix:379` | env-var | environment.variables.HERMES_HOME = hermesHome;
+- `nix/nixosModules.nix:394` | path-or-package | optionPath = "services.hermes-agent";
+- `nix/nixosModules.nix:398` | path-or-package | opt = options.services.hermes-agent.workingDirectory;
+- `nix/nixosModules.nix:399` | path-or-package | optionPath = "services.hermes-agent";
+- `nix/nixosModules.nix:403` | path-or-package | optionPath = "services.hermes-agent";
+- `nix/nixosModules.nix:411` | path-or-package | message = "services.hermes-agent: backend.mode is not supported together with container.enable — the container runs the gateway only.";
+- `nix/nixosModules.nix:417` | other | # Wire extraPackages into the hermes user's per-user profile so the
+- `nix/nixosModules.nix:433` | path-or-package | services.hermes-agent: container.enable is true and container.hostUsers
+- `nix/nixosModules.nix:434` | other | is set, but addToSystemPackages is false. Without a host-installed hermes
+- `nix/nixosModules.nix:436` | other | Set addToSystemPackages = true or ensure hermes is on PATH.
+- `nix/nixosModules.nix:446` | other | "d ${hermesHome}                  2770 ${cfg.user} ${cfg.group} - -"
+- `nix/nixosModules.nix:450` | other | ++ map (d: "d ${hermesHome}/${d} 2770 ${cfg.user} ${cfg.group} - -") common.stateSubdirs;
+- `nix/nixosModules.nix:455` | path-or-package | system.activationScripts."hermes-agent-setup" =
+- `nix/nixosModules.nix:462` | other | mkdir -p ${hermesHome}
+- `nix/nixosModules.nix:465` | other | chown ${cfg.user}:${cfg.group} ${cfg.stateDir} ${hermesHome} ${cfg.stateDir}/home ${cfg.workingDirectory}
+- `nix/nixosModules.nix:466` | other | chmod 2770 ${cfg.stateDir} ${hermesHome} ${cfg.workingDirectory}
+- `nix/nixosModules.nix:472` | other | find ${hermesHome} -maxdepth 1 \
+- `nix/nixosModules.nix:476` | other | mkdir -p "${hermesHome}/$_subdir"
+- `nix/nixosModules.nix:477` | other | chown ${cfg.user}:${cfg.group} "${hermesHome}/$_subdir"
+- `nix/nixosModules.nix:478` | other | chmod 2770 "${hermesHome}/$_subdir"
+- `nix/nixosModules.nix:479` | other | find "${hermesHome}/$_subdir" -type f \
+- `nix/nixosModules.nix:484` | other | inherit pkgs cfg hermesHome;
+- `nix/nixosModules.nix:498` | other | chown -h ${cfg.user}:${cfg.group} ${hermesHome}/plugins/nix-managed-* 2>/dev/null || true
+- `nix/nixosModules.nix:506` | other | install -o ${cfg.user} -g ${cfg.group} -m 0644 ${containerModeFile} ${hermesHome}/.container-mode
+- `nix/nixosModules.nix:510` | other | rm -f ${hermesHome}/.container-mode
+- `nix/nixosModules.nix:518` | other | symlinkPath = "${userHome}/.hermes";
+- `nix/nixosModules.nix:521` | other | if [ -L "${symlinkPath}" ] && [ "$(readlink "${symlinkPath}")" = "${hermesHome}" ]; then
+- `nix/nixosModules.nix:523` | path-or-package | echo "hermes-agent: removed symlink ${symlinkPath}"
+- `nix/nixosModules.nix:532` | other | # Create ~/.hermes -> stateDir/.hermes for each hostUser so the
+- `nix/nixosModules.nix:541` | other | symlinkPath = "${userHome}/.hermes";
+- `nix/nixosModules.nix:548` | path-or-package | echo "hermes-agent: backing up existing ${symlinkPath} to $_backup"
+- `nix/nixosModules.nix:553` | other | ln -sfn "${hermesHome}" "${symlinkPath}"
+- `nix/nixosModules.nix:566` | path-or-package | systemd.services.hermes-agent = {
+- `nix/nixosModules.nix:567` | other | description = "Hermes Agent Gateway";
+- `nix/nixosModules.nix:581` | env-var | # $HERMES_HOME/.env by the activation script. load_hermes_dotenv()
+- `nix/nixosModules.nix:600` | path-or-package | echo "hermes-agent: no user bus at /run/user/$(id -u)/bus after 10s;" \
+- `nix/nixosModules.nix:613` | other | # ── The backend: hermes serve or hermes dashboard ─────────────────
+- `nix/nixosModules.nix:615` | env-var | # HERMES_HOME.
+- `nix/nixosModules.nix:617` | path-or-package | systemd.services.hermes-backend = {
+- `nix/nixosModules.nix:640` | path-or-package | systemd.services.hermes-agent = {
+- `nix/nixosModules.nix:641` | other | description = "Hermes Agent Gateway (container)";
+- `nix/nixosModules.nix:671` | env-var | HERMES_UID=$(${pkgs.coreutils}/bin/id -u ${cfg.user})
+- `nix/nixosModules.nix:672` | env-var | HERMES_GID=$(${pkgs.coreutils}/bin/id -g ${cfg.user})
+- `nix/nixosModules.nix:683` | env-var | --env HERMES_UID="$HERMES_UID" \
+- `nix/nixosModules.nix:684` | env-var | --env HERMES_GID="$HERMES_GID" \
+- `nix/nixosModules.nix:685` | env-var | --env HERMES_HOME=${containerDataDir}/.hermes \
+- `nix/nixosModules.nix:686` | env-var | --env HERMES_MANAGED=true \
+- `nix/nixosModules.nix:690` | other | ${containerDataDir}/current-package/bin/hermes gateway run --replace ${lib.concatStringsSep " " cfg.extraArgs}
+- `nix/overlays.nix:1` | path-or-package | # nix/overlays.nix — Expose pkgs.hermes-agent for external NixOS configs
+- `nix/overlays.nix:5` | path-or-package | # `pkgs.hermes-agent`, `nix build .#default`, and the NixOS module's
+- `nix/overlays.nix:12` | path-or-package | hermes-agent = inputs.self.packages.${final.stdenv.hostPlatform.system}.default;
+- `nix/packages.nix:1` | other | # nix/packages.nix — Hermes Agent package built with uv2nix
+- `nix/packages.nix:37` | path-or-package | minimal = pkgs.callPackage ./hermes-agent.nix {
+- `nix/packages.nix:92` | other | tui = full.hermesTui;
+- `nix/packages.nix:93` | other | web = full.hermesWeb;
+- `nix/packages.nix:94` | other | desktop = full.hermesDesktop;
+- `nix/packages.nix:96` | other | update-npm-lockfile = full.hermesNpmLib.updateNpmLockfile;
+- `nix/pm-runtime.nix:18` | path-or-package | environment = pythonSet.mkVirtualEnv "hermes-pm-runtime" workspace.deps.default;
+- `nix/python.nix:136` | other | # Hermes derivation. This is deliberately a derivation environment
+- `nix/python.nix:140` | path-or-package | hermes-agent = prev.hermes-agent.overrideAttrs (_old: {
+- `nix/python.nix:141` | env-var | HERMES_NIX_BUILD = "1";
+- `nix/python.nix:152` | env-var | # $HERMES_PYTHON_SRC_ROOT at runtime.
+- `nix/python.nix:156` | env-var | root = "$HERMES_PYTHON_SRC_ROOT"; # resolved at shellHook time
+- `nix/python.nix:163` | path-or-package | hermes-agent = prev.hermes-agent.overrideAttrs (old: {
+- `nix/python.nix:175` | path-or-package | venv = pythonSet.mkVirtualEnv "hermes-agent-env" {
+- `nix/python.nix:176` | path-or-package | hermes-agent = dependency-groups;
+- `nix/python.nix:178` | path-or-package | editableVenv = editableSet.mkVirtualEnv "hermes-agent-editable-env" {
+- `nix/python.nix:179` | path-or-package | hermes-agent = dependency-groups;
+- `nix/sandbox.nix:3` | other | # sandboxed command launches the desktop app (`sandbox hermes desktop`,
+- `nix/tui.nix:1` | other | # Self-contained Hermes TUI, compiled by the same recipe as npm.
+- `nix/tui.nix:2` | other | { hermesNpmLib, ... }:
+- `nix/tui.nix:3` | other | hermesNpmLib.buildNpmPackage {
+- `nix/tui.nix:22` | path-or-package | mkdir -p $out/lib/hermes-tui
+- `nix/tui.nix:23` | path-or-package | cp -r "$TMPDIR/tui-product/." $out/lib/hermes-tui/
+- `nix/web.nix:2` | other | { hermesNpmLib, generatedIcons, ... }:
+- `nix/web.nix:3` | other | hermesNpmLib.buildNpmPackage {
+- `.github/workflows/bootstrap-installer-build.yml:4` | path-or-package | # (apps/bootstrap-installer, "Hermes-Setup"): Windows x64 exe signed with
+- `.github/workflows/bootstrap-installer-build.yml:19` | env-var | description: Branch the installer follows at install time (HERMES_BUILD_PIN_BRANCH)
+- `.github/workflows/bootstrap-installer-build.yml:23` | env-var | description: Optional commit pin baked in instead (HERMES_BUILD_PIN_COMMIT)
+- `.github/workflows/bootstrap-installer-build.yml:36` | env-var | HERMES_BUILD_PIN_BRANCH: ${{ inputs.pin_branch }}
+- `.github/workflows/bootstrap-installer-build.yml:37` | env-var | HERMES_BUILD_PIN_COMMIT: ${{ inputs.pin_commit }}
+- `.github/workflows/bootstrap-installer-build.yml:43` | path-or-package | name: Hermes-Setup.exe (windows x64, signed)
+- `.github/workflows/bootstrap-installer-build.yml:93` | path-or-package | exe="$CARGO_TARGET_DIR/x86_64-pc-windows-msvc/release/Hermes-Setup.exe"
+- `.github/workflows/bootstrap-installer-build.yml:95` | path-or-package | cp "$exe" "$RUNNER_TEMP/out/Hermes-Setup.exe"
+- `.github/workflows/bootstrap-installer-build.yml:131` | path-or-package | EXE="$(cygpath -w "$RUNNER_TEMP/out/Hermes-Setup.exe")" node --input-type=module -e '
+- `.github/workflows/bootstrap-installer-build.yml:141` | path-or-package | $sig = Get-AuthenticodeSignature "$env:RUNNER_TEMP\out\Hermes-Setup.exe"
+- `.github/workflows/bootstrap-installer-build.yml:148` | path-or-package | name: Hermes-Setup-windows-x64
+- `.github/workflows/bootstrap-installer-build.yml:149` | path-or-package | path: ${{ runner.temp }}/out/Hermes-Setup.exe
+- `.github/workflows/bootstrap-installer-build.yml:153` | path-or-package | name: Hermes-Setup.dmg (macos arm64, signed + notarized)
+- `.github/workflows/bootstrap-installer-build.yml:230` | path-or-package | dmg="$RUNNER_TEMP/out/Hermes-Setup.dmg"
+- `.github/workflows/bootstrap-installer-build.yml:248` | path-or-package | dmg="$RUNNER_TEMP/out/Hermes-Setup.dmg"
+- `.github/workflows/bootstrap-installer-build.yml:255` | path-or-package | name: Hermes-Setup-macos-arm64
+- `.github/workflows/bootstrap-installer-build.yml:256` | path-or-package | path: ${{ runner.temp }}/out/Hermes-Setup.dmg
+- `.github/workflows/bootstrap-installer.yml:71` | env-var | # install.sh reads HERMES_INSTALL_DIR, not INSTALL_DIR (its default
+- `.github/workflows/bootstrap-installer.yml:72` | path-or-package | # is $HOME/.hermes/hermes-agent); the marker/verification steps
+- `.github/workflows/bootstrap-installer.yml:74` | env-var | HERMES_INSTALL_DIR: ${{ runner.temp }}/bootstrap-install
+- `.github/workflows/bootstrap-installer.yml:75` | env-var | HERMES_HOME: ${{ runner.temp }}/hermes-home
+- `.github/workflows/bootstrap-installer.yml:76` | env-var | HERMES_RUNTIME_DIR: ${{ runner.temp }}/hermes-tools
+- `.github/workflows/bootstrap-installer.yml:77` | env-var | HERMES_REPO_URL: ${{ steps.source.outputs.mirror }}
+- `.github/workflows/bootstrap-installer.yml:91` | env-var | test -f "$HERMES_INSTALL_DIR/.hermes-bootstrap-complete"
+- `.github/workflows/bootstrap-installer.yml:96` | env-var | HERMES_INSTALL_DIR: ${{ runner.temp }}/bootstrap-install
+- `.github/workflows/bootstrap-installer.yml:99` | env-var | --stamp "$HERMES_INSTALL_DIR/.hermes-bootstrap-complete" \
+- `.github/workflows/bootstrap-installer.yml:100` | env-var | --repo "$HERMES_INSTALL_DIR" \
+- `.github/workflows/bootstrap-installer.yml:108` | env-var | HERMES_INSTALL_DIR: ${{ runner.temp }}/bootstrap-install
+- `.github/workflows/bootstrap-installer.yml:112` | env-var | head="$(git -C "$HERMES_INSTALL_DIR" rev-parse HEAD)"
+- `.github/workflows/bootstrap-installer.yml:126` | env-var | HERMES_TEST_FILE_RETRIES: '0'
+- `.github/workflows/deploy-site.yml:53` | path-or-package | if: github.repository == 'NousResearch/hermes-agent'
+- `.github/workflows/deploy-site.yml:152` | path-or-package | "https://hermes-agent.nousresearch.com/docs/api/skills-index.json" \
+- `.github/workflows/deploy-site.yml:188` | other | # prebuild renders icons on a Hermes runtime interpreter; the ci-tools
+- `.github/workflows/deploy-site.yml:189` | env-var | # step above re-exports HERMES_PYTHON to a tools-only environment.
+- `.github/workflows/deploy-site.yml:190` | env-var | HERMES_PYTHON: ${{ steps.pm.outputs.python-path }}
+- `.github/workflows/deploy-site.yml:197` | path-or-package | # (https://hermes-agent.nousresearch.com/llms.txt) because some
+- `.github/workflows/desktop-bundle-smoke.yml:118` | other | product=HermesBundled
+- `.github/workflows/desktop-bundled-release.yml:49` | other | # Payload staging is `hermes pm bundle` on the native runner. There is
+- `.github/workflows/desktop-bundled-release.yml:153` | other | description: 'Channel app name, icon and package ID: preview (own app) or stable (the regular Hermes app). Fixed when the channel is first created.'
+- `.github/workflows/desktop-bundled-release.yml:460` | env-var | HERMES_DESKTOP_VARIANT: bundled
+- `.github/workflows/desktop-bundled-release.yml:461` | env-var | HERMES_PAYLOAD_TAG: ${{ inputs.tag }}
+- `.github/workflows/desktop-bundled-release.yml:464` | env-var | HERMES_ARCHIVE_TAG: ${{ needs.validate.outputs.archive-tag }}
+- `.github/workflows/desktop-bundled-release.yml:465` | env-var | HERMES_BUILD_COMMIT: ${{ inputs.build_commit != '' && needs.validate.outputs.channel-build == '' && needs.validate.outputs.sha || '' }}
+- `.github/workflows/desktop-bundled-release.yml:466` | env-var | HERMES_RELEASE_COMMIT: ${{ inputs.release-phase != '' && needs.validate.outputs.sha || '' }}
+- `.github/workflows/desktop-bundled-release.yml:467` | env-var | HERMES_PAYLOAD_VERSION: ${{ needs.validate.outputs.payload-version }}
+- `.github/workflows/desktop-bundled-release.yml:557` | env-var | HERMES_BUNDLE_ENV_JSON: ${{ inputs.bundle_env }}
+- `.github/workflows/desktop-bundled-release.yml:559` | env-var | args=(--tag "$HERMES_PAYLOAD_TAG")
+- `.github/workflows/desktop-bundled-release.yml:560` | env-var | if [ -n "$HERMES_BUILD_COMMIT" ]; then args=(--commit "$HERMES_BUILD_COMMIT"); fi
+- `.github/workflows/desktop-bundled-release.yml:561` | env-var | if [ -n "$HERMES_RELEASE_COMMIT" ]; then args+=(--release-commit "$HERMES_RELEASE_COMMIT"); fi
+- `.github/workflows/desktop-bundled-release.yml:648` | env-var | HERMES_BUNDLE_ENV_JSON: ${{ inputs.bundle_env }}
+- `.github/workflows/desktop-bundled-release.yml:660` | env-var | if (-not $env:CHANNEL_BUILD -and -not $env:HERMES_BUILD_COMMIT -and $env:HERMES_PAYLOAD_TAG -notlike "*+canary.*") {
+- `.github/workflows/desktop-bundled-release.yml:707` | env-var | # step above, and HERMES_PAYLOAD_TAG/HERMES_BUILD_COMMIT are both
+- `.github/workflows/desktop-bundled-release.yml:723` | env-var | if [ "$RELEASE_PHASE" = candidate ] || { [ "$HERMES_DESKTOP_VARIANT" = bundled ] && [[ "$HERMES_PAYLOAD_TAG" == *+canary.* ]]; }; then
+- `.github/workflows/desktop-bundled-release.yml:725` | env-var | --root apps/desktop/release --tag "$HERMES_PAYLOAD_TAG" --commit "$RELEASE_COMMIT" \
+- `.github/workflows/desktop-bundled-release.yml:729` | env-var | if [ -n "$HERMES_BUILD_COMMIT" ]; then
+- `.github/workflows/desktop-bundled-release.yml:731` | env-var | python -m scripts.releases.handoff stage --commit-build "$HERMES_BUILD_COMMIT" \
+- `.github/workflows/desktop-bundled-release.yml:735` | env-var | python -m scripts.releases.handoff stage --tag "${HERMES_ARCHIVE_TAG:-$HERMES_PAYLOAD_TAG}" --commit "$RELEASE_COMMIT" \
+- `.github/workflows/desktop-bundled-release.yml:868` | env-var | HERMES_DESKTOP_VARIANT: bundled
+- `.github/workflows/desktop-bundled-release.yml:869` | env-var | HERMES_PAYLOAD_TAG: ${{ inputs.tag }}
+- `.github/workflows/desktop-bundled-release.yml:872` | env-var | HERMES_ARCHIVE_TAG: ${{ needs.validate.outputs.archive-tag }}
+- `.github/workflows/desktop-bundled-release.yml:873` | env-var | HERMES_BUILD_COMMIT: ${{ inputs.build_commit != '' && needs.validate.outputs.channel-build == '' && needs.validate.outputs.sha || '' }}
+- `.github/workflows/desktop-bundled-release.yml:874` | env-var | HERMES_RELEASE_COMMIT: ${{ inputs.release-phase != '' && needs.validate.outputs.sha || '' }}
+- `.github/workflows/desktop-bundled-release.yml:875` | env-var | HERMES_PAYLOAD_VERSION: ${{ needs.validate.outputs.payload-version }}
+- `.github/workflows/desktop-bundled-release.yml:950` | env-var | HERMES_BUNDLE_ENV_JSON: ${{ inputs.bundle_env }}
+- `.github/workflows/desktop-bundled-release.yml:952` | env-var | args=(--tag "$HERMES_PAYLOAD_TAG")
+- `.github/workflows/desktop-bundled-release.yml:953` | env-var | if [ -n "$HERMES_BUILD_COMMIT" ]; then args=(--commit "$HERMES_BUILD_COMMIT"); fi
+- `.github/workflows/desktop-bundled-release.yml:954` | env-var | if [ -n "$HERMES_RELEASE_COMMIT" ]; then args+=(--release-commit "$HERMES_RELEASE_COMMIT"); fi
+- `.github/workflows/desktop-bundled-release.yml:1021` | env-var | HERMES_BUNDLE_ENV_JSON: ${{ inputs.bundle_env }}
+- `.github/workflows/desktop-bundled-release.yml:1117` | env-var | if [ "$RELEASE_PHASE" = candidate ] || { [ "$HERMES_DESKTOP_VARIANT" = bundled ] && [[ "$HERMES_PAYLOAD_TAG" == *+canary.* ]]; }; then
+- `.github/workflows/desktop-bundled-release.yml:1119` | env-var | --root apps/desktop/release --tag "$HERMES_PAYLOAD_TAG" --commit "$RELEASE_COMMIT" \
+- `.github/workflows/desktop-bundled-release.yml:1123` | env-var | if [ -n "$HERMES_BUILD_COMMIT" ]; then
+- `.github/workflows/desktop-bundled-release.yml:1125` | env-var | python -m scripts.releases.handoff stage --commit-build "$HERMES_BUILD_COMMIT" \
+- `.github/workflows/desktop-bundled-release.yml:1130` | env-var | python -m scripts.releases.handoff stage --tag "${HERMES_ARCHIVE_TAG:-$HERMES_PAYLOAD_TAG}" --commit "$RELEASE_COMMIT" \
+- `.github/workflows/desktop-bundled-release.yml:1463` | env-var | HERMES_PAYLOAD_TAG: ${{ inputs.tag }}
+- `.github/workflows/desktop-bundled-release.yml:1465` | env-var | HERMES_ARCHIVE_TAG: ${{ needs.validate.outputs.archive-tag }}
+- `.github/workflows/desktop-bundled-release.yml:1466` | env-var | HERMES_BUILD_COMMIT: ${{ inputs.build_commit != '' && needs.validate.outputs.channel-build == '' && needs.validate.outputs.sha || '' }}
+- `.github/workflows/desktop-bundled-release.yml:1467` | env-var | HERMES_PAYLOAD_VERSION: ${{ needs.validate.outputs.payload-version }}
+- `.github/workflows/desktop-bundled-release.yml:1549` | env-var | elif [ -n "$HERMES_BUILD_COMMIT" ]; then
+- `.github/workflows/desktop-bundled-release.yml:1550` | env-var | python -m scripts.releases.handoff fetch --commit-build "$HERMES_BUILD_COMMIT" \
+- `.github/workflows/desktop-bundled-release.yml:1554` | env-var | python -m scripts.releases.handoff fetch --tag "${HERMES_ARCHIVE_TAG:-$HERMES_PAYLOAD_TAG}" --commit "$RELEASE_COMMIT" \
+- `.github/workflows/desktop-bundled-release.yml:1592` | env-var | if [ -n "$HERMES_BUILD_COMMIT" ]; then
+- `.github/workflows/desktop-bundled-release.yml:1593` | env-var | node scripts/stage-msixbundle.mjs --commit "$HERMES_BUILD_COMMIT" --version "$HERMES_PAYLOAD_VERSION" --variant bundled --no-upload
+- `.github/workflows/desktop-bundled-release.yml:1598` | env-var | node scripts/stage-msixbundle.mjs --tag "$HERMES_PAYLOAD_TAG" --variant bundled "${args[@]}"
+- `.github/workflows/desktop-bundled-release.yml:1600` | env-var | node scripts/bundle-store-msixbundle.mjs --tag "$HERMES_PAYLOAD_TAG"
+- `.github/workflows/desktop-bundled-release.yml:1611` | env-var | elif [ -n "$HERMES_BUILD_COMMIT" ]; then
+- `.github/workflows/desktop-bundled-release.yml:1612` | env-var | python -m scripts.releases.handoff stage --commit-build "$HERMES_BUILD_COMMIT" \
+- `.github/workflows/desktop-bundled-release.yml:1616` | env-var | python -m scripts.releases.handoff stage --tag "${HERMES_ARCHIVE_TAG:-$HERMES_PAYLOAD_TAG}" --commit "$RELEASE_COMMIT" \
+- `.github/workflows/desktop-bundled-release.yml:1712` | env-var | HERMES_PAYLOAD_TAG: ${{ inputs.tag }}
+- `.github/workflows/desktop-bundled-release.yml:1713` | env-var | HERMES_DESKTOP_VARIANT: bundled
+- `.github/workflows/desktop-bundled-release.yml:1732` | env-var | python -m scripts.releases.handoff fetch --tag "$HERMES_PAYLOAD_TAG" --commit "$RELEASE_COMMIT" \
+- `.github/workflows/desktop-bundled-release.yml:1733` | other | --name windows-universal --root staged --include 'HermesBundled-*-win.msixbundle'
+- `.github/workflows/desktop-bundled-release.yml:1748` | other | bundle = single(Path('staged').glob('HermesBundled-*-win.msixbundle'))
+- `.github/workflows/desktop-bundled-release.yml:1751` | other | match = re.fullmatch(r'HermesBundled-(\d+\.\d+\.\d+\.\d+)-win\.msixbundle', bundle.name)
+- `.github/workflows/desktop-bundled-release.yml:1760` | env-var | '--tag', os.environ['HERMES_PAYLOAD_TAG'], '--variant', 'bundled',
+- `.github/workflows/desktop-bundled-release.yml:1792` | env-var | HERMES_PAYLOAD_TAG: ${{ inputs.tag }}
+- `.github/workflows/desktop-bundled-release.yml:1813` | env-var | python -m scripts.releases.handoff fetch --tag "$HERMES_PAYLOAD_TAG" --commit "$RELEASE_COMMIT" \
+- `.github/workflows/desktop-bundled-release.yml:1841` | env-var | python -m scripts.ci.python_packages ruamel.yaml==0.18.17 -- -m scripts.releases.r2 finalize --tag "$HERMES_PAYLOAD_TAG" --dir staged
+- `.github/workflows/desktop-bundled-release.yml:1851` | env-var | HERMES_PAYLOAD_TAG: ${{ inputs.tag }}
+- `.github/workflows/desktop-bundled-release.yml:1853` | env-var | HERMES_ARCHIVE_TAG: ${{ needs.validate.outputs.archive-tag }}
+- `.github/workflows/desktop-bundled-release.yml:1854` | env-var | HERMES_BUILD_COMMIT: ${{ inputs.build_commit != '' && needs.validate.outputs.channel-build == '' && needs.validate.outputs.sha || '' }}
+- `.github/workflows/desktop-bundled-release.yml:1855` | env-var | HERMES_RELEASE_COMMIT: ${{ inputs.release-phase != '' && needs.validate.outputs.sha || '' }}
+- `.github/workflows/desktop-bundled-release.yml:1926` | env-var | run: python -m scripts.ci.archive_inputs --target linux-arm64-bionic --payload termux-build/payload --store "$HERMES_RUNTIME_DIR"
+- `.github/workflows/desktop-bundled-release.yml:2015` | env-var | if [ -n "${HERMES_RELEASE_COMMIT:-}" ]; then
+- `.github/workflows/desktop-bundled-release.yml:2018` | env-var | --tag "$HERMES_PAYLOAD_TAG" \
+- `.github/workflows/desktop-bundled-release.yml:2019` | env-var | --release-commit "$HERMES_RELEASE_COMMIT" \
+- `.github/workflows/desktop-bundled-release.yml:2021` | env-var | elif [ -n "$HERMES_BUILD_COMMIT" ]; then
+- `.github/workflows/desktop-bundled-release.yml:2025` | env-var | --commit "$HERMES_BUILD_COMMIT" \
+- `.github/workflows/desktop-bundled-release.yml:2030` | env-var | --tag "$HERMES_PAYLOAD_TAG" \
+- `.github/workflows/desktop-bundled-release.yml:2056` | env-var | if [ -n "${HERMES_RELEASE_COMMIT:-}" ]; then
+- `.github/workflows/desktop-bundled-release.yml:2059` | env-var | --tag "$HERMES_PAYLOAD_TAG" \
+- `.github/workflows/desktop-bundled-release.yml:2060` | env-var | --release-commit "$HERMES_RELEASE_COMMIT" \
+- `.github/workflows/desktop-bundled-release.yml:2063` | env-var | elif [ -n "$HERMES_BUILD_COMMIT" ]; then
+- `.github/workflows/desktop-bundled-release.yml:2066` | env-var | --commit "$HERMES_BUILD_COMMIT" \
+- `.github/workflows/desktop-bundled-release.yml:2072` | env-var | --tag "$HERMES_PAYLOAD_TAG" \
+- `.github/workflows/desktop-bundled-release.yml:2104` | env-var | python -m scripts.releases.handoff stage --commit-build "$HERMES_BUILD_COMMIT" \
+- `.github/workflows/desktop-bundled-release.yml:2137` | path-or-package | stage_args=(--pool termux-build/deb --out termux-build/apt --suite "hermes-$CHANNEL")
+- `.github/workflows/desktop-bundled-release.yml:2152` | path-or-package | "termux/termux-docker@$digest" bash /tmp/check-apt.sh "hermes-$CHANNEL" "$version"
+- `.github/workflows/desktop-bundled-release.yml:2161` | path-or-package | "termux/termux-docker@$digest" bash /tmp/check-apt.sh "hermes-$CHANNEL" "$version"
+- `.github/workflows/desktop-bundled-release.yml:2167` | env-var | --root termux-build --tag "$HERMES_PAYLOAD_TAG" --commit "$RELEASE_COMMIT" \
+- `.github/workflows/desktop-bundled-release.yml:2171` | env-var | python -m scripts.releases.handoff stage --tag "${HERMES_ARCHIVE_TAG:-$HERMES_PAYLOAD_TAG}" --commit "$RELEASE_COMMIT" \
+- `.github/workflows/desktop-bundled-release.yml:2184` | path-or-package | files=(pool/**/*.deb "dists/hermes-$CHANNEL"/main/binary-aarch64/by-hash/*/* key.asc
+- `.github/workflows/desktop-bundled-release.yml:2185` | path-or-package | "dists/hermes-$CHANNEL/main/binary-aarch64/Packages"
+- `.github/workflows/desktop-bundled-release.yml:2186` | path-or-package | "dists/hermes-$CHANNEL/main/binary-aarch64/Packages.gz"
+- `.github/workflows/desktop-bundled-release.yml:2187` | path-or-package | "dists/hermes-$CHANNEL/Release"
+- `.github/workflows/desktop-bundled-release.yml:2188` | path-or-package | "dists/hermes-$CHANNEL/Release.gpg"
+- `.github/workflows/desktop-bundled-release.yml:2189` | path-or-package | "dists/hermes-$CHANNEL/InRelease")
+- `.github/workflows/desktop-bundled-release.yml:2195` | env-var | --tag "$HERMES_PAYLOAD_TAG" \
+- `.github/workflows/desktop-bundled-release.yml:2209` | path-or-package | "termux/termux-docker@$digest" bash /tmp/check-apt.sh "hermes-$CHANNEL" "$version" "$public_repo"
+- `.github/workflows/desktop-bundled-release.yml:2224` | env-var | HERMES_PAYLOAD_TAG: ${{ inputs.tag }}
+- `.github/workflows/desktop-bundled-release.yml:2227` | env-var | if ! gh release view "$HERMES_PAYLOAD_TAG" >/dev/null 2>&1; then
+- `.github/workflows/desktop-bundled-release.yml:2228` | env-var | echo "::error::no release exists for $HERMES_PAYLOAD_TAG — cannot mark the builds table"
+- `.github/workflows/desktop-bundled-release.yml:2232` | env-var | --tag "$HERMES_PAYLOAD_TAG" --repo "$GITHUB_REPOSITORY" \
+- `.github/workflows/desktop-bundled-release.yml:2272` | env-var | HERMES_PAYLOAD_TAG: ${{ inputs.tag }}
+- `.github/workflows/desktop-bundled-release.yml:2282` | env-var | --tag "$HERMES_PAYLOAD_TAG" --repo "$GITHUB_REPOSITORY" --run-url "$RUN_URL"
+- `.github/workflows/desktop-bundled-release.yml:2332` | env-var | HERMES_BUNDLE_ENV_JSON: ${{ inputs.bundle_env }}
+- `.github/workflows/desktop-bundled-release.yml:2384` | env-var | HERMES_ARCHIVE_TAG: ${{ needs.validate.outputs.archive-tag }}
+- `.github/workflows/desktop-bundled-release.yml:2409` | env-var | HERMES_ARCHIVE_TAG: ${{ needs.validate.outputs.archive-tag }}
+- `.github/workflows/docker.yml:61` | path-or-package | IMAGE_NAME: nousresearch/hermes-agent
+- `.github/workflows/docker.yml:140` | path-or-package | ((needs.mode.outputs.release != 'true' && github.repository == 'NousResearch/hermes-agent' && needs.detect.outputs.build == 'true') || needs.mode.outputs.phase 
+- `.github/workflows/docker.yml:219` | env-var | HERMES_BOT_DESKTOP=${{ matrix.variant == 'desktop' && '1' || '0' }}
+- `.github/workflows/docker.yml:228` | env-var | # HERMES_TEST_IMAGE branch short-circuits the rebuild. Release tests
+- `.github/workflows/docker.yml:250` | env-var | HERMES_TEST_IMAGE: ${{ env.IMAGE_NAME }}:test
+- `.github/workflows/docker.yml:260` | env-var | HERMES_TEST_WORKERS=$(nproc) scripts/run_tests.sh tests/docker/
+- `.github/workflows/docker.yml:268` | path-or-package | 'import json; print(json.load(open("/opt/hermes/install-stamp.json"))["baseVersion"])')"
+- `.github/workflows/docker.yml:326` | path-or-package | github.repository == 'NousResearch/hermes-agent' &&
+- `.github/workflows/docker.yml:393` | env-var | HERMES_BOT_DESKTOP=${{ matrix.variant == 'desktop' && '1' || '0' }}
+- `.github/workflows/docker.yml:425` | path-or-package | if: ${{ !cancelled() && needs.mode.outputs.release != 'true' && github.repository == 'NousResearch/hermes-agent' && github.event_name == 'push' && github.ref ==
+- `.github/workflows/docker.yml:715` | path-or-package | manifest["image"] = "nousresearch/hermes-agent"
+- `.github/workflows/e2e-desktop-core.yml:4` | other | # that drives a real Electron build against a real `hermes serve` and a
+- `.github/workflows/e2e-desktop-core.yml:74` | path-or-package | HERMES_E2E_PYTHON: ${{ steps.pm.outputs.python-path }}
+- `.github/workflows/e2e-desktop-core.yml:76` | path-or-package | HERMES_E2E_REQUIRE_PACKAGED: '1'
+- `.github/workflows/e2e-desktop-update.yml:4` | other | # a REAL local install built (scripts/install.sh + `hermes desktop
+- `.github/workflows/e2e-desktop-update.yml:99` | path-or-package | HERMES_E2E_PYTHON: ${{ steps.pm.outputs.python-path }}
+- `.github/workflows/e2e-desktop-update.yml:101` | path-or-package | HERMES_E2E_UPDATE_ROOT: ${{ runner.temp }}/hdu
+- `.github/workflows/e2e-desktop-update.yml:111` | path-or-package | cp -r "${{ runner.temp }}/hdu/sb/home/.hermes/logs" apps/desktop/test-results/update/install-logs/ 2>/dev/null || true
+- `.github/workflows/icons-freshness-check.yml:8` | other | # `node scripts/generate-icons.mjs` on a Hermes runtime interpreter and commit.
+- `.github/workflows/icons-freshness-check.yml:29` | env-var | # The generator runs on a Hermes runtime interpreter; [] exports one as HERMES_PYTHON.
+- `.github/workflows/icons-freshness-check.yml:39` | env-var | HERMES_PAYLOAD_TAG: ''
+- `.github/workflows/icons-freshness-check.yml:40` | env-var | HERMES_BUILD_COMMIT: ''
+- `.github/workflows/install-e2e-macos-run.yml:8` | path-or-package | #                           script/updater/hermes-desktop-app-update
+- `.github/workflows/install-e2e-macos-run.yml:11` | path-or-package | #                           published Hermes-Setup.dmg, mounted and run,
+- `.github/workflows/install-e2e-macos-run.yml:24` | path-or-package | description: 'How OLD gets installed. Supported: installer-script, installer-script+desktop (curl | bash one-liner, optionally with --include-desktop) and deskt
+- `.github/workflows/install-e2e-macos-run.yml:28` | path-or-package | description: 'How the install updates to HEAD. Script installs support hermes-update / installer-script / installer-script+desktop / hermes-desktop-app-update; 
+- `.github/workflows/install-e2e-macos-run.yml:54` | path-or-package | default: https://hermes-assets.nousresearch.com/Hermes-Setup.dmg
+- `.github/workflows/install-e2e-macos-run.yml:85` | path-or-package | && (contains(fromJSON('["hermes-update", "installer-script"]'), inputs.update-method)
+- `.github/workflows/install-e2e-macos-run.yml:86` | path-or-package | || (contains(fromJSON('["installer-script+desktop", "hermes-desktop-app-update"]'), inputs.update-method) && inputs.tag-has-desktop))
+- `.github/workflows/install-e2e-macos-run.yml:102` | path-or-package | name: Hermes-Setup.dmg
+- `.github/workflows/install-e2e-macos-run.yml:105` | path-or-package | && contains(fromJSON('["open-app-update", "hermes-desktop-app-update", "hermes-update", "installer-script", "installer-script+desktop"]'), inputs.update-method)
+- `.github/workflows/install-e2e-macos-run.yml:145` | path-or-package | HERMES_E2E_LOG_DIR: ${{ runner.temp }}/e2e-logs
+- `.github/workflows/install-e2e-macos-run.yml:147` | path-or-package | - name: Install ${{ inputs.install-ref }} via Hermes-Setup.dmg
+- `.github/workflows/install-e2e-macos-run.yml:155` | path-or-package | HERMES_E2E_LOG_DIR: ${{ runner.temp }}/e2e-logs
+- `.github/workflows/install-e2e-macos-run.yml:165` | path-or-package | HERMES_E2E_LOG_DIR: ${{ runner.temp }}/e2e-logs
+- `.github/workflows/install-e2e-macos-run.yml:243` | path-or-package | HERMES_E2E_LOG_DIR: ${{ runner.temp }}/e2e-logs
+- `.github/workflows/install-e2e-macos-run.yml:254` | path-or-package | HERMES_E2E_LOG_DIR: ${{ runner.temp }}/e2e-logs
+- `.github/workflows/install-e2e-run.yml:8` | other | # update from the tip vs. from an older release, `hermes update` vs.
+- `.github/workflows/install-e2e-run.yml:21` | path-or-package | # today: install via installer-script, update via hermes-update or
+- `.github/workflows/install-e2e-run.yml:34` | path-or-package | #         update-method: hermes-update
+- `.github/workflows/install-e2e-run.yml:45` | path-or-package | description: 'How the install updates to HEAD. Supported: hermes-update (the updater), installer-script (re-run the one-liner), installer-script+desktop (re-run
+- `.github/workflows/install-e2e-run.yml:86` | path-or-package | # hermes-desktop-app-update) also need the starting tag to ship
+- `.github/workflows/install-e2e-run.yml:91` | path-or-package | && (contains(fromJSON('["hermes-update", "installer-script"]'), inputs.update-method)
+- `.github/workflows/install-e2e-run.yml:92` | path-or-package | || (contains(fromJSON('["installer-script+desktop", "hermes-desktop-app-update"]'), inputs.update-method) && inputs.tag-has-desktop))
+- `.github/workflows/install-e2e-run.yml:138` | path-or-package | HERMES_E2E_LOG_DIR: ${{ runner.temp }}/e2e-logs
+- `.github/workflows/install-e2e-windows-run.yml:9` | path-or-package | #   desktop-installer@latest    the website's Hermes-Setup.exe, downloaded and
+- `.github/workflows/install-e2e-windows-run.yml:15` | other | #                               builds Hermes.exe AND registers Start Menu /
+- `.github/workflows/install-e2e-windows-run.yml:17` | path-or-package | #   hermes-update               venv hermes.exe update.
+- `.github/workflows/install-e2e-windows-run.yml:23` | path-or-package | #   hermes-desktop-app-update   the same button, app launched via `hermes
+- `.github/workflows/install-e2e-windows-run.yml:53` | path-or-package | description: 'How the install updates to HEAD. Supported: open-app-update (Update button under Playwright, from a desktop-bearing install), hermes-desktop-app-u
+- `.github/workflows/install-e2e-windows-run.yml:79` | path-or-package | default: https://hermes-assets.nousresearch.com/Hermes-Setup.exe
+- `.github/workflows/install-e2e-windows-run.yml:133` | path-or-package | output: ${{ runner.temp }}/hermes-bundled-update-recording.mkv
+- `.github/workflows/install-e2e-windows-run.yml:148` | path-or-package | output: ${{ runner.temp }}/hermes-bundled-update-recording.mkv
+- `.github/workflows/install-e2e-windows-run.yml:155` | path-or-package | ${{ runner.temp }}/hermes-bundled-update/proof/
+- `.github/workflows/install-e2e-windows-run.yml:156` | path-or-package | ${{ runner.temp }}/hermes-bundled-update/home/logs/
+- `.github/workflows/install-e2e-windows-run.yml:157` | path-or-package | ${{ runner.temp }}/hermes-bundled-update-recording.mkv
+- `.github/workflows/install-e2e-windows-run.yml:173` | path-or-package | && (contains(fromJSON('["hermes-update", "installer-script"]'), inputs.update-method)
+- `.github/workflows/install-e2e-windows-run.yml:174` | path-or-package | || (contains(fromJSON('["installer-script+desktop", "hermes-desktop-app-update", "desktop-installer@latest"]'), inputs.update-method) && inputs.tag-has-desktop)
+- `.github/workflows/install-e2e-windows-run.yml:181` | path-or-package | # Sibling of the checkout (D:\a\hermes-agent\hermes-desktop-gui-e2e):
+- `.github/workflows/install-e2e-windows-run.yml:186` | path-or-package | HERMES_E2E_WORKROOT: ${{ github.workspace }}\..\hermes-desktop-gui-e2e
+- `.github/workflows/install-e2e-windows-run.yml:218` | env-var | # without pip) out of HERMES_RUNTIME_DIR, which is the tools directory itself and
+- `.github/workflows/install-e2e-windows-run.yml:225` | env-var | $uvDir = Get-ChildItem $env:HERMES_RUNTIME_DIR -Filter 'uv-*' -Directory | Select-Object -First 1
+- `.github/workflows/install-e2e-windows-run.yml:226` | env-var | if (-not $uvDir) { throw "uv not found under $env:HERMES_RUNTIME_DIR" }
+- `.github/workflows/install-e2e-windows-run.yml:227` | env-var | & (Join-Path $uvDir.FullName 'uv.exe') pip install --system --python $env:HERMES_PYTHON --quiet "pywinpty==3.0.5" "py-spy==0.4.2"
+- `.github/workflows/install-e2e-windows-run.yml:231` | env-var | & (Join-Path (Split-Path $env:HERMES_PYTHON) 'py-spy.exe') --version
+- `.github/workflows/install-e2e-windows-run.yml:244` | env-var | # Product steps below never see setup-pm's HERMES_RUNTIME_DIR or
+- `.github/workflows/install-e2e-windows-run.yml:245` | env-var | # HERMES_PYTHON: windows-e2e.ps1 drops both on entry, so the installer,
+- `.github/workflows/install-e2e-windows-run.yml:246` | other | # the app, `hermes update` and every chat turn share the leg's one store
+- `.github/workflows/install-e2e-windows-run.yml:247` | env-var | # (<HERMES_HOME>\tools), as on a user's machine. setup-pm reaches the
+- `.github/workflows/install-e2e-windows-run.yml:248` | env-var | # driver's own tooling only through HERMES_PYTHON (and PATH for older
+- `.github/workflows/install-e2e-windows-run.yml:277` | path-or-package | Copy-Item -LiteralPath (Join-Path $env:HERMES_E2E_WORKROOT 'known-failure.json') -Destination gui-e2e-proof/known-failure.json
+- `.github/workflows/install-e2e-windows-run.yml:310` | path-or-package | $work = $env:HERMES_E2E_WORKROOT
+- `.github/workflows/install-e2e-windows-run.yml:311` | path-or-package | $home_ = Join-Path $work "hermes-home"
+- `.github/workflows/install-e2e-windows-run.yml:317` | path-or-package | @{ src = (Join-Path $home_ ".hermes-update-result.json");    dst = ".hermes-update-result.json" }
+- `.github/workflows/install-e2e.yml:13` | path-or-package | #   Matrix: windows   the real desktop user flow: website Hermes-Setup.exe
+- `.github/workflows/install-e2e.yml:18` | path-or-package | #                     Hermes-Setup.dmg mounted and run, updates via the
+- `.github/workflows/install-e2e.yml:42` | path-or-package | #     hermes-update on linux (newest release -> PR, and PR -> NEXT), windows
+- `.github/workflows/install-e2e.yml:125` | path-or-package | # install or `hermes update` executes; hermes_cli/main.py and friends are
+- `.github/workflows/install-e2e.yml:130` | other | - 'setup-hermes.*'
+- `.github/workflows/install-e2e.yml:131` | module-ref | - 'hermes_bootstrap.py'
+- `.github/workflows/install-e2e.yml:133` | path-or-package | - 'hermes_cli/update*'
+- `.github/workflows/install-e2e.yml:134` | path-or-package | - 'hermes_cli/*update*'
+- `.github/workflows/install-e2e.yml:135` | path-or-package | - 'hermes_cli/pm*'
+- `.github/workflows/install-e2e.yml:136` | path-or-package | - 'hermes_cli/*install*'
+- `.github/workflows/install-e2e.yml:137` | path-or-package | - 'hermes_cli/_early_recovery.py'
+- `.github/workflows/install-e2e.yml:138` | path-or-package | - 'hermes_cli/_launchers.py'
+- `.github/workflows/install-e2e.yml:139` | path-or-package | - 'hermes_cli/managed_uv.py'
+- `.github/workflows/install-e2e.yml:140` | path-or-package | - 'hermes_cli/venv_sync.py'
+- `.github/workflows/install-e2e.yml:141` | path-or-package | - 'hermes_cli/relaunch.py'
+- `.github/workflows/install-e2e.yml:142` | path-or-package | - 'hermes_cli/gateway.py'
+- `.github/workflows/js-tests.yml:26` | path-or-package | # the electron contracts drive real hermes_cli/pm code through
+- `.github/workflows/js-tests.yml:27` | env-var | # HERMES_PYTHON, which needs the application dependencies.
+- `.github/workflows/lint.yml:180` | path-or-package | # (#92554, regressed repeatedly). All writers go through the hermes_cli.config writer seam.
+- `.github/workflows/live-providers.yml:39` | path-or-package | if: github.repository == 'NousResearch/hermes-agent'
+- `.github/workflows/live-providers.yml:52` | env-var | HERMES_LIVE_USAGE_FILE: ${{ github.workspace }}/live-usage.jsonl
+- `.github/workflows/live-providers.yml:119` | env-var | path = os.environ["HERMES_LIVE_USAGE_FILE"]
+- `.github/workflows/live-providers.yml:124` | path-or-package | "| {cache_write} | {hermes_est_usd} | {list_price_ceiling_usd} |".format(**u))
+- `.github/workflows/nix.yml:162` | path-or-package | package="$(nix build "path:$RUNNER_TEMP/release-source#hermes-agent" --no-link --print-out-paths)"
+- `.github/workflows/nix.yml:163` | other | actual="$("$package/bin/hermes" --version)"
+- `.github/workflows/plugin-catalog-ci.yml:7` | other | #   structural            — cheap schema check, no hermes install needed
+- `.github/workflows/plugin-catalog-ci.yml:11` | other | #                            `hermes plugins validate`.
+- `.github/workflows/plugin-catalog-ci.yml:55` | other | # `hermes plugins validate` below runs pinned-repo code; keep the
+- `.github/workflows/plugin-catalog-ci.yml:82` | other | # hermes) resolves from the PR checkout, so an entry PR that also
+- `.github/workflows/plugin-catalog-ci.yml:106` | other | - name: Prepare Hermes from the PR's own checkout
+- `.github/workflows/plugin-catalog-ci.yml:123` | other | # Entries arrive on fd 3, not stdin: `hermes plugins validate` executes
+- `.github/workflows/plugin-catalog-ci.yml:205` | path-or-package | # 600s: listed repos reach >1 GB (hermes-jackal-verified 1.43 GB,
+- `.github/workflows/plugin-catalog-ci.yml:252` | other | if ! timeout 600 hermes plugins validate --install-deps "$PLUGIN_DIR" </dev/null; then
+- `.github/workflows/plugin-catalog-ci.yml:253` | other | echo "::error file=$entry::hermes plugins validate failed"
+- `.github/workflows/pm-bundle.yml:4` | other | # `hermes pm bundle`: repo snapshot + tool store + facts + a relocatable
+- `.github/workflows/pm-bundle.yml:7` | path-or-package | # boots hermes_cli out of the payload with no network and no PYTHONPATH —
+- `.github/workflows/rust-tests.yml:4` | path-or-package | # `cargo test` for the Tauri bootstrap installer (Hermes-Setup). Nothing in CI
+- `.github/workflows/sandbox-image.yml:3` | path-or-package | # nousresearch/hermes-sandbox:desktop is the terminal-backend sandbox base
+- `.github/workflows/sandbox-image.yml:6` | other | # It contains NO Hermes code, so it does not need to track main: it changes
+- `.github/workflows/sandbox-image.yml:37` | path-or-package | IMAGE_NAME: nousresearch/hermes-sandbox
+- `.github/workflows/sandbox-image.yml:42` | path-or-package | if: github.repository == 'NousResearch/hermes-agent'
+- `.github/workflows/sandbox-image.yml:78` | path-or-package | if: github.repository == 'NousResearch/hermes-agent' && (github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && inputs.publish))
+- `.github/workflows/sandbox-image.yml:132` | path-or-package | if: ${{ !cancelled() && github.repository == 'NousResearch/hermes-agent' && (github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && inpu
+- `.github/workflows/skills-index-freshness.yml:21` | path-or-package | if: github.repository == 'NousResearch/hermes-agent'
+- `.github/workflows/skills-index-freshness.yml:38` | path-or-package | URL="https://hermes-agent.nousresearch.com/docs/api/skills-index.json"
+- `.github/workflows/skills-index.yml:21` | path-or-package | if: github.repository == 'NousResearch/hermes-agent'
+- `.github/workflows/stable-release.yml:482` | path-or-package | | jq -r '.packages[] | select(.name == "hermes-bootstrap") | .version')"
+- `.github/workflows/supply-chain-audit.yml:136` | path-or-package | # same name (e.g. hermes_cli/setup.py — the CLI setup wizard) is unrelated
+- `.github/workflows/termux-verify.yml:139` | env-var | run: python -m scripts.ci.archive_inputs --target linux-arm64-bionic --payload termux-build/payload --store "$HERMES_RUNTIME_DIR"
+- `.github/workflows/tests-os.yml:104` | env-var | # Installer stage tests inherit setup-pm's HERMES_RUNTIME_DIR. Prepare
+- `.github/workflows/tests-os.yml:184` | env-var | HERMES_TEST_WORKERS: ${{ matrix.marker == 'windows' && (runner.arch == 'ARM64' && '16' || '16') || '' }}
+- `.github/workflows/tests-os.yml:185` | env-var | HERMES_TEST_SLICE: ${{ matrix.slice || '' }}
+- `.github/workflows/tests-os.yml:193` | other | # The real scripts/install.ps1 -> `hermes update` HEAD -> NEXT journey on a real Windows
+- `.github/workflows/tests-os.yml:202` | other | # Real Hermes processes on a real Windows host (tests/e2e/core/windows): hermes.exe,
+- `.github/workflows/tests-os.yml:203` | other | # `hermes serve`, `hermes gateway run/stop`, the tui_gateway stdio process, cron script
+- `.github/workflows/tests-os.yml:239` | env-var | HERMES_TEST_WORKERS: '6'
+- `.github/workflows/tests-os.yml:240` | env-var | HERMES_TEST_FILE_TIMEOUT: '900'
+- `.github/workflows/tests-os.yml:241` | env-var | HERMES_TEST_FILE_RETRIES: '0'
+- `.github/workflows/tests-os.yml:246` | other | - name: No leftover Python / Hermes processes
+- `.github/workflows/tests-os.yml:250` | other | # python.exe / hermes.exe once the suite is done.
+- `.github/workflows/tests-os.yml:254` | other | $names = 'python.exe', 'pythonw.exe', 'hermes.exe'
+- `.github/workflows/tests-os.yml:258` | other | if ($left.Count -eq 0) { 'no leftover python/hermes processes'; exit 0 }
+- `.github/workflows/tests.yml:68` | other | # Hermes picks DELETE journal mode on a SQLite with the WAL-reset
+- `.github/workflows/tests.yml:74` | env-var | "$HERMES_PYTHON" -c "import sqlite3, sys, hermes_state_wal as w; v = w.is_sqlite_wal_reset_vulnerable(); print(f'Python {sys.version.split()[0]}, SQLite {sqlite
+- `.github/workflows/tests.yml:103` | env-var | HERMES_TEST_SLICE: ${{ matrix.slice }}/2
+- `.github/workflows/tests.yml:104` | env-var | HERMES_TEST_WORKERS: 32
+- `.github/workflows/tests.yml:105` | env-var | HERMES_TEST_FILE_TIMEOUT: 600
+- `.github/workflows/tests.yml:150` | other | # tests/e2e/core/terminal drives the real `hermes --tui` over a PTY;
+- `.github/workflows/tests.yml:151` | path-or-package | # HERMES_E2E_REQUIRE_TUI=1 below turns a missing build into a failure.
+- `.github/workflows/tests.yml:174` | env-var | "$HERMES_PYTHON" -c "import sqlite3, hermes_state_wal as w; print('sqlite', sqlite3.sqlite_version); assert not w.is_sqlite_wal_reset_vulnerable()"
+- `.github/workflows/tests.yml:191` | env-var | HERMES_TEST_WORKERS: "3"
+- `.github/workflows/tests.yml:195` | env-var | HERMES_TEST_FILE_TIMEOUT: "900"
+- `.github/workflows/tests.yml:199` | env-var | HERMES_TEST_FILE_RETRIES: "0"
+- `.github/workflows/tests.yml:200` | path-or-package | HERMES_E2E_REQUIRE_TUI: "1"
+- `.github/workflows/tests.yml:238` | other | # tests/e2e/core/upgrade: a real N-1 -> HEAD `hermes update` (clean,
+- `.github/workflows/tests.yml:261` | other | # `hermes update` builds the web UI / TUI workspaces.
+- `.github/workflows/tests.yml:288` | other | # 3.11.14, whose bundled SQLite has the WAL-reset bug, so Hermes runs
+- `.github/workflows/tests.yml:311` | env-var | # forbids mid-run pip installs (HERMES_DISABLE_LAZY_INSTALLS=1 in
+- `.github/workflows/tests.yml:336` | path-or-package | python -c "import sqlite3, hermes_state_wal as w; print('sqlite', sqlite3.sqlite_version); assert not w.is_sqlite_wal_reset_vulnerable()"
+- `.github/workflows/tests.yml:356` | env-var | HERMES_TEST_WORKERS: "6"
+- `.github/workflows/tests.yml:357` | env-var | HERMES_TEST_FILE_TIMEOUT: "3000"
+- `.github/workflows/uv-lockfile-check.yml:33` | other | #     hermes pm lock                     # regenerates uv.lock against new pyproject.toml
+- `.github/workflows/uv-lockfile-check.yml:38` | other | # If you also changed pyproject.toml in your PR, `hermes pm lock` handles that
+- `.github/workflows/uv-lockfile-check.yml:98` | other | # `hermes pm lock` with nothing to regenerate.
+- `.github/workflows/uv-lockfile-check.yml:144` | other | hermes pm lock                  # regenerate against new pyproject.toml
+- `.github/workflows/uv-lockfile-check.yml:150` | other | **If you only changed pyproject.toml:** run `hermes pm lock` locally
+- `.github/workflows/uv-lockfile-check.yml:158` | other | echo "::error title=uv.lock out of sync::Run \`hermes pm lock\` locally and commit the result. If on a PR, sync with main first."
+- `.github/workflows/uv-lockfile-check.yml:159` | other | review_status='[{"source":"uv.lock check","results":[{"kind":"action_required","title":"uv.lock out of sync","summary":"uv.lock is out of sync with pyproject.to
+- `.github/workflows/windows-install-update-e2e.yml:5` | other | # bare clone, no git/python/uv on PATH), then the real `hermes update` HEAD -> NEXT,
+- `.github/workflows/windows-install-update-e2e.yml:29` | other | name: Windows install.ps1 + hermes update E2E
+- `.github/workflows/windows-install-update-e2e.yml:38` | other | # `hermes update` need real history and release tags (version identity), as on GitHub.
+- `.github/workflows/windows-install-update-e2e.yml:55` | path-or-package | HERMES_E2E_WINDOWS_INSTALL: '1'
+- `.github/workflows/windows-install-update-e2e.yml:60` | path-or-package | HERMES_E2E_MACHINE_ROOT: ${{ runner.temp }}\wm
+- `.github/workflows/windows-install-update-e2e.yml:61` | path-or-package | HERMES_E2E_PROFILES_ROOT: C:\Users
+- `.github/workflows/windows-install-update-e2e.yml:62` | path-or-package | HERMES_E2E_ARTIFACTS: ${{ runner.temp }}\win-update-e2e
+- `.github/workflows/windows-install-update-e2e.yml:64` | env-var | HERMES_TEST_WORKERS: '6'
+- `.github/workflows/windows-install-update-e2e.yml:65` | env-var | HERMES_TEST_FILE_TIMEOUT: '2400'
+- `.github/workflows/windows-install-update-e2e.yml:66` | env-var | HERMES_TEST_FILE_RETRIES: '0'
+- `.github/workflows/windows-install-update-e2e.yml:80` | other | - name: No leftover Python / Hermes processes
+- `.github/workflows/windows-install-update-e2e.yml:85` | other | $names = 'python.exe', 'pythonw.exe', 'hermes.exe', 'node.exe'
+- `.github/workflows/windows-install-update-e2e.yml:86` | path-or-package | # Work dirs live under runner.temp\wm; profiles are C:\Users\*hermes-e2e-<id>.
+- `.github/workflows/windows-install-update-e2e.yml:88` | path-or-package | $profileMark = 'hermes-e2e-'
+- `.github/workflows/windows-venv-e2e.yml:6` | other | # spawns actual processes with realistic Hermes argv shapes and drives the
+- `.github/workflows/windows-venv-e2e.yml:60` | env-var | # enforces credential hygiene, TZ, temp HERMES_HOME and subprocess
+- `.github/workflows/windows-venv-e2e.yml:67` | path-or-package | tests/hermes_cli/test_venv_holder_windows_live.py \
+- `.github/workflows/windows-venv-e2e.yml:68` | path-or-package | tests/hermes_cli/test_taskkill_identity_windows_live.py \
+- `.github/workflows/windows-venv-e2e.yml:69` | path-or-package | tests/hermes_cli/test_git_trampoline_windows_live.py \
+- `.github/workflows/windows-venv-e2e.yml:70` | path-or-package | tests/hermes_cli/test_runtime_repair.py::TestWindowsRuntimeSelfLock
+- `.github/workflows/ci.yaml:187` | other | # + `hermes serve` backend, which never import anything under tests/.
+- `.github/actions/detect-changes/action.yml:37` | other | description: Run the N-1 to HEAD `hermes update` suites (tests/e2e/core/upgrade).
+- `.github/actions/e2e-screen-record/action.yml:75` | other | # see https://github.com/actions/runner-images/issues/14474 - as of this hermes agent commit,
+- `.github/actions/nix-setup/action.yml:16` | path-or-package | name: hermes-agent
+- `.github/actions/plugin-validate/action.yml:1` | other | name: Hermes Plugin Validate
+- `.github/actions/plugin-validate/action.yml:3` | other | Validate a plugin's manifest and registered capabilities with Hermes at the
+- `.github/actions/plugin-validate/action.yml:4` | other | requested ref. The caller owns its plugin checkout; Hermes and its locked
+- `.github/actions/plugin-validate/action.yml:11` | path-or-package | hermes-ref:
+- `.github/actions/plugin-validate/action.yml:12` | path-or-package | description: hermes-agent git ref (branch/tag/sha) to validate with.
+- `.github/actions/plugin-validate/action.yml:18` | other | - name: Prepare an isolated Hermes checkout
+- `.github/actions/plugin-validate/action.yml:22` | path-or-package | _HERMES_REF: ${{ inputs.hermes-ref }}
+- `.github/actions/plugin-validate/action.yml:25` | path-or-package | source=$(mktemp -d "$RUNNER_TEMP/hermes-plugin-validator.XXXXXX")
+- `.github/actions/plugin-validate/action.yml:27` | path-or-package | git -C "$source" remote add origin https://github.com/NousResearch/hermes-agent.git
+- `.github/actions/plugin-validate/action.yml:28` | path-or-package | git -C "$source" fetch --depth=1 -- origin "$_HERMES_REF"
+- `.github/actions/plugin-validate/action.yml:53` | env-var | "$HERMES_PYTHON" - <<'PY'
+- `.github/actions/plugin-validate/action.yml:70` | path-or-package | "$_VALIDATOR_PYTHON" -I -m hermes_cli.main plugins validate "$_PLUGIN_PATH"
+- `.github/actions/setup-pm/action.yml:142` | env-var | --toolchain "$_PM_TOOLCHAIN" --packages "$_PM_PACKAGES" --home "$HERMES_HOME"
+- `.github/actions/setup-pm/action.yml:154` | env-var | --toolchain "$_PM_TOOLCHAIN" --packages "$_PM_PACKAGES" --home "$HERMES_HOME"
+- `.github/actions/setup-pm/action.yml:234` | env-var | "$HERMES_PYTHON" -S "$_PM_ACTION/../../../scripts/ci/setup_toolchain.py" dependencies \
+- `.github/actions/setup-pm/action.yml:235` | env-var | --toolchain "$_PM_TOOLCHAIN" --extras "$_PM_EXTRAS" --home "$HERMES_HOME" "${args[@]}"
