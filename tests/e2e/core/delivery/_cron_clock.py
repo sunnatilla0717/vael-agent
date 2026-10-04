@@ -238,10 +238,10 @@ def install(clock: VirtualClock, control: Control, setattr_fn=setattr) -> None:
     import cron.executions as executions
     import cron.jobs as jobs
     import cron.scheduler as scheduler
-    import hermes_time
+    import vael_time
     import tools.send_message_tool as send_message_tool
 
-    setattr_fn(hermes_time, "datetime", _virtual_datetime_class(clock))
+    setattr_fn(vael_time, "datetime", _virtual_datetime_class(clock))
     proxy = _TimeProxy(clock)
     for module in (jobs, scheduler, executions):
         setattr_fn(module, "time", proxy)
@@ -264,7 +264,7 @@ def install(clock: VirtualClock, control: Control, setattr_fn=setattr) -> None:
     setattr_fn(sqlite_util, "open_db", open_db_no_full_sync)
     # Worktree GC prunes the REAL git checkout the test runs from; hygiene, not scheduling.
     setattr_fn(scheduler, "_maybe_run_worktree_maintenance", lambda: None)
-    hermes_time.reset_cache()
+    vael_time.reset_cache()
 
 
 # --- stepping ticker hosts -------------------------------------------------------------------

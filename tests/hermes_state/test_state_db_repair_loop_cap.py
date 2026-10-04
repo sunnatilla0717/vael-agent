@@ -25,8 +25,8 @@ from pathlib import Path
 from unittest.mock import patch
 
 import vael_state
-import hermes_state_repair
-from hermes_state_repair import _MAX_MALFORMED_BACKUPS, _MAX_PERSISTENT_REPAIR_ATTEMPTS, _backup_db_file, _existing_malformed_backups, _persistent_repair_attempts_exhausted, _prune_malformed_backups, _record_repair_outcome, _repair_ledger_path, repair_state_db_schema
+import vael_state_repair
+from vael_state_repair import _MAX_MALFORMED_BACKUPS, _MAX_PERSISTENT_REPAIR_ATTEMPTS, _backup_db_file, _existing_malformed_backups, _persistent_repair_attempts_exhausted, _prune_malformed_backups, _record_repair_outcome, _repair_ledger_path, repair_state_db_schema
 
 
 def _make_unrepairable_db(tmp_path: Path) -> Path:
@@ -67,7 +67,7 @@ class TestPersistentAttemptCap:
         # Budget burned: the next call must refuse WITHOUT running surgery
         # (and without taking another backup).
         backups_before = len(_existing_malformed_backups(db))
-        with patch.object(hermes_state_repair, "_repair_state_db_schema_locked") as surgery:
+        with patch.object(vael_state_repair, "_repair_state_db_schema_locked") as surgery:
             report = repair_state_db_schema(db)
         surgery.assert_not_called()
         assert report["repaired"] is False

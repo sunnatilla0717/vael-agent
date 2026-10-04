@@ -12,7 +12,7 @@ import sqlite3
 import pytest
 
 import vael_state
-from hermes_state_repair import apply_durability_barriers
+from vael_state_repair import apply_durability_barriers
 
 
 def _config(monkeypatch, database_section):

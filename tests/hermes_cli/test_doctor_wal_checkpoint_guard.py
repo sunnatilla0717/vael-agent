@@ -6,7 +6,7 @@ from __future__ import annotations
 import sqlite3
 from pathlib import Path
 
-import hermes_state_repair
+import vael_state_repair
 from hermes_cli.doctor_report import Finding
 from hermes_cli.doctor_state import _state_db_wal
 
@@ -37,13 +37,13 @@ def test_doctor_checkpoint_runs_only_on_the_exclusive_repair_guard(tmp_path, mon
 
     monkeypatch.setattr(sqlite3, "connect", _spy)
     guard_connects: list[Path] = []
-    real_durable = hermes_state_repair._connect_repair_durable
+    real_durable = vael_state_repair._connect_repair_durable
 
     def _durable(path, **kwargs):
         guard_connects.append(Path(path))
         return real_durable(path, **kwargs)
 
-    monkeypatch.setattr(hermes_state_repair, "_connect_repair_durable", _durable)
+    monkeypatch.setattr(vael_state_repair, "_connect_repair_durable", _durable)
 
     finding = Finding()
     _state_db_wal(finding, True, db)

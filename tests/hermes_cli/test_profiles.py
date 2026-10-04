@@ -16,7 +16,7 @@ import types
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 
-import hermes_yaml as yaml
+import vael_yaml as yaml
 import pytest
 
 from hermes_cli import profiles
@@ -1247,7 +1247,7 @@ class TestRenameProfile:
              patch("hermes_cli.profiles._notify_multiplexer"), \
              patch("gateway.control_socket.migrate_gateway_profile_identity",
                    return_value={"ok": True, "rekeyed": 1, "db": {}}) as verb, \
-             patch("hermes_state_registry.acquire") as acquire:
+             patch("vael_state_registry.acquire") as acquire:
             rename_profile("oldname", "newname")
 
         # Delegated to the gateway; the CLI's own durable-rewrite branch never ran.

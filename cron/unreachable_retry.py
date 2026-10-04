@@ -23,7 +23,7 @@ import logging
 from datetime import datetime
 from typing import Any, Dict, Optional
 
-from hermes_time import now as _hermes_now
+from vael_time import now as _hermes_now
 
 logger = logging.getLogger("cron.scheduler")
 

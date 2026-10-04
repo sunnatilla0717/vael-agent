@@ -18,7 +18,7 @@ from __future__ import annotations
 
 import shutil
 
-import hermes_state_registry as registry
+import vael_state_registry as registry
 
 
 def _seed(path):

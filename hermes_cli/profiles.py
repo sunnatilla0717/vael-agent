@@ -634,7 +634,7 @@ def _load_yaml_dict(path: Path) -> Optional[dict]:
     if not path.is_file():
         return None
     try:
-        import hermes_yaml as yaml
+        import vael_yaml as yaml
         data = yaml.safe_load(path.read_text(encoding="utf-8-sig")) or {}
     except Exception:
         return None
@@ -1038,7 +1038,7 @@ def profile_is_standalone(home: Path) -> bool:
     (``gateway.standalone: true``)? Memoised by file signature. The DEFAULT profile is
     never standalone — it IS the host — and warns once per process if the key is set there."""
     global _STANDALONE_WARNED
-    from hermes_yaml import YAMLError
+    from vael_yaml import YAMLError
     from utils import file_signature
 
     home = Path(home)
@@ -1796,7 +1796,7 @@ def delete_profile(name: str, yes: bool = False) -> Path:
         if _released:
             print(f"✓ Released {_released} memory-store connection(s) held by this process")
     with contextlib.suppress(Exception):
-        from hermes_state_registry import close_all_under as _close_session_dbs_under
+        from vael_state_registry import close_all_under as _close_session_dbs_under
         _closed = _close_session_dbs_under(profile_dir)
         if _closed:
             print(f"✓ Released {_closed} session database connection(s) held by this process")

@@ -60,15 +60,15 @@ def _apply_sqlite_version_pin() -> None:
     pin = os.environ.get("HERMES_E2E_SQLITE_VERSION_PIN")
     if not pin:
         return
-    import hermes_state_wal
+    import vael_state_wal
 
     pinned = tuple(int(p) for p in pin.split("."))
-    probe = hermes_state_wal.is_sqlite_wal_reset_vulnerable
+    probe = vael_state_wal.is_sqlite_wal_reset_vulnerable
 
     def is_sqlite_wal_reset_vulnerable(version_info=None):
         return probe(pinned if version_info is None else version_info)
 
-    hermes_state_wal.is_sqlite_wal_reset_vulnerable = is_sqlite_wal_reset_vulnerable
+    vael_state_wal.is_sqlite_wal_reset_vulnerable = is_sqlite_wal_reset_vulnerable
 
 
 def _patient(a: dict, out: Out, op: str, fn, *, deadline: float = 90.0):
@@ -289,7 +289,7 @@ def role_fts(a: dict, out: Out) -> int:
 
 def role_repair(a: dict, out: Out) -> int:
     """`repair_state_db_schema` as the CLI/doctor/startup recovery calls it."""
-    from hermes_state_repair import repair_state_db_schema
+    from vael_state_repair import repair_state_db_schema
 
     db_path = Path(a["db"])
     try:

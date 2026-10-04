@@ -248,7 +248,7 @@ def import_foreign_session(source: str, path, db=None) -> str:
     tool = _SOURCE_DB_NAMES[source]
     owns_db = db is None
     if owns_db:
-        from hermes_state_registry import acquire
+        from vael_state_registry import acquire
         db = acquire()  # the CLI resume that follows acquires this same handle
     try:
         session_id = new_session_id()

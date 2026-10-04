@@ -22,7 +22,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 from hermes_cli._subprocess_compat import noninteractive_git_env
-from hermes_time import safe_strftime
+from vael_time import safe_strftime
 
 logger = logging.getLogger(__name__)
 
@@ -603,12 +603,12 @@ def _acquire_session_db(home: str):
     """The registry's shared handle for ``home/state.db``. A bare ``SessionDB()`` here was a SECOND
     writer per profile beside the gateway's registry handle — its own token-writer thread and
     close-time checkpoint (the #90837 corruption shape), doubled under multiplexing."""
-    from hermes_state_registry import acquire
+    from vael_state_registry import acquire
     return acquire(Path(home) / "state.db")
 
 
 def _release_session_db(db) -> None:
-    from hermes_state_registry import release_or_close
+    from vael_state_registry import release_or_close
     try:
         release_or_close(db)
     except Exception:

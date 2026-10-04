@@ -10,7 +10,7 @@ import subprocess
 import sys
 
 import pytest
-import hermes_yaml as yaml
+import vael_yaml as yaml
 
 from vael_state import SessionDB
 

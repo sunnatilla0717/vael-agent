@@ -5,7 +5,7 @@ from pathlib import Path
 import sys
 
 import pytest
-import hermes_yaml as yaml
+import vael_yaml as yaml
 from fastapi.testclient import TestClient
 
 

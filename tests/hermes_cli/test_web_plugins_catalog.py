@@ -4,7 +4,7 @@ installer-owned install-metadata ``catalog`` record; the install endpoint has no
 from __future__ import annotations
 
 import pytest
-import hermes_yaml as yaml
+import vael_yaml as yaml
 
 from hermes_cli import plugin_catalog as pc_cat
 

@@ -12,7 +12,7 @@ from pathlib import Path
 from unittest.mock import patch, MagicMock
 
 import pytest
-import hermes_yaml as yaml
+import vael_yaml as yaml
 
 from hermes_cli.config import (
     reload_env,
@@ -2147,7 +2147,7 @@ CONFIG_SCHEMA = ProviderConfigSchema(
         secret by the time Save sees it. Migrating it would duplicate the
         user's secret into a second env var they never asked for.
         """
-        import hermes_yaml as yaml
+        import vael_yaml as yaml
 
         from hermes_cli.config import custom_endpoint_key_env, get_config_path, get_env_value
 

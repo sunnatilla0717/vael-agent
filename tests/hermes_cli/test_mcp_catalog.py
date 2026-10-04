@@ -11,7 +11,7 @@ import re
 from pathlib import Path
 
 import pytest
-import hermes_yaml as yaml
+import vael_yaml as yaml
 
 
 # ---------------------------------------------------------------------------

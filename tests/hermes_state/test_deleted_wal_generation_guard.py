@@ -17,8 +17,8 @@ from pathlib import Path
 import pytest
 
 import vael_state_dbfile
-import hermes_state_readpool
-import hermes_state_wal
+import vael_state_readpool
+import vael_state_wal
 from vael_state import (
     DeletedWalGenerationError, SessionDB, StateDbReplacedError, _close_time_checkpoint_configurable,
     classify_persistence_error, refuse_deleted_wal_generation,
@@ -65,9 +65,9 @@ def test_clean_open_and_second_open_still_work(tmp_path, force_wal):
 
 
 def test_delete_journal_two_writers_still_work(tmp_path, monkeypatch):
-    monkeypatch.setattr(hermes_state_wal, "resolve_journal_mode", lambda: "delete")
+    monkeypatch.setattr(vael_state_wal, "resolve_journal_mode", lambda: "delete")
     monkeypatch.setattr(
-        hermes_state_wal, "is_sqlite_wal_reset_vulnerable", lambda version_info=None: False
+        vael_state_wal, "is_sqlite_wal_reset_vulnerable", lambda version_info=None: False
     )
     path = tmp_path / "state.db"
     a = make_db(path, "s", "from-a")
@@ -241,7 +241,7 @@ def test_write_path_ignores_live_unhashed_dentry(tmp_path, force_wal, monkeypatc
             return target + " (deleted)"
         return target
 
-    monkeypatch.setattr(hermes_state_readpool.os, "readlink", fake_readlink)
+    monkeypatch.setattr(vael_state_readpool.os, "readlink", fake_readlink)
     try:
         assert db._wal_generation_was_lost() is False
         db.append_message("s", role="user", content="after-artifact")

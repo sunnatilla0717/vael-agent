@@ -14,7 +14,7 @@ import sqlite3
 import pytest
 
 from vael_state_common import DEFERRED_INDEX_SQL, SCHEMA_SQL
-from hermes_state_schema import SessionSchemaMixin, schema_read_probe_statements
+from vael_state_schema import SessionSchemaMixin, schema_read_probe_statements
 
 def _fresh_schema_conn() -> sqlite3.Connection:
     conn = sqlite3.connect(":memory:")

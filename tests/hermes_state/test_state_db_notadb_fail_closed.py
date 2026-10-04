@@ -15,7 +15,7 @@ from unittest.mock import MagicMock
 import pytest
 
 from vael_state import SessionDB, StateDbCorruptError
-from hermes_state_wal import _on_disk_journal_mode
+from vael_state_wal import _on_disk_journal_mode
 
 
 class _NotADbOnce:

@@ -12,7 +12,7 @@ from pathlib import Path
 import pytest
 
 from vael_state import SessionDB
-from hermes_state_repair import repair_state_db_schema
+from vael_state_repair import repair_state_db_schema
 
 _HOLDER = """
 import sqlite3, sys
@@ -26,8 +26,8 @@ conn.close()
 
 @pytest.fixture
 def delete_mode_db(tmp_path, monkeypatch) -> Path:
-    import hermes_state_wal
-    monkeypatch.setattr(hermes_state_wal, "resolve_journal_mode", lambda: "delete")
+    import vael_state_wal
+    monkeypatch.setattr(vael_state_wal, "resolve_journal_mode", lambda: "delete")
     db = tmp_path / "state.db"
     handle = SessionDB(db_path=db)
     sid = handle.create_session(session_id=str(uuid.uuid4()), source="cli")

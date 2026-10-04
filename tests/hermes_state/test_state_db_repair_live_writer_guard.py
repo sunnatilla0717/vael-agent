@@ -29,10 +29,10 @@ from pathlib import Path
 import pytest
 
 import vael_state
-import hermes_state_repair
+import vael_state_repair
 import vael_state_holders
 from vael_state import SessionDB
-from hermes_state_repair import repair_state_db_schema
+from vael_state_repair import repair_state_db_schema
 
 
 def _make_wal_db(tmp_path: Path) -> Path:
@@ -100,7 +100,7 @@ def test_repair_checks_foreign_holders_before_opening_sqlite(tmp_path, monkeypat
     def _unexpected_probe(*_args, **_kwargs):
         pytest.fail("repair opened SQLite before excluding foreign holders")
 
-    monkeypatch.setattr(hermes_state_repair, "_connect_repair_durable", _unexpected_probe)
+    monkeypatch.setattr(vael_state_repair, "_connect_repair_durable", _unexpected_probe)
 
     report = repair_state_db_schema(db, backup=False)
 
@@ -180,7 +180,7 @@ def test_uninspectable_watched_descriptor_blocks_repair_before_sqlite(
     def _unexpected_probe(*_args, **_kwargs):
         pytest.fail("repair opened SQLite with unproven descriptor identity")
 
-    monkeypatch.setattr(hermes_state_repair, "_connect_repair_durable", _unexpected_probe)
+    monkeypatch.setattr(vael_state_repair, "_connect_repair_durable", _unexpected_probe)
 
     report = repair_state_db_schema(db, backup=False)
 
@@ -226,7 +226,7 @@ def test_uninspectable_unknown_descriptor_uses_hermes_identity_at_repair_boundar
             pytest.fail("repair opened SQLite with an unproven Hermes descriptor")
 
         monkeypatch.setattr(
-            hermes_state_repair, "_connect_repair_durable",
+            vael_state_repair, "_connect_repair_durable",
             _unexpected_probe,
         )
         report = repair_state_db_schema(db, backup=False)
@@ -234,7 +234,7 @@ def test_uninspectable_unknown_descriptor_uses_hermes_identity_at_repair_boundar
         assert report["repaired"] is False
         assert "live writer" in (report["error"] or "").lower()
     else:
-        real_connect = hermes_state_repair._connect_repair_durable
+        real_connect = vael_state_repair._connect_repair_durable
         probe_reached = False
 
         def _record_probe(*args, **kwargs):
@@ -243,7 +243,7 @@ def test_uninspectable_unknown_descriptor_uses_hermes_identity_at_repair_boundar
             return real_connect(*args, **kwargs)
 
         monkeypatch.setattr(
-            hermes_state_repair, "_connect_repair_durable",
+            vael_state_repair, "_connect_repair_durable",
             _record_probe,
         )
         report = repair_state_db_schema(db, backup=False)
@@ -290,7 +290,7 @@ def test_uninspectable_watched_identity_blocks_alias_before_sqlite(
     def _unexpected_probe(*_args, **_kwargs):
         pytest.fail("repair opened SQLite with an unproven watched identity")
 
-    monkeypatch.setattr(hermes_state_repair, "_connect_repair_durable", _unexpected_probe)
+    monkeypatch.setattr(vael_state_repair, "_connect_repair_durable", _unexpected_probe)
 
     report = repair_state_db_schema(db, backup=False)
 
@@ -334,7 +334,7 @@ def test_uninspectable_alias_descriptor_for_hermes_blocks_before_sqlite(
     def _unexpected_probe(*_args, **_kwargs):
         pytest.fail("repair opened SQLite with an unproven Hermes alias fd")
 
-    monkeypatch.setattr(hermes_state_repair, "_connect_repair_durable", _unexpected_probe)
+    monkeypatch.setattr(vael_state_repair, "_connect_repair_durable", _unexpected_probe)
 
     report = repair_state_db_schema(db, backup=False)
 

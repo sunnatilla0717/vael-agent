@@ -1933,7 +1933,7 @@ def _read_raw_yaml_dict(path: Path) -> Optional[Dict[str, Any]]:
     if not path.is_file():
         return None
     try:
-        import hermes_yaml as yaml
+        import vael_yaml as yaml
 
         with open(path, "r", encoding="utf-8-sig") as f:
             data = yaml.safe_load(f)

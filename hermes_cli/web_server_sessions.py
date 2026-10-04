@@ -87,7 +87,7 @@ def _session_db_read_probe_statements() -> tuple:
     """Stale-schema probes for read-only opens (which skip _reconcile_columns()).
     Derived from SCHEMA_SQL so a new column is probed automatically — a
     hand-written list once went stale and emptied the sidebar after update."""
-    from hermes_state_schema import schema_read_probe_statements
+    from vael_state_schema import schema_read_probe_statements
 
     return schema_read_probe_statements()
 
@@ -119,7 +119,7 @@ def _open_session_db_at_path(db_path: Path, *, read_only: bool):
     import sqlite3
 
     from vael_state import SessionDB, is_malformed_schema_error
-    from hermes_state_registry import acquire, release_or_close
+    from vael_state_registry import acquire, release_or_close
 
     # Read-only file/sidecar preflight (port of kilocode#12508): repair-or-refuse BEFORE the first
     # connection so users get an actionable message instead of an opaque "attempt to write a readonly

@@ -19,15 +19,15 @@ from zoneinfo import ZoneInfo
 
 import pytest
 
-import hermes_time
+import vael_time
 
 
 @pytest.fixture(autouse=True)
 def _fresh_tz_cache(monkeypatch):
     monkeypatch.delenv("HERMES_TIMEZONE", raising=False)
-    hermes_time.reset_cache()
+    vael_time.reset_cache()
     yield
-    hermes_time.reset_cache()
+    vael_time.reset_cache()
 
 
 def test_foreign_process_tick_persists_owning_profile_offset(
@@ -49,7 +49,7 @@ def test_foreign_process_tick_persists_owning_profile_offset(
     monkeypatch.setenv("HERMES_HOME", str(backend_home))
 
     # Backend process resolves its own timezone first (process startup).
-    assert hermes_time.now().utcoffset() == datetime.now(
+    assert vael_time.now().utcoffset() == datetime.now(
         ZoneInfo("UTC")
     ).utcoffset()
 

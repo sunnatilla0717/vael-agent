@@ -19,7 +19,7 @@ import json
 import zipfile
 
 import pytest
-import hermes_yaml as yaml
+import vael_yaml as yaml
 
 
 @pytest.fixture(autouse=True)

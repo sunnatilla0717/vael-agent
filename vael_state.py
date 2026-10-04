@@ -46,13 +46,13 @@ from vael_state_guard import (
     _STATE_DB_GUARD_BYPASS_ENV, _in_test_context, _is_production_state_db, _real_platform_state_root,
     _register_test_instance, _set_last_init_error, get_last_init_error,
 )
-from hermes_state_readpool import _READ_POOL_MAX, _proc_fd_targets, _read_budget_for
-from hermes_state_sessions import SessionSessionsMixin
+from vael_state_readpool import _READ_POOL_MAX, _proc_fd_targets, _read_budget_for
+from vael_state_sessions import SessionSessionsMixin
 from vael_state_fts import SessionFtsSetupMixin, load_fts5_cjk_extension
-from hermes_state_portability import SessionPortabilityMixin
-from hermes_state_telegram import SessionTelegramTopicsMixin
-from hermes_state_profile_repair import SessionProfileRepairMixin
-from hermes_state_schema import SessionSchemaMixin
+from vael_state_portability import SessionPortabilityMixin
+from vael_state_telegram import SessionTelegramTopicsMixin
+from vael_state_profile_repair import SessionProfileRepairMixin
+from vael_state_schema import SessionSchemaMixin
 import vael_state_holders as _state_holders
 import vael_state_lockguard as _lockguard
 from vael_state_lockowners import log_write_lock_holders
@@ -63,18 +63,18 @@ from vael_state_dbfile import (
     quarantine_invalid_state_db,
     RetiredGenerationCaptureError, capture_retired_wal_generation, refuse_deleted_wal_generation,
 )
-from hermes_state_messages import SessionMessagesMixin
-from hermes_state_rewind import SessionRewindMixin
-from hermes_state_wal import (
+from vael_state_messages import SessionMessagesMixin
+from vael_state_rewind import SessionRewindMixin
+from vael_state_wal import (
     _WAL_INCOMPAT_MARKERS, _on_disk_journal_mode, apply_database_pragmas, apply_wal_with_fallback,
 )
-from hermes_state_repair import _claim_repair_attempt, preflight_db_writability, repair_state_db_schema
-from hermes_state_titles import SessionTitlesMixin
-from hermes_state_usage import SessionUsageMixin
+from vael_state_repair import _claim_repair_attempt, preflight_db_writability, repair_state_db_schema
+from vael_state_titles import SessionTitlesMixin
+from vael_state_usage import SessionUsageMixin
 from vael_state_maintenance import SessionMaintenanceMixin
 from vael_state_gateway import SessionGatewayMixin
 from vael_state_compression import SessionCompressionMixin
-from hermes_state_search import SessionSearchMixin
+from vael_state_search import SessionSearchMixin
 
 try:  # Hard dependency, but tolerate scaffold-phase imports before pip install.
     import psutil
@@ -387,7 +387,7 @@ def format_session_db_unavailable(
             f"{prefix}. {_SESSION_DB_CONSEQUENCE} Run `hermes {profile_arg}doctor` to check the "
             "storage location."
         )
-    from hermes_state_user_copy import describe_storage_failure
+    from vael_state_user_copy import describe_storage_failure
     failure = describe_storage_failure(cause)
     gloss, action, hint = failure.gloss, failure.action, ""
     if any(m in cause.lower() for m in _WAL_INCOMPAT_MARKERS):
@@ -397,7 +397,7 @@ def format_session_db_unavailable(
             hint = _NETWORK_DRIVE_HINT
     text = f"{prefix}: {gloss}. {_SESSION_DB_CONSEQUENCE} {action}{hint}"
     if details:
-        from hermes_state_user_copy import storage_failure_details
+        from vael_state_user_copy import storage_failure_details
         text += f"\nDetails: {storage_failure_details(cause)}"
     return text
 
@@ -1509,7 +1509,7 @@ class SessionDB(
         sites return their reference instead of leaking it.
         """
         if self._shared_registry_owned:
-            from hermes_state_registry import release
+            from vael_state_registry import release
             release(self)
             return
         self._stop_token_writer()

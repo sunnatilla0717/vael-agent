@@ -23,7 +23,7 @@ import pytest
 
 import vael_state
 import vael_state_holders
-import hermes_state_schema
+import vael_state_schema
 from vael_state import SessionDB
 from vael_state_common import FTS_REBUILD_DEFERRAL_KEY, FTS_STALE_KEY, LEGACY_FTS_SQL, LEGACY_FTS_TRIGRAM_SQL, SCHEMA_SQL, _FTS_TRIGGERS
 from vael_state_dbfile import _concrete_state_db_holder_pids, _is_inactive_orphan_desktop_holder
@@ -720,7 +720,7 @@ class TestRuntimeFtsRebuild:
             "_reap_inactive_orphan_desktop_holders",
             lambda self, holders, *, min_age_seconds: reaped.extend(holders) or [4242],
         )
-        monkeypatch.setattr(hermes_state_schema.time, "time", lambda: 120.0)
+        monkeypatch.setattr(vael_state_schema.time, "time", lambda: 120.0)
 
         reopened = SessionDB(db_path=db_path)
         try:
@@ -758,10 +758,10 @@ class TestRuntimeFtsRebuild:
             SessionDB, "_reap_inactive_orphan_desktop_holders", lambda self, holders, *, min_age_seconds: [],
         )
         monkeypatch.setattr(
-            hermes_state_schema, "_read_proc_argv", lambda pid: ["python", "-m", "hermes_cli.main", "serve"], raising=False,
+            vael_state_schema, "_read_proc_argv", lambda pid: ["python", "-m", "hermes_cli.main", "serve"], raising=False,
         )
         clock = [1000.0]
-        monkeypatch.setattr(hermes_state_schema.time, "time", lambda: clock[0])
+        monkeypatch.setattr(vael_state_schema.time, "time", lambda: clock[0])
 
         from hermes_cli.doctor_state import _render_state_db_stats
         from vael_state_dbfile import collect_state_db_stats
@@ -770,8 +770,8 @@ class TestRuntimeFtsRebuild:
             return " ".join(" ".join(row) for row in _render_state_db_stats(collect_state_db_stats(db_path))).lower()
 
         # Read via getattr so the red-on-base run reaches the behavioural assertion, not a NameError.
-        futile_attempts = getattr(hermes_state_schema, "_FTS_HOLDER_FUTILE_ATTEMPTS", 10)
-        futile_seconds = getattr(hermes_state_schema, "_FTS_HOLDER_FUTILE_SECONDS", 1800.0)
+        futile_attempts = getattr(vael_state_schema, "_FTS_HOLDER_FUTILE_ATTEMPTS", 10)
+        futile_seconds = getattr(vael_state_schema, "_FTS_HOLDER_FUTILE_SECONDS", 1800.0)
         reopened = SessionDB(db_path=db_path)
         try:
             cursor = reopened._conn.cursor()
@@ -825,8 +825,8 @@ class TestRuntimeFtsRebuild:
         try:
             assert reopened._fts_stale is True
             # Backoff pinned at the cap by the same holder; the holder still there -> no retry.
-            reopened._fts_stale_retry_after = time.monotonic() + hermes_state_schema._FTS_STALE_RETRY_MAX_SECONDS
-            reopened._fts_stale_retry_interval = hermes_state_schema._FTS_STALE_RETRY_MAX_SECONDS
+            reopened._fts_stale_retry_after = time.monotonic() + vael_state_schema._FTS_STALE_RETRY_MAX_SECONDS
+            reopened._fts_stale_retry_interval = vael_state_schema._FTS_STALE_RETRY_MAX_SECONDS
             assert reopened.retry_deferred_fts_recovery() is False
             assert reopened._fts_stale is True
             # Holder leaves: the very next tick retries and rebuilds instead of waiting out the cap.

@@ -338,9 +338,9 @@ class TestOrphanedHolderStalenessBreak:
 import os, sys, time
 sys.path.insert(0, {repo!r})
 from pathlib import Path
-import hermes_state_repair
+import vael_state_repair
 
-lock_cm = hermes_state_repair._cross_process_repair_lock(Path({db!r}))
+lock_cm = vael_state_repair._cross_process_repair_lock(Path({db!r}))
 assert lock_cm.__enter__() is True
 pid = os.fork()
 if pid == 0:
@@ -358,9 +358,9 @@ os._exit(1)
         grandchild = int(proc.stdout.readline().strip().split()[1])
         proc.wait(timeout=10)
         try:
-            import hermes_state_repair
+            import vael_state_repair
 
-            with hermes_state_repair._cross_process_repair_lock(db_path) as holding:
+            with vael_state_repair._cross_process_repair_lock(db_path) as holding:
                 assert holding is True
         finally:
             with contextlib.suppress(OSError):
@@ -391,9 +391,9 @@ class TestNonContentionErrnoFailsFast:
         self, tmp_path, monkeypatch
     ):
         """Gateway-shaped: same SessionDB stays open and retries after deferral."""
-        import hermes_state_schema
+        import vael_state_schema
 
-        monkeypatch.setattr(hermes_state_schema, "_FTS_STALE_RETRY_SECONDS", 0.0)
+        monkeypatch.setattr(vael_state_schema, "_FTS_STALE_RETRY_SECONDS", 0.0)
         db_path = tmp_path / "state.db"
         d = SessionDB(db_path=db_path)
         if not d._fts_enabled:
@@ -463,7 +463,7 @@ class TestNonContentionErrnoFailsFast:
         import fcntl
 
         import vael_state
-        import hermes_state_repair
+        import vael_state_repair
 
         monkeypatch.setattr(vael_state, "_REPAIR_LOCK_TIMEOUT_SECONDS", 30.0)
 
@@ -472,7 +472,7 @@ class TestNonContentionErrnoFailsFast:
 
         monkeypatch.setattr(fcntl, "flock", _flock)
         t0 = time.monotonic()
-        with hermes_state_repair._cross_process_repair_lock(tmp_path / "state.db") as ok:
+        with vael_state_repair._cross_process_repair_lock(tmp_path / "state.db") as ok:
             assert ok is False
         assert time.monotonic() - t0 < 2.0
 
@@ -513,7 +513,7 @@ class TestDeferredFtsRetryInProcess:
     def test_retry_is_non_blocking_while_live_holder_and_backs_off(
         self, tmp_path, fast_timeout, monkeypatch
     ):
-        import hermes_state_schema
+        import vael_state_schema
 
         db_path = tmp_path / "state.db"
         d = SessionDB(db_path=db_path)
@@ -543,8 +543,8 @@ class TestDeferredFtsRetryInProcess:
                 assert gw.retry_deferred_fts_recovery() is False
                 # Backoff doubled (60s -> 120s) but capped at the max.
                 assert gw._fts_stale_retry_interval == min(
-                    2 * hermes_state_schema._FTS_STALE_RETRY_SECONDS,
-                    hermes_state_schema._FTS_STALE_RETRY_MAX_SECONDS,
+                    2 * vael_state_schema._FTS_STALE_RETRY_SECONDS,
+                    vael_state_schema._FTS_STALE_RETRY_MAX_SECONDS,
                 )
                 assert gw._fts_stale_retry_after > time.monotonic()
             except BaseException:
@@ -571,11 +571,11 @@ class TestDeferredFtsRetryInProcess:
         and reaches shared-registry instances."""
         import threading
 
-        import hermes_state_registry
-        import hermes_state_schema
+        import vael_state_registry
+        import vael_state_schema
         import gateway.run as grun
 
-        monkeypatch.setattr(hermes_state_schema, "_FTS_STALE_RETRY_SECONDS", 0.0)
+        monkeypatch.setattr(vael_state_schema, "_FTS_STALE_RETRY_SECONDS", 0.0)
         db_path = tmp_path / "state.db"
         d = SessionDB(db_path=db_path)
         if not d._fts_enabled:
@@ -587,10 +587,10 @@ class TestDeferredFtsRetryInProcess:
         self._mark_stale(db_path)
 
         with _rebuild_lock_held_by_other_process(db_path):
-            gw = hermes_state_registry.acquire(db_path)
+            gw = vael_state_registry.acquire(db_path)
         try:
             assert gw._fts_stale is True
-            assert gw in hermes_state_registry.live_shared_session_dbs()
+            assert gw in vael_state_registry.live_shared_session_dbs()
             stop = threading.Event()
             th = threading.Thread(
                 target=grun._start_gateway_housekeeping,
@@ -607,7 +607,7 @@ class TestDeferredFtsRetryInProcess:
             assert gw._fts_stale is False
             assert gw._fts_enabled is True
         finally:
-            hermes_state_registry.release_or_close(gw)
+            vael_state_registry.release_or_close(gw)
         assert _meta_value(db_path, FTS_STALE_KEY) is None
 
     def test_retry_noop_when_not_stale_or_read_only(self, tmp_path):

@@ -283,7 +283,7 @@ class TestSetupLogging:
 
     def test_explicit_params_override_config(self, hermes_home):
         """Explicit function params take precedence over config.yaml."""
-        import hermes_yaml as yaml
+        import vael_yaml as yaml
         config = {"logging": {"level": "DEBUG"}}
         (hermes_home / "config.yaml").write_text(yaml.safe_dump(config))
 
@@ -556,7 +556,7 @@ class TestReadLoggingConfig:
         assert backup is None
 
     def test_reads_logging_section(self, hermes_home):
-        import hermes_yaml as yaml
+        import vael_yaml as yaml
         config = {"logging": {"level": "DEBUG", "max_size_mb": 10, "backup_count": 5}}
         (hermes_home / "config.yaml").write_text(yaml.safe_dump(config), encoding="utf-8")
 

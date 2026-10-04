@@ -1,7 +1,7 @@
 """Schema creation, column reconciliation, and FTS DDL management for SessionDB.
 
-Plain mixin for ``hermes_state.SessionDB`` (no ``__init__``/state of its own).
-Must never import hermes_state (cycle); shared constants live in hermes_state_common.
+Plain mixin for ``vael_state.SessionDB`` (no ``__init__``/state of its own).
+Must never import vael_state (cycle); shared constants live in vael_state_common.
 """
 
 import contextlib
@@ -28,7 +28,7 @@ from vael_state_common import (
 )
 from vael_state_fts import _drop_orphan_fts_shadow_tables
 from vael_state_holders import _read_proc_argv
-from hermes_state_search import _delete_meta, _meta_row
+from vael_state_search import _delete_meta, _meta_row
 from vael_state_errors import is_sqlite_lock_error
 
 # Pre-split logger identity so log filtering/capture is unchanged.

@@ -11,7 +11,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-import hermes_yaml as yaml
+import vael_yaml as yaml
 
 import hermes_constants
 from hermes_cli import gateway_migrate as gm

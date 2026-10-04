@@ -571,7 +571,7 @@ class SessionTranscriptMixin:
         db = self._db_for_session_id(session_id)
         if not db:
             return None
-        from hermes_state_rewind import RewindTargetUnavailableError
+        from vael_state_rewind import RewindTargetUnavailableError
         with self._get_transcript_drain_lock():
             try:
                 outcome = db.rewind_user_turn(

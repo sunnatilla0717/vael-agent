@@ -8,7 +8,7 @@ the delete wiring the picker's 'd' key relies on.
 import pytest
 
 from vael_state import SessionDB
-from hermes_state_sessions import (
+from vael_state_sessions import (
     SESSION_STATUS_COMPLETE,
     SESSION_STATUS_EMPTY,
     SESSION_STATUS_ERROR,

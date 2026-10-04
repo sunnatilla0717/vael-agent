@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import hermes_yaml as yaml
+import vael_yaml as yaml
 
 
 def _invalidate_config_cache():

@@ -42,7 +42,7 @@ def _refusal(target: str, current: str, *, on_cross_vm_fs: bool) -> Optional[str
 def cmd_set_journal_mode(args) -> int:
     from vael_state import _default_db_path
     from vael_state_holders import describe_holder_pid, foreign_state_db_holders
-    from hermes_state_wal import (_path_on_cross_vm_fs, _set_journal_mode_no_wait, is_sqlite_wal_reset_vulnerable,
+    from vael_state_wal import (_path_on_cross_vm_fs, _set_journal_mode_no_wait, is_sqlite_wal_reset_vulnerable,
                                   resolve_journal_mode)
 
     target = args.mode

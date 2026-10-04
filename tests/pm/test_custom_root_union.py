@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import hermes_yaml as yaml
+import vael_yaml as yaml
 import pytest
 
 import pm.plugins_state as pstate

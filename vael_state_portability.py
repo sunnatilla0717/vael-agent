@@ -1,7 +1,7 @@
 """Session listing/rich rows, export, and import (portability) for SessionDB.
 
-Plain mixin for ``hermes_state.SessionDB`` (no ``__init__``/state of its own).
-Must never import hermes_state (cycle); shared constants live in hermes_state_common.
+Plain mixin for ``vael_state.SessionDB`` (no ``__init__``/state of its own).
+Must never import vael_state (cycle); shared constants live in vael_state_common.
 """
 
 import logging
@@ -16,7 +16,7 @@ from utils import safe_json_loads
 from hermes_cli.timefmt import coerce_epoch
 from vael_state_ids import new_session_id
 from vael_state_common import SCHEMA_SQL, _shape_preview, _sql_preview_raw, _sql_session_last_active
-from hermes_state_messages import _parse_tool_calls, _tool_calls_count
+from vael_state_messages import _parse_tool_calls, _tool_calls_count
 
 # Pre-split logger identity so log filtering/capture is unchanged.
 logger = logging.getLogger("hermes_state")

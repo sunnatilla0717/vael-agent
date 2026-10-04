@@ -9,7 +9,7 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
-import hermes_yaml as yaml
+import vael_yaml as yaml
 
 from hermes_cli.plugins import (
     ENTRY_POINTS_GROUP,

@@ -1194,7 +1194,7 @@ class CLICommandsMixin:
             return _cp(f"  {_t('shared.agent_busy', command='/handoff')}")
         if not self._session_db:
             with suppress(Exception):
-                from hermes_state_registry import acquire
+                from vael_state_registry import acquire
                 self._session_db = acquire()
         if not self._session_db:
             return _cp(_db_unavailable_line())

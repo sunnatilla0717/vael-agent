@@ -643,7 +643,7 @@ def _open_configured(path: Path, under_lock) -> tuple[sqlite3.Connection, Any]:
         with _INIT_LOCK:
             # WAL doesn't work on network filesystems; the helper falls back to
             # DELETE with one ERROR log (see hermes_state_wal._WAL_INCOMPAT_MARKERS).
-            from hermes_state_wal import apply_wal_with_fallback
+            from vael_state_wal import apply_wal_with_fallback
             apply_wal_with_fallback(conn, db_label=f"kanban.db ({path.name})")
             # FULL (not NORMAL): fsync before each checkpoint to narrow the
             # crash window that can leave a b-tree page header torn.

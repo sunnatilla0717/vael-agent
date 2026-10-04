@@ -13,7 +13,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 import cron.incidents as incidents
 import cron.jobs as cron_jobs
 import cron.scheduler as sched
-from hermes_time import now as _hermes_now
+from vael_time import now as _hermes_now
 
 
 def _point_db(monkeypatch, tmp_path):
@@ -57,7 +57,7 @@ def _tick_failing(job, tmp_path, deliveries, error="boom unrelated"):
          patch("cron.scheduler_delivery._resolve_origin", return_value=None), \
          patch("hermes_cli.env_loader.load_hermes_dotenv"), \
          patch("hermes_cli.env_loader.reset_secret_source_cache"), \
-         patch("hermes_state_registry.acquire", return_value=fake_db), \
+         patch("vael_state_registry.acquire", return_value=fake_db), \
          patch("tools.mcp_tool_discovery.discover_mcp_tools", return_value=[]), \
          patch("hermes_cli.runtime_provider.resolve_runtime_provider",
                return_value={

@@ -260,7 +260,7 @@ def _config_default_interface_early() -> str:
     value = "cli"
     try:
         if os.path.exists(cfg_path):
-            import hermes_yaml as _yaml_iface
+            import vael_yaml as _yaml_iface
 
             with open(cfg_path, encoding="utf-8-sig") as _f:
                 raw = _yaml_iface.safe_load(_f) or {}
@@ -1479,7 +1479,7 @@ def _create_titled_session(title: str) -> Optional[str]:
     db = None
     try:
         from vael_state_ids import new_session_id as mint_session_id
-        from hermes_state_registry import acquire
+        from vael_state_registry import acquire
 
         new_session_id = mint_session_id()
         # The CLI acquires the registry handle for this same path moments later; share it

@@ -11,7 +11,7 @@ from __future__ import annotations
 import json
 import logging
 import re
-from hermes_time import now as _hermes_now
+from vael_time import now as _hermes_now
 from typing import Optional
 
 # Log-record parity with the origin module.

@@ -1,7 +1,7 @@
 """Full-text / trigram / CJK message search and FTS maintenance for SessionDB.
 
-Plain mixin for ``hermes_state.SessionDB`` (no ``__init__``/state of its own).
-Must never import hermes_state (cycle); shared constants live in hermes_state_common.
+Plain mixin for ``vael_state.SessionDB`` (no ``__init__``/state of its own).
+Must never import vael_state (cycle); shared constants live in vael_state_common.
 """
 
 import contextlib

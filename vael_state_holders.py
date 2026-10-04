@@ -576,7 +576,7 @@ def in_process_state_db_holders(
     (auto-VACUUM admission) need this arm too: a VACUUM plus its TRUNCATE checkpoint retires
     the generation a sibling SessionDB in this very process still holds.
     """
-    from hermes_state_registry import other_generations_for_path
+    from vael_state_registry import other_generations_for_path
 
     return [
         (os.getpid(), description)

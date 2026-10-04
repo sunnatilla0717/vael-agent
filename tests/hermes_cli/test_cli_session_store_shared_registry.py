@@ -14,17 +14,17 @@ from cli import HermesCLI
 
 
 def test_cli_session_store_is_the_registry_handle_goals_reuse(monkeypatch):
-    import hermes_state_registry
+    import vael_state_registry
 
     monkeypatch.setattr(goals, "_DB_CACHE", {})
     constructed = []
-    real_open = hermes_state_registry._open_session_db
+    real_open = vael_state_registry._open_session_db
 
     def recording_open(path):
         constructed.append(path)
         return real_open(path)
 
-    monkeypatch.setattr(hermes_state_registry, "_open_session_db", recording_open)
+    monkeypatch.setattr(vael_state_registry, "_open_session_db", recording_open)
 
     cli = SimpleNamespace()
     try:
@@ -34,4 +34,4 @@ def test_cli_session_store_is_the_registry_handle_goals_reuse(monkeypatch):
         assert goals._get_session_db() is cli._session_db
         assert len(constructed) == 1
     finally:
-        hermes_state_registry.close_all()
+        vael_state_registry.close_all()

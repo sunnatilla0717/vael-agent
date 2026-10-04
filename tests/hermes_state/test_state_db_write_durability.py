@@ -35,7 +35,7 @@ from pathlib import Path
 import pytest
 
 from vael_state import repair_state_db_schema
-from hermes_state_repair import _connect_repair_durable
+from vael_state_repair import _connect_repair_durable
 
 
 def _make_db(tmp_path: Path) -> Path:

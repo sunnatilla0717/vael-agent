@@ -14,7 +14,7 @@ from unittest import mock
 import pytest
 
 import vael_state
-import hermes_state_wal
+import vael_state_wal
 import vael_state_common
 from agent.session_activity import ActivityProvenance, build_activity_snapshot
 from vael_state import SessionDB
@@ -1864,7 +1864,7 @@ class TestSanitizeTitle:
 class TestSchemaInit:
     def test_wal_mode(self, db):
         """Prefer WAL on fixed SQLite; DELETE on WAL-reset-vulnerable builds (#69784)."""
-        from hermes_state_wal import is_sqlite_wal_reset_vulnerable
+        from vael_state_wal import is_sqlite_wal_reset_vulnerable
 
         cursor = db._conn.execute("PRAGMA journal_mode")
         mode = cursor.fetchone()[0].lower()
@@ -2343,7 +2343,7 @@ class TestFtsRebuildLoopWithoutTrigram:
             LEGACY_FTS_TRIGRAM_SQL,
             _FTS_TRIGGERS,
         )
-        from hermes_state_schema import _FTS_BASE_TRIGGERS, _FTS_TRIGRAM_TRIGGERS
+        from vael_state_schema import _FTS_BASE_TRIGGERS, _FTS_TRIGRAM_TRIGGERS
 
         # Exhaustive and disjoint: nothing may fall out of the classification.
         assert set(_FTS_BASE_TRIGGERS) | set(_FTS_TRIGRAM_TRIGGERS) == set(_FTS_TRIGGERS)
@@ -4816,14 +4816,14 @@ class TestApplyWalProbe:
         """These cases cover the fixed-SQLite WAL path (not the #69784 gate)."""
 
         monkeypatch.setattr(
-            hermes_state_wal, "is_sqlite_wal_reset_vulnerable", lambda version_info=None: False
+            vael_state_wal, "is_sqlite_wal_reset_vulnerable", lambda version_info=None: False
         )
 
 
     def test_sets_wal_on_fresh_connection(self, tmp_path):
         """Probe sees 'delete', then set-pragma runs and returns 'wal'."""
         import sqlite3
-        from hermes_state_wal import apply_wal_with_fallback
+        from vael_state_wal import apply_wal_with_fallback
 
         class _TracingConn(sqlite3.Connection):
             def __init__(self, *a, **kw):
@@ -4856,7 +4856,7 @@ class TestApplyWalProbe:
         import sys
         import threading
         import sqlite3
-        from hermes_state_wal import apply_wal_with_fallback
+        from vael_state_wal import apply_wal_with_fallback
 
         db_path = tmp_path / "concurrent.db"
         errors = []
@@ -6301,7 +6301,7 @@ class TestPerformancePragmasEndToEnd:
         # path. Force WAL eligibility so _get_read_conn is truly exercised
         # (established pattern used by the WAL tests above).
         monkeypatch.setattr(
-            hermes_state_wal, "is_sqlite_wal_reset_vulnerable",
+            vael_state_wal, "is_sqlite_wal_reset_vulnerable",
             lambda version_info=None: False,
         )
         home = tmp_path / "hermes_home"
@@ -6388,7 +6388,7 @@ class TestFts5SanitizerCharacterClass:
 
     @staticmethod
     def _sanitize(query):
-        from hermes_state_search import SessionSearchMixin
+        from vael_state_search import SessionSearchMixin
 
         return SessionSearchMixin._sanitize_fts5_query(query)
 

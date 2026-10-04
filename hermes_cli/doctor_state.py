@@ -301,7 +301,7 @@ def _write_health_reason(state_db_path: Path, *, should_fix: bool):
     """FTS/write-health probe (a rolled-back BEGIN IMMEDIATE). Against a store a live writer holds,
     that probe is the second-writer class (#103339), so probe a read-only snapshot instead; a quiet
     store is probed in place. Returns the failure reason, or None when healthy or skipped."""
-    from hermes_state_repair import _db_opens_cleanly, _live_writer_holds_db
+    from vael_state_repair import _db_opens_cleanly, _live_writer_holds_db
     if not _live_writer_holds_db(state_db_path):
         return _db_opens_cleanly(state_db_path)
     if not should_fix and state_db_path.stat().st_size > _WRITE_PROBE_SNAPSHOT_MAX_BYTES:
@@ -355,7 +355,7 @@ def _repair_state_db(f: Finding, should_fix: bool, state_db_path: Path, kind: st
     ok_label, not_fixed_label, failed_issue, fix_hint = _STATE_DB_REPAIRS[kind]
     if not should_fix:
         return f.issues.append(fix_hint)
-    from hermes_state_repair import repair_state_db_schema
+    from vael_state_repair import repair_state_db_schema
     report = repair_state_db_schema(state_db_path)
     if not report.get("repaired"):
         check_warn(not_fixed_label, f"({report.get('error')}; backup: {report.get('backup_path')})")
@@ -372,7 +372,7 @@ def _repair_state_db(f: Finding, should_fix: bool, state_db_path: Path, kind: st
 
 def _report_structural_damage(f: Finding, should_fix: bool, state_db_path: Path, _DHH: str, reason) -> bool:
     """True (and reported/repaired) when the canonical b-tree, not just the FTS index, is damaged."""
-    from hermes_state_repair import state_db_has_structural_damage
+    from vael_state_repair import state_db_has_structural_damage
     if not state_db_has_structural_damage(state_db_path):
         return False
     check_warn(f"{_DHH}/state.db has structural corruption (canonical tables/indexes damaged, "
@@ -437,7 +437,7 @@ def _state_db_wal(f: Finding, should_fix: bool, state_db_path: Path) -> None:
             # joins the live WAL — under a running gateway that second-writer handling corrupts state.db.
             # Holder scan first (any other process holding the DB, or an unknown, fails closed), then run the
             # checkpoint on the exclusive repair guard so an opener arriving in between is refused, not joined.
-            from hermes_state_repair import _exclusive_repair_db_guard, _live_writer_holds_db
+            from vael_state_repair import _exclusive_repair_db_guard, _live_writer_holds_db
             title = f"WAL file is large ({size // (1024*1024)} MB)"
             _SKIP = ("Large WAL file — cannot prove state.db is quiet (stop the profile's gateway first, then "
                      "run 'hermes doctor --fix' to checkpoint)")

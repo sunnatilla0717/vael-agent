@@ -14,7 +14,7 @@ import time
 from datetime import datetime
 from typing import Any, Optional
 
-from hermes_time import safe_strftime
+from vael_time import safe_strftime
 
 logger = logging.getLogger(__name__)
 

@@ -1300,7 +1300,7 @@ class TestCronRunHistoryFallback:
         server's (review of #61403: a fixed-offset snapshot was off by hours
         when HERMES_TIMEZONE differs from the server zone)."""
         from zoneinfo import ZoneInfo
-        from hermes_time import _tz_cache
+        from vael_time import _tz_cache
 
         job_id = "job-tz"
         home = isolated_profiles["default"]
@@ -1472,7 +1472,7 @@ class TestCronRunHistoryFallback:
         (both profiles configure config.yaml timezones, so a shared env var
         cannot mask the mix-up)."""
         from zoneinfo import ZoneInfo
-        from hermes_time import _tz_cache
+        from vael_time import _tz_cache
 
         job_id = "job-owner-tz"
         worker_home = isolated_profiles["worker_alpha"]

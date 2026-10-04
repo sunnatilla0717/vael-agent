@@ -13,7 +13,7 @@ from agent.message_metadata import (
     CANONICAL_ROW, DB_ROW_SNAPSHOT, MESSAGE_UID, copy_identity_fields, message_uid_or_none)
 from vael_state_common import _id_chunks, _placeholders
 from vael_state_identity import _fill_missing_tool_call_uids, _restore_row_identity
-from hermes_state_messages import _MESSAGE_WRITE_COLUMNS
+from vael_state_messages import _MESSAGE_WRITE_COLUMNS
 
 
 # Durable payload columns a row-addressed rewrite may change: every INSERT column except row identity,

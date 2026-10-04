@@ -12,7 +12,7 @@ import textwrap
 import threading
 
 import pytest
-import hermes_yaml as yaml
+import vael_yaml as yaml
 
 _mcp_server_mod = pytest.importorskip("mcp.server")
 

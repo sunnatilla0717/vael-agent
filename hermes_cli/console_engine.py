@@ -599,7 +599,7 @@ def _sessions_list(_engine: HermesConsoleEngine, args: list[str]) -> str:
     ns = _parse("sessions list", args, (("--limit",), dict(type=int, default=20)))
     if ns.limit < 1 or ns.limit > 200:
         raise ConsoleCommandError("sessions list --limit must be between 1 and 200")
-    from hermes_state_sessions import INTERNAL_LISTING_SOURCES
+    from vael_state_sessions import INTERNAL_LISTING_SOURCES
     with _session_db() as db:
         sessions = db.list_sessions_rich(
             exclude_sources=list(INTERNAL_LISTING_SOURCES), limit=ns.limit, order_by_last_active=True)
@@ -608,7 +608,7 @@ def _sessions_list(_engine: HermesConsoleEngine, args: list[str]) -> str:
 
 def _sessions_stats(_engine: HermesConsoleEngine, args: list[str]) -> str:
     _expect_no_args(args, "sessions stats")
-    from hermes_state_sessions import INTERNAL_LISTING_SOURCES
+    from vael_state_sessions import INTERNAL_LISTING_SOURCES
     with _session_db() as db:
         total = db.session_count()
         listable = db.session_count(exclude_children=True, exclude_sources=list(INTERNAL_LISTING_SOURCES))
@@ -726,7 +726,7 @@ def _sessions_repair(_engine: HermesConsoleEngine, args: list[str]) -> int | Non
         "sessions repair", args, (("--check-only",), dict(action="store_true")),
         (("--no-backup",), dict(action="store_true")))
     from vael_state import DEFAULT_DB_PATH
-    from hermes_state_repair import _db_opens_cleanly, repair_state_db_schema
+    from vael_state_repair import _db_opens_cleanly, repair_state_db_schema
     db_path = DEFAULT_DB_PATH
     if not db_path.exists():
         print(f"No session database at {db_path} (nothing to repair).")

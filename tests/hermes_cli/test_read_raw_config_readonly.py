@@ -15,7 +15,7 @@ import os
 import time
 
 import pytest
-import hermes_yaml as yaml
+import vael_yaml as yaml
 
 
 @pytest.fixture()
