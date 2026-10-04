@@ -845,7 +845,7 @@ def test_session_resume_deferred_and_omitted_paths_guard_the_tip_only(server, mo
         def assert_resume_safe(self, sid, max_messages=None, *, tip_only=False):
             calls.append(tip_only)
             if not tip_only:
-                from hermes_state import SessionResumeTooLargeError
+                from vael_state import SessionResumeTooLargeError
 
                 raise SessionResumeTooLargeError(20_001, 20_000)
             return 666
@@ -887,7 +887,7 @@ def test_deferred_hydration_falls_back_to_tip_when_lineage_exceeds_limit(server,
     """The hydration worker never loads a lineage the guard would refuse."""
     import threading
 
-    from hermes_state import SessionResumeTooLargeError
+    from vael_state import SessionResumeTooLargeError
 
     tip = [{"role": "user", "content": "tip"}]
     reads = []

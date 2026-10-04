@@ -757,7 +757,7 @@ class CLIAgentSetupMixin:
         if not self._session_db:
             return None
         from cli import logger
-        from hermes_state import SessionResumeTooLargeError
+        from vael_state import SessionResumeTooLargeError
         try:
             safety_check = getattr(self._session_db, "assert_resume_safe", None)
             if not callable(safety_check):

@@ -65,7 +65,7 @@ from types import SimpleNamespace
 
 import pytest
 
-import hermes_state
+import vael_state
 import hermes_state_repair
 from hermes_state_repair import repair_state_db_schema
 
@@ -131,7 +131,7 @@ def _leave_hot_wal_row(db_path: str) -> None:
 
 def _probe_repair_lock_from_child(db_path: str, result) -> None:
     """Attempt the repair lock with a short timeout from another process."""
-    hermes_state._REPAIR_LOCK_TIMEOUT_SECONDS = 0.5
+    vael_state._REPAIR_LOCK_TIMEOUT_SECONDS = 0.5
     with hermes_state_repair._cross_process_repair_lock(Path(db_path)) as holding:
         result.put(holding)
 
@@ -691,7 +691,7 @@ def test_snapshot_deadline_has_a_floor_and_scales_with_source_size(
         fh.truncate(64 * 1024 * 1024)
     db.with_name(db.name + "-wal").write_bytes(b"w" * (8 * 1024 * 1024))
     large = deadline(db)
-    assert small >= hermes_state._REPAIR_LOCK_TIMEOUT_SECONDS
+    assert small >= vael_state._REPAIR_LOCK_TIMEOUT_SECONDS
     assert large > small
 
 
@@ -739,8 +739,8 @@ def test_interrupted_snapshot_rolls_back_destination(tmp_path, monkeypatch):
         conn.execute("INSERT INTO marker VALUES ('original')")
         conn.commit()
 
-    ticks = iter((0.0, hermes_state._REPAIR_LOCK_TIMEOUT_SECONDS + 1.0))
-    monkeypatch.setattr(hermes_state.time, "monotonic", lambda: next(ticks))
+    ticks = iter((0.0, vael_state._REPAIR_LOCK_TIMEOUT_SECONDS + 1.0))
+    monkeypatch.setattr(vael_state.time, "monotonic", lambda: next(ticks))
 
     with pytest.raises(TimeoutError):
         hermes_state_repair._copy_database_snapshot(source, destination)

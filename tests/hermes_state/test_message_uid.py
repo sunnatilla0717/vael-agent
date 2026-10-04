@@ -16,7 +16,7 @@ import re
 
 import pytest
 
-from hermes_state import SessionDB
+from vael_state import SessionDB
 
 UID_RE = re.compile(r"^[0-9a-f]{32}$")
 

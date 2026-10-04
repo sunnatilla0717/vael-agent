@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Iterator, Optional
 
 if TYPE_CHECKING:  # pragma: no cover
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
 # caplog tests pin the "hermes_state" logger name.
 logger = logging.getLogger("hermes_state")

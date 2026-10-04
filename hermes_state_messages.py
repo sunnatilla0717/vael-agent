@@ -19,10 +19,10 @@ from agent.message_metadata import (
     index_tool_call_uids, message_uid_or_none, resolve_tool_call_uid, mint_uid, stamp_message_uid)
 from agent.message_sanitization import _sanitize_surrogates, coalesce_tool_call_id
 from hermes_cli.timefmt import coerce_epoch
-from hermes_state_common import (
+from vael_state_common import (
     _COMPRESSION_LOCK_ROW_SQL, _ENDED_ROW_SQL, _RESET_END_REASONS, _RESET_END_REASONS_SQL, _ended_by_compression,
     _json_or, _legacy_reset_child_sql, _placeholders, _sql_json_extract)
-from hermes_state_identity import (
+from vael_state_identity import (
     _absorbed_uids_json, _restore_identity_columns, _tool_call_uid_map, _tool_call_uid_or_none, _tool_call_uids_json)
 
 logger = logging.getLogger("hermes_state")  # caplog tests pin the origin module's name
@@ -113,7 +113,7 @@ def _scrub_surrogates(value: Any) -> Any:
 
 def _stale_holder(row, now: float) -> bool:
     """A lock/lease row whose holder is expired or a provably dead local process."""
-    from hermes_state import _compression_lock_holder_process_is_dead
+    from vael_state import _compression_lock_holder_process_is_dead
     return float(row["expires_at"]) <= now or _compression_lock_holder_process_is_dead(row["holder"])
 
 
@@ -213,8 +213,8 @@ class SessionMessagesMixin:
         #74478 patience note below). User-initiated transcript mutations may opt in to rejecting an active
         unowned turn lease in that same transaction.
         """
-        from hermes_state import SessionCompressionInProgressError
-        from hermes_state_errors import CompressionSessionClosedError, SessionTurnLeaseLostError
+        from vael_state import SessionCompressionInProgressError
+        from vael_state_errors import CompressionSessionClosedError, SessionTurnLeaseLostError
         # NOTE (#75316 redesign): appends do NOT check compression_locks. The lock's job is to stop two
         # COMPRESSIONS colliding, not to fence ordinary transcript writes. Concurrent appends during a
         # compression are safe by construction: archive_and_compact() commits against a watermark captured
@@ -824,7 +824,7 @@ class SessionMessagesMixin:
         the whole transcript on every rewind). The live view is identical either way; only the durability
         of the dropped turns differs.
         """
-        from hermes_state_errors import CompressionSessionClosedError
+        from vael_state_errors import CompressionSessionClosedError
         def _do(conn):
             if reject_active_turn_lease:
                 self._check_transcript_write_guards(
@@ -1102,7 +1102,7 @@ class SessionMessagesMixin:
         index the clones naturally), and the originals are archived. NOTE: re-sequencing assigns the tail
         rows fresh ids; consumers that reference durable row ids re-resolve by content (see 3e8ab0610).
         """
-        from hermes_state import SessionCompressionInProgressError
+        from vael_state import SessionCompressionInProgressError
         def _do(conn):
             if lock_holder is not None:
                 lock_row = conn.execute(_COMPRESSION_LOCK_ROW_SQL, (session_id,)).fetchone()
@@ -1655,7 +1655,7 @@ class SessionMessagesMixin:
         mutable payload while the digest still fences a concurrent winner. ``_row_id`` is opt-in (gateway
         reactions); reasoning restored on assistant rows only; ``api_content`` VERBATIM (no sanitize/strip)
         so replay keeps the provider prompt cache byte-stable."""
-        from hermes_state import _strip_background_review_harness, _strip_stale_tool_call_markers
+        from vael_state import _strip_background_review_harness, _strip_stale_tool_call_markers
         # Runtime import avoids the transcript_repair -> hermes_state_messages module cycle.
         from agent.transcript_repair import transcript_row_snapshot
         # Only the unaddressed live replay gets the digest: row-addressed loaders (include_row_ids) keep the
@@ -1807,7 +1807,7 @@ class SessionMessagesMixin:
         """Resume row count, or raise ``SessionResumeTooLargeError``. ``max_messages=None`` reads config; 0
         disables the guard without counting. ``tip_only`` bounds only the tip's active rows for callers that
         never materialize the lineage: a heavily compressed conversation is a success, not a rejection."""
-        from hermes_state import SessionResumeTooLargeError, resolved_max_resume_messages
+        from vael_state import SessionResumeTooLargeError, resolved_max_resume_messages
         if max_messages is None:
             max_messages = resolved_max_resume_messages()
         if max_messages < 0:
@@ -2048,7 +2048,7 @@ class SessionMessagesMixin:
         """Permanently clear bare tool-call marker content ("[memory]") left by pre-fix sessions
         (``_rows_to_conversation`` repairs it in memory; this stops the re-scan). Only ``content`` is touched.
         ``backup``: ``VACUUM INTO`` snapshot first (none when nothing changes)."""
-        from hermes_state import _STALE_TOOL_CALL_MARKER_RE
+        from vael_state import _STALE_TOOL_CALL_MARKER_RE
         def _find_affected(conn) -> List[int]:
             cursor = conn.execute("SELECT id, content FROM messages "
                 "WHERE role = 'assistant' AND tool_calls IS NOT NULL AND tool_calls != ''")

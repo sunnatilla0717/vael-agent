@@ -61,7 +61,7 @@ class TestCreateTitledSession:
         sid = _create_titled_session("Bot Chat")
         assert sid, "should return a session id"
 
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
 
         db = SessionDB()
         try:
@@ -76,7 +76,7 @@ class TestCreateTitledSession:
         sid = _create_titled_session("Bot Chat")
         assert sid
 
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
 
         db = SessionDB()
         try:
@@ -150,7 +150,7 @@ class TestChatCFailLoudlyOnStderr:
         main_mod._resolve_continue_arg(args, use_tui=False)
 
         assert args.resume, "resume should be set to the new session id"
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
 
         db = SessionDB()
         try:

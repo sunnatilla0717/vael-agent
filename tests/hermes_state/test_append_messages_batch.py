@@ -11,8 +11,8 @@ import sqlite3
 
 import pytest
 
-from hermes_state import SessionDB
-from hermes_state_errors import CompressionSessionClosedError
+from vael_state import SessionDB
+from vael_state_errors import CompressionSessionClosedError
 
 
 @pytest.fixture()

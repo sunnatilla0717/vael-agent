@@ -26,9 +26,9 @@ from pathlib import Path
 
 import pytest
 
-import hermes_state_common
-from hermes_state import SessionDB
-from hermes_state_common import FTS_STALE_KEY, _FTS_TRIGGERS
+import vael_state_common
+from vael_state import SessionDB
+from vael_state_common import FTS_STALE_KEY, _FTS_TRIGGERS
 
 pytestmark = pytest.mark.skipif(
     sys.platform == "win32", reason="POSIX flock child-process harness"
@@ -101,7 +101,7 @@ def _meta_value(db_path: Path, key: str):
 @pytest.fixture
 def fast_timeout(monkeypatch):
     monkeypatch.setattr(
-        hermes_state_common, "_FTS_REBUILD_LOCK_TIMEOUT_SECONDS", 0.5
+        vael_state_common, "_FTS_REBUILD_LOCK_TIMEOUT_SECONDS", 0.5
     )
 
 
@@ -139,7 +139,7 @@ class TestRebuildFtsAdmission:
     def test_rebuild_waits_out_a_short_holder(self, db, monkeypatch):
         """A holder that releases within the bounded wait does not cause deferral."""
         monkeypatch.setattr(
-            hermes_state_common, "_FTS_REBUILD_LOCK_TIMEOUT_SECONDS", 10.0
+            vael_state_common, "_FTS_REBUILD_LOCK_TIMEOUT_SECONDS", 10.0
         )
         with _rebuild_lock_held_by_other_process(db.db_path, hold_seconds=1.0):
             # Child exits after 1s; deadline is 10s — this must acquire and rebuild.
@@ -147,7 +147,7 @@ class TestRebuildFtsAdmission:
 
     def test_admission_yields_true_for_pathless_db(self):
         """In-memory / pathless stores have no cross-process surface."""
-        with hermes_state_common.fts_rebuild_admission(None) as admitted:
+        with vael_state_common.fts_rebuild_admission(None) as admitted:
             assert admitted is True
 
 
@@ -245,9 +245,9 @@ class TestSchemaPathAdmission:
 _ORPHANING_HOLDER_SCRIPT = """
 import os, sys, time
 sys.path.insert(0, {repo!r})
-import hermes_state_common
+import vael_state_common
 
-admission = hermes_state_common.fts_rebuild_admission({db!r})
+admission = vael_state_common.fts_rebuild_admission({db!r})
 admitted = admission.__enter__()
 assert admitted is True
 pid = os.fork()
@@ -270,7 +270,7 @@ def _orphaned_fork_holder(db_path: Path):
     import signal
 
     script = _ORPHANING_HOLDER_SCRIPT.format(
-        repo=str(Path(hermes_state_common.__file__).parent), db=str(db_path)
+        repo=str(Path(vael_state_common.__file__).parent), db=str(db_path)
     )
     proc = subprocess.Popen(
         [sys.executable, "-c", script], stdout=subprocess.PIPE, text=True
@@ -312,7 +312,7 @@ class TestOrphanedHolderStalenessBreak:
         with _rebuild_lock_held_by_other_process(db.db_path) as proc:
             record = {
                 "pid": proc.pid,
-                "start_ticks": hermes_state_common._proc_start_ticks(proc.pid),
+                "start_ticks": vael_state_common._proc_start_ticks(proc.pid),
                 "acquired_at": 0,
             }
             lock.write_bytes(json.dumps(record).encode())
@@ -320,7 +320,7 @@ class TestOrphanedHolderStalenessBreak:
 
     def test_holder_record_cleared_on_normal_release(self, tmp_path):
         lock = tmp_path / "x.db.fts_rebuild.lock"
-        with hermes_state_common.fts_rebuild_admission(tmp_path / "x.db") as ok:
+        with vael_state_common.fts_rebuild_admission(tmp_path / "x.db") as ok:
             assert ok is True
             assert b"pid" in lock.read_bytes()
         assert lock.read_bytes() == b""
@@ -328,9 +328,9 @@ class TestOrphanedHolderStalenessBreak:
     @pytest.mark.live_system_guard_bypass
     def test_repair_lock_breaks_orphaned_holder(self, tmp_path, monkeypatch):
         """_cross_process_repair_lock shares the same staleness break."""
-        import hermes_state
+        import vael_state
 
-        monkeypatch.setattr(hermes_state, "_REPAIR_LOCK_TIMEOUT_SECONDS", 0.5)
+        monkeypatch.setattr(vael_state, "_REPAIR_LOCK_TIMEOUT_SECONDS", 0.5)
         db_path = tmp_path / "state.db"
         db_path.touch()
 
@@ -348,7 +348,7 @@ if pid == 0:
     os._exit(0)
 print("child", pid, flush=True)
 os._exit(1)
-""".format(repo=str(Path(hermes_state_common.__file__).parent), db=str(db_path))
+""".format(repo=str(Path(vael_state_common.__file__).parent), db=str(db_path))
         import os
         import signal
 
@@ -374,7 +374,7 @@ class TestNonContentionErrnoFailsFast:
         import fcntl
 
         monkeypatch.setattr(
-            hermes_state_common, "_FTS_REBUILD_LOCK_TIMEOUT_SECONDS", 30.0
+            vael_state_common, "_FTS_REBUILD_LOCK_TIMEOUT_SECONDS", 30.0
         )
 
         def _flock(*_args, **_kwargs):
@@ -383,7 +383,7 @@ class TestNonContentionErrnoFailsFast:
         monkeypatch.setattr(fcntl, "flock", _flock)
         db_path = tmp_path / "state.db"
         t0 = time.monotonic()
-        with hermes_state_common.fts_rebuild_admission(db_path) as admitted:
+        with vael_state_common.fts_rebuild_admission(db_path) as admitted:
             assert admitted is False
         assert time.monotonic() - t0 < 2.0
 
@@ -440,7 +440,7 @@ class TestNonContentionErrnoFailsFast:
         import logging
 
         monkeypatch.setattr(
-            hermes_state_common, "_FTS_REBUILD_LOCK_TIMEOUT_SECONDS", 30.0
+            vael_state_common, "_FTS_REBUILD_LOCK_TIMEOUT_SECONDS", 30.0
         )
 
         def _flock(*_args, **_kwargs):
@@ -448,7 +448,7 @@ class TestNonContentionErrnoFailsFast:
 
         monkeypatch.setattr(fcntl, "flock", _flock)
         with caplog.at_level(logging.INFO, logger="hermes_state"):
-            with hermes_state_common.fts_rebuild_admission(
+            with vael_state_common.fts_rebuild_admission(
                 tmp_path / "state.db"
             ) as admitted:
                 assert admitted is False
@@ -462,10 +462,10 @@ class TestNonContentionErrnoFailsFast:
         """Sibling site: the state.db repair lock shares the errno filter."""
         import fcntl
 
-        import hermes_state
+        import vael_state
         import hermes_state_repair
 
-        monkeypatch.setattr(hermes_state, "_REPAIR_LOCK_TIMEOUT_SECONDS", 30.0)
+        monkeypatch.setattr(vael_state, "_REPAIR_LOCK_TIMEOUT_SECONDS", 30.0)
 
         def _flock(*_args, **_kwargs):
             raise OSError(errno.EIO, "i/o error")
@@ -490,7 +490,7 @@ class TestNonContentionErrnoFailsFast:
         ],
     )
     def test_is_advisory_lock_contention_table(self, exc, expected):
-        assert hermes_state_common.is_advisory_lock_contention(exc) is expected
+        assert vael_state_common.is_advisory_lock_contention(exc) is expected
 
 
 class TestDeferredFtsRetryInProcess:
@@ -532,7 +532,7 @@ class TestDeferredFtsRetryInProcess:
                 # Live holder: the retry must return quickly (timeout=0),
                 # not wait out any admission budget.
                 monkeypatch.setattr(
-                    hermes_state_common, "_FTS_REBUILD_LOCK_TIMEOUT_SECONDS", 30.0
+                    vael_state_common, "_FTS_REBUILD_LOCK_TIMEOUT_SECONDS", 30.0
                 )
                 t0 = time.monotonic()
                 assert gw.retry_deferred_fts_recovery() is False

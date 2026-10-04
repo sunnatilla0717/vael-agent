@@ -82,7 +82,7 @@ class TestInodeReplacement:
         # a catchable, typed error, never a use-after-close segfault or
         # "Cannot operate on a closed database".
         assert a._conn is not None, "retired generation closed while holders live"
-        from hermes_state import StateDbReplacedError
+        from vael_state import StateDbReplacedError
 
         with pytest.raises(StateDbReplacedError):
             a.create_session(
@@ -172,7 +172,7 @@ class TestInodeReplacement:
 
 
 def _make_session_db(path):
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     return SessionDB(db_path=Path(path))
 

@@ -16,7 +16,7 @@ import sys
 from pathlib import Path
 from typing import Callable, List, Optional, Sequence, Set, Tuple
 
-from hermes_state_errors import is_sqlite_lock_error
+from vael_state_errors import is_sqlite_lock_error
 
 try:  # Hard dependency, but tolerate scaffold-phase imports before pip install.
     import psutil
@@ -596,7 +596,7 @@ def held_store_refusal(db_path: Path, *, command: str, force_hint: Optional[str]
     if not holders:
         return None
     from hermes_constants import profile_cli_selector
-    from hermes_state_errors import STORAGE_RECOVERY_DOCS_URL
+    from vael_state_errors import STORAGE_RECOVERY_DOCS_URL
 
     by_pid: dict[int, Set[str]] = {}
     unknown: List[str] = []

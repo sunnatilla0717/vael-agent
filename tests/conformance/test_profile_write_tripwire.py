@@ -40,7 +40,7 @@ from pathlib import Path
 
 import pytest
 
-import hermes_state
+import vael_state
 from hermes_constants import (
     reset_hermes_home_override,
     set_hermes_home_override,
@@ -148,7 +148,7 @@ def profile_tripwire(tmp_path, monkeypatch):
 
     # Close the conftest's DEFAULT_DB_PATH escape hatch (see docstring).
     monkeypatch.setattr(
-        hermes_state, "DEFAULT_DB_PATH", hermes_state._IMPORT_DEFAULT_DB_PATH
+        vael_state, "DEFAULT_DB_PATH", vael_state._IMPORT_DEFAULT_DB_PATH
     )
 
     tripwire = ProfileTripwire(root, profile)
@@ -167,7 +167,7 @@ def profile_tripwire(tmp_path, monkeypatch):
 
 def _exercise_session_db(tripwire: ProfileTripwire) -> None:
     """SessionDB() argless construction + session + message (#88532)."""
-    db = hermes_state.SessionDB()
+    db = vael_state.SessionDB()
     try:
         db.create_session("20260823_000000_tripwire", "cli")
         db.append_message("20260823_000000_tripwire", "user", "hello")

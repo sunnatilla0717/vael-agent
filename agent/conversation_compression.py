@@ -34,7 +34,7 @@ from agent.memory_provider import PRE_COMPRESS_CHECKPOINT_API_VERSION
 from agent.model_metadata import estimate_messages_tokens_rough, estimate_request_tokens_rough
 from agent.session_activity import ActivityProvenance, normalize_activity_provenance
 from agent.usage_anchor import set_usage_anchor
-from hermes_state_ids import new_session_id as mint_session_id
+from vael_state_ids import new_session_id as mint_session_id
 
 logger = logging.getLogger(__name__)
 
@@ -1431,7 +1431,7 @@ def _lock_api_is_absent_on_session_db(lock_db: Any) -> bool:
     Only the exact old ``hermes_state.SessionDB`` class (hot-reload skew) may fail open; proxies, lookalikes,
     non-callables and descriptor failures fail closed."""
     try:
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
         missing = object()
         return (
             type(lock_db) is SessionDB
@@ -3284,7 +3284,7 @@ def _parent_deliberately_ended(session_db: Any, session_id: str) -> bool:
     if not callable(reader):
         return False
     try:
-        from hermes_state_common import is_automatic_end_reason
+        from vael_state_common import is_automatic_end_reason
         row = reader(session_id) or {}
         return row.get("ended_at") is not None and not is_automatic_end_reason(row.get("end_reason"))
     except Exception:

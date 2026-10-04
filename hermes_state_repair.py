@@ -22,8 +22,8 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from hermes_constants import get_hermes_home
 from hermes_startup_watchdog import report_startup_progress
-from hermes_state_holders import read_only_db_uri
-from hermes_state_common import (
+from vael_state_holders import read_only_db_uri
+from vael_state_common import (
     _acquire_db_flock, _clear_lock_holder_record, _describe_lock_holder, _read_lock_holder_record,
     is_advisory_lock_contention,
 )
@@ -95,7 +95,7 @@ def _read_offline(db_path: Path, what: str, reader) -> Optional[str]:
 def _claim_repair_attempt(db_path: Path) -> bool:
     """Claim the one-shot per-process repair attempt for *db_path*: True for the first caller, False
     afterwards (bounds the repair/reopen loop and stops concurrent callers racing surgery on one file)."""
-    from hermes_state import _repair_attempt_lock, _repair_attempted_paths
+    from vael_state import _repair_attempt_lock, _repair_attempted_paths
     with _repair_attempt_lock:
         if str(db_path) in _repair_attempted_paths:
             return False
@@ -122,7 +122,7 @@ def _msvcrt_lock(handle, flag_name: str) -> None:
 
 def _try_lock_nonblocking(handle) -> None:
     """Take the advisory lock on *handle* without waiting (raises on contention)."""
-    from hermes_state import _IS_WINDOWS
+    from vael_state import _IS_WINDOWS
     if _IS_WINDOWS:
         _msvcrt_lock(handle, "LK_NBLCK")
     else:
@@ -132,7 +132,7 @@ def _try_lock_nonblocking(handle) -> None:
 
 def _release_lock_handle(handle, *, clear_record: bool = False) -> None:
     """Drop the advisory lock on *handle* (best effort) and close it."""
-    from hermes_state import _IS_WINDOWS
+    from vael_state import _IS_WINDOWS
     with contextlib.closing(handle), contextlib.suppress(OSError):  # best-effort release; always close
         if _IS_WINDOWS:
             _msvcrt_lock(handle, "LK_UNLCK")
@@ -176,7 +176,7 @@ def _cross_process_repair_lock(db_path: Path):
     a large DB, and an unbounded wait would hang the caller's open with no traceback (the failure shape of
     #36644).
     """
-    from hermes_state import _IS_WINDOWS, _REPAIR_LOCK_TIMEOUT_SECONDS
+    from vael_state import _IS_WINDOWS, _REPAIR_LOCK_TIMEOUT_SECONDS
     lock_path, handle = _open_lock_file(
         db_path, ".repair.lock", "repair", "skipping schema surgery rather than running it without cross-process authority.")
     if handle is None:
@@ -292,7 +292,7 @@ def _backup_free_space_error(db_path: Path) -> Optional[str]:
 def _repair_snapshot_timeout_seconds(source_path: Path) -> float:
     """Bound one SQLite snapshot by source size incl. sidecars (a WAL can hold committed rows not yet in the
     main file), so a healthy large-database copy is not cut off by the repair-lock timeout."""
-    from hermes_state import _REPAIR_LOCK_TIMEOUT_SECONDS
+    from vael_state import _REPAIR_LOCK_TIMEOUT_SECONDS
     source_bytes = 0
     for candidate in (source_path, *_sidecars(source_path)):
         with contextlib.suppress(FileNotFoundError):  # a sidecar may vanish mid-walk
@@ -763,7 +763,7 @@ def _db_opens_cleanly(db_path: Path) -> Optional[str]:
 
     See #50502.
     """
-    from hermes_state import SessionDB, load_fts5_cjk_extension
+    from vael_state import SessionDB, load_fts5_cjk_extension
     # ── Strategy 0.5: rebuild stale B-tree indexes (#63386) ── PRAGMA integrity_check can report "wrong #
     # of entries in index" when a B-tree index (e.g. idx_sessions_handoff_state) falls out of sync with its
     # base table. REINDEX rewrites the index b-tree from the canonical table rows using the existing index
@@ -839,7 +839,7 @@ def _live_writer_holds_db(db_path: Path) -> bool:
     WAL sidecar open, a deleted WAL generation, or an unknown/uninspectable holder fails CLOSED. The SQLite
     probe (``locking_mode=EXCLUSIVE`` + ``BEGIN IMMEDIATE``) is only an additional positive signal — it cannot
     see a ``journal_mode=DELETE`` reader and cannot run on a malformed file, which is why the scan comes first."""
-    import hermes_state_holders as _state_holders
+    import vael_state_holders as _state_holders
     return _state_holders.live_writer_holds_db(db_path, connect_repair_durable=_connect_repair_durable)
 
 
@@ -1051,7 +1051,7 @@ def _repair_state_db_schema_locked(
 
 def _unlink_db_triple(path: Path) -> Optional[str]:
     """Remove *path* and every SQLite sidecar; return any cleanup failure."""
-    from hermes_state import _IS_WINDOWS
+    from vael_state import _IS_WINDOWS
     failures: List[str] = []
     for victim in (path, *_sidecars(path)):
         for attempt in range(10):
@@ -1082,7 +1082,7 @@ def _edit_sqlite_master(conn: sqlite3.Connection, edit) -> None:
 def _strategy_rebuild_fts(conn: sqlite3.Connection) -> None:
     """FTS5 'rebuild' rewrites each index from the content table: the least-
     destructive fix for an index that rejects writes while reads work."""
-    from hermes_state import load_fts5_cjk_extension
+    from vael_state import load_fts5_cjk_extension
     # The cjk index can only be rebuilt with its tokenizer loaded (best-effort).
     load_fts5_cjk_extension(conn)
     for table_name in _FTS_TABLES:

@@ -33,10 +33,10 @@ from pathlib import Path
 
 import pytest
 
-import hermes_state
+import vael_state
 import hermes_state_repair
-import hermes_state_common
-from hermes_state import SessionDB
+import vael_state_common
+from vael_state import SessionDB
 from hermes_state_repair import repair_state_db_schema
 
 
@@ -62,7 +62,7 @@ def test_fts_admission_fails_closed_when_lock_file_is_unopenable(tmp_path):
     db_path = tmp_path / "state.db"
     _make_unopenable(db_path.with_name(db_path.name + ".fts_rebuild.lock"))
 
-    with hermes_state_common.fts_rebuild_admission(db_path) as admitted:
+    with vael_state_common.fts_rebuild_admission(db_path) as admitted:
         assert admitted is False
 
 
@@ -71,7 +71,7 @@ def test_fts_admission_still_admits_a_pathless_db(tmp_path):
 
     The fix must not turn the legitimate no-op case into a permanent deferral.
     """
-    with hermes_state_common.fts_rebuild_admission(None) as admitted:
+    with vael_state_common.fts_rebuild_admission(None) as admitted:
         assert admitted is True
 
 

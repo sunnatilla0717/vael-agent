@@ -155,7 +155,7 @@ def test_download_authenticates_via_query_token(forced_files_client):
 
 def test_download_resolves_paths_in_the_originating_profile_session(local_files_client, monkeypatch):
     from pathlib import Path
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     client, home = local_files_client
     monkeypatch.setattr(Path, "home", lambda: home)

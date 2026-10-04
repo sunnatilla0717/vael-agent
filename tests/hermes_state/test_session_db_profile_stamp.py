@@ -12,8 +12,8 @@ import sqlite3
 
 import pytest
 
-import hermes_state
-from hermes_state import SessionDB
+import vael_state
+from vael_state import SessionDB
 
 
 @pytest.fixture
@@ -24,7 +24,7 @@ def hermes_root(tmp_path, monkeypatch):
     # get_default_hermes_root memoizes on (native_home, env) — the env change
     # invalidates the memo by itself, but re-point DEFAULT_DB_PATH so any
     # default-constructed SessionDB in the module under test stays sandboxed.
-    monkeypatch.setattr(hermes_state, "DEFAULT_DB_PATH", root / "state.db")
+    monkeypatch.setattr(vael_state, "DEFAULT_DB_PATH", root / "state.db")
     return root
 
 

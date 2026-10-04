@@ -3,7 +3,7 @@
 import json
 import sys
 
-import hermes_state
+import vael_state
 import hermes_cli.main as main_mod
 
 
@@ -19,7 +19,7 @@ class _FakeDB:
 
 
 def _export(monkeypatch, *argv):
-    monkeypatch.setattr(hermes_state, "SessionDB", lambda *args, **kwargs: _FakeDB())
+    monkeypatch.setattr(vael_state, "SessionDB", lambda *args, **kwargs: _FakeDB())
     monkeypatch.setattr(sys, "argv", ["hermes", "sessions", "export", "--session-id", "sess", *argv])
     main_mod.main()
 

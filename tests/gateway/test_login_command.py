@@ -325,12 +325,12 @@ async def test_a_completion_evicts_welcome_and_clears_its_override(monkeypatch):
 
 
 def _durable_sweep_runner(monkeypatch, tmp_path):
-    import hermes_state
+    import vael_state
 
     def no_sqlite(**_kwargs):
         raise RuntimeError("Exercise sessions.json persistence")
 
-    monkeypatch.setattr(hermes_state, "SessionDB", no_sqlite)
+    monkeypatch.setattr(vael_state, "SessionDB", no_sqlite)
     runner = _runner(monkeypatch)
     store = SessionStore(sessions_dir=tmp_path, config=runner.config)
     key = store.get_or_create_session(_source()).session_key

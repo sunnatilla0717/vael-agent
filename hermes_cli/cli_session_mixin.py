@@ -14,7 +14,7 @@ import sys
 
 from agent.i18n import t
 from hermes_constants import get_hermes_home
-from hermes_state_ids import new_session_id
+from vael_state_ids import new_session_id
 from pathlib import Path
 from rich.console import Console
 from rich.markup import escape as _escape
@@ -112,7 +112,7 @@ def _reset_model_to_config_default(cli, silent: bool) -> None:
 def _apply_new_session_title(cli, title: str) -> Optional[str]:
     """Sanitize + persist a /new title; returns the stored title or None (untitled)."""
     from cli import _cprint
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
     try:
         sanitized = SessionDB.sanitize_title(title)
     except ValueError as e:
@@ -171,7 +171,7 @@ class CLISessionMixin:
         says so — the in-memory ``tools.approval._session_yolo`` set starts empty in a fresh
         process. No-op when already active or when the process was launched with ``--yolo``."""
         try:
-            from hermes_state import SessionDB
+            from vael_state import SessionDB
             from tools.approval import (
                 _YOLO_MODE_FROZEN, enable_session_yolo, is_session_yolo_enabled)
         except Exception:

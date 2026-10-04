@@ -17,7 +17,7 @@ from contextlib import contextmanager
 
 import pytest
 
-from hermes_state import SessionDB
+from vael_state import SessionDB
 
 class TestHandoffStateDB:
     """Test the handoff schema + helper methods on SessionDB."""

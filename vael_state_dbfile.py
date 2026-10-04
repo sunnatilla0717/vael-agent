@@ -24,8 +24,8 @@ import time
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
-from hermes_state_holders import canonical_sqlite_path, read_only_db_uri
-from hermes_state_common import (
+from vael_state_holders import canonical_sqlite_path, read_only_db_uri
+from vael_state_common import (
     FTS_REBUILD_DEFERRAL_KEY, stat_db_file_identity as _stat_db_file_identity
 )
 
@@ -78,7 +78,7 @@ def _pread_db_range(db_path: Path, offset: int, length: int) -> "Optional[bytes]
     """Lock-safe raw read of a possibly-live SQLite database: POSIX preads from a cached,
     never-closed fd (rebound when the path names a new inode); Windows reads plainly, since
     advisory-lock cancellation is a POSIX-only hazard."""
-    from hermes_state import _IS_WINDOWS
+    from vael_state import _IS_WINDOWS
     if _IS_WINDOWS:
         with contextlib.suppress(OSError), db_path.open("rb") as handle:
             handle.seek(offset)
@@ -118,7 +118,7 @@ def _pread_db_header(db_path: Path, length: int) -> "Optional[bytes]":
 
 def _read_sqlite_application_id(db_path: Path) -> "Optional[int]":
     """application_id from the SQLite header, via the lock-safe :func:`_pread_db_header`."""
-    from hermes_state_errors import _STATE_DB_APPLICATION_ID_OFFSET
+    from vael_state_errors import _STATE_DB_APPLICATION_ID_OFFSET
     end = _STATE_DB_APPLICATION_ID_OFFSET + 4
     header = _pread_db_header(db_path, end)
     if header is None or len(header) < end or header[:16] != b"SQLite format 3\x00":
@@ -385,8 +385,8 @@ def iter_deleted_sqlite_sidecar_holders(db_path) -> List[Tuple[int, str]]:
 def refuse_deleted_wal_generation(db_path) -> None:
     """Raise if any process holds a deleted WAL/SHM generation for *db_path*; called
     *before* ``sqlite3.connect`` so a second opener cannot mint a replacement WAL inode."""
-    from hermes_state import DeletedWalGenerationError
-    from hermes_state_errors import _DELETED_WAL_GENERATION_MSG
+    from vael_state import DeletedWalGenerationError
+    from vael_state_errors import _DELETED_WAL_GENERATION_MSG
     if not iter_deleted_sqlite_sidecar_holders(db_path):
         return
     logger.error(_DELETED_WAL_GENERATION_MSG)
@@ -422,7 +422,7 @@ class RetiredGenerationCaptureError(RuntimeError):
 def _fsync_path(path: Path) -> None:
     """fsync a file or directory we own. Never used on the live database: opening and closing a
     descriptor on a file SQLite has locked would cancel this process's POSIX advisory locks."""
-    from hermes_state import _IS_WINDOWS
+    from vael_state import _IS_WINDOWS
     if _IS_WINDOWS:
         return  # directories cannot be opened; file writes fsync their own handle
     fd = os.open(path, os.O_RDONLY)
@@ -504,7 +504,7 @@ def _parse_sqlite_header(header: bytes) -> Dict[str, Any]:
     if len(header) < _SQLITE_HEADER_BYTES or header[:16] != b"SQLite format 3\x00":
         return {"valid": False}
     raw_page_size = struct.unpack(">H", header[16:18])[0]
-    from hermes_state_errors import _STATE_DB_APPLICATION_ID_OFFSET
+    from vael_state_errors import _STATE_DB_APPLICATION_ID_OFFSET
     fields = {"change_counter": 24, "page_count": 28, "user_version": 60,
               "application_id": _STATE_DB_APPLICATION_ID_OFFSET, "version_valid_for": 92}
     parsed = {name: struct.unpack(">I", header[off:off + 4])[0] for name, off in fields.items()}
@@ -749,7 +749,7 @@ def collect_state_db_stats(db_path: Path) -> Dict[str, Any]:
     Deliberately does NOT instantiate :class:`SessionDB` — its constructor runs DDL.
     ``wal_size_bytes`` is 0 when the sidecar is absent; ``fts_storage_version`` None means the
     legacy inline layout; ``fts_rebuild_deferral`` is the durable blocked-repair diagnostic."""
-    from hermes_state import _connect_tracked_db
+    from vael_state import _connect_tracked_db
     stats: Dict[str, Any] = dict.fromkeys((
         "page_count", "page_size", "freelist_count", "logical_size_bytes", "wal_size_bytes", "journal_mode",
         "messages", "sessions", "fts_tables", "fts_storage_version", "fts_rebuild_pending",

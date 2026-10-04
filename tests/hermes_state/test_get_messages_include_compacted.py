@@ -25,7 +25,7 @@ from agent.context_compressor import (
     _MERGED_SUMMARY_DELIMITER,
     _SUMMARY_END_MARKER,
 )
-from hermes_state import SessionDB
+from vael_state import SessionDB
 
 
 @pytest.fixture

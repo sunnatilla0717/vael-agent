@@ -284,7 +284,7 @@ def test_real_db_openers_honor_configured_delete(monkeypatch, tmp_path):
     from gateway.platforms.api_server import ResponseStore
     from hermes_cli import projects_db
     from hermes_cli import kanban_db_connect as kbc
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
     from plugins.memory.holographic.store import MemoryStore
     from plugins.platforms.discord.recovery import DiscordRecoveryStore
     from tools import async_delegation

@@ -11,7 +11,7 @@ import sqlite3
 import time
 from typing import Any, Dict, List, Optional, Tuple
 
-from hermes_state_common import (
+from vael_state_common import (
     _BOUNDARY_END_REASONS, _COMPRESSION_LOCK_ROW_SQL as _LOCK_ROW_SQL, _ENDED_ROW_SQL, _ended_by_compression,
     _RESET_CHILD_SQL, _sql_json_extract, _sql_session_last_active, is_automatic_end_reason)
 
@@ -261,7 +261,7 @@ class SessionCompressionMixin:
         See #75316.
         ``None`` = unbounded (no internal flush happened). See #47202.
         """
-        from hermes_state_errors import CompressionSessionBusyError
+        from vael_state_errors import CompressionSessionBusyError
         def _do(conn):
             if require_lease_refresh and compression_lock_holder:
                 conn.execute(
@@ -502,7 +502,7 @@ class SessionCompressionMixin:
         """Try to atomically acquire the compression lock for ``session_id``. ``False``: another holder owns
         a live lock and the caller MUST NOT compress (its rotation would split the lineage). Expired
         locks and structured holders whose local ``pid=`` is dead are reclaimed transparently."""
-        from hermes_state import _compression_lock_holder_process_is_dead
+        from vael_state import _compression_lock_holder_process_is_dead
         if not session_id:
             return False
         now = time.time()
@@ -572,7 +572,7 @@ class SessionCompressionMixin:
         """Atomically acquire the cross-process turn lease for a conversation (keyed by the
         lineage root). The walk, the INSERT, and reclaim of expired or dead-local-PID leases
         share one write transaction."""
-        from hermes_state import _compression_lock_holder_process_is_dead
+        from vael_state import _compression_lock_holder_process_is_dead
         if not session_id or not holder:
             return False
         now = time.time()
@@ -603,7 +603,7 @@ class SessionCompressionMixin:
         retried at once with a longer write patience, and ``on_contended()`` is called instead,
         since the busy writer may be the holder's last flush. ``should_abort()`` True (e.g.
         ``/stop``) returns False at once."""
-        from hermes_state import classify_persistence_error
+        from vael_state import classify_persistence_error
         deadline = time.monotonic() + max(0.0, float(wait_seconds))
         patience = acquire_patience_s
         wait_started = None

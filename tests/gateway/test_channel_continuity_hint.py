@@ -24,9 +24,9 @@ from gateway.session import (
 
 @pytest.fixture()
 def _isolated_db(tmp_path, monkeypatch):
-    import hermes_state
+    import vael_state
 
-    monkeypatch.setattr(hermes_state, "DEFAULT_DB_PATH", tmp_path / "state.db")
+    monkeypatch.setattr(vael_state, "DEFAULT_DB_PATH", tmp_path / "state.db")
     monkeypatch.setenv("HERMES_HOME", str(tmp_path))
     return tmp_path
 

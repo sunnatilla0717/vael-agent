@@ -54,7 +54,7 @@ def stored_session_route(session_meta, *, current_model, current_provider):
     stored_model = str((session_meta or {}).get("model") or "").strip()
     if not stored_model:
         return None
-    from hermes_state import SessionDB as _SessionDB
+    from vael_state import SessionDB as _SessionDB
     runtime = _SessionDB.session_gateway_runtime(session_meta)
     base_url = runtime.get("base_url") or None
     provider = _heal_bare_custom_provider(runtime.get("provider") or None, base_url=base_url, model=stored_model)

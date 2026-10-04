@@ -13,7 +13,7 @@ sessions a user happens to call "Bot Chat" stay freely renameable.
 """
 import pytest
 
-from hermes_state import SessionDB
+from vael_state import SessionDB
 
 
 @pytest.fixture

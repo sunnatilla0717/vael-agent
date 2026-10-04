@@ -225,7 +225,7 @@ class GatewaySessionCommandsMixin:
 
     async def _reset_titled_header(self, header: str, session_id: str, title_arg: str) -> str:
         """``/new <title>``: titled header on success, else the header plus a rejection note."""
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
         note = ""
         try:
             sanitized = SessionDB.sanitize_title(title_arg)
@@ -793,7 +793,7 @@ class GatewaySessionCommandsMixin:
                 return t("gateway.title.current_with_title", session_id=session_id, title=title)
             return t("gateway.title.current_no_title", session_id=session_id)
         try:
-            from hermes_state import SessionDB
+            from vael_state import SessionDB
             sanitized = SessionDB.sanitize_title(title_arg)
         except ValueError as e:
             return t("gateway.shared.warn_passthrough", error=e)

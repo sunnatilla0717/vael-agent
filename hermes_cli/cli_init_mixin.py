@@ -11,7 +11,7 @@ import queue
 import threading
 from datetime import datetime
 from hermes_cli.fallback_config import get_fallback_chain
-from hermes_state_ids import new_session_id
+from vael_state_ids import new_session_id
 from pathlib import Path
 from rich.console import Console
 from typing import Any, Dict, List, Optional

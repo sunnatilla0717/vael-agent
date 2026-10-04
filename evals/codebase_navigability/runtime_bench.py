@@ -105,9 +105,9 @@ except Exception as e:
         out["prompt_builder_err"]=repr(e)[:120]+" cands="+",".join(cands)[:120]
     except Exception as e2: out["prompt_builder_err"]=repr(e2)[:160]
 try:
-    import hermes_state, tempfile, uuid
+    import vael_state, tempfile, uuid
     from pathlib import Path
-    db=hermes_state.SessionDB(Path(tempfile.mkdtemp())/"s.db") if hasattr(hermes_state,"SessionDB") else None
+    db=vael_state.SessionDB(Path(tempfile.mkdtemp())/"s.db") if hasattr(vael_state,"SessionDB") else None
     if db:
         sid=str(uuid.uuid4())
         db.create_session(sid, source="bench", model="m") if hasattr(db,"create_session") else None

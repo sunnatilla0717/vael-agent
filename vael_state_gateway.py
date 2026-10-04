@@ -12,7 +12,7 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
 
-from hermes_state_common import (
+from vael_state_common import (
     _RECOVERABLE_END_REASONS_SQL, _RESET_CHILD_SQL, _RESET_END_REASONS_SQL, _sql_json_extract,
     _sql_session_last_active)
 
@@ -183,8 +183,8 @@ class SessionGatewayMixin:
 
         Fails closed: anything whose parent, age, argv, or network connections
         cannot be proved safe remains a repair-blocking holder."""
-        from hermes_state import psutil
-        from hermes_state_dbfile import _concrete_state_db_holder_pids, _is_inactive_orphan_desktop_holder
+        from vael_state import psutil
+        from vael_state_dbfile import _concrete_state_db_holder_pids, _is_inactive_orphan_desktop_holder
         if not sys.platform.startswith("linux") or psutil is None:
             return []
         try:
@@ -800,7 +800,7 @@ class SessionGatewayMixin:
         CLI ``/model``), then top-level ``provider``/``base_url``/``api_mode`` (TUI), with
         ``billing_provider`` filling a missing provider so sessions that never ran ``/model``
         still restore the provider that served them. Empty dict on parse failure — resume uses ambient config."""
-        from hermes_state import _BARE_BILLING_PROVIDERS
+        from vael_state import _BARE_BILLING_PROVIDERS
         raw = (session_meta or {}).get("model_config")
         if isinstance(raw, str):
             try:

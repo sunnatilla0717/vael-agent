@@ -11,9 +11,9 @@ import sqlite3
 
 import pytest
 
-from hermes_state import SessionDB, StateDbCorruptError
-from hermes_state_errors import classify_persistence_error
-from hermes_state_health import (
+from vael_state import SessionDB, StateDbCorruptError
+from vael_state_errors import classify_persistence_error
+from vael_state_health import (
     is_structural_corruption_error,
     note_storage_error,
     reset_storage_state,
@@ -175,13 +175,13 @@ def client(monkeypatch, _isolate_hermes_home):
     except ImportError:
         pytest.skip("fastapi/starlette not installed")
 
-    import hermes_state
+    import vael_state
     from hermes_cli.web_routers import profiles as profiles_routes
     from hermes_cli.web_server import _SESSION_HEADER_NAME, _SESSION_TOKEN, app
     from hermes_constants import get_hermes_home
 
     monkeypatch.setattr(profiles_routes, "_SIDEBAR_CACHE_TTL_SECONDS", 0.0)
-    monkeypatch.setattr(hermes_state, "DEFAULT_DB_PATH", get_hermes_home() / "state.db")
+    monkeypatch.setattr(vael_state, "DEFAULT_DB_PATH", get_hermes_home() / "state.db")
     (get_hermes_home() / "config.yaml").write_text("{}\n", encoding="utf-8")
     c = TestClient(app)
     c.headers[_SESSION_HEADER_NAME] = _SESSION_TOKEN

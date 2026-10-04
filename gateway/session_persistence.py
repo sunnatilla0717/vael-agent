@@ -49,7 +49,7 @@ class SessionPersistenceMixin:
         Resolving here rather than once in ``__init__`` is the whole fix for #88532: it lets the scoping
         that the multiplexed inbound path already performs actually reach session storage.
         """
-        from hermes_state import _default_db_path
+        from vael_state import _default_db_path
         from hermes_state_registry import acquire
 
         path = Path(db_path) if db_path is not None else Path(_default_db_path())

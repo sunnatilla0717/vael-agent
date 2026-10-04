@@ -18,7 +18,7 @@ def test_sessions_optimize_accepts_the_force_override_it_advertises(_isolate_her
 
 
 def test_sessions_list_and_stats_use_isolated_session_store(_isolate_hermes_home):
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     db = SessionDB()
     try:
@@ -43,8 +43,8 @@ def test_sessions_export_rejects_oversized_single_before_touching_output(
     monkeypatch,
     tmp_path,
 ):
-    import hermes_state
-    from hermes_state import SessionDB
+    import vael_state
+    from vael_state import SessionDB
 
     db = SessionDB()
     try:
@@ -56,7 +56,7 @@ def test_sessions_export_rejects_oversized_single_before_touching_output(
     finally:
         db.close()
 
-    monkeypatch.setattr(hermes_state, "resolved_max_export_messages", lambda: 2)
+    monkeypatch.setattr(vael_state, "resolved_max_export_messages", lambda: 2)
     materialized = []
     original_export_session = SessionDB.export_session
 
@@ -93,8 +93,8 @@ def test_sessions_export_all_uses_per_session_budget(
     """
     import json
 
-    import hermes_state
-    from hermes_state import SessionDB
+    import vael_state
+    from vael_state import SessionDB
 
     db = SessionDB()
     try:
@@ -107,7 +107,7 @@ def test_sessions_export_all_uses_per_session_budget(
     finally:
         db.close()
 
-    monkeypatch.setattr(hermes_state, "resolved_max_export_messages", lambda: 3)
+    monkeypatch.setattr(vael_state, "resolved_max_export_messages", lambda: 3)
     output = tmp_path / "all-sessions.jsonl"
 
     # 3 sessions x 2 messages = 6 total > 3, but each session is under the
@@ -134,8 +134,8 @@ def test_sessions_export_all_rejects_single_oversized_session(
     monkeypatch,
     tmp_path,
 ):
-    import hermes_state
-    from hermes_state import SessionDB
+    import vael_state
+    from vael_state import SessionDB
 
     db = SessionDB()
     try:
@@ -152,7 +152,7 @@ def test_sessions_export_all_rejects_single_oversized_session(
     finally:
         db.close()
 
-    monkeypatch.setattr(hermes_state, "resolved_max_export_messages", lambda: 3)
+    monkeypatch.setattr(vael_state, "resolved_max_export_messages", lambda: 3)
     export_all_calls = []
 
     def tracked_export_all(self, source=None):
@@ -181,8 +181,8 @@ def test_sessions_export_zero_limit_disables_guard(
     monkeypatch,
     tmp_path,
 ):
-    import hermes_state
-    from hermes_state import SessionDB
+    import vael_state
+    from vael_state import SessionDB
 
     db = SessionDB()
     try:
@@ -194,7 +194,7 @@ def test_sessions_export_zero_limit_disables_guard(
     finally:
         db.close()
 
-    monkeypatch.setattr(hermes_state, "resolved_max_export_messages", lambda: 0)
+    monkeypatch.setattr(vael_state, "resolved_max_export_messages", lambda: 0)
     output = tmp_path / "huge.jsonl"
 
     result = HermesConsoleEngine().execute(

@@ -66,12 +66,12 @@ def test_conftest_does_not_import_hermes_state_at_collection():
             )
         return real_import(name, *args, **kwargs)
 
-    saved = sys.modules.pop("hermes_state", None)
+    saved = sys.modules.pop("vael_state", None)
     builtins.__import__ = guard
     try:
         _wal_is_usable()  # must not raise
     finally:
         builtins.__import__ = real_import
         if saved is not None:
-            sys.modules["hermes_state"] = saved
+            sys.modules["vael_state"] = saved
     assert not blocked

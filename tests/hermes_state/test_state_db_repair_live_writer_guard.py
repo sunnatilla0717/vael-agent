@@ -28,10 +28,10 @@ from pathlib import Path
 
 import pytest
 
-import hermes_state
+import vael_state
 import hermes_state_repair
-import hermes_state_holders
-from hermes_state import SessionDB
+import vael_state_holders
+from vael_state import SessionDB
 from hermes_state_repair import repair_state_db_schema
 
 
@@ -92,7 +92,7 @@ def test_repair_checks_foreign_holders_before_opening_sqlite(tmp_path, monkeypat
     """A replacement pathname cannot expose locks on the deleted old inode."""
     db = _make_wal_db(tmp_path)
     monkeypatch.setattr(
-        hermes_state_holders,
+        vael_state_holders,
         "foreign_state_db_holders",
         lambda _path: [(4242, f"{db}-wal (deleted)")],
     )
@@ -111,9 +111,9 @@ def test_repair_checks_foreign_holders_before_opening_sqlite(tmp_path, monkeypat
 @pytest.mark.platforms("linux")
 def test_linux_holder_scan_does_not_require_psutil(tmp_path, monkeypatch):
     """The Linux safety scan must not make psutil a repair dependency."""
-    monkeypatch.setattr(hermes_state_holders, "psutil", None)
+    monkeypatch.setattr(vael_state_holders, "psutil", None)
 
-    holders = hermes_state_holders.foreign_state_db_holders(
+    holders = vael_state_holders.foreign_state_db_holders(
         tmp_path / "absent-state.db"
     )
 
@@ -135,18 +135,18 @@ def test_incomplete_holder_scan_keeps_unknown_sentinel(tmp_path, monkeypatch):
             raise RuntimeError("scan interrupted")
         raise AssertionError(f"unexpected scan path: {path}")
 
-    monkeypatch.setattr(hermes_state_holders.os, "listdir", _listdir)
-    monkeypatch.setattr(hermes_state_holders.os, "readlink", lambda _path: str(db))
-    real_stat = hermes_state_holders.os.stat
+    monkeypatch.setattr(vael_state_holders.os, "listdir", _listdir)
+    monkeypatch.setattr(vael_state_holders.os, "readlink", lambda _path: str(db))
+    real_stat = vael_state_holders.os.stat
 
     def _stat(path, *args, **kwargs):
         if path == "/proc/4242/fd/7":
             return real_stat(db)
         return real_stat(path, *args, **kwargs)
 
-    monkeypatch.setattr(hermes_state_holders.os, "stat", _stat)
+    monkeypatch.setattr(vael_state_holders.os, "stat", _stat)
 
-    holders = hermes_state_holders.foreign_state_db_holders(db)
+    holders = vael_state_holders.foreign_state_db_holders(db)
 
     assert (4242, str(db)) in holders
     assert any(pid < 0 and "scan interrupted" in path for pid, path in holders)
@@ -166,16 +166,16 @@ def test_uninspectable_watched_descriptor_blocks_repair_before_sqlite(
             return ["7"]
         raise AssertionError(f"unexpected scan path: {path}")
 
-    real_stat = hermes_state_holders.os.stat
+    real_stat = vael_state_holders.os.stat
 
     def _stat(path, *args, **kwargs):
         if path == "/proc/4242/fd/7":
             raise PermissionError(errno.EACCES, "descriptor denied", path)
         return real_stat(path, *args, **kwargs)
 
-    monkeypatch.setattr(hermes_state_holders.os, "listdir", _listdir)
-    monkeypatch.setattr(hermes_state_holders.os, "readlink", lambda _path: str(db))
-    monkeypatch.setattr(hermes_state_holders.os, "stat", _stat)
+    monkeypatch.setattr(vael_state_holders.os, "listdir", _listdir)
+    monkeypatch.setattr(vael_state_holders.os, "readlink", lambda _path: str(db))
+    monkeypatch.setattr(vael_state_holders.os, "stat", _stat)
 
     def _unexpected_probe(*_args, **_kwargs):
         pytest.fail("repair opened SQLite with unproven descriptor identity")
@@ -212,10 +212,10 @@ def test_uninspectable_unknown_descriptor_uses_hermes_identity_at_repair_boundar
     def _readlink(path):
         raise PermissionError(errno.EACCES, "descriptor denied", path)
 
-    monkeypatch.setattr(hermes_state_holders.os, "listdir", _listdir)
-    monkeypatch.setattr(hermes_state_holders.os, "readlink", _readlink)
+    monkeypatch.setattr(vael_state_holders.os, "listdir", _listdir)
+    monkeypatch.setattr(vael_state_holders.os, "readlink", _readlink)
     monkeypatch.setattr(
-        hermes_state_holders,
+        vael_state_holders,
         "_read_proc_argv",
         lambda _pid: argv,
     )
@@ -267,7 +267,7 @@ def test_uninspectable_watched_identity_blocks_alias_before_sqlite(
             return ["7"]
         raise AssertionError(f"unexpected scan path: {path}")
 
-    real_stat = hermes_state_holders.os.stat
+    real_stat = vael_state_holders.os.stat
 
     def _stat(path, *args, **kwargs):
         # ``os`` is shared: deny only the holder scan's own probe of the watched file, not
@@ -281,11 +281,11 @@ def test_uninspectable_watched_identity_blocks_alias_before_sqlite(
             return real_stat(db)
         return real_stat(path, *args, **kwargs)
 
-    monkeypatch.setattr(hermes_state_holders.os, "listdir", _listdir)
+    monkeypatch.setattr(vael_state_holders.os, "listdir", _listdir)
     monkeypatch.setattr(
-        hermes_state_holders.os, "readlink", lambda _path: str(alias)
+        vael_state_holders.os, "readlink", lambda _path: str(alias)
     )
-    monkeypatch.setattr(hermes_state_holders.os, "stat", _stat)
+    monkeypatch.setattr(vael_state_holders.os, "stat", _stat)
 
     def _unexpected_probe(*_args, **_kwargs):
         pytest.fail("repair opened SQLite with an unproven watched identity")
@@ -313,20 +313,20 @@ def test_uninspectable_alias_descriptor_for_hermes_blocks_before_sqlite(
             return ["7"]
         raise AssertionError(f"unexpected scan path: {path}")
 
-    real_stat = hermes_state_holders.os.stat
+    real_stat = vael_state_holders.os.stat
 
     def _stat(path, *args, **kwargs):
         if path == "/proc/4242/fd/7":
             raise PermissionError(errno.EACCES, "descriptor denied", path)
         return real_stat(path, *args, **kwargs)
 
-    monkeypatch.setattr(hermes_state_holders.os, "listdir", _listdir)
+    monkeypatch.setattr(vael_state_holders.os, "listdir", _listdir)
     monkeypatch.setattr(
-        hermes_state_holders.os, "readlink", lambda _path: str(alias)
+        vael_state_holders.os, "readlink", lambda _path: str(alias)
     )
-    monkeypatch.setattr(hermes_state_holders.os, "stat", _stat)
+    monkeypatch.setattr(vael_state_holders.os, "stat", _stat)
     monkeypatch.setattr(
-        hermes_state_holders,
+        vael_state_holders,
         "_read_proc_argv",
         lambda _pid: ["python3", "-m", "hermes_cli.main", "gateway"],
     )

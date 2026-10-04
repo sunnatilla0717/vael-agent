@@ -259,14 +259,14 @@ async def test_multiplex_picker_global_persists_only_named_profile(
 
 def _make_store_runner(adapter, sessions_dir, monkeypatch):
     """Bare runner with a real JSONL SessionStore (the durable /model override lives there)."""
-    import hermes_state
+    import vael_state
     from gateway.config import GatewayConfig
     from gateway.session import SessionStore
 
     def _no_sqlite(*_a, **_k):
         raise RuntimeError("SQLite disabled in test")
 
-    monkeypatch.setattr(hermes_state, "SessionDB", _no_sqlite)
+    monkeypatch.setattr(vael_state, "SessionDB", _no_sqlite)
     runner = _make_runner(adapter)
     runner.session_store = SessionStore(sessions_dir=sessions_dir, config=GatewayConfig())
     return runner

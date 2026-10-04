@@ -27,7 +27,7 @@ def _reimport_with_fcntl(monkeypatch, stub: types.ModuleType | None):
     else:
         monkeypatch.setitem(sys.modules, "fcntl", stub)
 
-    return importlib.import_module("hermes_state_lockguard")
+    return importlib.import_module("vael_state_lockguard")
 
 
 def _windows_fcntl_lookalike() -> types.ModuleType:

@@ -9,7 +9,7 @@ import pytest
 
 from agent import codex_runtime, runtime_cwd
 from agent.transports import codex_app_server_session
-from hermes_state import SessionDB
+from vael_state import SessionDB
 from plugins.memory.honcho import HonchoMemoryProvider
 from plugins.memory.honcho.client import HonchoClientConfig
 from run_agent import AIAgent

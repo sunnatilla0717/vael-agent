@@ -9,7 +9,7 @@ import time
 from pathlib import Path
 from typing import Dict, Optional
 
-from hermes_state_common import _RESET_CHILD_SQL, _sql_json_extract
+from vael_state_common import _RESET_CHILD_SQL, _sql_json_extract
 
 # Same logger the code used before extraction (record parity).
 _log = logging.getLogger("hermes_cli.web_server")
@@ -118,7 +118,7 @@ def _open_session_db_at_path(db_path: Path, *, read_only: bool):
     """
     import sqlite3
 
-    from hermes_state import SessionDB, is_malformed_schema_error
+    from vael_state import SessionDB, is_malformed_schema_error
     from hermes_state_registry import acquire, release_or_close
 
     # Read-only file/sidecar preflight (port of kilocode#12508): repair-or-refuse BEFORE the first
@@ -192,7 +192,7 @@ def _open_session_db_at_path(db_path: Path, *, read_only: bool):
 def _session_db_path_for_profile(profile: Optional[str]) -> Path:
     """state.db path for ``profile`` (None/empty = this process's own)."""
     from hermes_cli.web_server_cron import _cron_profile_home
-    from hermes_state import _default_db_path
+    from vael_state import _default_db_path
 
     if profile:
         _name, home = _cron_profile_home(profile)

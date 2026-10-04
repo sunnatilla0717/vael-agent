@@ -50,7 +50,7 @@ def test_timeout_queues_degraded_marker(cli_lane, monkeypatch):
 
     # Draining the marker record itself times out too: recognised by the record's flag,
     # so nothing further is queued (the guard is structural, not a text match).
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
     SessionDB(db_path=cli_lane / "state.db").close()  # a deferred target must have a state.db
     record = {"id": key, "home": str(cli_lane), "profile": "", "degraded": True}
     posted = []

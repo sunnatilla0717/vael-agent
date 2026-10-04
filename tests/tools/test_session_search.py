@@ -14,7 +14,7 @@ from datetime import datetime, timezone
 
 import pytest
 
-from hermes_state import SessionDB
+from vael_state import SessionDB
 from tools.session_search_tool import (
     _format_timestamp,
     _is_compacted_message,

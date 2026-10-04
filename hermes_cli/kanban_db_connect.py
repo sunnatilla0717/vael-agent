@@ -715,7 +715,7 @@ def connect(db_path: Optional[Path] = None, *, board: Optional[str] = None) -> s
         # Read-only file/sidecar preflight first, so a stray read-only kanban.db
         # fails actionably instead of "attempt to write a readonly database".
         # See #12508.
-        from hermes_state import preflight_db_writability
+        from vael_state import preflight_db_writability
         preflight_db_writability(path, db_label=f"kanban.db ({path.name})")
         # Cheap byte-level header check before any sqlite connection, then the
         # full integrity probe (cached per path via _INITIALIZED_PATHS).

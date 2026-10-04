@@ -30,15 +30,15 @@ import pytest
 from gateway.config import GatewayConfig, Platform
 from gateway.platforms.event import MessageEvent
 from gateway.session import SessionSource, SessionStore, build_session_key
-from hermes_state import AsyncSessionDB, SessionDB
+from vael_state import AsyncSessionDB, SessionDB
 
 
 @pytest.fixture()
 def store(tmp_path, monkeypatch):
     """Real SessionStore backed by a real SessionDB (SQLite in tmp_path)."""
-    import hermes_state
+    import vael_state
 
-    monkeypatch.setattr(hermes_state, "DEFAULT_DB_PATH", tmp_path / "state.db")
+    monkeypatch.setattr(vael_state, "DEFAULT_DB_PATH", tmp_path / "state.db")
     config = GatewayConfig()
     return SessionStore(sessions_dir=tmp_path, config=config)
 

@@ -13,7 +13,7 @@ import sqlite3
 
 import pytest
 
-from hermes_state_common import DEFERRED_INDEX_SQL, SCHEMA_SQL
+from vael_state_common import DEFERRED_INDEX_SQL, SCHEMA_SQL
 from hermes_state_schema import SessionSchemaMixin, schema_read_probe_statements
 
 def _fresh_schema_conn() -> sqlite3.Connection:

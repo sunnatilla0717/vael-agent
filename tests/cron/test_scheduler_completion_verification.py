@@ -64,7 +64,7 @@ class _RecordingSessionDB:
 
 
 def _run_booked_job(monkeypatch, tmp_path):
-    import hermes_state
+    import vael_state
     import run_agent
 
     instances: list[_RecordingSessionDB] = []
@@ -75,7 +75,7 @@ def _run_booked_job(monkeypatch, tmp_path):
         instances.append(self)
 
     monkeypatch.setattr(_RecordingSessionDB, "__init__", _capture_init)
-    monkeypatch.setattr(hermes_state, "SessionDB", _RecordingSessionDB)
+    monkeypatch.setattr(vael_state, "SessionDB", _RecordingSessionDB)
     monkeypatch.setattr(run_agent, "AIAgent", _FakeCronAgent)
     monkeypatch.setattr(
         "hermes_constants.resolve_reasoning_config", lambda *_a, **_k: None

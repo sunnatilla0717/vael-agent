@@ -531,7 +531,7 @@ class TestDeleteProfile:
         enters the routing index, resolves a profile whose directory is gone, and logs
         ``Profile '<name>' does not exist`` on every subsequent event.
         """
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
         import time
 
         tmp_path = profile_env
@@ -582,7 +582,7 @@ class TestDeleteProfile:
         would be undone by its next save. When it cannot be reached the delete is NOT a clean
         success: the identity settlement is reported as pending, with the retry named.
         """
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
         from hermes_cli.profiles import ProfileIdentitySettlementPending
 
         tmp_path = profile_env
@@ -1200,7 +1200,7 @@ class TestRenameProfile:
         """No live gateway → the CLI performs the durable rekey itself so a renamed profile's session
         keys / profile_name / routing rows follow the new name (else inbound events on the old name's
         chats resolve to a nonexistent profile and flood errors.log)."""
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
         tmp_path = profile_env
         create_profile("oldname", no_alias=True)
         old_dir = tmp_path / ".hermes" / "profiles" / "oldname"
@@ -1262,7 +1262,7 @@ class TestRenameProfile:
         migrate-identity <old> <new>` rekeys the durable rows once no gateway holds the store, and
         is idempotent (a second run has nothing left to rekey but still succeeds)."""
         from hermes_cli.profile_cmd import cmd_profile
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
         from argparse import Namespace
         tmp_path = profile_env
         create_profile("oldname", no_alias=True)

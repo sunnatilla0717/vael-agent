@@ -11,7 +11,7 @@ import sqlite3
 
 import pytest
 
-import hermes_state
+import vael_state
 from hermes_state_repair import apply_durability_barriers
 
 

@@ -13,7 +13,7 @@ import sqlite3
 
 import pytest
 
-from hermes_state import (
+from vael_state import (
     DeletedWalGenerationError,
     SessionDB,
     StateDbCorruptError,
@@ -132,7 +132,7 @@ class TestQuarantinedHandleStopsTouchingTheFile:
         db, real_conn = _quarantined_db(tmp_path)
         db.close()
         reopen = MagicMock()
-        monkeypatch.setattr("hermes_state._connect_tracked_db", reopen)
+        monkeypatch.setattr("vael_state._connect_tracked_db", reopen)
         with pytest.raises(StateDbCorruptError, match="structural corruption"):
             db.create_session(session_id="s4", source="cli", model="test")
         reopen.assert_not_called()
@@ -167,7 +167,7 @@ class TestQuarantineScope:
     def test_replaced_file_takes_precedence_over_corrupt(self, tmp_path):
         import os
 
-        from hermes_state import StateDbReplacedError
+        from vael_state import StateDbReplacedError
 
         live = tmp_path / "state.db"
         other = tmp_path / "other.db"
@@ -191,7 +191,7 @@ class TestQuarantineScope:
             db.close()
 
     def test_classify_persistence_error_maps_quarantine_to_corrupt(self):
-        from hermes_state import _STATE_DB_CORRUPT_MSG, classify_persistence_error
+        from vael_state import _STATE_DB_CORRUPT_MSG, classify_persistence_error
 
         assert classify_persistence_error(StateDbCorruptError("x")) == "corrupt"
         # The stringified form (RPC boundaries) must classify the same way.

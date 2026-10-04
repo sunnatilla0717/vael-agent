@@ -34,7 +34,7 @@ WRITE_SECONDS = 8.0
 # every session so the harness knows an upper bound at any instant.
 _WRITER = r"""
 import sys, time
-from hermes_state import SessionDB
+from vael_state import SessionDB
 deadline = time.monotonic() + float(sys.argv[1])
 db = SessionDB()
 n = 0

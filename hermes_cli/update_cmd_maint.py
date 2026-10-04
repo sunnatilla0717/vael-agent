@@ -120,7 +120,7 @@ def _print_fts_optimize_available_notice() -> None:
 
     try:
         from hermes_constants import get_hermes_home
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
     except Exception:
         return
     db_path = get_hermes_home() / "state.db"

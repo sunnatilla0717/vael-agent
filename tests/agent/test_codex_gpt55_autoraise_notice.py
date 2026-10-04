@@ -21,7 +21,7 @@ import io
 from pathlib import Path
 
 from hermes_constants import get_hermes_home
-from hermes_state import SessionDB
+from vael_state import SessionDB
 from run_agent import AIAgent
 
 from agent.agent_init import (

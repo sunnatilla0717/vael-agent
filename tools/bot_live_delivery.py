@@ -32,7 +32,7 @@ _TERMINAL = frozenset({"settled", "failed", "cancelled", "ambiguous"})
 def find_canonical_owner(profile_home: Path | str) -> dict[str, Any] | None:
     """Return the exact Bot Chat tip's lease, including unsupported CLI owners."""
     from hermes_cli.active_sessions import active_session_registry_snapshot
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     home = Path(profile_home).resolve()
     if not (home / "state.db").is_file():
@@ -231,7 +231,7 @@ def _matches(home: Path | str, record: dict, owner: dict) -> bool:
         return False
     if pinned["session_id"] == owner["session_id"]:
         return True
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     db = SessionDB(db_path=Path(home) / "state.db", read_only=True)
     try:

@@ -18,9 +18,9 @@ from pathlib import Path
 
 import pytest
 
-import hermes_state
+import vael_state
 import hermes_state_wal
-from hermes_state import SessionDB
+from vael_state import SessionDB
 
 
 def pin_wal(monkeypatch) -> None:
@@ -124,7 +124,7 @@ _GATEWAY_CHILD = textwrap.dedent(
     if hermes_state_wal.is_sqlite_wal_reset_vulnerable():
         hermes_state_wal.is_sqlite_wal_reset_vulnerable = lambda version_info=None: False
     hermes_state_wal.resolve_journal_mode = lambda: "wal"
-    from hermes_state import DeletedWalGenerationError, SessionDB
+    from vael_state import DeletedWalGenerationError, SessionDB
 
     def emit(**e):
         sys.stdout.write(json.dumps(e) + "\\n"); sys.stdout.flush()
@@ -228,7 +228,7 @@ def gateway_writer(tmp_path: Path):
     """Spawn the gateway writer child on ``tmp_path / "state.db"`` and yield a :class:`GatewayWriter`.
 
     The child is torn down (stdin closed, then wait → terminate → kill) on exit from the block."""
-    repo_root = os.path.dirname(os.path.abspath(hermes_state.__file__))
+    repo_root = os.path.dirname(os.path.abspath(vael_state.__file__))
     hermes_home = tmp_path / "home"
     hermes_home.mkdir()
     path = tmp_path / "state.db"

@@ -11,8 +11,8 @@ from hermes_cli.doctor_report import (
     warn_on_error,
 )
 from hermes_cli.sizefmt import format_bytes as _human_bytes
-from hermes_state_common import FTS_STORAGE_VERSION
-from hermes_state_holders import read_only_db_uri
+from vael_state_common import FTS_STORAGE_VERSION
+from vael_state_holders import read_only_db_uri
 
 
 def _honcho_is_configured_for_doctor() -> bool:
@@ -383,7 +383,7 @@ def _report_structural_damage(f: Finding, should_fix: bool, state_db_path: Path,
 
 def _classify_unreadable_state_db(f: Finding, should_fix: bool, state_db_path: Path, _DHH: str, exc: Exception) -> None:
     """Structural damage first; only then schema repair. Avoids SessionDB auto-repair side effects."""
-    from hermes_state import is_malformed_db_error
+    from vael_state import is_malformed_db_error
     if _report_structural_damage(f, should_fix, state_db_path, _DHH, exc):
         return
     if not is_malformed_db_error(exc):
@@ -413,7 +413,7 @@ def _state_db_stats(issues: list, state_db_path: Path) -> None:
     """Health/stats snapshot: strictly read-only (mode=ro) so it is safe against a live DB held by
     the gateway; any failure degrades to one info line rather than failing doctor."""
     with warn_on_error("state.db stats unavailable ({e})", "", report=lambda t, _d: check_info(t)):
-        from hermes_state_dbfile import collect_state_db_stats, count_db_holders
+        from vael_state_dbfile import collect_state_db_stats, count_db_holders
         rows = _render_state_db_stats(collect_state_db_stats(state_db_path), holders=count_db_holders(state_db_path),
                                       host_note=host_gateway_note())
         for _kind, _text, _detail in rows:
@@ -470,8 +470,8 @@ def _retired_wal_holders(f: Finding, state_db_path: Path, _DHH: str) -> bool:
     refused while they live, and the current inode has no holders, so the plain holder count says
     "0 holding the DB open" beside a green state.db line — the opposite of the truth."""
     from hermes_constants import profile_cli_selector
-    from hermes_state_dbfile import iter_deleted_sqlite_sidecar_holders
-    from hermes_state_holders import describe_holder_pid
+    from vael_state_dbfile import iter_deleted_sqlite_sidecar_holders
+    from vael_state_holders import describe_holder_pid
     pids = list(dict.fromkeys(pid for pid, _ in iter_deleted_sqlite_sidecar_holders(state_db_path)))
     if not pids:
         return False

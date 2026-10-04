@@ -17,8 +17,8 @@ from pathlib import Path
 from typing import Any, Callable, Iterator, Optional
 
 from hermes_cli.timefmt import EPOCH_MAX, EPOCH_MIN
-from hermes_state import SessionDB
-from hermes_state_common import FTS_STORAGE_VERSION, SCHEMA_VERSION
+from vael_state import SessionDB
+from vael_state_common import FTS_STORAGE_VERSION, SCHEMA_VERSION
 from hermes_state_repair import _db_opens_cleanly
 
 

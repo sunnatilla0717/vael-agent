@@ -488,7 +488,7 @@ def _schedule_row_git_meta(session: dict, key: str, db) -> None:
 
 def _workdir_reraise_disk_full(exc: BaseException, log_msg: str) -> None:
     """Re-raise a disk-full write error (the caller must surface it); debug-log the rest."""
-    from hermes_state_errors import is_disk_full_error
+    from vael_state_errors import is_disk_full_error
     if is_disk_full_error(exc):
         raise exc
     logger.debug(log_msg, exc_info=True)

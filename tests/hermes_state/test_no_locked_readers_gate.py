@@ -40,7 +40,7 @@ from pathlib import Path
 import pytest
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
-_STATE_PY = _REPO_ROOT / "hermes_state.py"
+_STATE_PY = _REPO_ROOT / "vael_state.py"
 
 # SessionDB's own class body lives in hermes_state.py; the rest of its
 # methods come from these mixins (see module docstring). Each entry is

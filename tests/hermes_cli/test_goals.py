@@ -263,14 +263,14 @@ class TestSessionDbCacheAfterProfileDelete:
     def test_delete_then_recreate_gets_a_live_store(self, hermes_home):
         import shutil
 
-        import hermes_state
+        import vael_state
         import hermes_state_registry as registry
         from hermes_constants import reset_hermes_home_override, set_hermes_home_override
         from hermes_cli.goals import GoalState, _get_session_db, load_goal, save_goal
 
         # conftest re-points DEFAULT_DB_PATH at one fixed file; the registry must resolve the
         # scoped profile home here, as production does.
-        with patch.object(hermes_state, "DEFAULT_DB_PATH", hermes_state._IMPORT_DEFAULT_DB_PATH):
+        with patch.object(vael_state, "DEFAULT_DB_PATH", vael_state._IMPORT_DEFAULT_DB_PATH):
             profile = hermes_home / "profiles" / "p1"
             profile.mkdir(parents=True)
             token = set_hermes_home_override(profile)

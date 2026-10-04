@@ -109,7 +109,7 @@ def cmd_tools(args):
 def cmd_insights(args):
     db = None
     try:
-        from hermes_state import SessionDB, _default_db_path
+        from vael_state import SessionDB, _default_db_path
         from agent.insights import InsightsEngine
         if not _default_db_path().exists():
             print("No session data yet.")

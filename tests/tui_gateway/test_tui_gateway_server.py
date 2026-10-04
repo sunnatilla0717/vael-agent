@@ -3469,7 +3469,7 @@ def test_live_visible_history_matches_eager_resume_with_real_db(tmp_path):
     projection — both keeping the candidate — so switching to a live session
     shows the same substantive answer a cold resume would.
     """
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     db = SessionDB(db_path=tmp_path / "state.db")
     db.create_session("s1", source="tui")
@@ -3501,7 +3501,7 @@ def test_live_visible_history_matches_eager_resume_with_real_db(tmp_path):
 def test_live_visible_history_keeps_candidate_and_new_flushed_turn_real_db(tmp_path):
     """Real-DB variant of the combined case: a candidate from turn 1 AND a
     fully-flushed turn 2 both appear once."""
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     db = SessionDB(db_path=tmp_path / "state.db")
     db.create_session("s1", source="tui")
@@ -3537,7 +3537,7 @@ def test_live_session_payload_reads_profile_db_not_launch_db(monkeypatch, tmp_pa
     fell back to collapsed in-memory model history — while eager
     ``session.resume`` against the same profile still showed them.
     """
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     launch_home = tmp_path / "launch"
     profile_home = tmp_path / "profile"
@@ -3591,7 +3591,7 @@ def test_lazy_child_watch_resume_serves_candidate_inclusive_display(monkeypatch,
     verbatim display projection so a persisted verification candidate is not
     collapsed out of the watch window (#65919 sibling of the warm-payload fix).
     """
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     db = SessionDB(db_path=tmp_path / "state.db")
     db.create_session("child1", source="tui")
@@ -3857,7 +3857,7 @@ def test_session_resume_follows_compression_tip(monkeypatch, tmp_path):
     the response generated after compression. session.resume must follow the
     compression tip via resolve_resume_session_id.
     """
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     db = SessionDB(db_path=tmp_path / "state.db")
     base = int(time.time()) - 10_000
@@ -12693,7 +12693,7 @@ def test_rollback_restore_preserves_composite_carrier_scaffold(monkeypatch, tmp_
         SUMMARY_PREFIX,
         _SUMMARY_END_MARKER,
     )
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     class _Mgr:
         enabled = True
@@ -21809,7 +21809,7 @@ def test_persist_branch_seed_keeps_reasoning_fields(monkeypatch, tmp_path):
     branch resuming without the parent's reasoning, preserved thinking blocks or
     Codex encrypted-reasoning/message-item continuation state.
     """
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     db = SessionDB(db_path=tmp_path / "state.db")
     session = _session(
@@ -21846,7 +21846,7 @@ def test_session_branch_keeps_reasoning_fields(monkeypatch, tmp_path):
     Same drop as the seed path: the copy loop wrote only role/content, so the
     new session row replayed without the reasoning context the parent had.
     """
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     db = SessionDB(db_path=tmp_path / "state.db")
     server._sessions["sid"] = _session(history=_branch_history())
@@ -22384,7 +22384,7 @@ def test_prompt_submit_row_id_real_sessiondb_resolve_without_memory_stamps(
     No hand-seeded ids and no MagicMock state manager — the contract that
     #82766 review said unit fixtures must exercise.
     """
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     db = SessionDB(db_path=tmp_path / "rowid-trunc.db")
     session_key = "real-db-row-trunc"
@@ -22451,7 +22451,7 @@ def test_prompt_submit_row_id_real_sessiondb_unknown_refuses_despite_ordinal(
     """#82959 fail-closed: unknown row_id + valid ordinal must not truncate
     real SessionDB (the mass-delete class when durable id cannot resolve).
     """
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     db = SessionDB(db_path=tmp_path / "rowid-refuse.db")
     session_key = "real-db-row-refuse"
@@ -22509,7 +22509,7 @@ def test_prompt_submit_row_id_misaligned_memory_refuses_content_swap(
     must refuse (4018), not zip-stamp durable ids positionally and cut the
     wrong turn. Probe 4a from the PR #83202 review.
     """
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     db = SessionDB(db_path=tmp_path / "rowid-misalign-content.db")
     session_key = "real-db-row-misalign-content"
@@ -22580,7 +22580,7 @@ def test_prompt_submit_row_id_misaligned_memory_role_shift_targets_real_turn(
     addressed user turn, never a positionally mis-aimed one. Probe 4b from
     the PR #83202 review.
     """
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     db = SessionDB(db_path=tmp_path / "rowid-misalign-role.db")
     session_key = "real-db-row-misalign-role"
@@ -22745,7 +22745,7 @@ def test_prompt_submit_consecutive_rewinds_with_returned_survivor_row_ids(
     the first rewind. The submit response must return the fresh survivor ids,
     and a second rewind using them must succeed where the stale id fail-closes.
     """
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     db = SessionDB(db_path=tmp_path / "rowid-consec.db")
     session_key = "real-db-consec-rewind"
@@ -22854,7 +22854,7 @@ def test_prompt_submit_rebind_map_clears_active_row_hidden_by_sequence_repair(
     monkeypatch, tmp_path
 ):
     """The bounded map classifies physical active IDs before user;user repair."""
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     db = SessionDB(db_path=tmp_path / "rowid-repaired-wedge.db")
     session_key = "real-db-rowid-repaired-wedge"

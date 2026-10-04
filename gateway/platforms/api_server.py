@@ -159,7 +159,7 @@ from gateway.browser_control_broker import (
 from gateway.platforms._shared import coerce_port as _coerce_port
 from gateway.platforms._shared import get_scoped_secret as _get_scoped_secret
 from gateway.platforms.tcp_site import start_tcp_site
-from hermes_state_errors import SessionActiveWriteGuardError
+from vael_state_errors import SessionActiveWriteGuardError
 
 
 logger = logging.getLogger(__name__)
@@ -2797,7 +2797,7 @@ class APIServerAdapter(OpenAICompatRoutesMixin, BasePlatformAdapter):
         except Exception:
             # Unscoped fallback (tests/manual wiring): controlled root under the Hermes home.
             try:
-                from hermes_state import get_hermes_home
+                from vael_state import get_hermes_home
                 root = Path(get_hermes_home()) / "artifacts" / "browser-control"
             except Exception:
                 raise ArtifactError("no artifact root is resolvable") from None

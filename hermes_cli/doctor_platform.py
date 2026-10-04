@@ -103,7 +103,7 @@ def _report_database_holders(name: str, db_path: Path) -> None:
     """Name the processes holding ``db_path`` (or a WAL sidecar) so the operator knows what to stop before the
     offline journal-mode conversion; a partial or unavailable scan is reported as "cannot prove quiet", never as
     an all-clear (the scan is the same fail-closed authority repair/VACUUM/checkpoint admission uses)."""
-    from hermes_state_holders import describe_holder_pid, foreign_state_db_holders
+    from vael_state_holders import describe_holder_pid, foreign_state_db_holders
     unknown: list[str] = []
     by_pid: dict[int, set[str]] = {}
     for pid, target in foreign_state_db_holders(db_path):

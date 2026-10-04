@@ -11,9 +11,9 @@ from types import SimpleNamespace
 
 import pytest
 
-import hermes_state
-from hermes_state import SessionDB
-from hermes_state_common import FTS_STORAGE_VERSION, SCHEMA_VERSION
+import vael_state
+from vael_state import SessionDB
+from vael_state_common import FTS_STORAGE_VERSION, SCHEMA_VERSION
 from hermes_cli import session_recovery
 from hermes_cli.session_recovery import (
     SessionRecoverySafetyError,

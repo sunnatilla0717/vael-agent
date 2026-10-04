@@ -29,8 +29,8 @@ def store(tmp_path, monkeypatch):
     at hermes_state import time, before pytest's HERMES_HOME monkeypatch
     fires — the autouse fixture's HERMES_HOME override doesn't help here.)
     """
-    import hermes_state
-    monkeypatch.setattr(hermes_state, "DEFAULT_DB_PATH", tmp_path / "state.db")
+    import vael_state
+    monkeypatch.setattr(vael_state, "DEFAULT_DB_PATH", tmp_path / "state.db")
     config = GatewayConfig()
     s = SessionStore(sessions_dir=tmp_path, config=config)
     return s

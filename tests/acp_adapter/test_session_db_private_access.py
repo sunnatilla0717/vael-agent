@@ -11,7 +11,7 @@ import json
 from unittest.mock import MagicMock
 
 
-from hermes_state import SessionDB
+from vael_state import SessionDB
 from acp_adapter.session import SessionManager
 
 

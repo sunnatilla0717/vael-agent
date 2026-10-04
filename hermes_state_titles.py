@@ -8,7 +8,7 @@ import re
 from typing import Any, Dict, Optional
 
 from agent.message_sanitization import _sanitize_surrogates
-from hermes_state_common import _COMPRESSION_CHILD_SQL, escape_like as _escape_like
+from vael_state_common import _COMPRESSION_CHILD_SQL, escape_like as _escape_like
 
 # caplog tests pin the "hermes_state" logger name.
 logger = logging.getLogger("hermes_state")
@@ -34,7 +34,7 @@ class SessionTitlesMixin:
     def sanitize_title(title: Optional[str]) -> Optional[str]:
         """Strip control/zero-width/bidi chars (and lone surrogates sqlite3 cannot bind),
         collapse whitespace, normalize empty to None. ValueError past MAX_TITLE_LENGTH."""
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
         if not title:
             return None
         cleaned = _TITLE_INVISIBLE_RE.sub('', _TITLE_CONTROL_RE.sub('', _sanitize_surrogates(title)))

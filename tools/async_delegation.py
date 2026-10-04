@@ -104,7 +104,7 @@ def _connect() -> sqlite3.Connection:
     # hardening so this writer doesn't create/leave the file (and its WAL
     # sidecars) at the process umask. See hermes_state._secure_state_db_files.
     from hermes_constants import mkdir_under_hermes_home
-    from hermes_state import _secure_state_db_files
+    from vael_state import _secure_state_db_files
 
     path = _db_path()
     # A late replay or writer must not resurrect a removed named profile (#123265).

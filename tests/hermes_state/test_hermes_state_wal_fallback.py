@@ -18,9 +18,9 @@ from unittest.mock import patch
 
 import pytest
 
-import hermes_state
+import vael_state
 import hermes_state_wal
-from hermes_state import SessionDB, get_last_init_error
+from vael_state import SessionDB, get_last_init_error
 from hermes_state_wal import WalUnsupportedError, apply_wal_with_fallback
 
 
@@ -76,9 +76,9 @@ def _make_silent_noop_factory(returned_mode: str = "delete"):
 @pytest.fixture(autouse=True)
 def _reset_last_init_error():
     """Reset the module-global last-error before and after each test."""
-    hermes_state._set_last_init_error(None)
+    vael_state._set_last_init_error(None)
     yield
-    hermes_state._set_last_init_error(None)
+    vael_state._set_last_init_error(None)
 
 
 @pytest.fixture(autouse=True)
@@ -575,7 +575,7 @@ class TestGetLastInitError:
             kwargs.pop("factory", None)
             return real_connect(str(target), factory=_ForeignKeysFailConnection, **kwargs)
 
-        with patch("hermes_state.sqlite3.connect", side_effect=gated_connect):
+        with patch("vael_state.sqlite3.connect", side_effect=gated_connect):
             with pytest.raises(sqlite3.OperationalError):
                 SessionDB(db_path=target)
 
@@ -603,7 +603,7 @@ class TestSessionDbUsesWalFallback:
             kwargs.pop("factory", None)
             return real_connect(str(target), factory=factory, **kwargs)
 
-        with patch("hermes_state.sqlite3.connect", side_effect=gated_connect):
+        with patch("vael_state.sqlite3.connect", side_effect=gated_connect):
             db = SessionDB(db_path=target)
 
         try:
@@ -635,7 +635,7 @@ class TestSessionDbUsesWalFallback:
             kwargs.pop("factory", None)
             return real_connect(str(target), factory=factory, **kwargs)
 
-        with patch("hermes_state.sqlite3.connect", side_effect=gated_connect):
+        with patch("vael_state.sqlite3.connect", side_effect=gated_connect):
             with caplog.at_level("ERROR", logger="hermes_state"):
                 db = SessionDB(db_path=target)
 

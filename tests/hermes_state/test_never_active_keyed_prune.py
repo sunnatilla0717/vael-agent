@@ -14,7 +14,7 @@ import time
 
 import pytest
 
-from hermes_state import SessionDB
+from vael_state import SessionDB
 
 DAY = 86400.0
 

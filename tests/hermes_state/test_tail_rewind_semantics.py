@@ -33,7 +33,7 @@ from pathlib import Path
 
 import pytest
 
-from hermes_state import SessionDB
+from vael_state import SessionDB
 
 @pytest.fixture
 def db(tmp_path: Path) -> SessionDB:

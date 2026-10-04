@@ -456,7 +456,7 @@ class TestConfiguredDeleteNeverApplied:
     def test_partial_holder_scan_is_never_an_all_clear(self, tmp_path, capsys, monkeypatch):
         _make_db(tmp_path / "state.db", journal_mode="WAL")
         monkeypatch.setattr("hermes_state_wal.resolve_journal_mode", lambda: "delete")
-        monkeypatch.setattr("hermes_state_holders.foreign_state_db_holders",
+        monkeypatch.setattr("vael_state_holders.foreign_state_db_holders",
                             lambda path: [(-1, "open-file scan unavailable")])
 
         doctor_platform._report_database_journal_modes(tmp_path, (3, 51, 3))

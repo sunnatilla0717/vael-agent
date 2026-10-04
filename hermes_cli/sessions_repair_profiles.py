@@ -85,7 +85,7 @@ class _Session:
         path = store.db_path
         if path not in self._dbs:
             if self.read_only:
-                from hermes_state import SessionDB
+                from vael_state import SessionDB
                 self._dbs[path] = SessionDB(path, read_only=True) if path.exists() else _EMPTY_STORE
             else:
                 from hermes_state_registry import acquire

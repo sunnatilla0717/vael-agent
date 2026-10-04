@@ -57,11 +57,11 @@ def two_homes(tmp_path, monkeypatch):
     # hermes_state is already imported, and that pin WINS over ``get_hermes_home()`` inside
     # ``_default_db_path()`` — exactly the per-profile resolution these tests exist to prove.
     # Restore the import-time sentinel so an argless ``acquire()`` resolves through the scope.
-    import hermes_state
-    monkeypatch.setattr(hermes_state, "DEFAULT_DB_PATH", hermes_state._IMPORT_DEFAULT_DB_PATH)
+    import vael_state
+    monkeypatch.setattr(vael_state, "DEFAULT_DB_PATH", vael_state._IMPORT_DEFAULT_DB_PATH)
     # Disabling the hermetic pin is only safe while the sentinel still resolves INSIDE the sandbox:
     # a resolution that escaped to the real home would have these tests writing the live store.
-    resolved = Path(hermes_state._default_db_path())
+    resolved = Path(vael_state._default_db_path())
     assert resolved.is_relative_to(tmp_path), f"unpinned store escaped the sandbox: {resolved}"
     return a, b
 
@@ -119,7 +119,7 @@ def test_multiplexed_auto_archive_tick_sweeps_every_served_profile_store(two_hom
     every profile it owns, so a served secondary would have had no archiver at all.
     """
     from agent.secret_scope import set_multiplex_active
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     a, b = two_homes
     swept: list = []
@@ -147,7 +147,7 @@ def test_multiplexed_maintenance_tick_prunes_every_served_profile_store(two_home
     Real stores, real config files: nothing here is patched.
     """
     from agent.secret_scope import set_multiplex_active
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     homes = two_homes
     for home in homes:
@@ -189,7 +189,7 @@ def test_a_failing_profile_does_not_strand_the_profiles_after_it(two_homes, monk
     import hermes_state_registry as registry
     from agent.secret_scope import set_multiplex_active
     from hermes_constants import get_hermes_home
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     a, b = two_homes
     swept: list = []
@@ -250,7 +250,7 @@ def test_prune_unlinks_transcripts_under_the_configured_sessions_dir(two_homes, 
     override left every pruned session's ``.json``/``.jsonl``/``request_dump_*`` orphaned forever.
     """
     from agent.secret_scope import set_multiplex_active
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     a, b = two_homes
     override = tmp_path / "custom-transcripts"

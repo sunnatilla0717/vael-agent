@@ -591,7 +591,7 @@ def _session_db(*, read_only: bool = True):
     reads attach ``read_only`` so they never add a writer connection beside it (#100896).
     Mutating commands pass ``read_only=False``.
     """
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
     return closing(SessionDB(read_only=read_only))
 
 
@@ -651,7 +651,7 @@ def _config_migrate(_engine: HermesConsoleEngine, args: list[str]) -> None:
 
 def _guard_exports(db, session_ids: list[str]) -> None:
     """Per-session export budget: only an individual runaway transcript trips it; 0 disables."""
-    from hermes_state import SessionExportTooLargeError, resolved_max_export_messages
+    from vael_state import SessionExportTooLargeError, resolved_max_export_messages
     limit = resolved_max_export_messages()
     if limit <= 0:
         return
@@ -712,7 +712,7 @@ def _sessions_optimize(_engine: HermesConsoleEngine, args: list[str]) -> None:
     # accept would make this command refuse forever whenever a gateway is running.
     ns = _parse("sessions optimize", args, (("--force",), dict(action="store_true")))
     with _session_db(read_only=False) as db:
-        from hermes_state_holders import held_store_refusal
+        from vael_state_holders import held_store_refusal
         refusal = None if ns.force else held_store_refusal(
             db.db_path, command="optimize", force_hint="`sessions optimize --force`")
         if refusal:
@@ -725,7 +725,7 @@ def _sessions_repair(_engine: HermesConsoleEngine, args: list[str]) -> int | Non
     ns = _parse(
         "sessions repair", args, (("--check-only",), dict(action="store_true")),
         (("--no-backup",), dict(action="store_true")))
-    from hermes_state import DEFAULT_DB_PATH
+    from vael_state import DEFAULT_DB_PATH
     from hermes_state_repair import _db_opens_cleanly, repair_state_db_schema
     db_path = DEFAULT_DB_PATH
     if not db_path.exists():

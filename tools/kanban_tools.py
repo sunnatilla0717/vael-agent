@@ -1037,7 +1037,7 @@ def _persisted_session_id(session_id: Optional[str]) -> Optional[str]:
     if not session_id:
         return None
     try:
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
         from hermes_constants import get_hermes_home
 
         state = SessionDB(db_path=get_hermes_home() / "state.db", read_only=True)

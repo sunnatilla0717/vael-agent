@@ -16,14 +16,14 @@ from pathlib import Path
 
 import pytest
 
-import hermes_state_dbfile
+import vael_state_dbfile
 import hermes_state_readpool
 import hermes_state_wal
-from hermes_state import (
+from vael_state import (
     DeletedWalGenerationError, SessionDB, StateDbReplacedError, _close_time_checkpoint_configurable,
     classify_persistence_error, refuse_deleted_wal_generation,
 )
-from hermes_state_dbfile import _pread_db_header, iter_deleted_sqlite_sidecar_holders
+from vael_state_dbfile import _pread_db_header, iter_deleted_sqlite_sidecar_holders
 from tests.hermes_state._wal_generation_harness import (
     gateway_writer, integrity_ok_path, lose_sidecars, make_db, message_count, pin_wal, require_wal,
     write_second_generation,
@@ -190,7 +190,7 @@ def test_iter_holders_ignores_live_unhashed_dentry(tmp_path, force_wal, monkeypa
             return target + " (deleted)"
         return target
 
-    monkeypatch.setattr(hermes_state_dbfile.os, "readlink", fake_readlink)
+    monkeypatch.setattr(vael_state_dbfile.os, "readlink", fake_readlink)
     try:
         assert iter_deleted_sqlite_sidecar_holders(path) == []
         assert wal.exists()
@@ -206,9 +206,9 @@ def test_iter_holders_ignores_descriptor_closed_during_scan(tmp_path, monkeypatc
     wal = Path(str(path) + "-wal")
     wal.write_bytes(b"current generation")
     vanished_fd = tmp_path / "closed-writable-opener-fd"
-    monkeypatch.setattr(hermes_state_dbfile.sys, "platform", "linux")
+    monkeypatch.setattr(vael_state_dbfile.sys, "platform", "linux")
     monkeypatch.setattr(
-        hermes_state_dbfile,
+        vael_state_dbfile,
         "_iter_proc_fd_targets",
         lambda: iter([(os.getpid(), str(wal) + " (deleted)", str(vanished_fd))]),
     )
@@ -219,7 +219,7 @@ def test_iter_holders_ignores_descriptor_closed_during_scan(tmp_path, monkeypatc
             raise OSError(vanish_errno, os.strerror(vanish_errno), str(target))
         return real_stat(target, *args, **kwargs)
 
-    monkeypatch.setattr(hermes_state_dbfile.os, "stat", stat_vanished)
+    monkeypatch.setattr(vael_state_dbfile.os, "stat", stat_vanished)
 
     assert iter_deleted_sqlite_sidecar_holders(path) == []
 

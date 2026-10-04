@@ -53,18 +53,18 @@ def client(monkeypatch, profiles_on_disk):
     except ImportError:
         pytest.skip("fastapi/starlette not installed")
 
-    import hermes_state
+    import vael_state
     from hermes_cli.web_server import _SESSION_HEADER_NAME, _SESSION_TOKEN, app
     from hermes_constants import get_hermes_home
 
-    monkeypatch.setattr(hermes_state, "DEFAULT_DB_PATH", get_hermes_home() / "state.db")
+    monkeypatch.setattr(vael_state, "DEFAULT_DB_PATH", get_hermes_home() / "state.db")
     http = TestClient(app)
     http.headers[_SESSION_HEADER_NAME] = _SESSION_TOKEN
     return http
 
 
 def _seed_session(home, session_id, *, source="cli"):
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     db = SessionDB(db_path=home / "state.db")
     try:
@@ -94,14 +94,14 @@ class TestSidebarFailedLoad:
         self, client, profiles_on_disk, monkeypatch
     ):
         _seed_session(profiles_on_disk["worker"], "worker-chat")
-        import hermes_state
+        import vael_state
 
         def boom(self, *args, **kwargs):
             raise sqlite3.OperationalError(
                 "no such column: s.compression_ineffective_count"
             )
 
-        monkeypatch.setattr(hermes_state.SessionDB, "list_sessions_rich", boom)
+        monkeypatch.setattr(vael_state.SessionDB, "list_sessions_rich", boom)
 
         payload = _sidebar(client, "worker")
 
@@ -118,10 +118,10 @@ class TestSidebarFailedLoad:
         from hermes_cli import web_server_sessions as sessions_mod
 
         sessions_mod._session_db_heal_exhausted.add(str(home / "state.db"))
-        import hermes_state
+        import vael_state
 
         monkeypatch.setattr(
-            hermes_state.SessionDB,
+            vael_state.SessionDB,
             "list_sessions_rich",
             lambda self, *args, **kwargs: [],
         )
@@ -144,25 +144,25 @@ class TestSidebarFailedLoad:
             "_session_db_read_probe_statements",
             lambda: ('SELECT "sessions"."not_a_real_column" FROM "sessions" LIMIT 0',),
         )
-        import hermes_state
+        import vael_state
 
         writable_opens = []
-        real_init = hermes_state.SessionDB.__init__
+        real_init = vael_state.SessionDB.__init__
 
         def counting_init(self, *args, **kwargs):
             if not kwargs.get("read_only", False):
                 writable_opens.append(1)
             return real_init(self, *args, **kwargs)
 
-        monkeypatch.setattr(hermes_state.SessionDB, "__init__", counting_init)
-        real_list = hermes_state.SessionDB.list_sessions_rich
+        monkeypatch.setattr(vael_state.SessionDB, "__init__", counting_init)
+        real_list = vael_state.SessionDB.list_sessions_rich
 
         def list_then_miss(self, *args, **kwargs):
             if str(getattr(self, "_db_path", home / "state.db")):
                 raise sqlite3.OperationalError("no such column: s.not_a_real_column")
             return real_list(self, *args, **kwargs)
 
-        monkeypatch.setattr(hermes_state.SessionDB, "list_sessions_rich", list_then_miss)
+        monkeypatch.setattr(vael_state.SessionDB, "list_sessions_rich", list_then_miss)
 
         first = _sidebar(client, "worker")
         second = _sidebar(client, "worker")
@@ -203,7 +203,7 @@ class TestSidebarFailedLoad:
         assert [row["id"] for row in payload["recents"]["sessions"]] == ["worker-chat"]
 
     def test_healthy_empty_store_stays_an_empty_list(self, client, profiles_on_disk):
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
 
         SessionDB(db_path=profiles_on_disk["worker"] / "state.db").close()
 
@@ -218,9 +218,9 @@ class TestSidebarFailedLoad:
     ):
         _seed_session(profiles_on_disk["default"], "default-chat")
         _seed_session(profiles_on_disk["worker"], "worker-chat")
-        import hermes_state
+        import vael_state
 
-        real_list = hermes_state.SessionDB.list_sessions_rich
+        real_list = vael_state.SessionDB.list_sessions_rich
         worker_db = (profiles_on_disk["worker"] / "state.db").resolve()
 
         def explode_worker(self, *args, **kwargs):
@@ -228,7 +228,7 @@ class TestSidebarFailedLoad:
                 raise sqlite3.OperationalError("database is locked")
             return real_list(self, *args, **kwargs)
 
-        monkeypatch.setattr(hermes_state.SessionDB, "list_sessions_rich", explode_worker)
+        monkeypatch.setattr(vael_state.SessionDB, "list_sessions_rich", explode_worker)
 
         payload = _sidebar(client, "all")
 

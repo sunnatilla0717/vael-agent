@@ -51,7 +51,7 @@ def multiplex_homes(tmp_path, monkeypatch):
     home, serving a ``fitness`` profile whose store lives under
     ``profiles/fitness``.
     """
-    import hermes_state
+    import vael_state
 
     root = tmp_path / "hermes"
     profile = root / "profiles" / "fitness"
@@ -70,7 +70,7 @@ def multiplex_homes(tmp_path, monkeypatch):
     # which is what production does.  ``HERMES_HOME`` above still keeps that
     # resolution inside ``tmp_path``, so no real store is ever opened.
     monkeypatch.setattr(
-        hermes_state, "DEFAULT_DB_PATH", hermes_state._IMPORT_DEFAULT_DB_PATH
+        vael_state, "DEFAULT_DB_PATH", vael_state._IMPORT_DEFAULT_DB_PATH
     )
     return root, profile
 
@@ -247,7 +247,7 @@ def test_two_primary_routed_turns_reload_profile_transcript(multiplex_homes):
     """A second routed turn sees the first turn in the profile database."""
     from gateway.profile_routing import ProfileRoute
     from gateway.run import GatewayRunner
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
 
     root, profile = multiplex_homes
     (profile / "config.yaml").write_text("{}\n", encoding="utf-8")

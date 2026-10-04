@@ -1300,7 +1300,7 @@ def _session_db():
     callers fall through to their ``return None``."""
     db = None
     try:
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
 
         db = SessionDB(read_only=True)
     except Exception:
@@ -1478,7 +1478,7 @@ def _create_titled_session(title: str) -> Optional[str]:
     """
     db = None
     try:
-        from hermes_state_ids import new_session_id as mint_session_id
+        from vael_state_ids import new_session_id as mint_session_id
         from hermes_state_registry import acquire
 
         new_session_id = mint_session_id()

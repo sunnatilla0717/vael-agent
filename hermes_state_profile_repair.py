@@ -24,7 +24,7 @@ from __future__ import annotations
 import logging
 from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
 
-from hermes_state_common import _id_chunks, _placeholders as _session_ids_placeholders
+from vael_state_common import _id_chunks, _placeholders as _session_ids_placeholders
 
 logger = logging.getLogger(__name__)
 

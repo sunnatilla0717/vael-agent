@@ -22,10 +22,10 @@ from pathlib import Path
 
 import pytest
 
-import hermes_state
+import vael_state
 import hermes_state_repair
 import hermes_state_wal
-from hermes_state import SessionDB, is_malformed_db_error
+from vael_state import SessionDB, is_malformed_db_error
 from hermes_state_repair import repair_state_db_schema
 
 
@@ -79,9 +79,9 @@ def test_generic_malformed_open_does_not_attempt_schema_surgery(
     def _generic_corruption(*_args, **_kwargs):
         raise sqlite3.DatabaseError("database disk image is malformed")
 
-    monkeypatch.setattr(hermes_state, "apply_wal_with_fallback", _generic_corruption)  # SessionDB open path
+    monkeypatch.setattr(vael_state, "apply_wal_with_fallback", _generic_corruption)  # SessionDB open path
     monkeypatch.setattr(
-        hermes_state, "repair_state_db_schema",
+        vael_state, "repair_state_db_schema",
         lambda *args, **kwargs: repair_calls.append((args, kwargs)),
     )
 
@@ -117,17 +117,17 @@ def test_auto_heal_attempted_once_per_process(tmp_path, monkeypatch):
     db_path = tmp_path / "state.db"
     _build_healthy_db(db_path)
     _corrupt_duplicate_fts(db_path)
-    monkeypatch.setattr(hermes_state, "_repair_attempted_paths", set())
+    monkeypatch.setattr(vael_state, "_repair_attempted_paths", set())
 
     calls = {"n": 0}
-    real_repair = hermes_state.repair_state_db_schema
+    real_repair = vael_state.repair_state_db_schema
 
     def fake_repair(path, **kw):
         calls["n"] += 1
         # Pretend repair failed so the guard's one-shot behavior is exercised.
         return {"repaired": False, "strategy": None, "backup_path": None, "error": "x"}
 
-    monkeypatch.setattr(hermes_state, "repair_state_db_schema", fake_repair)
+    monkeypatch.setattr(vael_state, "repair_state_db_schema", fake_repair)
 
     with pytest.raises(sqlite3.DatabaseError):
         SessionDB(db_path=db_path)
@@ -135,7 +135,7 @@ def test_auto_heal_attempted_once_per_process(tmp_path, monkeypatch):
         SessionDB(db_path=db_path)
     assert calls["n"] == 1  # repair attempted only once across both opens
 
-    monkeypatch.setattr(hermes_state, "repair_state_db_schema", real_repair)
+    monkeypatch.setattr(vael_state, "repair_state_db_schema", real_repair)
 
 
 
@@ -444,7 +444,7 @@ time.sleep({hold})
 def _lock_held_by_other_process(db_path: Path, hold_seconds: float = 30.0):
     """Hold the repair flock for *db_path* in a real child process."""
     script = _HOLD_LOCK_SCRIPT.format(
-        root=str(Path(hermes_state.__file__).parent),
+        root=str(Path(vael_state.__file__).parent),
         lock=str(db_path.with_name(db_path.name + ".repair.lock")),
         hold=hold_seconds,
     )
@@ -469,7 +469,7 @@ def test_repair_skips_surgery_while_another_process_holds_the_lock(
     db_path = tmp_path / "state.db"
     _build_healthy_db(db_path)
     _corrupt_duplicate_fts(db_path)
-    monkeypatch.setattr(hermes_state, "_REPAIR_LOCK_TIMEOUT_SECONDS", 0.5)
+    monkeypatch.setattr(vael_state, "_REPAIR_LOCK_TIMEOUT_SECONDS", 0.5)
 
     with _lock_held_by_other_process(db_path):
         report = repair_state_db_schema(db_path)
@@ -489,7 +489,7 @@ def test_repair_reports_success_when_the_holder_already_healed_the_db(
     """Timing out against a healthy DB is a success, not an error."""
     db_path = tmp_path / "state.db"
     _build_healthy_db(db_path)
-    monkeypatch.setattr(hermes_state, "_REPAIR_LOCK_TIMEOUT_SECONDS", 0.5)
+    monkeypatch.setattr(vael_state, "_REPAIR_LOCK_TIMEOUT_SECONDS", 0.5)
 
     with _lock_held_by_other_process(db_path):
         report = repair_state_db_schema(db_path)
@@ -510,11 +510,11 @@ def _release_header_probe_fds() -> None:
     """Close this process's cached header-probe fds (no SQLite connection is live, so no lock is at risk)."""
     import os
 
-    import hermes_state_dbfile
-    with hermes_state_dbfile._HEADER_PROBE_LOCK:
-        for fd, _dev, _ino in hermes_state_dbfile._HEADER_PROBE_FDS.values():
+    import vael_state_dbfile
+    with vael_state_dbfile._HEADER_PROBE_LOCK:
+        for fd, _dev, _ino in vael_state_dbfile._HEADER_PROBE_FDS.values():
             os.close(fd)
-        hermes_state_dbfile._HEADER_PROBE_FDS.clear()
+        vael_state_dbfile._HEADER_PROBE_FDS.clear()
 
 
 @pytest.mark.platforms("posix")  # POSIX flock test
@@ -534,7 +534,7 @@ def test_two_processes_repairing_at_once_perform_surgery_once(tmp_path):
     _release_header_probe_fds()
 
     script = _REPAIR_SCRIPT.format(
-        root=str(Path(hermes_state.__file__).parent), db=str(db_path)
+        root=str(Path(vael_state.__file__).parent), db=str(db_path)
     )
     procs = [
         subprocess.Popen(

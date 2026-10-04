@@ -23,8 +23,8 @@ from __future__ import annotations
 import threading
 import time
 
-import hermes_state_guard
-from hermes_state import SessionDB
+import vael_state_guard
+from vael_state import SessionDB
 
 # Deliberate cross-test handoff: test_leaked_instance_* leaks an instance;
 # the later test (pytest runs file order deterministically without a
@@ -36,7 +36,7 @@ _leaked: list[SessionDB] = []
 def test_constructed_sessiondb_is_registered(tmp_path):
     db = SessionDB(db_path=tmp_path / "state.db")
     try:
-        assert db in hermes_state_guard._test_instance_registry
+        assert db in vael_state_guard._test_instance_registry
     finally:
         db.close()
     # close() must fully release the writer connection…

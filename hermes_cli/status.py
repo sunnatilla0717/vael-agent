@@ -276,7 +276,7 @@ def _render_sessions(ctx):
     # Gateway session count: state.db is the source of truth; fall back to sessions.json for
     # pre-migration installs.
     try:
-        from hermes_state import SessionDB
+        from vael_state import SessionDB
         db = SessionDB(read_only=True)  # status only reads; never a writer beside a running gateway
         try:
             gateway_rows = db.list_gateway_sessions(active_only=True) or []

@@ -16,7 +16,7 @@ from pathlib import Path
 
 from hermes_cli.cli_output import print_truncated
 from hermes_cli.sessions_cmd_browse import _relative_time, _session_browse_picker
-from hermes_state_errors import SessionActiveWriteGuardError
+from vael_state_errors import SessionActiveWriteGuardError
 
 
 def get_hermes_home():
@@ -100,7 +100,7 @@ def _write_output(output, text, summary) -> None:
 # -- handlers that must run BEFORE SessionDB() is opened ----------------------
 
 def _cmd_repair(args):
-    from hermes_state import DEFAULT_DB_PATH as db_path, SessionDB
+    from vael_state import DEFAULT_DB_PATH as db_path, SessionDB
     from hermes_state_repair import _db_opens_cleanly, repair_state_db_schema
     if not db_path.exists():
         print(f"No session database at {db_path} (nothing to repair).")
@@ -1199,7 +1199,7 @@ def cmd_sessions(args, sessions_parser=None):
     if pre is not None:
         return pre(args)
     observational = action in _OBSERVATIONAL_DB_ACTIONS
-    from hermes_state import SessionDB, _default_db_path
+    from vael_state import SessionDB, _default_db_path
     try:
         db = SessionDB(read_only=observational)
     except Exception as e:
@@ -1216,7 +1216,7 @@ def cmd_sessions(args, sessions_parser=None):
             sessions_parser.print_help()
             return
         if action in _HELD_STORE_ACTIONS and not getattr(args, "dry_run", False) and not getattr(args, "force", False):
-            from hermes_state_holders import held_store_refusal
+            from vael_state_holders import held_store_refusal
             # Same resolver the SessionDB above opened, so the scan never depends on the db object.
             refusal = held_store_refusal(_default_db_path(), command=action)
             if refusal:

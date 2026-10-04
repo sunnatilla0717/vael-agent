@@ -15,7 +15,7 @@ import time
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Union
 
-from hermes_state_common import _BOUNDARY_END_REASONS
+from vael_state_common import _BOUNDARY_END_REASONS
 from hermes_time import safe_strftime
 
 # Hidden from browsing/searching — integrations (HERMES_SESSION_SOURCE=tool), delegate
@@ -436,7 +436,7 @@ def _resolve_profile_db(profile: str):
     if profile is None or not str(profile).strip():
         return None
     from hermes_cli import profiles as profiles_mod
-    from hermes_state import SessionDB
+    from vael_state import SessionDB
     canon = profiles_mod.normalize_profile_name(profile)
     profiles_mod.validate_profile_name(canon)
     if not profiles_mod.profile_exists(canon):
@@ -622,7 +622,7 @@ def session_search(query: str = "", role_filter: str = None, limit: int = 3, db=
                    after: str = None, before: str = None, exclude_session_ids: Optional[List[str]] = None) -> str:
     """Run session search, closing DBs opened here. Positional order is frozen for old callers;
     new parameters are appended after ``detail``."""
-    from hermes_state import format_session_db_unavailable
+    from vael_state import format_session_db_unavailable
     from hermes_state_registry import acquire, release_or_close
     owned_dbs: List[Any] = []
     if db is None:
@@ -642,7 +642,7 @@ def session_search(query: str = "", role_filter: str = None, limit: int = 3, db=
 def check_session_search_requirements() -> bool:
     """Requires the SQLite state database."""
     try:
-        from hermes_state import _default_db_path
+        from vael_state import _default_db_path
         return _default_db_path().parent.exists()
     except ImportError:
         return False

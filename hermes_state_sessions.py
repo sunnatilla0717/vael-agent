@@ -15,8 +15,8 @@ from agent.session_activity import (
     ActivityProvenance, bound_activity_description, normalize_activity_provenance,
 )
 from hermes_startup_watchdog import report_startup_progress
-from hermes_state_errors import SessionActiveWriteGuardError
-from hermes_state_common import (
+from vael_state_errors import SessionActiveWriteGuardError
+from vael_state_common import (
     _LISTABLE_CHILD_SQL, _RECOVERABLE_END_REASONS,
     _RECOVERABLE_END_REASONS_SQL, _RESET_CHILD_SQL, _RESET_END_REASONS, _legacy_reset_child_sql, _non_continuation_child_sql,
     _shape_preview, _sql_preview_raw, QUEUED_PROMPT_METADATA_KEY,
@@ -1444,7 +1444,7 @@ class SessionSessionsMixin:
         it — or raise SessionExportTooLargeError (the LIMITed subquery
         stops once the bound is exceeded). ``None`` resolves ``sessions.max_export_messages``; 0 disables
         the guard."""
-        from hermes_state import SessionExportTooLargeError, resolved_max_export_messages
+        from vael_state import SessionExportTooLargeError, resolved_max_export_messages
         if max_messages is None:
             max_messages = resolved_max_export_messages()
         if max_messages < 0:

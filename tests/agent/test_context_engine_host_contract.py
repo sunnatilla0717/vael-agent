@@ -28,7 +28,7 @@ from __future__ import annotations
 
 
 from agent.context_compressor import ContextCompressor
-from hermes_state import SessionDB
+from vael_state import SessionDB
 from run_agent import AIAgent
 
 

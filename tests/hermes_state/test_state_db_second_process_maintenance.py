@@ -11,7 +11,7 @@ from pathlib import Path
 
 import pytest
 
-from hermes_state import SessionDB
+from vael_state import SessionDB
 from hermes_state_repair import repair_state_db_schema
 
 _HOLDER = """
@@ -64,7 +64,7 @@ def test_holder_scan_sees_through_a_symlinked_home(tmp_path):
     /proc leg already compares inodes; the textual psutil leg (macOS) is the one this pins."""
     import sqlite3
 
-    from hermes_state_holders import foreign_state_db_holders
+    from vael_state_holders import foreign_state_db_holders
 
     real = tmp_path / "real-home"
     real.mkdir()

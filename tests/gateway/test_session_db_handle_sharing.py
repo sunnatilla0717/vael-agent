@@ -36,7 +36,7 @@ def _live_count(path) -> int:
 @pytest.fixture
 def home(tmp_path, monkeypatch):
     """A gateway home under tmp_path, with path resolution going through it."""
-    import hermes_state
+    import vael_state
 
     root = tmp_path / "hermes"
     root.mkdir(parents=True)
@@ -48,7 +48,7 @@ def home(tmp_path, monkeypatch):
     # keeps it inside tmp_path. Same reasoning as
     # test_multiplex_session_db_profile_scope.py.
     monkeypatch.setattr(
-        hermes_state, "DEFAULT_DB_PATH", hermes_state._IMPORT_DEFAULT_DB_PATH
+        vael_state, "DEFAULT_DB_PATH", vael_state._IMPORT_DEFAULT_DB_PATH
     )
     return root
 

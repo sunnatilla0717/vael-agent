@@ -157,8 +157,8 @@ def _session_db_content_sig(db_path: Path):
     conn = None
     try:
         import hashlib
-        from hermes_state import _connect_tracked_db
-        from hermes_state_holders import read_only_db_uri
+        from vael_state import _connect_tracked_db
+        from vael_state_holders import read_only_db_uri
 
         conn = _connect_tracked_db(read_only_db_uri(db_path), tracking_path=db_path,
                                    uri=True, timeout=0.05)
